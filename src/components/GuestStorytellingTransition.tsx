@@ -59,9 +59,9 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
     const renderFrame = (progress: number) => {
       // Dimensions
       const initialHeight = isSmallMob
-        ? Math.min(vh * 0.38, 280)
+        ? Math.min(vh * 0.52, 450)
         : isMob
-        ? Math.min(vh * 0.44, 330)
+        ? Math.min(vh * 0.55, 480)
         : isTab
         ? Math.min(vh * 0.52, 470)
         : Math.min(vh * 0.58, 550);
@@ -77,9 +77,10 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
       // Pure hardware-composited integer scissor insets (Zero re-tessellation)
       const insetY = Math.max(0, Math.round((vh - currentHeight) / 2));
       const insetX = Math.max(0, Math.round((vw - currentWidth) / 2));
+      const roundRadius = Math.max(0, Math.round(6 * (1 - expansionProgress)));
 
       if (gpuCanvasRef.current) {
-        const clipStr = `inset(${insetY}px ${insetX}px ${insetY}px ${insetX}px)`;
+        const clipStr = `inset(${insetY}px ${insetX}px ${insetY}px ${insetX}px round ${roundRadius}px)`;
         gpuCanvasRef.current.style.clipPath = clipStr;
         gpuCanvasRef.current.style.setProperty('-webkit-clip-path', clipStr);
       }
@@ -445,7 +446,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
                 MALVIN
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
-                <span>10 SEPTEMBER</span>
+                <span>30 OKTOBER</span>
                 <span style={{ color: 'var(--color-oxblood)' }}>·</span>
                 <span style={{ color: 'var(--color-gold-antique)' }}>22:00 WIB</span>
               </div>
@@ -479,7 +480,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
                 FAR
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
-                <span>10 SEPTEMBER</span>
+                <span>31 OKTOBER</span>
                 <span style={{ color: 'var(--color-oxblood)' }}>·</span>
                 <span style={{ color: 'var(--color-gold-antique)' }}>23:30 WIB</span>
               </div>
@@ -492,35 +493,41 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
 
         {/* Mobile Editorial Layout */}
         <div className="storytelling-mobile-layer story-mobile-only">
-          <div ref={mobileTopRef} className="story-mobile-top">
-            <div className="story-mobile-top-pill">
-              <div>
-                <span className="story-mobile-kicker">01 // THE GUESTS</span>
-                <h2 className="story-mobile-title">THE GUESTS</h2>
-              </div>
-              <div className="story-mobile-top-right">
-                <span className="story-mobile-status">10 SEP</span>
-                <span className="story-mobile-dates">MIZU ROOM</span>
-              </div>
+          {/* Top Editorial Header: Monumental & Clean */}
+          <div ref={mobileTopRef} className="story-mobile-top-editorial">
+            <div className="story-mobile-kicker-row">
+              <span className="story-mobile-eyebrow">01 // THE GUESTS</span>
+              <span className="story-mobile-date-badge">30 — 31 OKT 2026</span>
             </div>
+            <h2 className="story-mobile-monument-title text-gold-metallic">
+              THE GUESTS
+            </h2>
+            <p className="story-mobile-sub-venue">
+              SWEAR IN CONTINENTAL · MIZU COMMONROOM
+            </p>
           </div>
 
-          <div ref={mobileCueRef} className="story-mobile-cue-wrapper">
-            <div className="story-mobile-cue-pill">
-              <span>GULIR KE BAWAH</span>
-              <span className="story-mobile-cue-arrow">↓</span>
+          {/* Bottom Dock: Refined Artist Lineup & Integrated Scroll Cue */}
+          <div ref={mobileBottomRef} className="story-mobile-bottom-editorial">
+            <div ref={mobileCueRef} className="story-mobile-scroll-cue">
+              <span className="story-mobile-scroll-text">GULIR UNTUK MELANGKAH MASUK</span>
+              <span className="story-mobile-scroll-arrow">↓</span>
             </div>
-          </div>
 
-          <div ref={mobileBottomRef} className="story-mobile-bottom">
-            <div className="story-mobile-artist-block">
-              <span className="story-mobile-artist-name">MALVIN</span>
-              <span className="story-mobile-artist-meta">10 SEP · 22:00 WIB · MIZU</span>
-            </div>
-            <div className="story-mobile-bottom-divider" />
-            <div className="story-mobile-artist-block text-right">
-              <span className="story-mobile-artist-name">FAR</span>
-              <span className="story-mobile-artist-meta text-muted">10 SEP · 23:30 WIB · MIZU</span>
+            <div className="story-mobile-lineup-dock">
+              <div className="story-mobile-artist-item">
+                <span className="artist-item-day">DAY 1 // 30 OKT</span>
+                <span className="artist-item-name">MALVIN</span>
+                <span className="artist-item-time">22:00 WIB · MIZU</span>
+              </div>
+
+              <div className="story-mobile-dock-divider" />
+
+              <div className="story-mobile-artist-item text-right">
+                <span className="artist-item-day">DAY 2 // 31 OKT</span>
+                <span className="artist-item-name">FAR</span>
+                <span className="artist-item-time">23:30 WIB · MIZU</span>
+              </div>
             </div>
           </div>
         </div>
