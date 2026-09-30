@@ -581,18 +581,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
 
             {/* Golden Accent Divider */}
             <div className="story-welcome-divider" />
-
-            {/* Minimal Scroll Cue */}
-            <div
-              className="story-welcome-scroll-hint"
-              onClick={handleLineupScroll}
-              role="button"
-              tabIndex={0}
-              aria-label="Scroll for more"
-            >
-              <span className="story-welcome-scroll-text">SCROLL FOR MORE</span>
-              <span className="story-welcome-scroll-arrow">↓</span>
-            </div>
           </div>
         </div>
 

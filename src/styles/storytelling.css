@@ -276,7 +276,7 @@
     var(--color-gold-antique) 80%,
     transparent 100%
   );
-  margin: 0 auto 2.25rem;
+  margin: 0 auto;
   border-radius: 1px;
   opacity: 0.75;
 }
