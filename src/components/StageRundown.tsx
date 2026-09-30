@@ -18,7 +18,7 @@ export const StageRundown: React.FC<Props> = ({
     <section id="the-night" className="cinematic-section stage-rundown-section">
       <div className="stage-rundown-header-block">
         <h2 className="section-headline">
-          DETAIL & RUNDOWN ACARA
+          DETAIL ACARA
         </h2>
 
         <p className="section-subheadline">
