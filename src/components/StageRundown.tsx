@@ -20,10 +20,6 @@ export const StageRundown: React.FC<Props> = ({
 
   return (
     <section id="the-night" className="cinematic-section">
-      <div className="section-eyebrow">
-        <span>04 // INFORMASI ACARA</span>
-      </div>
-
       <h2 className="section-headline">
         DETAIL & RUNDOWN ACARA
       </h2>

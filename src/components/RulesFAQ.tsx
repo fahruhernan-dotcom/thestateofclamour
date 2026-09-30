@@ -9,10 +9,6 @@ interface Props {
 export const RulesFAQ: React.FC<Props> = ({ onOpenDossier }) => {
   return (
     <section id="before-you-enter" className="cinematic-section">
-      <div className="section-eyebrow">
-        <span>05 // PROTOKOL MASUK</span>
-      </div>
-
       <h2 className="section-headline">
         PANDUAN SEBELUM MASUK
       </h2>

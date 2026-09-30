@@ -428,12 +428,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
           <div className="storytelling-editorial-bounds">
             {/* Top-Left Cluster */}
             <div ref={clusterTopLeftRef} className="story-cluster-top-left">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.45rem' }}>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.3em', color: 'var(--color-gold-antique)', textTransform: 'uppercase' }}>
-                  01 // THE GUESTS
-                </span>
-                <div style={{ width: '2rem', height: '1px', backgroundColor: 'rgba(197, 168, 105, 0.28)' }} />
-              </div>
               <h2 style={{ fontFamily: 'var(--font-monumental)', fontSize: '1.65rem', letterSpacing: '0.18em', fontWeight: 600, color: 'var(--color-ivory)', textTransform: 'uppercase', lineHeight: 1.1 }}>
                 THE GUESTS
               </h2>

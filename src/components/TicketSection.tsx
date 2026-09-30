@@ -24,10 +24,6 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
 
   return (
     <section id="the-passage" className="cinematic-section">
-      <div className="section-eyebrow">
-        <span>03 // ADMISSION</span>
-      </div>
-
       <h2 className="section-headline">
         THE PASSAGE
       </h2>

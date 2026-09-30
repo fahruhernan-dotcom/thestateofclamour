@@ -637,10 +637,6 @@ export const LineupSection: React.FC<Props> = ({
 
   return (
     <section id="lineup" ref={sectionRef} className="cinematic-section">
-      <div className="section-eyebrow">
-        <span>02 // THE RELEASE</span>
-      </div>
-
       <h2 className="section-headline">
         THE GUESTS
       </h2>
