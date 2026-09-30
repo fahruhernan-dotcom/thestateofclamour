@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { ArrowRight, ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Artist } from '../types';
-import { silenceSec1, setAudioOwner, getAudioOwner, canSec2PlayAudio } from '../utils/audioCoordinator';
+import { silenceSec1, setAudioOwner, getAudioOwner } from '../utils/audioCoordinator';
 
 interface Props {
   artists: Artist[];
@@ -17,14 +17,9 @@ interface GuestCardProps {
   isFlashing: boolean;
   isClone?: boolean;
   isCardActive: boolean;
-  isSectionVisible: boolean;
-  isSectionAudioMuted: boolean;
-  isAudioUnlocked: boolean;
-  canPlayAudio: boolean;
   isMobile: boolean;
   onSelectArtist: (index: number) => void;
   onSelectCard?: (cardIndex: number, artistIndex: number) => void;
-  onToggleMute: (index: number, forcePlay?: boolean) => void;
   onTriggerFlash: (id: string) => void;
   onOpenModal: (artist: Artist) => void;
 }
@@ -36,14 +31,9 @@ const GuestCard: React.FC<GuestCardProps> = ({
   isFlashing,
   isClone,
   isCardActive,
-  isSectionVisible,
-  isSectionAudioMuted,
-  isAudioUnlocked,
-  canPlayAudio,
   isMobile,
   onSelectArtist,
   onSelectCard,
-  onToggleMute,
   onTriggerFlash,
   onOpenModal,
 }) => {
@@ -67,40 +57,29 @@ const GuestCard: React.FC<GuestCardProps> = ({
     card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px)`;
   };
 
-  const handleCardMouseLeave = () => {
-    if (cardRef.current) {
-      cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-    }
-  };
-
+  // Sound only appears when cursor hovers over card!
   const handleCardMouseEnter = () => {
     onTriggerFlash(artist.id);
     onSelectArtist(artistIndex);
-  };
-
-  // Video playback & audio synchronization:
-  // Auto-play unmuted ONLY when Section 2 is visible AND Section 1 audio is completely dead!
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const sec2Allowed = isSectionVisible && canPlayAudio && canSec2PlayAudio();
-
-    if (!sec2Allowed) {
-      // Out of section or Section 1 is still active: force mute
-      video.muted = true;
-      setIsPlayingAudio(false);
-      return;
+    if (onSelectCard) {
+      onSelectCard(cardIndex, artistIndex);
     }
 
-    const shouldPlaySound = isCardActive && !isSectionAudioMuted && sec2Allowed;
+    // 1. Immediately silence Section 1 audio completely
+    silenceSec1();
+    setAudioOwner('sec2-lineup');
 
-    if (shouldPlaySound) {
-      // Section 2 is about to play sound:
-      // STRICT REQUIREMENT: silence Section 1 first and claim audio ownership
-      silenceSec1();
-      setAudioOwner('sec2-lineup');
+    // 2. Mute other videos in #lineup to guarantee single-audio playback
+    const allVideos = document.querySelectorAll<HTMLVideoElement>('#lineup video');
+    allVideos.forEach((v) => {
+      if (v !== videoRef.current) {
+        v.muted = true;
+      }
+    });
 
+    // 3. Unmute and play audio for hovered card
+    const video = videoRef.current;
+    if (video) {
       video.volume = 0.95;
       video.muted = false;
       const playPromise = video.play();
@@ -110,80 +89,54 @@ const GuestCard: React.FC<GuestCardProps> = ({
             setIsPlayingAudio(true);
           })
           .catch(() => {
-            // Autoplay blocked by browser policy without user gesture yet
             video.muted = true;
             setIsPlayingAudio(false);
             video.play().catch(() => {});
           });
       }
-    } else {
-      video.muted = true;
-      setIsPlayingAudio(false);
-
-      if (!isMobile) {
-        // On desktop, keep video visuals alive smoothly (muted)
-        if (video.paused) {
-          video.play().catch(() => {});
-        }
-      } else {
-        // On mobile, pause inactive carousel clones to save memory
-        if (!isCardActive && !video.paused) {
-          video.pause();
-        }
-      }
     }
-  }, [isSectionVisible, isCardActive, isSectionAudioMuted, isAudioUnlocked, isMobile, canPlayAudio]);
+  };
 
-  // Direct user-click sound toggle (unconditionally permitted by browsers due to user gesture)
-  const handleToggleSound = useCallback((e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
+  // When cursor leaves card: mute audio back to silence
+  const handleCardMouseLeave = () => {
+    if (cardRef.current) {
+      cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+    }
+
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+    }
+    setIsPlayingAudio(false);
+
+    if (getAudioOwner() === 'sec2-lineup') {
+      setAudioOwner('none');
+    }
+  };
+
+  const handleCardTouch = () => {
+    handleCardMouseEnter();
+  };
+
+  // Video visuals loop smoothly in background (muted unless hovered)
+  useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isCardActive && isPlayingAudio && !isSectionAudioMuted) {
-      // Currently playing sound: mute it
-      video.muted = true;
-      setIsPlayingAudio(false);
-      onToggleMute(artistIndex, false);
-      if (getAudioOwner() === 'sec2-lineup') {
-        setAudioOwner('none');
+    if (!isMobile) {
+      // Desktop: Keep looping visually (muted by default)
+      if (video.paused) {
+        video.play().catch(() => {});
       }
     } else {
-      // User explicitly clicked to play sound on this card:
-      // 1. Immediately kill Section 1 audio completely!
-      silenceSec1();
-      setAudioOwner('sec2-lineup');
-
-      // 2. Mute any other videos in #lineup to guarantee single-audio playback
-      const allVideos = document.querySelectorAll<HTMLVideoElement>('#lineup video');
-      allVideos.forEach((v) => {
-        if (v !== video) {
-          v.muted = true;
-        }
-      });
-
-      video.volume = 0.95;
-      video.muted = false;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlayingAudio(true);
-          })
-          .catch((err) => {
-            console.warn("Audio playback error:", err);
-          });
-      } else {
-        setIsPlayingAudio(true);
+      // Mobile: Pause non-active clones to save memory
+      if (!isCardActive && !video.paused) {
+        video.pause();
+      } else if (isCardActive && video.paused) {
+        video.play().catch(() => {});
       }
-      if (onSelectCard) {
-        onSelectCard(cardIndex, artistIndex);
-      } else {
-        onSelectArtist(artistIndex);
-      }
-      onToggleMute(artistIndex, true);
     }
-  }, [isCardActive, isPlayingAudio, isSectionAudioMuted, artistIndex, cardIndex, onSelectArtist, onSelectCard, onToggleMute]);
+  }, [isMobile, isCardActive]);
 
   return (
     <article
@@ -192,12 +145,10 @@ const GuestCard: React.FC<GuestCardProps> = ({
       onMouseMove={handleCardMouseMove}
       onMouseLeave={handleCardMouseLeave}
       onMouseEnter={handleCardMouseEnter}
+      onTouchStart={handleCardTouch}
     >
       <div
         className="guest-portrait-frame"
-        onClick={handleToggleSound}
-        style={{ cursor: 'pointer' }}
-        title={isPlayingAudio ? "Klik untuk mematikan audio" : "Klik untuk memutar audio"}
       >
         {artist.videoUrl ? (
           <video
@@ -271,17 +222,6 @@ const GuestCard: React.FC<GuestCardProps> = ({
           <ArrowRight size={13} />
         </div>
       </div>
-
-      {/* Compact Sound Logo Button (Bottom-Right of Flyer) */}
-      <button
-        type="button"
-        className={`guest-flyer-sound-btn ${isPlayingAudio ? 'is-active' : (isCardActive && isSectionVisible ? 'is-muted-hint' : '')}`}
-        onClick={handleToggleSound}
-        aria-label={isPlayingAudio ? "Bisukan suara" : "Aktifkan suara"}
-        title={isPlayingAudio ? "Klik untuk bisukan audio" : "Klik untuk putar audio"}
-      >
-        {isPlayingAudio ? <Volume2 size={13} /> : <VolumeX size={13} />}
-      </button>
     </article>
   );
 };
@@ -298,9 +238,6 @@ export const LineupSection: React.FC<Props> = ({
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isSectionVisible, setIsSectionVisible] = useState(false);
-  const [isSectionAudioMuted, setIsSectionAudioMuted] = useState(false);
-  const [isAudioUnlocked, setIsAudioUnlocked] = useState(false);
-  const [canPlayAudio, setCanPlayAudio] = useState(false);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const recenterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -311,15 +248,6 @@ export const LineupSection: React.FC<Props> = ({
   const handleSelectCard = useCallback((cardIdx: number, artistIdx: number) => {
     setActiveCardIndex(cardIdx);
     setActiveArtistIndex(artistIdx);
-  }, []);
-
-  const handleToggleMute = useCallback((_index: number, forcePlay?: boolean) => {
-    setIsAudioUnlocked(true);
-    if (forcePlay !== undefined) {
-      setIsSectionAudioMuted(!forcePlay);
-    } else {
-      setIsSectionAudioMuted((prev) => !prev);
-    }
   }, []);
 
   // 7 repetitions: Set 0, 1, 2, 3 (CENTER), 4, 5, 6
@@ -339,7 +267,7 @@ export const LineupSection: React.FC<Props> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Check eligibility for playing audio (Section 1 MUST be completely dead)
+  // Check section visibility: mute lineup videos when out of view
   const checkAudioEligibility = useCallback(() => {
     const sec = sectionRef.current;
     if (!sec) return;
@@ -347,15 +275,14 @@ export const LineupSection: React.FC<Props> = ({
     const inView = r.top < window.innerHeight * 0.70 && r.bottom > window.innerHeight * 0.15;
     setIsSectionVisible(inView);
 
-    const eligible = inView && canSec2PlayAudio();
-    setCanPlayAudio(eligible);
-
-    if (!eligible) {
-      // Force mute any playing lineup videos if Section 1 is still active
+    if (!inView) {
       const allVideos = document.querySelectorAll<HTMLVideoElement>('#lineup video');
       allVideos.forEach((v) => {
         v.muted = true;
       });
+      if (getAudioOwner() === 'sec2-lineup') {
+        setAudioOwner('none');
+      }
     }
   }, []);
 
@@ -393,8 +320,6 @@ export const LineupSection: React.FC<Props> = ({
         allVideos.forEach((v) => {
           v.muted = true;
         });
-        setIsSectionAudioMuted(true);
-        setCanPlayAudio(false);
       }
     };
 
@@ -403,8 +328,6 @@ export const LineupSection: React.FC<Props> = ({
       allVideos.forEach((v) => {
         v.muted = true;
       });
-      setIsSectionAudioMuted(true);
-      setCanPlayAudio(false);
     };
 
     window.addEventListener('how:audio-owner-change', handleOwnerChange);
@@ -415,30 +338,6 @@ export const LineupSection: React.FC<Props> = ({
       window.removeEventListener('how:audio-sec2-silenced', handleSec2Silenced);
     };
   }, []);
-
-  // Unlock audio on first natural user interaction anywhere on page
-  useEffect(() => {
-    const unlockOnGesture = () => {
-      setIsAudioUnlocked(true);
-      checkAudioEligibility();
-      window.removeEventListener('pointerdown', unlockOnGesture);
-      window.removeEventListener('touchstart', unlockOnGesture);
-      window.removeEventListener('click', unlockOnGesture);
-      window.removeEventListener('keydown', unlockOnGesture);
-    };
-
-    window.addEventListener('pointerdown', unlockOnGesture, { passive: true });
-    window.addEventListener('touchstart', unlockOnGesture, { passive: true });
-    window.addEventListener('click', unlockOnGesture, { passive: true });
-    window.addEventListener('keydown', unlockOnGesture, { passive: true });
-
-    return () => {
-      window.removeEventListener('pointerdown', unlockOnGesture);
-      window.removeEventListener('touchstart', unlockOnGesture);
-      window.removeEventListener('click', unlockOnGesture);
-      window.removeEventListener('keydown', unlockOnGesture);
-    };
-  }, [checkAudioEligibility]);
 
   // Desktop needs only 1 set (2 cards). Mobile gets 7 repetitions for endless infinite scroll.
   const carouselItems = useMemo(() => {
@@ -648,15 +547,10 @@ export const LineupSection: React.FC<Props> = ({
               cardIndex={index}
               isClone={item.isClone}
               isCardActive={isCardActive}
-              isSectionVisible={isSectionVisible}
-              isSectionAudioMuted={isSectionAudioMuted}
-              isAudioUnlocked={isAudioUnlocked}
-              canPlayAudio={canPlayAudio}
               isMobile={isMobile}
               isFlashing={!!activeFlashes[item.artist.id]}
               onSelectArtist={handleSelectArtist}
               onSelectCard={handleSelectCard}
-              onToggleMute={handleToggleMute}
               onTriggerFlash={triggerFlash}
               onOpenModal={handleOpenModal}
             />

@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { silenceSec1, silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../utils/audioCoordinator';
 
 interface Props {
@@ -21,10 +20,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
   const videoDimRef = useRef<HTMLDivElement | null>(null);
 
   // Audio State & Persistence
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [isSectionVisible, setIsSectionVisible] = useState(false);
-  const [, setIsAudioMuted] = useState(false);
-  const isAudioMutedRef = useRef(false);
+  const isPlayingAudioRef = useRef(false);
   const isSectionVisibleRef = useRef(false);
 
   // Desktop/Tablet Clusters
@@ -236,29 +232,31 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
       const video = photoImgRef.current;
       if (!video) return;
 
-      if (inView && canSec1PlayAudio() && targetProgressRef.current < 0.88) {
-        if (!isAudioMutedRef.current) {
-          silenceSec2();
-          setAudioOwner('sec1-storytelling');
-          video.volume = 0.95;
-          video.muted = false;
-          const playPromise = video.play();
-          if (playPromise !== undefined) {
-            playPromise
-              .then(() => setIsPlayingAudio(true))
-              .catch(() => {
-                // Browser autoplay policy blocked unmuted play without gesture yet
-                video.muted = true;
-                setIsPlayingAudio(false);
-                video.play().catch(() => {});
-              });
-          }
+      // Always guarantee video visuals keep playing continuously in an infinite loop
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+
+      if (inView && canSec1PlayAudio()) {
+        silenceSec2();
+        setAudioOwner('sec1-storytelling');
+        video.volume = 0.95;
+        video.muted = false;
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => { isPlayingAudioRef.current = true; })
+            .catch(() => {
+              // Browser autoplay policy blocked unmuted play without gesture yet
+              video.muted = true;
+              isPlayingAudioRef.current = false;
+              video.play().catch(() => {});
+            });
         }
       } else {
-        // Out of section or transitioning into Section 2: auto-stop sound and pause playback
-        if (!video.paused) video.pause();
+        // Out of section or Section 2 is active: mute audio (keep video looping)
         video.muted = true;
-        setIsPlayingAudio(false);
+        isPlayingAudioRef.current = false;
         if (getAudioOwner() === 'sec1-storytelling') {
           setAudioOwner('none');
         }
@@ -277,28 +275,24 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
         requestTick();
       }
 
-      // Section 1 is considered active for audio ONLY when:
-      // 1. Scrolled comfortably into view (rect.top < 50% viewport)
-      // 2. Section 1 has NOT yet transitioned out (rect.bottom > 50% viewport)
-      // 3. Target progress is below exit cutoff (targetProgress < 0.88)
-      // 4. Section 2 has NOT claimed audio dominance
-      const inView = rect.top < window.innerHeight * 0.50 && 
-                     rect.bottom > window.innerHeight * 0.50 && 
-                     targetProgressRef.current < 0.88 &&
+      // Section 1 is considered active for audio when:
+      // 1. Scrolled into view
+      // 2. Section 1 has NOT yet scrolled completely away
+      // 3. Section 2 has NOT claimed audio dominance
+      const inView = rect.top < window.innerHeight * 0.60 && 
+                     rect.bottom > window.innerHeight * 0.25 && 
                      canSec1PlayAudio();
 
       if (inView !== isSectionVisibleRef.current) {
         isSectionVisibleRef.current = inView;
-        setIsSectionVisible(inView);
         checkAudioPlayback(inView);
-      } else if (!inView && isPlayingAudio) {
-        // Safety guard: immediately mute and stop if no longer valid
+      } else if (!inView && isPlayingAudioRef.current) {
+        // Safety guard: immediately mute if no longer valid
         const video = photoImgRef.current;
         if (video) {
-          if (!video.paused) video.pause();
           video.muted = true;
         }
-        setIsPlayingAudio(false);
+        isPlayingAudioRef.current = false;
         if (getAudioOwner() === 'sec1-storytelling') {
           setAudioOwner('none');
         }
@@ -312,10 +306,9 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const valid = entry.isIntersecting && canSec1PlayAudio() && targetProgressRef.current < 0.88;
+          const valid = entry.isIntersecting && canSec1PlayAudio();
           if (valid !== isSectionVisibleRef.current) {
             isSectionVisibleRef.current = valid;
-            setIsSectionVisible(valid);
             checkAudioPlayback(valid);
           }
           if (entry.isIntersecting) {
@@ -330,22 +323,20 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
       observer.observe(containerRef.current);
     }
 
-    // Global gesture listener: when user clicks, taps, or presses key anywhere, immediately unmute if section is visible!
+    // Global gesture listener: when user scrolls, touches, clicks, or interacts, immediately unmute!
     const unlockOnGesture = () => {
       const video = photoImgRef.current;
       if (
         video && 
         isSectionVisibleRef.current && 
-        !isAudioMutedRef.current && 
-        canSec1PlayAudio() && 
-        targetProgressRef.current < 0.88
+        canSec1PlayAudio()
       ) {
         silenceSec2();
         setAudioOwner('sec1-storytelling');
         video.volume = 0.95;
         video.muted = false;
         video.play()
-          .then(() => setIsPlayingAudio(true))
+          .then(() => { isPlayingAudioRef.current = true; })
           .catch(() => {});
       }
     };
@@ -356,9 +347,8 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
         const video = photoImgRef.current;
         if (video) {
           video.muted = true;
-          if (!video.paused) video.pause();
         }
-        setIsPlayingAudio(false);
+        isPlayingAudioRef.current = false;
       }
     };
 
@@ -366,9 +356,8 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
       const video = photoImgRef.current;
       if (video) {
         video.muted = true;
-        if (!video.paused) video.pause();
       }
-      setIsPlayingAudio(false);
+      isPlayingAudioRef.current = false;
     };
 
     window.addEventListener('how:audio-owner-change', handleOwnerChange);
@@ -378,6 +367,8 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
     window.addEventListener('pointerdown', unlockOnGesture, { passive: true });
     window.addEventListener('touchstart', unlockOnGesture, { passive: true });
     window.addEventListener('keydown', unlockOnGesture, { passive: true });
+    window.addEventListener('wheel', unlockOnGesture, { passive: true });
+    window.addEventListener('scroll', unlockOnGesture, { passive: true });
 
     renderFrame(0);
     requestTick();
@@ -394,53 +385,15 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
       window.removeEventListener('pointerdown', unlockOnGesture);
       window.removeEventListener('touchstart', unlockOnGesture);
       window.removeEventListener('keydown', unlockOnGesture);
+      window.removeEventListener('wheel', unlockOnGesture);
+      window.removeEventListener('scroll', unlockOnGesture);
     };
   }, []);
-
-  const handleToggleSound = useCallback((e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    const video = photoImgRef.current;
-    if (!video) return;
-
-    if (isPlayingAudio && !video.muted) {
-      // User clicked to mute
-      video.muted = true;
-      setIsPlayingAudio(false);
-      setIsAudioMuted(true);
-      isAudioMutedRef.current = true;
-      if (getAudioOwner() === 'sec1-storytelling') {
-        setAudioOwner('none');
-      }
-    } else {
-      // User clicked to unmute & play
-      silenceSec2();
-      setAudioOwner('sec1-storytelling');
-
-      video.volume = 0.95;
-      video.muted = false;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlayingAudio(true);
-            setIsAudioMuted(false);
-            isAudioMutedRef.current = false;
-          })
-          .catch((err) => {
-            console.warn("Recap audio playback error:", err);
-          });
-      } else {
-        setIsPlayingAudio(true);
-        setIsAudioMuted(false);
-        isAudioMutedRef.current = false;
-      }
-    }
-  }, [isPlayingAudio]);
 
   const handleLineupScroll = useCallback(() => {
     // Immediately silence Section 1 before scrolling to Lineup!
     silenceSec1();
-    setIsPlayingAudio(false);
+    isPlayingAudioRef.current = false;
 
     if (onExploreGuests) {
       onExploreGuests();
@@ -575,12 +528,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
 
         {/* GPU-Accelerated Unmasking Canvas */}
         <div ref={gpuCanvasRef} className="storytelling-gpu-canvas">
-          <div
-            className="storytelling-photo-frame"
-            onClick={handleToggleSound}
-            style={{ cursor: 'pointer' }}
-            title={isPlayingAudio ? "Klik untuk bisukan musik" : "Klik untuk putar musik"}
-          >
+          <div className="storytelling-photo-frame">
             <video
               ref={photoImgRef}
               src="/assets/how2026_recap.mp4"
@@ -590,6 +538,12 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
               loop
               playsInline
               preload="auto"
+              onEnded={() => {
+                if (photoImgRef.current) {
+                  photoImgRef.current.currentTime = 0;
+                  photoImgRef.current.play().catch(() => {});
+                }
+              }}
             />
 
             {/* Cinematic Video Dim Overlay (darkens when welcome text appears) */}
@@ -638,19 +592,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
           </span>
           <div className="storytelling-scroll-cue-line" />
         </div>
-
-        {/* Compact Sound Toggle Button (Bottom-Right of Storytelling Section) */}
-        {isSectionVisible && (
-          <button
-            type="button"
-            className={`story-sound-toggle-btn ${isPlayingAudio ? 'is-active' : 'is-muted-hint'}`}
-            onClick={handleToggleSound}
-            aria-label={isPlayingAudio ? "Bisukan suara musik" : "Putar suara musik"}
-            title={isPlayingAudio ? "Klik untuk bisukan musik" : "Klik untuk putar musik"}
-          >
-            {isPlayingAudio ? <Volume2 size={15} /> : <VolumeX size={15} />}
-          </button>
-        )}
       </div>
     </section>
   );
