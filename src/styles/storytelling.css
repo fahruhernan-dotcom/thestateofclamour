@@ -13,7 +13,8 @@
   position: sticky;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
@@ -46,7 +47,8 @@
 .storytelling-gpu-canvas {
   position: absolute;
   inset: 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   height: 100vh;
   height: 100dvh;
   z-index: 10;
@@ -58,7 +60,6 @@
   -webkit-transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  contain: layout paint;
   transition: none; /* Never use transitions on scroll-interpolated variables */
 }
 

@@ -228,6 +228,13 @@ export const LineupSection: React.FC<Props> = ({
   const [activeAudioArtistId, setActiveAudioArtistId] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const recenterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startYRef = useRef(0);
+  const startScrollLeftRef = useRef(0);
+  const hasMovedRef = useRef(false);
+  const startTimeRef = useRef(0);
+  const lastDeltaXRef = useRef(0);
 
   const triggerFlash = useCallback((artistId: string) => {
     setActiveFlashes((prev) => ({ ...prev, [artistId]: true }));
@@ -538,6 +545,96 @@ export const LineupSection: React.FC<Props> = ({
     }
   };
 
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    const el = carouselRef.current;
+    if (!el) return;
+
+    isDraggingRef.current = true;
+    hasMovedRef.current = false;
+    startXRef.current = e.clientX;
+    startYRef.current = e.clientY;
+    startScrollLeftRef.current = el.scrollLeft;
+    startTimeRef.current = performance.now();
+    lastDeltaXRef.current = 0;
+
+    el.style.scrollSnapType = 'none';
+    el.style.scrollBehavior = 'auto';
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const el = carouselRef.current;
+    if (!el) return;
+
+    const deltaX = e.clientX - startXRef.current;
+    const deltaY = e.clientY - startYRef.current;
+
+    if (!hasMovedRef.current) {
+      if (Math.abs(deltaX) > 6 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        hasMovedRef.current = true;
+        try {
+          e.currentTarget.setPointerCapture(e.pointerId);
+        } catch {}
+      } else if (Math.abs(deltaY) > 10 && Math.abs(deltaY) > Math.abs(deltaX)) {
+        isDraggingRef.current = false;
+        el.style.scrollSnapType = isMobile ? 'x mandatory' : '';
+        return;
+      }
+    }
+
+    if (hasMovedRef.current) {
+      lastDeltaXRef.current = deltaX;
+      el.scrollLeft = startScrollLeftRef.current - deltaX;
+    }
+  };
+
+  const finishDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    const el = carouselRef.current;
+
+    try {
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    } catch {}
+
+    if (!el) return;
+
+    const duration = performance.now() - startTimeRef.current;
+    const deltaX = lastDeltaXRef.current;
+    const velocity = deltaX / Math.max(1, duration);
+
+    el.style.scrollSnapType = isMobile ? 'x mandatory' : '';
+    el.style.scrollBehavior = '';
+
+    if (hasMovedRef.current) {
+      if (velocity < -0.35 || deltaX < -45) {
+        handleStepNext();
+      } else if (velocity > 0.35 || deltaX > 45) {
+        handleStepPrev();
+      } else {
+        const closestIdx = getClosestCardIndex();
+        const card = el.children[closestIdx] as HTMLElement | undefined;
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+
+      setTimeout(() => {
+        hasMovedRef.current = false;
+      }, 80);
+    }
+  };
+
+  const handleClickCapture = (e: React.MouseEvent) => {
+    if (hasMovedRef.current) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
+
   return (
     <section id="lineup" ref={sectionRef} className="cinematic-section">
       <div className="section-eyebrow">
@@ -556,6 +653,11 @@ export const LineupSection: React.FC<Props> = ({
       <div
         ref={carouselRef}
         onScroll={handleScroll}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={finishDrag}
+        onPointerCancel={finishDrag}
+        onClickCapture={handleClickCapture}
         className="guests-editorial-grid"
         style={{ marginTop: '2.5rem' }}
       >

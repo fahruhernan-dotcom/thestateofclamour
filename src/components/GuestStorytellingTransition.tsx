@@ -44,17 +44,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
     let isSmallMob = vw < 480;
     let isTab = vw >= 768 && vw < 1024;
 
-    const updateDimensions = () => {
-      vw = window.innerWidth;
-      vh = window.innerHeight;
-      isMob = vw < 768;
-      isSmallMob = vw < 480;
-      isTab = vw >= 768 && vw < 1024;
-      renderFrame(smoothProgressRef.current);
-    };
-
-    window.addEventListener('resize', updateDimensions, { passive: true });
-
     // High performance direct DOM mutation (0ms React Overhead, locked 60/120fps)
     const renderFrame = (progress: number) => {
       // Dimensions
@@ -108,7 +97,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
         stageGlowRef.current.style.opacity = glowOp.toFixed(3);
       }
 
-      // Initial typography fading & drifting (0.0 -> 0.22)
+      // Desktop initial typography fading & drifting (0.0 -> 0.22)
       const op1 = Math.max(0, 1 - progress / 0.20);
       const drift1X = Math.round(-55 * progress);
       const drift1Y = Math.round(-35 * progress);
@@ -154,30 +143,34 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
         scrollCueRef.current.style.opacity = opCue.toFixed(3);
       }
 
-      // Mobile clusters
+      // Mobile clusters — extended smooth fade (0.0 -> 0.30) to eliminate any black dead zone
+      const mobOp1 = Math.max(0, 1 - progress / 0.30);
+      const mobOp4 = Math.max(0, 1 - Math.max(0, progress - 0.04) / 0.30);
+      const mobCueOp = Math.max(0, 1 - progress / 0.18);
+
       if (mobileTopRef.current) {
-        mobileTopRef.current.style.opacity = op1.toFixed(3);
+        mobileTopRef.current.style.opacity = mobOp1.toFixed(3);
         mobileTopRef.current.style.transform = `translate3d(0, ${drift1Y}px, 0)`;
       }
       if (mobileCueRef.current) {
-        mobileCueRef.current.style.opacity = opCue.toFixed(3);
+        mobileCueRef.current.style.opacity = mobCueOp.toFixed(3);
       }
       if (mobileBottomRef.current) {
-        mobileBottomRef.current.style.opacity = op4.toFixed(3);
+        mobileBottomRef.current.style.opacity = mobOp4.toFixed(3);
         mobileBottomRef.current.style.transform = `translate3d(0, ${drift4Y}px, 0)`;
       }
 
-      // Welcome Climax Reveal (Progress 0.36 -> 0.50 -> 0.90)
+      // Welcome Climax Reveal (Progress 0.30 -> 0.46 -> 0.90) seamlessly meeting outgoing dock
       let welcomeOpacity = 0;
-      let welcomeTranslateY = 32;
+      let welcomeTranslateY = 28;
 
-      if (progress < 0.36) {
+      if (progress < 0.30) {
         welcomeOpacity = 0;
-        welcomeTranslateY = 32;
-      } else if (progress < 0.50) {
-        const p = (progress - 0.36) / 0.14;
+        welcomeTranslateY = 28;
+      } else if (progress < 0.46) {
+        const p = (progress - 0.30) / 0.16;
         welcomeOpacity = p;
-        welcomeTranslateY = Math.round(32 * (1 - Math.pow(p, 0.8)));
+        welcomeTranslateY = Math.round(28 * (1 - Math.pow(p, 0.8)));
       } else if (progress <= 0.90) {
         welcomeOpacity = 1;
         welcomeTranslateY = 0;
@@ -199,6 +192,19 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
         videoDimRef.current.style.opacity = dimOpacity.toFixed(3);
       }
     };
+
+    const updateDimensions = () => {
+      vw = window.innerWidth;
+      vh = window.innerHeight;
+      isMob = vw < 768;
+      isSmallMob = vw < 480;
+      isTab = vw >= 768 && vw < 1024;
+      renderFrame(smoothProgressRef.current);
+    };
+
+    window.addEventListener('resize', updateDimensions, { passive: true });
+    // Immediately calculate dimensions and render frame 0 on mount!
+    updateDimensions();
 
     let rafId: number | null = null;
     let isTicking = false;
