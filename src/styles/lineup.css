@@ -1,0 +1,453 @@
+/* 3. SCENE 02: THE GUESTS (KINETIC PARTY ENERGY SPREAD)                      */
+/* ========================================================================== */
+.lineup-filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 2.75rem;
+  flex-wrap: wrap;
+}
+
+.lineup-filter-tab {
+  font-family: var(--font-monumental);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  padding: 0.55rem 1.35rem;
+  border-radius: 9999px;
+  background: rgba(13, 17, 23, 0.7);
+  border: 1px solid var(--color-gold-hairline);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: all 250ms var(--ease-cinematic);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.lineup-filter-tab:hover {
+  border-color: rgba(197, 168, 105, 0.6);
+  color: var(--color-ivory);
+}
+
+.lineup-filter-tab.is-active {
+  background: var(--color-oxblood);
+  border-color: var(--color-gold-antique);
+  color: var(--color-ivory);
+  box-shadow: 0 0 20px var(--color-crimson-glow);
+}
+
+.guests-editorial-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 860px) {
+  .guests-editorial-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+  }
+}
+
+/* Hide infinite carousel clones on desktop screens */
+@media (min-width: 769px) {
+  .guest-card-container.is-clone {
+    display: none !important;
+  }
+}
+
+.guest-card-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-gold-hairline);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: border-color 300ms ease, transform 350ms var(--ease-cinematic), box-shadow 350ms ease;
+  will-change: transform;
+}
+
+.guest-card-container:hover {
+  border-color: rgba(197, 168, 105, 0.55);
+  box-shadow: 0 30px 65px rgba(0, 0, 0, 0.95), 0 0 25px rgba(197, 168, 105, 0.08);
+}
+
+.guest-card-container.is-playing-audio {
+  border-color: var(--color-gold-antique);
+  box-shadow: 0 30px 65px rgba(0, 0, 0, 0.95), 0 0 35px var(--color-crimson-glow);
+}
+
+.guest-portrait-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 720 / 934;
+  max-height: 640px;
+  overflow: hidden;
+  background: #000000;
+}
+
+.guest-portrait-img,
+.guest-portrait-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  transition: transform 650ms var(--ease-cinematic);
+  display: block;
+}
+
+.guest-card-container:hover .guest-portrait-img,
+.guest-card-container:hover .guest-portrait-video {
+  transform: scale(1.035);
+}
+
+.guest-play-overlay-cue {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.9;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.guest-card-container.is-video-active .guest-play-overlay-cue {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.9);
+}
+
+.guest-play-pill-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: rgba(6, 7, 9, 0.75);
+  border: 1px solid rgba(197, 168, 105, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--color-gold-antique);
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+}
+
+/* Strobe Camera Flash Flare */
+.guest-strobe-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(197, 168, 105, 0.4) 40%, transparent 80%);
+  mix-blend-mode: screen;
+  transition: opacity 250ms ease;
+}
+
+.guest-strobe-flash.is-flashing {
+  animation: camera-flash-strobe 450ms ease-out forwards;
+}
+
+@keyframes camera-flash-strobe {
+  0% {
+    opacity: 0.9;
+    filter: brightness(2.2);
+  }
+  35% {
+    opacity: 0.25;
+  }
+  60% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.guest-portrait-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(6, 7, 9, 0.95) 95%);
+}
+
+/* Compact Sound Logo Button (Bottom-Right of Flyer) */
+.guest-flyer-sound-btn {
+  position: absolute;
+  bottom: 1.35rem;
+  right: 1.35rem;
+  z-index: 6;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 7, 9, 0.78);
+  border: 1px solid rgba(197, 168, 105, 0.35);
+  color: var(--color-gold-antique);
+  cursor: pointer;
+  transition: all 0.22s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.guest-flyer-sound-btn:hover {
+  background: rgba(197, 168, 105, 0.2);
+  border-color: var(--color-gold-antique);
+  color: #FFFFFF;
+  transform: scale(1.08);
+}
+
+.guest-flyer-sound-btn.is-active {
+  background: rgba(197, 168, 105, 0.16);
+  border-color: var(--color-gold-antique);
+  color: #FFFFFF;
+  box-shadow: 0 0 12px rgba(197, 168, 105, 0.35);
+}
+
+.guest-flyer-sound-btn.is-muted-hint {
+  animation: pulse-sound-hint 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-sound-hint {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(197, 168, 105, 0);
+    border-color: rgba(197, 168, 105, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(197, 168, 105, 0.45);
+    border-color: var(--color-gold-antique);
+  }
+}
+
+/* Equalizer Bars Animation */
+.equalizer-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 11px;
+}
+
+.equalizer-bars .bar {
+  width: 2px;
+  height: 2px;
+  background: var(--color-gold-antique);
+  border-radius: 1px;
+  transition: height 0.2s ease;
+}
+
+.equalizer-bars.mini {
+  height: 9px;
+  gap: 2px;
+}
+
+.equalizer-bars.mini .bar {
+  width: 2px;
+  height: 2px;
+}
+
+.equalizer-bars .bar-1 {
+  animation: eq-bounce 0.65s ease-in-out infinite alternate;
+}
+.equalizer-bars .bar-2 {
+  animation: eq-bounce 0.85s ease-in-out infinite alternate 0.15s;
+}
+.equalizer-bars .bar-3 {
+  animation: eq-bounce 0.5s ease-in-out infinite alternate 0.3s;
+}
+.equalizer-bars .bar-4 {
+  animation: eq-bounce 0.75s ease-in-out infinite alternate 0.1s;
+}
+
+@keyframes eq-bounce {
+  0% { height: 2px; }
+  100% { height: 10px; }
+}
+
+/* Kicker Row inside Info Pane (Below the Flyer) */
+.guest-card-kicker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+
+.guest-sound-active-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background: rgba(197, 168, 105, 0.16);
+  border: 1px solid rgba(197, 168, 105, 0.45);
+  color: var(--color-gold-antique);
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.guest-card-info-pane {
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  padding: 2rem 1.75rem 1.5rem;
+  text-align: left;
+  z-index: 3;
+}
+
+.guest-day-kicker {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-gold-antique);
+  margin-bottom: 0.35rem;
+}
+
+.guest-artist-name {
+  font-size: 2.2rem;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.guest-performance-meta {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ========================================================================== */
+/* MOBILE CAROUSEL CONTROLS                                                   */
+/* ========================================================================== */
+
+.guest-carousel-mobile-controls {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .guest-carousel-mobile-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+
+  .guest-carousel-navigation-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .guest-carousel-arrow-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(6, 7, 9, 0.75);
+    border: 1px solid rgba(197, 168, 105, 0.35);
+    color: var(--color-gold-antique);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    flex-shrink: 0;
+  }
+
+  .guest-carousel-arrow-btn:active {
+    transform: scale(0.92);
+    background: rgba(197, 168, 105, 0.2);
+    border-color: var(--color-gold-antique);
+    box-shadow: 0 0 12px rgba(197, 168, 105, 0.4);
+  }
+
+  .guest-carousel-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+  }
+
+  .guest-carousel-dot-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 1rem;
+    border-radius: 9999px;
+    background: rgba(6, 7, 9, 0.65);
+    border: 1px solid rgba(197, 168, 105, 0.25);
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .guest-carousel-dot-btn.is-active {
+    background: rgba(197, 168, 105, 0.15);
+    border-color: var(--color-gold-antique);
+    color: #FFFFFF;
+    box-shadow: 0 0 16px rgba(197, 168, 105, 0.25);
+  }
+
+  .guest-carousel-dot-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(197, 168, 105, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .guest-carousel-dot-btn.is-active .guest-carousel-dot-indicator {
+    background: var(--color-gold-antique);
+    box-shadow: 0 0 8px var(--color-gold-antique);
+    transform: scale(1.3);
+  }
+
+  .guest-carousel-swipe-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(197, 168, 105, 0.7);
+  }
+
+  .guest-carousel-swipe-arrow {
+    animation: bounceRight 1.6s infinite ease-in-out;
+  }
+
+  @keyframes bounceRight {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+  }
+}

@@ -1,0 +1,230 @@
+/* 4. SCENE 03: THE PASSAGE (ZERO-COSPLAY ADMISSION DOCUMENT)                 */
+/* ========================================================================== */
+.passage-matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+  .passage-matrix-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .passage-matrix-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.admission-document-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.25rem 1.75rem;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-gold-hairline);
+  border-radius: 4px;
+  text-align: left;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  transition: all 250ms var(--ease-cinematic);
+}
+
+/* Dynamic Foil Specular Light Sweep */
+.card-foil-specular-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    circle 340px at var(--foil-x, 50%) var(--foil-y, 50%),
+    rgba(197, 168, 105, 0.15) 0%,
+    rgba(255, 255, 255, 0.04) 30%,
+    transparent 75%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  transition: opacity 300ms ease;
+}
+
+.admission-document-card:hover .card-foil-specular-layer {
+  opacity: 1;
+}
+
+/* Faint Embossed Watermark Admission Seal */
+.admission-seal-watermark {
+  position: absolute;
+  right: -25px;
+  bottom: 50px;
+  width: 155px;
+  height: 155px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.055;
+  color: var(--color-gold-antique);
+  transform: rotate(-8deg);
+  transition: transform 600ms var(--ease-cinematic), opacity 400ms ease;
+}
+
+.admission-document-card:hover .admission-seal-watermark {
+  transform: rotate(-1deg) scale(1.06);
+  opacity: 0.12;
+}
+
+.admission-document-card.is-active-tier {
+  border-color: rgba(197, 168, 105, 0.55);
+  background: linear-gradient(180deg, rgba(23, 29, 41, 0.85) 0%, rgba(13, 17, 23, 0.95) 100%);
+}
+
+.admission-document-card.is-sold-out {
+  opacity: 0.6;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.admission-document-card.is-spotlighted {
+  animation: ticket-spotlight-pulse 2.5s ease-out forwards;
+}
+
+@keyframes ticket-spotlight-pulse {
+  0% {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    border-color: rgba(197, 168, 105, 0.55);
+  }
+  20%, 45% {
+    box-shadow: 0 0 50px rgba(197, 168, 105, 0.55), 0 0 25px var(--color-crimson-glow);
+    border-color: var(--color-gold-antique);
+    transform: translateY(-8px);
+  }
+  100% {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    border-color: rgba(197, 168, 105, 0.55);
+    transform: translateY(0);
+  }
+}
+
+.admission-category-tag {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.live-allocation-pulse-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-gold-antique);
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #EF4444;
+  box-shadow: 0 0 8px #EF4444;
+  animation: live-dot-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes live-dot-ping {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.4);
+  }
+}
+
+.admission-tier-title {
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 1.25rem;
+  color: var(--color-ivory);
+}
+
+.admission-hairline-sep {
+  height: 1px;
+  background: var(--color-gold-hairline);
+  margin-bottom: 1.5rem;
+}
+
+.admission-price-display {
+  font-family: var(--font-monumental);
+  font-size: 1.65rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--color-ivory);
+  margin-bottom: 1.5rem;
+}
+
+.admission-perks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 2rem;
+  flex-grow: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.admission-perk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.85rem;
+  color: var(--color-ivory-dim);
+  line-height: 1.4;
+}
+
+.admission-action-btn {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  font-family: var(--font-monumental);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--color-oxblood);
+  color: var(--color-ivory);
+  border: 1px solid rgba(143, 29, 36, 0.6);
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.admission-action-btn:hover {
+  background: var(--color-crimson);
+  box-shadow: 0 0 20px var(--color-crimson-glow);
+}
+
+.admission-action-btn.is-disabled {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-dim);
+  cursor: not-allowed;
+}
+
+.admission-auth-guarantee {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ========================================================================== */

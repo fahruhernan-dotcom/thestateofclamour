@@ -1,0 +1,234 @@
+/* THE STATE OF CLAMOUR // DESIGN SYSTEM (RITUALIZED REALISM SPECIFICATION)   */
+/* ========================================================================== */
+
+:root {
+  /* Canvas & Obsidian Depths */
+  --color-void: #060709;
+  --color-midnight: #0D1117;
+  --color-surface-dark: #11151F;
+  --color-surface-card: rgba(17, 21, 31, 0.75);
+
+  /* The Single Signal of Life & Party */
+  --color-oxblood: #5C0D12;
+  --color-crimson: #8F1D24;
+  --color-crimson-glow: rgba(143, 29, 36, 0.35);
+
+  /* Rare Physical Materials (Cast Brass / Embossed Metal) */
+  --color-gold-antique: #C5A869;
+  --color-gold-burnished: #8C6E38;
+  --color-gold-hairline: rgba(197, 168, 105, 0.22);
+  --color-gold-glow: rgba(197, 168, 105, 0.12);
+
+  /* Functional Typography & Hierarchy */
+  --color-ivory: #E9E4DA;
+  --color-ivory-dim: #D1C9BC;
+  --color-muted: #9CA3AF;
+  --color-dim: #4B5563;
+
+  /* Typography Pairing */
+  --font-display-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-monumental: 'Cinzel', serif;
+  --font-editorial: 'Cormorant Garamond', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Easing */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================================================== */
+/* GLOBAL RESET & BASE RULES                                                  */
+/* ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-padding-top: 5rem;
+  background-color: var(--color-void);
+  color-scheme: dark;
+  /* Firefox standard */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(197, 168, 105, 0.32) var(--color-void);
+}
+
+/* Chrome, Edge, Safari & Webkit Browsers */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(197, 168, 105, 0.28);
+  border-radius: 9999px;
+  border: 1px solid rgba(13, 17, 23, 0.6);
+  transition: background 250ms ease, box-shadow 250ms ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(197, 168, 105, 0.65);
+  box-shadow: 0 0 10px rgba(197, 168, 105, 0.35);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--color-gold-antique);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-void);
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-ivory);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Universal Mobile Touch Ergonomics */
+button, a, input, select, textarea, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Prevent accidental text selection on decorative elements */
+.section-eyebrow,
+.nav-brand-title,
+.hero-identity-label,
+.story-mobile-kicker,
+.story-mobile-status,
+.story-welcome-kicker,
+.dossier-doc-stamp {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 35mm Subtle Film Grain Overlay */
+.film-grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Nocturnal Torchlight Ambient Lantern */
+.nocturnal-torchlight {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    circle 480px at var(--torch-x, 50%) var(--torch-y, 50%),
+    rgba(197, 168, 105, 0.038) 0%,
+    rgba(92, 13, 18, 0.02) 40%,
+    transparent 80%
+  );
+  transition: opacity 300ms ease;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-monumental);
+  text-transform: uppercase;
+  color: var(--color-ivory);
+  letter-spacing: 0.15em;
+  font-weight: 600;
+}
+
+.font-editorial {
+  font-family: var(--font-editorial);
+  font-style: italic;
+}
+
+.text-gold-metallic {
+  background: linear-gradient(180deg, #F5E8C7 0%, #C5A869 55%, #8C6E38 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-subtle {
+  color: var(--color-gold-antique);
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--color-gold-antique);
+  margin-bottom: 0.85rem;
+}
+
+.section-headline {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+}
+
+.section-subheadline {
+  font-family: var(--font-editorial);
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-style: italic;
+  color: var(--color-ivory-dim);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.section-body-text {
+  max-width: 640px;
+  margin-inline: auto;
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  line-height: 1.7;
+  margin-bottom: 3.5rem;
+}
+
+/* Layout Containers */
+.cinematic-section {
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: 6.5rem 1.5rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .cinematic-section {
+    padding: 8rem 2.5rem;
+  }
+}
+
+/* Micro-interaction Button State */
+.btn-press {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 160ms var(--ease-cinematic), background-color 200ms ease, border-color 200ms ease, opacity 200ms ease, box-shadow 200ms ease;
+}
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* ========================================================================== */

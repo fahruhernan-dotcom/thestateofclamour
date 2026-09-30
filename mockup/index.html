@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECHO VOID // 2026 Nightlife & DJ Festival</title>
+  <meta name="description" content="Indonesia's underground music & rave festival. Two nights of heavy bass, acid techno and visual ecstasy in Yogyakarta.">
+  
+  <!-- Fonts: Syne (Brutalist display) + Space Grotesk (Tech mono/sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --void-abyss: #050308;
+      --void-surface: #0D0B12;
+      --void-elevated: #16131F;
+      --border-hairline: rgba(255, 255, 255, 0.12);
+      
+      --accent-volt: #CCFF00;
+      --accent-volt-glow: rgba(204, 255, 0, 0.4);
+      --accent-violet: #8B5CF6;
+      --accent-violet-glow: rgba(139, 92, 246, 0.35);
+      --accent-crimson: #FF1744;
+      --accent-cyan: #00F0FF;
+
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--void-abyss);
+      color: var(--text-primary);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    .font-syne {
+      font-family: 'Syne', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Apple-grade Physical Pressed State */
+    button, .btn-press {
+      cursor: pointer;
+      user-select: none;
+      transition: transform 120ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms ease, background-color 150ms ease;
+    }
+    button:active, .btn-press:active {
+      transform: scale(0.97);
+    }
+
+    /* Top Emergency Announcement Marquee */
+    #announcement-bar {
+      transition: max-height 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms ease;
+      overflow: hidden;
+      background: linear-gradient(90deg, #17080a 0%, #2a0b12 50%, #17080a 100%);
+      border-bottom: 1px solid rgba(255, 23, 68, 0.35);
+    }
+    #announcement-bar.hidden-bar {
+      max-height: 0 !important;
+      opacity: 0 !important;
+      border: none !important;
+    }
+
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Floating Glass Pill Navbar (Carnaval of Screams + Apple Design) */
+    .floating-header {
+      position: fixed;
+      top: 2rem;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .glass-pill {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.35rem 0.5rem;
+      background: rgba(13, 11, 18, 0.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.7), 0 0 40px -10px rgba(139, 92, 246, 0.25);
+    }
+    .glass-nav-link {
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.45rem 1rem;
+      border-radius: 9999px;
+      transition: all 180ms ease;
+    }
+    .glass-nav-link:hover, .glass-nav-link.active {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .admin-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #CCFF00;
+      color: #050308;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      box-shadow: 0 0 20px -3px rgba(204, 255, 0, 0.6);
+      transition: all 150ms ease;
+    }
+    .admin-pill-badge:hover {
+      box-shadow: 0 0 28px 0px rgba(204, 255, 0, 0.9);
+      transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .hero-container {
+      position: relative;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 1.5rem 4rem;
+      overflow: hidden;
+    }
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.65) contrast(1.1);
+    }
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(circle at 50% 45%, transparent 20%, rgba(5, 3, 8, 0.85) 85%),
+                  linear-gradient(to bottom, rgba(5,3,8,0.5) 0%, transparent 40%, rgba(5,3,8,1) 98%);
+    }
+
+    /* Laser light animation canvas */
+    #laserCanvas {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* Glow CTAs */
+    .btn-volt {
+      background-color: var(--accent-volt);
+      color: #050308;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      padding: 1rem 2.5rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 0 40px -5px var(--accent-volt-glow);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-volt:hover {
+      box-shadow: 0 0 60px 0px var(--accent-volt);
+      transform: translateY(-2px);
+    }
+
+    /* Guest Stars & DJ Cards 9:16 Aspect Ratio */
+    .dj-card {
+      position: relative;
+      background: var(--void-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dj-card:hover {
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.3);
+    }
+    .dj-poster-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      background: #110e17;
+    }
+    .dj-poster-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 400ms ease;
+    }
+    .dj-card:hover .dj-poster-img {
+      transform: scale(1.04);
+    }
+
+    /* Ticket Pass Panels */
+    .pass-panel {
+      position: relative;
+      background: var(--void-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .pass-panel.active-tier {
+      border-color: rgba(204, 255, 0, 0.5);
+      box-shadow: 0 10px 40px -10px rgba(204, 255, 0, 0.2);
+    }
+    .pass-panel.sold-out-tier {
+      opacity: 0.45;
+      filter: grayscale(40%);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    .pass-panel.sold-out-tier .ticket-cta {
+      pointer-events: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Audio Preview Equalizer Animation */
+    .equalizer-bar {
+      display: inline-block;
+      width: 3px;
+      background: var(--accent-volt);
+      border-radius: 2px;
+      margin: 0 1px;
+      height: 12px;
+    }
+    .playing .eq-1 { animation: eqJump 0.4s ease-in-out infinite alternate; }
+    .playing .eq-2 { animation: eqJump 0.3s ease-in-out infinite 0.1s alternate; }
+    .playing .eq-3 { animation: eqJump 0.5s ease-in-out infinite 0.2s alternate; }
+    @keyframes eqJump {
+      0% { height: 4px; }
+      100% { height: 16px; }
+    }
+
+    /* Slide-over Drawer for Admin Console */
+    #admin-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 250ms ease;
+    }
+    #admin-drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #admin-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(92vw, 480px);
+      background: #0C0A10;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: -15px 0 50px rgba(0, 0, 0, 0.85);
+      z-index: 101;
+      transform: translateX(100%);
+      transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    #admin-drawer.open {
+      transform: translateX(0%);
+    }
+
+    /* Toggle Switches in Admin */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #27272a;
+      transition: .2s;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
+    input:checked + .toggle-slider {
+      background-color: var(--accent-volt);
+    }
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+      background-color: #050308;
+    }
+
+    /* Toast Notification */
+    #live-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #171420;
+      color: white;
+      border: 1px solid var(--accent-volt);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 25px -5px var(--accent-volt-glow);
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 150;
+      transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+    #live-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Top Emergency / Flash Announcement Bar (Dynamic from Admin) -->
+  <div id="announcement-bar" style="max-height: 48px;">
+    <div style="overflow: hidden; padding: 0.5rem 0;">
+      <div class="marquee-track font-mono text-xs" style="color: #FF859A; gap: 4rem;">
+        <span id="announcement-text-1">⚡ FLASH ALERT: PRESALE 1 TICKETS AT 85% CAPACITY · REMAINING 42 PASSES · GATE OPENS 20:00 WIB</span>
+        <span id="announcement-text-2">⚡ FLASH ALERT: PRESALE 1 TICKETS AT 85% CAPACITY · REMAINING 42 PASSES · GATE OPENS 20:00 WIB</span>
+        <span id="announcement-text-3">⚡ FLASH ALERT: PRESALE 1 TICKETS AT 85% CAPACITY · REMAINING 42 PASSES · GATE OPENS 20:00 WIB</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Floating Glass Pill Navbar (Carnaval of Screams + Apple Design) -->
+  <header class="floating-header">
+    <div class="glass-pill">
+      <a href="#hero" class="glass-nav-link active">Home</a>
+      <a href="#lineup" class="glass-nav-link">Lineup</a>
+      <a href="#tickets" class="glass-nav-link">Tickets</a>
+      <a href="#rundown" class="glass-nav-link">Rundown</a>
+      <a href="#rules" class="glass-nav-link">Rules</a>
+      <button id="open-admin-btn" class="admin-pill-badge btn-press" title="Open Dynamic CMS Controller">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span>ADMIN CMS</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 3. Hero Section -->
+  <section id="hero" class="hero-container">
+    <div class="hero-media" style="background-image: url('assets/hero_bg.jpg');"></div>
+    <canvas id="laserCanvas"></canvas>
+    <div class="hero-vignette"></div>
+
+    <div style="position: relative; z-index: 10; max-width: 900px; margin: auto;">
+      <!-- Eyebrow (1 per 3 sections as per taste rules) -->
+      <p class="font-mono" style="font-size: 0.8rem; letter-spacing: 0.35em; color: var(--accent-volt); text-transform: uppercase; margin-bottom: 1.25rem;">
+        INDONESIA'S GREATEST UNDERGROUND RAVE
+      </p>
+
+      <h1 id="event-display-title" class="font-syne" style="font-size: clamp(2.5rem, 7vw, 5.5rem); font-weight: 900; line-height: 0.95; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 1.5rem; text-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+        ECHO VOID<br>
+        <span style="color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,0.85);">VOL. 01</span>
+      </h1>
+
+      <p id="event-display-date" class="font-syne" style="font-size: clamp(1rem, 2.2vw, 1.4rem); letter-spacing: 0.15em; color: rgba(255,255,255,0.9); margin-bottom: 0.5rem;">
+        30<sup style="font-size: 0.6em;">TH</sup> – 31<sup style="font-size: 0.6em;">ST</sup> OCTOBER 2026
+      </p>
+
+      <p class="font-mono" style="font-size: 0.85rem; letter-spacing: 0.25em; color: var(--text-secondary); margin-bottom: 2.5rem;">
+        JEC EXPO CENTER · YOGYAKARTA, INDONESIA
+      </p>
+
+      <!-- Live Dynamic Countdown -->
+      <div style="display: inline-flex; gap: 1rem; margin-bottom: 3rem; background: rgba(13, 11, 18, 0.65); backdrop-filter: blur(12px); padding: 0.8rem 1.6rem; border-radius: 9999px; border: 1px solid var(--border-hairline);">
+        <div style="text-align: center;">
+          <div id="cnt-days" class="font-mono" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-volt);">14</div>
+          <div style="font-size: 0.6rem; letter-spacing: 0.15em; color: var(--text-secondary);">DAYS</div>
+        </div>
+        <span style="color: rgba(255,255,255,0.2); font-weight: 300;">:</span>
+        <div style="text-align: center;">
+          <div id="cnt-hours" class="font-mono" style="font-size: 1.2rem; font-weight: 700; color: white;">08</div>
+          <div style="font-size: 0.6rem; letter-spacing: 0.15em; color: var(--text-secondary);">HRS</div>
+        </div>
+        <span style="color: rgba(255,255,255,0.2); font-weight: 300;">:</span>
+        <div style="text-align: center;">
+          <div id="cnt-mins" class="font-mono" style="font-size: 1.2rem; font-weight: 700; color: white;">32</div>
+          <div style="font-size: 0.6rem; letter-spacing: 0.15em; color: var(--text-secondary);">MINS</div>
+        </div>
+        <span style="color: rgba(255,255,255,0.2); font-weight: 300;">:</span>
+        <div style="text-align: center;">
+          <div id="cnt-secs" class="font-mono" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-crimson);">45</div>
+          <div style="font-size: 0.6rem; letter-spacing: 0.15em; color: var(--text-secondary);">SECS</div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div>
+        <a href="#tickets" class="btn-volt btn-press">
+          <span>GET YOUR TICKETS</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Guest Stars & DJ Lineup Section (With Audio Synthesizer Preview!) -->
+  <section id="lineup" style="position: relative; z-index: 10; padding: 7rem 1.5rem; max-width: 1200px; margin: auto;">
+    <div style="text-align: center; margin-bottom: 4rem;">
+      <p class="font-mono" style="font-size: 0.75rem; letter-spacing: 0.3em; color: var(--text-secondary); text-transform: uppercase;">
+        ACOUSTIC CARNAGE // LINEUP
+      </p>
+      <h2 class="font-syne" style="font-size: clamp(2rem, 5vw, 3.8rem); font-weight: 800; letter-spacing: -0.01em; margin-top: 0.5rem; text-transform: uppercase;">
+        HEADLINERS & SELECTORS
+      </h2>
+      <p style="color: var(--text-secondary); max-width: 50ch; margin: 1rem auto 2.5rem; font-size: 0.95rem;">
+        Click the play button on any artist to preview their signature sound live in your browser.
+      </p>
+
+      <!-- Day Filters -->
+      <div style="display: inline-flex; background: var(--void-surface); border: 1px solid var(--border-hairline); padding: 0.3rem; border-radius: 9999px;">
+        <button class="filter-btn active btn-press" data-filter="all" style="background: rgba(255,255,255,0.12); color: white; border: none; border-radius: 9999px; padding: 0.4rem 1.2rem; font-size: 0.8rem; font-weight: 600;">ALL DAYS</button>
+        <button class="filter-btn btn-press" data-filter="day1" style="background: transparent; color: var(--text-secondary); border: none; border-radius: 9999px; padding: 0.4rem 1.2rem; font-size: 0.8rem; font-weight: 600;">DAY 1 (30 OCT)</button>
+        <button class="filter-btn btn-press" data-filter="day2" style="background: transparent; color: var(--text-secondary); border: none; border-radius: 9999px; padding: 0.4rem 1.2rem; font-size: 0.8rem; font-weight: 600;">DAY 2 (31 OCT)</button>
+      </div>
+    </div>
+
+    <!-- DJ Cards Grid (9:16 Aspect Ratio) -->
+    <div id="dj-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem;">
+      
+      <!-- Artist 1 -->
+      <article class="dj-card" data-day="day1">
+        <div class="dj-poster-wrap">
+          <img src="assets/dj_basboi.jpg" alt="Basboi" class="dj-poster-img">
+          <!-- Audio Play Overlay Button -->
+          <button class="audio-preview-btn btn-press" data-sound="bounce" style="position: absolute; bottom: 1rem; right: 1rem; width: 44px; height: 44px; border-radius: 50%; background: rgba(13, 11, 18, 0.85); backdrop-filter: blur(8px); border: 1px solid var(--accent-volt); color: var(--accent-volt); display: flex; align-items: center; justify-content: center;">
+            <svg class="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <div class="equalizer" style="display: none;">
+              <span class="equalizer-bar eq-1"></span>
+              <span class="equalizer-bar eq-2"></span>
+              <span class="equalizer-bar eq-3"></span>
+            </div>
+          </button>
+          <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(5,3,8,0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.7rem; font-family: 'JetBrains Mono';">
+            DAY 1 · 22:30 WIB
+          </div>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem;">
+            <h3 class="font-syne artist-name" style="font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em;">BASBOI</h3>
+            <span style="font-size: 0.7rem; color: var(--accent-cyan); font-family: 'JetBrains Mono';">#INDOBOUNCE</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">The Main Void Stage · High-voltage hip-hop meets rave breakbeats.</p>
+        </div>
+      </article>
+
+      <!-- Artist 2 -->
+      <article class="dj-card" data-day="day2">
+        <div class="dj-poster-wrap">
+          <img src="assets/dj_techno.jpg" alt="Elena Vex" class="dj-poster-img">
+          <!-- Audio Play Overlay Button -->
+          <button class="audio-preview-btn btn-press" data-sound="techno" style="position: absolute; bottom: 1rem; right: 1rem; width: 44px; height: 44px; border-radius: 50%; background: rgba(13, 11, 18, 0.85); backdrop-filter: blur(8px); border: 1px solid var(--accent-volt); color: var(--accent-volt); display: flex; align-items: center; justify-content: center;">
+            <svg class="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <div class="equalizer" style="display: none;">
+              <span class="equalizer-bar eq-1"></span>
+              <span class="equalizer-bar eq-2"></span>
+              <span class="equalizer-bar eq-3"></span>
+            </div>
+          </button>
+          <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(5,3,8,0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.7rem; font-family: 'JetBrains Mono';">
+            DAY 2 · 00:00 WIB
+          </div>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem;">
+            <h3 class="font-syne artist-name" style="font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em;">ELENA VEX</h3>
+            <span style="font-size: 0.7rem; color: var(--accent-volt); font-family: 'JetBrains Mono';">#HARDTECHNO</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">The Sub-Bunker · Industrial 145 BPM driving acid synthesis.</p>
+        </div>
+      </article>
+
+      <!-- Artist 3 -->
+      <article class="dj-card" data-day="day1">
+        <div class="dj-poster-wrap" style="background: linear-gradient(180deg, #1f112e 0%, #0d0b12 100%); display: flex; align-items: center; justify-content: center;">
+          <div style="text-align: center; padding: 2rem;">
+            <div class="font-syne" style="font-size: 3rem; color: rgba(255,255,255,0.15); font-weight: 900;">???</div>
+            <p class="font-mono" style="font-size: 0.75rem; letter-spacing: 0.2em; color: var(--accent-violet);">SECRET GUEST</p>
+          </div>
+          <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(5,3,8,0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.7rem; font-family: 'JetBrains Mono';">
+            DAY 1 · 01:30 WIB
+          </div>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem;">
+            <h3 class="font-syne artist-name" style="font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em;">PHASE 2 HEADLINER</h3>
+            <span style="font-size: 0.7rem; color: var(--text-muted); font-family: 'JetBrains Mono';">UNANNOUNCED</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">Drops on Instagram when Presale 1 reaches 100% sold out.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 5. Tickets & Passes Section (Dynamic Matrix) -->
+  <section id="tickets" style="position: relative; z-index: 10; padding: 7rem 1.5rem; max-width: 1200px; margin: auto;">
+    <div style="text-align: center; margin-bottom: 4rem;">
+      <p class="font-mono" style="font-size: 0.75rem; letter-spacing: 0.3em; color: var(--text-secondary); text-transform: uppercase;">
+        OFFICIAL ADMISSION
+      </p>
+      <h2 class="font-syne" style="font-size: clamp(2rem, 5vw, 3.8rem); font-weight: 800; letter-spacing: -0.01em; margin-top: 0.5rem; text-transform: uppercase;">
+        TICKET PASSES
+      </h2>
+      <p style="color: var(--text-secondary); max-width: 60ch; margin: 1rem auto 0; font-size: 0.95rem;">
+        Choose your admission into the void. 1-Day Passes give access to single dates; Weekend Passes cover all 48 hours.
+      </p>
+    </div>
+
+    <!-- Ticket Cards Matrix -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.75rem;">
+
+      <!-- Ticket 1: Blind Ticket (Sold Out) -->
+      <article id="ticket-card-blind" class="pass-panel sold-out-tier">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <span class="font-mono" style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--text-secondary);">1 DAY PASS</span>
+          <span class="badge-status font-mono" style="font-size: 0.7rem; background: rgba(255,23,68,0.15); color: var(--accent-crimson); border: 1px solid rgba(255,23,68,0.3); padding: 0.2rem 0.6rem; border-radius: 9999px;">SOLD OUT</span>
+        </div>
+        <h3 class="font-syne ticket-title" style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem;">BLIND TICKET</h3>
+        <div class="ticket-price font-mono" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">Rp75.000</div>
+        <p class="ticket-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
+          Blind trust admission released before artist announcement.
+        </p>
+        <button class="ticket-cta btn-press" disabled style="width: 100%; padding: 0.85rem; border-radius: 9999px; border: 1px solid var(--border-hairline); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">
+          SOLD OUT
+        </button>
+      </article>
+
+      <!-- Ticket 2: Early Bird (Sold Out) -->
+      <article id="ticket-card-early" class="pass-panel sold-out-tier">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <span class="font-mono" style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--text-secondary);">2 DAYS PASS</span>
+          <span class="badge-status font-mono" style="font-size: 0.7rem; background: rgba(255,23,68,0.15); color: var(--accent-crimson); border: 1px solid rgba(255,23,68,0.3); padding: 0.2rem 0.6rem; border-radius: 9999px;">SOLD OUT</span>
+        </div>
+        <h3 class="font-syne ticket-title" style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem;">EARLY BIRD</h3>
+        <div class="ticket-price font-mono" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">Rp99.000</div>
+        <p class="ticket-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
+          Access to both nights with priority entry lane before 21:00.
+        </p>
+        <button class="ticket-cta btn-press" disabled style="width: 100%; padding: 0.85rem; border-radius: 9999px; border: 1px solid var(--border-hairline); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">
+          SOLD OUT
+        </button>
+      </article>
+
+      <!-- Ticket 3: Presale 1 (CURRENTLY ACTIVE) -->
+      <article id="ticket-card-presale1" class="pass-panel active-tier">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <span class="font-mono" style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-volt);">2 DAYS PASS</span>
+          <span class="badge-status font-mono" style="font-size: 0.7rem; background: rgba(204,255,0,0.15); color: var(--accent-volt); border: 1px solid var(--accent-volt); padding: 0.2rem 0.6rem; border-radius: 9999px; display: inline-flex; align-items: center; gap: 0.3rem;">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-volt); display: inline-block;"></span>
+            SELLING FAST
+          </span>
+        </div>
+        <h3 class="font-syne ticket-title" style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem;">PRESALE 1</h3>
+        <div class="ticket-price font-mono" style="font-size: 1.5rem; font-weight: 700; color: var(--accent-volt); margin-bottom: 1rem;">Rp129.000</div>
+        <p class="ticket-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
+          General admission 2-day pass. Free flow signature welcome cocktail before 21:30.
+        </p>
+        <button class="ticket-cta btn-press" onclick="handleTicketCheckout('Presale 1')" style="width: 100%; padding: 0.85rem; border-radius: 9999px; background: white; color: black; border: none; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">
+          GET TICKETS
+        </button>
+      </article>
+
+      <!-- Ticket 4: VIP Sofa Table -->
+      <article id="ticket-card-vip" class="pass-panel" style="border-color: rgba(139, 92, 246, 0.4);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <span class="font-mono" style="font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-cyan);">VIP EXPERIENCE</span>
+          <span class="badge-status font-mono" style="font-size: 0.7rem; background: rgba(0,240,255,0.15); color: var(--accent-cyan); border: 1px solid rgba(0,240,255,0.3); padding: 0.2rem 0.6rem; border-radius: 9999px;">LIMITED TABLES</span>
+        </div>
+        <h3 class="font-syne ticket-title" style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem;">VIP SOFA & TABLE</h3>
+        <div class="ticket-price font-mono" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">Rp2.500.000</div>
+        <p class="ticket-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
+          Includes entry for 6 guests, dedicated server, 2 premium spirit bottles, and elevated stage view.
+        </p>
+        <button class="ticket-cta btn-press" onclick="handleTicketCheckout('VIP Table')" style="width: 100%; padding: 0.85rem; border-radius: 9999px; background: transparent; color: white; border: 1px solid rgba(255,255,255,0.4); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">
+          RESERVE VIA WA
+        </button>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 6. Stage Rundown (Clashfinder) -->
+  <section id="rundown" style="position: relative; z-index: 10; padding: 5rem 1.5rem; max-width: 900px; margin: auto;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h2 class="font-syne" style="font-size: 2.5rem; font-weight: 800; text-transform: uppercase;">STAGE RUNDOWN</h2>
+      <p style="color: var(--text-secondary); font-size: 0.9rem;">Plan your movement between the Main Void and Sub-Bunker stages.</p>
+    </div>
+
+    <div style="background: var(--void-surface); border: 1px solid var(--border-hairline); border-radius: 16px; overflow: hidden;">
+      <div style="display: grid; grid-template-columns: 120px 1fr 1fr; border-bottom: 1px solid var(--border-hairline); padding: 1rem 1.5rem; background: rgba(255,255,255,0.02); font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--text-secondary);">
+        <span>TIME (WIB)</span>
+        <span>MAIN VOID STAGE</span>
+        <span>SUB-BUNKER STAGE</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 120px 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 1.2rem 1.5rem; font-size: 0.9rem;">
+        <span class="font-mono" style="color: var(--accent-volt); font-size: 0.85rem;">20:00 - 21:30</span>
+        <span style="font-weight: 600;">Opening Ambient Beats</span>
+        <span style="color: var(--text-secondary);">Warm-up Soundscape</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 120px 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 1.2rem 1.5rem; font-size: 0.9rem; background: rgba(139,92,246,0.04);">
+        <span class="font-mono" style="color: var(--accent-volt); font-size: 0.85rem;">21:30 - 23:00</span>
+        <span style="font-weight: 600; color: white;">Whisnu Santika</span>
+        <span style="color: var(--accent-cyan);">Raw Techno Selector</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 120px 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 1.2rem 1.5rem; font-size: 0.9rem; background: rgba(204,255,0,0.04);">
+        <span class="font-mono" style="color: var(--accent-volt); font-size: 0.85rem;">23:00 - 00:30</span>
+        <span style="font-weight: 700; color: var(--accent-volt);">Basboi (Live Set)</span>
+        <span style="font-weight: 600; color: white;">Elena Vex (145 BPM)</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 120px 1fr 1fr; padding: 1.2rem 1.5rem; font-size: 0.9rem;">
+        <span class="font-mono" style="color: var(--accent-crimson); font-size: 0.85rem;">00:30 - LATE</span>
+        <span style="font-weight: 600;">Secret B2B Session</span>
+        <span style="color: var(--text-secondary);">Dark Hardcore Bunker</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Festival Rules & FAQ Accordion -->
+  <section id="rules" style="position: relative; z-index: 10; padding: 5rem 1.5rem 8rem; max-width: 800px; margin: auto;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h2 class="font-syne" style="font-size: 2.2rem; font-weight: 800; text-transform: uppercase;">PARTY RULES & POLICIES</h2>
+      <p style="color: var(--text-secondary); font-size: 0.85rem;">Read carefully before stepping through the gates.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <details style="background: var(--void-surface); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 1.25rem; cursor: pointer;">
+        <summary style="font-weight: 600; color: white;">What is the age restriction for entry?</summary>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.8rem; line-height: 1.6;">
+          ECHO VOID is strictly an 18+ event. A valid physical ID (KTP / Driver's License / Passport) is required for wristband exchange. No digital photos of IDs allowed.
+        </p>
+      </details>
+
+      <details style="background: var(--void-surface); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 1.25rem; cursor: pointer;">
+        <summary style="font-weight: 600; color: white;">What is the dress code?</summary>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.8rem; line-height: 1.6;">
+          Underground rave, all-black cyberpunk, or expressive Y2K festival aesthetic. No flip-flops or sports jerseys for security and dancefloor safety.
+        </p>
+      </details>
+
+      <details style="background: var(--void-surface); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 1.25rem; cursor: pointer;">
+        <summary style="font-weight: 600; color: white;">What items are prohibited?</summary>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.8rem; line-height: 1.6;">
+          Illegal substances/drugs (Zero tolerance policy), weapons, liquids from outside, professional DSLRs without media credentials, and laser pointers.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- 8. Footer -->
+  <footer style="border-top: 1px solid var(--border-hairline); padding: 3rem 1.5rem; text-align: center; color: var(--text-secondary); font-size: 0.8rem;">
+    <p class="font-syne" style="font-size: 1.2rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">ECHO VOID // FESTIVAL</p>
+    <p style="margin-bottom: 1.5rem;">© 2026 Echo Void Event Organizer. Powered by Dynamic Headless Supabase Architecture.</p>
+    <div style="display: flex; justify-content: center; gap: 1.5rem;">
+      <a href="#" style="color: var(--text-secondary); text-decoration: none;">Instagram</a>
+      <a href="#" style="color: var(--text-secondary); text-decoration: none;">TikTok</a>
+      <a href="#" style="color: var(--text-secondary); text-decoration: none;">Spotify Playlist</a>
+      <a href="#" style="color: var(--text-secondary); text-decoration: none;">Artatix Partner</a>
+    </div>
+  </footer>
+
+  <!-- ======================================================== -->
+  <!-- 9. INTERACTIVE ADMIN CMS DRAWER SIMULATOR                 -->
+  <!-- ======================================================== -->
+  <div id="admin-drawer-backdrop"></div>
+  <aside id="admin-drawer">
+    <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center; background: #120F1A;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-volt); box-shadow: 0 0 10px var(--accent-volt);"></span>
+          <h3 class="font-syne" style="font-size: 1.1rem; font-weight: 800; letter-spacing: 0.05em;">ADMIN CONSOLE</h3>
+        </div>
+        <p class="font-mono" style="font-size: 0.7rem; color: var(--accent-cyan); margin-top: 0.2rem;">
+          🛡️ WHITELIST SECURED · SUPER ADMIN
+        </p>
+      </div>
+      <button id="close-admin-btn" class="btn-press" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">✕</button>
+    </div>
+
+    <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 2rem;">
+
+      <!-- Controller Section 1: Ticket Status Switcher (The Hero Feature) -->
+      <div style="background: var(--void-surface); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h4 class="font-syne" style="font-size: 0.95rem; font-weight: 700;">TICKET PASSES CONTROLLER</h4>
+          <span class="font-mono" style="font-size: 0.65rem; color: var(--accent-volt);">LIVE SYNC</span>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+          Toggle a switch to change availability on the live site instantly.
+        </p>
+
+        <!-- Ticket 1 Control -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <div>
+            <div style="font-size: 0.85rem; font-weight: 600;">Presale 1 (Rp129.000)</div>
+            <div id="admin-presale-status-label" class="font-mono" style="font-size: 0.7rem; color: var(--accent-volt);">Status: ACTIVE</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-presale1" checked onchange="toggleTicketTier('presale1', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- Ticket 2 Control -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <div>
+            <div style="font-size: 0.85rem; font-weight: 600;">Early Bird (Rp99.000)</div>
+            <div id="admin-early-status-label" class="font-mono" style="font-size: 0.7rem; color: var(--accent-crimson);">Status: SOLD OUT</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-earlybird" onchange="toggleTicketTier('early', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- Ticket 3 Control -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0;">
+          <div>
+            <div style="font-size: 0.85rem; font-weight: 600;">Blind Ticket (Rp75.000)</div>
+            <div id="admin-blind-status-label" class="font-mono" style="font-size: 0.7rem; color: var(--accent-crimson);">Status: SOLD OUT</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-blind" onchange="toggleTicketTier('blind', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Controller Section 2: Top Announcement Bar -->
+      <div style="background: var(--void-surface); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+          <h4 class="font-syne" style="font-size: 0.95rem; font-weight: 700;">LIVE BROADCAST TICKER</h4>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-announcement" checked onchange="toggleAnnouncementBar(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+          Broadcast emergency messages, rundown changes, or quota alerts.
+        </p>
+        <textarea id="admin-announcement-input" rows="2" style="width: 100%; background: #050308; border: 1px solid var(--border-hairline); border-radius: 8px; color: white; padding: 0.5rem; font-size: 0.8rem; font-family: 'JetBrains Mono'; resize: none;" oninput="updateAnnouncementText(this.value)">⚡ FLASH ALERT: PRESALE 1 TICKETS AT 85% CAPACITY · REMAINING 42 PASSES · GATE OPENS 20:00 WIB</textarea>
+      </div>
+
+      <!-- Controller Section 3: Event Info Customizer -->
+      <div style="background: var(--void-surface); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 1.25rem;">
+        <h4 class="font-syne" style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.8rem;">EVENT HEADLINE CONFIG</h4>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div>
+            <label class="font-mono" style="font-size: 0.7rem; color: var(--text-secondary);">EVENT TITLE</label>
+            <input type="text" id="admin-event-title" value="ECHO VOID // VOL. 01" style="width: 100%; background: #050308; border: 1px solid var(--border-hairline); border-radius: 8px; color: white; padding: 0.5rem; font-size: 0.85rem;" oninput="updateEventTitle(this.value)">
+          </div>
+          <div>
+            <label class="font-mono" style="font-size: 0.7rem; color: var(--text-secondary);">EVENT DATES</label>
+            <input type="text" id="admin-event-date" value="30TH – 31ST OCTOBER 2026" style="width: 100%; background: #050308; border: 1px solid var(--border-hairline); border-radius: 8px; color: white; padding: 0.5rem; font-size: 0.85rem;" oninput="updateEventDate(this.value)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Controller Section 4: Supabase Whitelist Security Simulator -->
+      <div style="background: var(--void-surface); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 12px; padding: 1.25rem;">
+        <h4 class="font-syne" style="font-size: 0.95rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.4rem;">
+          SUPABASE WHITELIST GATE
+        </h4>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Test the security filter: Only whitelisted EO emails get access.
+        </p>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <input type="email" id="test-email-input" placeholder="unauthorized@gmail.com" style="flex: 1; background: #050308; border: 1px solid var(--border-hairline); border-radius: 8px; color: white; padding: 0.4rem 0.6rem; font-size: 0.8rem;">
+          <button class="btn-press" onclick="testWhitelistAuth()" style="background: var(--accent-cyan); color: black; font-weight: 700; border: none; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.75rem;">
+            TEST AUTH
+          </button>
+        </div>
+        <div id="whitelist-test-result" style="margin-top: 0.6rem; font-size: 0.75rem; font-family: 'JetBrains Mono';"></div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- 10. Floating Toast Feedback -->
+  <div id="live-toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="color: var(--accent-volt);"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toast-message">Database updated & Landing page synced!</span>
+  </div>
+
+  <!-- JavaScript Logic for Physical Feedback, Sound Synthesis & Live Synchronization -->
+  <script>
+    // --- 1. Sound Synthesizer via Web Audio API (Apple-grade interactive audio) ---
+    let audioCtx = null;
+    let currentOsc = null;
+    let isPlayingAudio = false;
+
+    function playSynthesizedBeat(soundType, buttonEl) {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      // If already playing on this button, stop
+      if (buttonEl.classList.contains('playing')) {
+        stopAllAudio();
+        return;
+      }
+
+      stopAllAudio();
+      buttonEl.classList.add('playing');
+      const playIcon = buttonEl.querySelector('.play-icon');
+      const eq = buttonEl.querySelector('.equalizer');
+      if (playIcon) playIcon.style.display = 'none';
+      if (eq) eq.style.display = 'inline-flex';
+
+      showToast(`Now playing 15s audio preview: ${soundType === 'bounce' ? 'Basboi - Indo Bounce Set' : 'Elena Vex - Acid Techno 145'}`);
+
+      // Create synthetic rhythmic bass pattern
+      let beatCount = 0;
+      const bpm = soundType === 'bounce' ? 128 : 145;
+      const intervalMs = (60 / bpm) * 1000 / 2;
+
+      const beatTimer = setInterval(() => {
+        if (!buttonEl.classList.contains('playing')) {
+          clearInterval(beatTimer);
+          return;
+        }
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        // Kick drum on 1 and 3, synth hit on 2 and 4
+        if (beatCount % 2 === 0) {
+          osc.frequency.setValueAtTime(soundType === 'bounce' ? 110 : 130, now);
+          osc.frequency.exponentialRampToValueAtTime(35, now + 0.12);
+          gain.gain.setValueAtTime(0.6, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        } else {
+          osc.type = soundType === 'bounce' ? 'sawtooth' : 'triangle';
+          osc.frequency.setValueAtTime(soundType === 'bounce' ? 240 : 360, now);
+          osc.frequency.exponentialRampToValueAtTime(120, now + 0.08);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        }
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
+
+        beatCount++;
+        if (beatCount > 32) { // 16 beats preview stop
+          stopAllAudio();
+          clearInterval(beatTimer);
+        }
+      }, intervalMs);
+
+      buttonEl._timer = beatTimer;
+    }
+
+    function stopAllAudio() {
+      document.querySelectorAll('.audio-preview-btn').forEach(btn => {
+        btn.classList.remove('playing');
+        const playIcon = btn.querySelector('.play-icon');
+        const eq = btn.querySelector('.equalizer');
+        if (playIcon) playIcon.style.display = 'block';
+        if (eq) eq.style.display = 'none';
+        if (btn._timer) clearInterval(btn._timer);
+      });
+    }
+
+    document.querySelectorAll('.audio-preview-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const type = btn.dataset.sound;
+        playSynthesizedBeat(type, btn);
+      });
+    });
+
+    // --- 2. Live Admin Drawer Controls ---
+    const adminDrawer = document.getElementById('admin-drawer');
+    const adminBackdrop = document.getElementById('admin-drawer-backdrop');
+    const openAdminBtn = document.getElementById('open-admin-btn');
+    const closeAdminBtn = document.getElementById('close-admin-btn');
+
+    openAdminBtn.addEventListener('click', () => {
+      adminDrawer.classList.add('open');
+      adminBackdrop.classList.add('open');
+    });
+
+    function closeDrawer() {
+      adminDrawer.classList.remove('open');
+      adminBackdrop.classList.remove('open');
+    }
+    closeAdminBtn.addEventListener('click', closeDrawer);
+    adminBackdrop.addEventListener('click', closeDrawer);
+
+    // --- 3. Dynamic Ticket Matrix Syncing ---
+    function toggleTicketTier(tierId, isActive) {
+      let cardEl, statusLabel, priceColor, btnEl;
+
+      if (tierId === 'presale1') {
+        cardEl = document.getElementById('ticket-card-presale1');
+        statusLabel = document.getElementById('admin-presale-status-label');
+      } else if (tierId === 'early') {
+        cardEl = document.getElementById('ticket-card-early');
+        statusLabel = document.getElementById('admin-early-status-label');
+      } else if (tierId === 'blind') {
+        cardEl = document.getElementById('ticket-card-blind');
+        statusLabel = document.getElementById('admin-blind-status-label');
+      }
+
+      if (!cardEl) return;
+
+      const badge = cardEl.querySelector('.badge-status');
+      const ctaBtn = cardEl.querySelector('.ticket-cta');
+
+      if (isActive) {
+        // Mark as Active
+        cardEl.classList.remove('sold-out-tier');
+        cardEl.classList.add('active-tier');
+        badge.innerHTML = `<span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-volt); display: inline-block;"></span> ACTIVE`;
+        badge.style.background = 'rgba(204,255,0,0.15)';
+        badge.style.color = 'var(--accent-volt)';
+        badge.style.borderColor = 'var(--accent-volt)';
+        ctaBtn.disabled = false;
+        ctaBtn.innerText = 'GET TICKETS';
+        ctaBtn.style.background = 'white';
+        ctaBtn.style.color = 'black';
+        ctaBtn.onclick = () => handleTicketCheckout(tierId);
+        statusLabel.innerText = 'Status: ACTIVE';
+        statusLabel.style.color = 'var(--accent-volt)';
+        showToast(`${tierId.toUpperCase()} is now ACTIVE on landing page!`);
+      } else {
+        // Mark as Sold Out (Dim effect)
+        cardEl.classList.add('sold-out-tier');
+        cardEl.classList.remove('active-tier');
+        badge.innerText = 'SOLD OUT';
+        badge.style.background = 'rgba(255,23,68,0.15)';
+        badge.style.color = 'var(--accent-crimson)';
+        badge.style.borderColor = 'rgba(255,23,68,0.3)';
+        ctaBtn.disabled = true;
+        ctaBtn.innerText = 'SOLD OUT';
+        ctaBtn.style.background = 'transparent';
+        ctaBtn.style.color = 'rgba(255,255,255,0.3)';
+        statusLabel.innerText = 'Status: SOLD OUT';
+        statusLabel.style.color = 'var(--accent-crimson)';
+        showToast(`${tierId.toUpperCase()} set to SOLD OUT on landing page!`);
+      }
+    }
+
+    // --- 4. Dynamic Announcement Bar Syncing ---
+    function toggleAnnouncementBar(isShown) {
+      const bar = document.getElementById('announcement-bar');
+      if (isShown) {
+        bar.classList.remove('hidden-bar');
+        bar.style.maxHeight = '48px';
+        bar.style.opacity = '1';
+        showToast('Top Announcement bar activated!');
+      } else {
+        bar.classList.add('hidden-bar');
+        bar.style.maxHeight = '0px';
+        bar.style.opacity = '0';
+        showToast('Top Announcement bar hidden!');
+      }
+    }
+
+    function updateAnnouncementText(newText) {
+      document.getElementById('announcement-text-1').innerText = newText;
+      document.getElementById('announcement-text-2').innerText = newText;
+      document.getElementById('announcement-text-3').innerText = newText;
+    }
+
+    function updateEventTitle(newTitle) {
+      document.getElementById('event-display-title').innerHTML = `${newTitle.replace('//', '<br><span style="color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,0.85);">')}</span>`;
+    }
+
+    function updateEventDate(newDate) {
+      document.getElementById('event-display-date').innerText = newDate;
+    }
+
+    // --- 5. Supabase Whitelist Security Tester ---
+    const authorizedWhitelist = [
+      'admin@beatwave.io',
+      'director@echovoid.id',
+      'sarah@beatwave.io'
+    ];
+
+    function testWhitelistAuth() {
+      const emailInput = document.getElementById('test-email-input').value.trim().toLowerCase();
+      const resultEl = document.getElementById('whitelist-test-result');
+
+      if (!emailInput) {
+        resultEl.innerHTML = `<span style="color: #FFB300;">⚠️ Masukkan email untuk menguji.</span>`;
+        return;
+      }
+
+      if (authorizedWhitelist.includes(emailInput)) {
+        resultEl.innerHTML = `<span style="color: var(--accent-volt);">✅ GRANTED: ${emailInput} terdaftar di whitelist! Akses diizinkan.</span>`;
+        showToast(`Akses Diterima: ${emailInput} (Role: Event Manager)`);
+      } else {
+        resultEl.innerHTML = `<span style="color: var(--accent-crimson);">🚫 403 ACCESS DENIED: ${emailInput} BUKAN tim terdaftar. Sesi langsung ditolak!</span>`;
+        showToast(`Ditolak: ${emailInput} tidak ada di whitelist!`);
+      }
+    }
+
+    // --- 6. Toast Notification Helper ---
+    let toastTimeout = null;
+    function showToast(message) {
+      const toast = document.getElementById('live-toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.innerText = message;
+      toast.classList.add('show');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function handleTicketCheckout(tier) {
+      showToast(`Redirecting to Artatix checkout for ${tier}...`);
+    }
+
+    // --- 7. Lineup Filters ---
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.style.background = 'transparent';
+          b.style.color = 'var(--text-secondary)';
+        });
+        btn.style.background = 'rgba(255,255,255,0.12)';
+        btn.style.color = 'white';
+
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.dj-card').forEach(card => {
+          if (filter === 'all' || card.dataset.day === filter) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // --- 8. Laser Beam Animation on Canvas ---
+    const canvas = document.getElementById('laserCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const beams = [
+      { x1: width * 0.1, y1: 0, x2: width * 0.9, y2: height, color: 'rgba(204, 255, 0, 0.4)', speed: 0.008, offset: 0 },
+      { x1: width * 0.9, y1: 0, x2: width * 0.2, y2: height, color: 'rgba(139, 92, 246, 0.45)', speed: 0.012, offset: 2 },
+      { x1: width * 0.5, y1: 0, x2: width * 0.4, y2: height, color: 'rgba(0, 240, 255, 0.35)', speed: 0.01, offset: 4 }
+    ];
+
+    function renderLasers() {
+      ctx.clearRect(0, 0, width, height);
+      const time = Date.now() * 0.001;
+
+      beams.forEach(b => {
+        const sweep = Math.sin(time * b.speed * 60 + b.offset) * (width * 0.25);
+        ctx.beginPath();
+        ctx.moveTo(b.x1, b.y1);
+        ctx.lineTo(b.x2 + sweep, b.y2);
+        ctx.strokeStyle = b.color;
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = b.color;
+        ctx.stroke();
+      });
+
+      requestAnimationFrame(renderLasers);
+    }
+    renderLasers();
+
+    // --- 9. Countdown Timer Tick ---
+    let sec = 45;
+    setInterval(() => {
+      sec = sec > 0 ? sec - 1 : 59;
+      document.getElementById('cnt-secs').innerText = sec < 10 ? '0' + sec : sec;
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+import React, { useState, useEffect } from 'react';
+import { HomePage } from './pages/HomePage';
+import { NightOneEventPage } from './pages/NightOneEventPage';
+import { NightTwoEventPage } from './pages/NightTwoEventPage';
+import { EventDetailsPage } from './pages/EventDetailsPage';
+import { Footer } from './components/Footer';
+import { initialEvent, initialTickets, initialArtists } from './data/eventData';
+import { Artist, EventData, TicketTier } from './types';
+import { Check } from 'lucide-react';
+
+type ViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier';
+
+export const App: React.FC = () => {
+  const [event] = useState<EventData>(initialEvent);
+  const [tickets] = useState<TicketTier[]>(initialTickets);
+  const [artists] = useState<Artist[]>(initialArtists);
+  const [currentView, setCurrentView] = useState<ViewMode>('home');
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [dossierInitialTab, setDossierInitialTab] = useState<'protocols' | 'architecture' | 'timetable' | 'guide'>('protocols');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [highlightedTicketId, setHighlightedTicketId] = useState<string | null>(null);
+
+  // Parse view from hash
+  const parseViewFromHash = (hash: string): { view: ViewMode; tab?: 'protocols' | 'architecture' | 'timetable' | 'guide' } => {
+    if (hash === '#/event/night-1' || hash === '#event-night-1' || hash === '#night-1') {
+      return { view: 'event-night-1' };
+    }
+    if (hash === '#/event/night-2' || hash === '#event-night-2' || hash === '#night-2') {
+      return { view: 'event-night-2' };
+    }
+    if (hash.startsWith('#dossier') || hash.startsWith('#/event/full-dossier') || hash === '#details') {
+      let tab: 'protocols' | 'architecture' | 'timetable' | 'guide' = 'protocols';
+      if (hash.includes('timetable')) tab = 'timetable';
+      else if (hash.includes('architecture')) tab = 'architecture';
+      else if (hash.includes('guide')) tab = 'guide';
+      return { view: 'full-dossier', tab };
+    }
+    return { view: 'home' };
+  };
+
+  // Sync hash routing on mount and hashchange with motion
+  useEffect(() => {
+    const handleHash = () => {
+      const { view, tab } = parseViewFromHash(window.location.hash);
+      if (tab) setDossierInitialTab(tab);
+
+      if (view !== currentView) {
+        setIsTransitioning(true);
+        setTimeout(() => {
+          setCurrentView(view);
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          setTimeout(() => {
+            setIsTransitioning(false);
+          }, 80);
+        }, 180);
+      }
+    };
+
+    // Initial load
+    const initial = parseViewFromHash(window.location.hash);
+    if (initial.tab) setDossierInitialTab(initial.tab);
+    setCurrentView(initial.view);
+
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, [currentView]);
+
+  // Global Nocturnal Torchlight Lantern tracking
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const x = `${(e.clientX / window.innerWidth) * 100}%`;
+    const y = `${(e.clientY / window.innerHeight) * 100}%`;
+    e.currentTarget.style.setProperty('--torch-x', x);
+    e.currentTarget.style.setProperty('--torch-y', y);
+  };
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3200);
+  };
+
+  const handleCheckout = (ticket: TicketTier) => {
+    showToast(`Membuka loket tiket resmi untuk ${ticket.name}...`);
+    if (ticket.ticketUrl) {
+      window.open(ticket.ticketUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleScrollToTickets = () => {
+    const el = document.getElementById('the-passage');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      const activeTier = tickets.find(t => t.status === 'active');
+      if (activeTier) {
+        setHighlightedTicketId(activeTier.id);
+        setTimeout(() => setHighlightedTicketId(null), 2500);
+      }
+    }
+  };
+
+  // Smooth cinematic page navigation
+  const navigateTo = (view: ViewMode, hash = '') => {
+    if (currentView === view && window.location.hash === hash) return;
+
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentView(view);
+      if (hash) {
+        window.location.hash = hash;
+      } else {
+        window.history.pushState(null, '', ' ');
+      }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 80);
+    }, 180);
+  };
+
+  const handleOpenNight1 = () => {
+    navigateTo('event-night-1', '#/event/night-1');
+  };
+
+  const handleOpenNight2 = () => {
+    navigateTo('event-night-2', '#/event/night-2');
+  };
+
+  const handleOpenFullDossier = (tab: 'protocols' | 'architecture' | 'timetable' | 'guide' = 'protocols') => {
+    setDossierInitialTab(tab);
+    navigateTo('full-dossier', tab === 'protocols' ? '#dossier' : `#dossier-${tab}`);
+  };
+
+  const handleBackToHome = () => {
+    navigateTo('home', '');
+  };
+
+  const handleGetTicketsFromDossier = () => {
+    navigateTo('home', '');
+    setTimeout(() => {
+      handleScrollToTickets();
+    }, 250);
+  };
+
+  return (
+    <div
+      onMouseMove={handleMouseMove}
+      className="clamer-app-canvas"
+      style={{ minHeight: '100vh', position: 'relative', backgroundColor: 'var(--color-void)' }}
+    >
+      {/* Top Precision Laser Transit Beam */}
+      <div
+        className={`page-transition-beam ${isTransitioning ? 'is-active' : ''}`}
+        aria-hidden="true"
+      />
+
+      {/* Optical Velvet Shutter Veil */}
+      <div
+        className={`page-transition-veil ${isTransitioning ? 'is-active' : ''}`}
+        aria-hidden="true"
+      />
+
+      {/* Nocturnal Torchlight Ambient Lantern */}
+      <div className="nocturnal-torchlight" aria-hidden="true" />
+
+      {/* 35mm Analog Film Grain Overlay */}
+      <div className="film-grain-overlay" aria-hidden="true" />
+
+      {/* Dynamic Multi-Page File Router with Smooth Entrance Animation */}
+      <div key={currentView} className="page-view-wrapper page-entrance-anim">
+        {currentView === 'home' && (
+          <HomePage
+            event={event}
+            artists={artists}
+            tickets={tickets}
+            highlightedTicketId={highlightedTicketId}
+            onOpenNight1={handleOpenNight1}
+            onOpenNight2={handleOpenNight2}
+            onOpenFullDossier={handleOpenFullDossier}
+            onCheckout={handleCheckout}
+            onScrollToTickets={handleScrollToTickets}
+            onToast={showToast}
+          />
+        )}
+
+        {currentView === 'event-night-1' && (
+          <NightOneEventPage
+            artists={artists}
+            tickets={tickets}
+            onBack={handleBackToHome}
+            onCheckout={handleCheckout}
+            onViewNight2={handleOpenNight2}
+          />
+        )}
+
+        {currentView === 'event-night-2' && (
+          <NightTwoEventPage
+            artists={artists}
+            tickets={tickets}
+            onBack={handleBackToHome}
+            onCheckout={handleCheckout}
+            onViewNight1={handleOpenNight1}
+          />
+        )}
+
+        {currentView === 'full-dossier' && (
+          <EventDetailsPage
+            artists={artists}
+            tickets={tickets}
+            initialTab={dossierInitialTab}
+            onBack={handleBackToHome}
+            onGetTickets={handleGetTicketsFromDossier}
+          />
+        )}
+      </div>
+
+      {/* Cinematic Footer & Credits */}
+      <Footer />
+
+      {/* Discreet Atmospheric Toast Alert */}
+      <div className={`clamour-toast-alert ${toastMessage ? 'is-visible' : ''}`} role="status">
+        <Check size={15} style={{ color: 'var(--color-gold-antique)' }} />
+        <span>{toastMessage}</span>
+      </div>
+    </div>
+  );
+};
+
+export default App;
