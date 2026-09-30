@@ -8,3 +8,20 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>
 );
+
+// Purge any stale Service Worker & Cache Storage so browser loads 100% original full-quality media
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for (const r of registrations) {
+      r.unregister();
+    }
+  });
+}
+if (typeof window !== 'undefined' && 'caches' in window) {
+  caches.keys().then((keys) => {
+    for (const k of keys) {
+      caches.delete(k);
+    }
+  });
+}
+

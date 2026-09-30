@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Artist } from '../types';
-import { silenceSec1, setAudioOwner, getAudioOwner } from '../utils/audioCoordinator';
+import { silenceSec1, setAudioOwner, getAudioOwner, canSec2PlayAudio } from '../utils/audioCoordinator';
+import { getCachedVideoUrl } from '../utils/mediaPreloader';
 
 interface Props {
   artists: Artist[];
@@ -137,7 +138,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
         {artist.videoUrl ? (
           <video
             ref={videoRef}
-            src={artist.videoUrl}
+            src={getCachedVideoUrl(artist.videoUrl) || artist.videoUrl}
             poster={artist.posterUrl || artist.imageUrl}
             className="guest-portrait-video"
             autoPlay
@@ -297,18 +298,27 @@ export const LineupSection: React.FC<Props> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Check section visibility: mute lineup videos when out of view
+  // Check section visibility: auto-start lineup video & audio when Section 2 scrolls into view
   const checkAudioEligibility = useCallback(() => {
     const sec = sectionRef.current;
     if (!sec) return;
     const r = sec.getBoundingClientRect();
-    const inView = r.top < window.innerHeight * 0.70 && r.bottom > window.innerHeight * 0.15;
+    const inView = r.top < window.innerHeight * 0.75 && r.bottom > window.innerHeight * 0.15;
     setIsSectionVisible(inView);
 
-    if (!inView) {
-      stopArtistAudio();
+    if (inView) {
+      if (canSec2PlayAudio()) {
+        const targetArtist = artists[activeArtistIndex] || artists[0];
+        if (targetArtist && activeAudioArtistId !== targetArtist.id) {
+          playArtistAudio(targetArtist.id);
+        }
+      }
+    } else {
+      if (activeAudioArtistId !== null) {
+        stopArtistAudio();
+      }
     }
-  }, [stopArtistAudio]);
+  }, [artists, activeArtistIndex, activeAudioArtistId, playArtistAudio, stopArtistAudio]);
 
   useEffect(() => {
     window.addEventListener('scroll', checkAudioEligibility, { passive: true });
@@ -344,18 +354,24 @@ export const LineupSection: React.FC<Props> = ({
       }
     };
 
+    const handleSec1Silenced = () => {
+      checkAudioEligibility();
+    };
+
     const handleSec2Silenced = () => {
       stopArtistAudio();
     };
 
     window.addEventListener('how:audio-owner-change', handleOwnerChange);
     window.addEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+    window.addEventListener('how:audio-sec1-silenced', handleSec1Silenced);
 
     return () => {
       window.removeEventListener('how:audio-owner-change', handleOwnerChange);
       window.removeEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+      window.removeEventListener('how:audio-sec1-silenced', handleSec1Silenced);
     };
-  }, [stopArtistAudio]);
+  }, [checkAudioEligibility, stopArtistAudio]);
 
   // Desktop needs only 1 set (2 cards). Mobile gets 7 repetitions for endless infinite scroll.
   const carouselItems = useMemo(() => {
@@ -467,11 +483,12 @@ export const LineupSection: React.FC<Props> = ({
       setActiveArtistIndex(newArtistIdx);
     }
 
-    // If audio is active on mobile, switch to newly centered artist seamlessly
-    if (isMobile && activeAudioArtistId !== null && artists.length > 0) {
+    // If on mobile, auto-switch to newly centered artist seamlessly without clicking
+    if (isMobile && artists.length > 0) {
       const currentArtist = artists[newArtistIdx];
-      if (currentArtist && currentArtist.id !== activeAudioArtistId) {
+      if (currentArtist && currentArtist.id !== activeAudioArtistId && canSec2PlayAudio()) {
         playArtistAudio(currentArtist.id);
+        triggerFlash(currentArtist.id);
       }
     }
 

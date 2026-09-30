@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import { silenceSec1, silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../utils/audioCoordinator';
+import { getCachedVideoUrl } from '../utils/mediaPreloader';
 
 interface Props {
   onExploreGuests?: () => void;
@@ -545,13 +546,14 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
           <div className="storytelling-photo-frame">
             <video
               ref={photoImgRef}
-              src="/assets/how2026_recap.mp4"
+              src={getCachedVideoUrl('/assets/how2026_recap.mp4')}
+              poster="/assets/how2026_recap_poster.jpg"
               className="storytelling-photo-img"
               autoPlay
               muted
               loop
               playsInline
-              preload="auto"
+              preload="metadata"
               onEnded={() => {
                 if (photoImgRef.current) {
                   photoImgRef.current.currentTime = 0;

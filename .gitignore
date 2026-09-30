@@ -7,3 +7,4 @@ dist/
 
 # Raw downloaded video assets in root (processed assets are in public/assets/)
 /*.mp4
+public/assets/*_orig.mp4

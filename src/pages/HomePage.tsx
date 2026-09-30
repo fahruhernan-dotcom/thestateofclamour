@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HeroSection } from '../components/HeroSection';
 import { GuestStorytellingTransition } from '../components/GuestStorytellingTransition';
 import { LineupSection } from '../components/LineupSection';
@@ -6,6 +6,7 @@ import { TicketSection } from '../components/TicketSection';
 import { StageRundown } from '../components/StageRundown';
 import { FinalCTA } from '../components/FinalCTA';
 import { Artist, EventData, TicketTier } from '../types';
+import { startPreload } from '../utils/mediaPreloader';
 
 interface Props {
   event: EventData;
@@ -32,9 +33,14 @@ export const HomePage: React.FC<Props> = ({
   onScrollToTickets,
   onToast,
 }) => {
+  useEffect(() => {
+    // Silently preload media in background for zero-latency playback
+    startPreload();
+  }, []);
+
   return (
     <>
-      {/* Scene 01: Hero Section (Minimalist Atmospheric Editorial // Swear In Continental) */}
+      {/* Scene 01: Hero Section */}
       <HeroSection event={event} />
 
       {/* Transition: The Guests (Scroll-Driven Cinematic Transformation) */}
