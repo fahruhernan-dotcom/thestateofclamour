@@ -3,11 +3,10 @@ import { EventData } from '../types';
 
 interface Props {
   event: EventData;
-  onEnterState?: () => void;
   onExploreGuests?: () => void;
 }
 
-export const HeroSection: React.FC<Props> = ({ event, onEnterState }) => {
+export const HeroSection: React.FC<Props> = ({ event }) => {
   const heroRef = useRef<HTMLElement | null>(null);
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
   const revealLayerRef = useRef<HTMLDivElement | null>(null);
@@ -347,22 +346,12 @@ export const HeroSection: React.FC<Props> = ({ event, onEnterState }) => {
         {/* Generous Negative Space: reveals architecture, fog, darkness, and glowing red entrance */}
         <div className="hero-poster-spacer" aria-hidden="true" />
 
-        {/* Lower Poster Stack: Factual Metadata & Minimal CTA */}
+        {/* Lower Poster Stack: Factual Metadata */}
         <div className="hero-poster-bottom">
           <div className="hero-poster-meta">
             <span className="hero-meta-date">30 — 31 OCTOBER 2026</span>
             <span className="hero-meta-venue">{venueLabel}</span>
           </div>
-
-          <button
-            type="button"
-            className="hero-minimal-cta"
-            onClick={onEnterState}
-            aria-label="Enter Swear In Continental"
-          >
-            <span>ENTER</span>
-            <span className="hero-cta-arrow">→</span>
-          </button>
         </div>
       </div>
     </section>

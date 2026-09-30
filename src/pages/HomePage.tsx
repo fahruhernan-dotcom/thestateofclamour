@@ -35,13 +35,7 @@ export const HomePage: React.FC<Props> = ({
   return (
     <>
       {/* Scene 01: Hero Section (Minimalist Atmospheric Editorial // Swear In Continental) */}
-      <HeroSection
-        event={event}
-        onEnterState={() => {
-          const el = document.getElementById('the-guests');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }}
-      />
+      <HeroSection event={event} />
 
       {/* Transition: The Guests (Scroll-Driven Cinematic Transformation) */}
       <GuestStorytellingTransition
