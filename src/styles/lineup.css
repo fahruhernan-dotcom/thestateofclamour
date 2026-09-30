@@ -292,6 +292,12 @@
   display: none;
 }
 
+/* Audio Playing Card State with Golden Pulse Glow */
+.guest-card-container.is-playing-audio {
+  border-color: var(--color-gold-antique);
+  box-shadow: 0 0 32px rgba(197, 168, 105, 0.38), inset 0 0 20px rgba(197, 168, 105, 0.14);
+}
+
 @media (max-width: 768px) {
   .guest-carousel-mobile-controls {
     display: flex;
@@ -314,8 +320,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     border-radius: 50%;
     background: rgba(6, 7, 9, 0.75);
     border: 1px solid rgba(197, 168, 105, 0.35);
@@ -325,6 +333,8 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .guest-carousel-arrow-btn:active {

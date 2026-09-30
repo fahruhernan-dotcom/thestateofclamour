@@ -189,6 +189,10 @@
 .admission-action-btn {
   width: 100%;
   padding: 0.85rem 1.25rem;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-monumental);
   font-size: 0.75rem;
   letter-spacing: 0.2em;
@@ -200,11 +204,18 @@
   border: 1px solid rgba(143, 29, 36, 0.6);
   text-decoration: none;
   transition: all 200ms ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
 }
 
 .admission-action-btn:hover {
   background: var(--color-crimson);
   box-shadow: 0 0 20px var(--color-crimson-glow);
+}
+
+.admission-action-btn:active {
+  transform: scale(0.97);
 }
 
 .admission-action-btn.is-disabled {

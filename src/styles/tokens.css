@@ -33,11 +33,25 @@
 
   /* Easing */
   --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Mobile Safe Area Insets & Touch Ergonomics */
+  --safe-top: max(1rem, env(safe-area-inset-top));
+  --safe-bottom: max(1rem, env(safe-area-inset-bottom));
+  --safe-left: max(0.75rem, env(safe-area-inset-left));
+  --safe-right: max(0.75rem, env(safe-area-inset-right));
 }
 
 /* ========================================================================== */
 /* GLOBAL RESET & BASE RULES                                                  */
 /* ========================================================================== */
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -94,7 +108,10 @@ body {
   background-color: var(--color-void);
   color: var(--color-ivory);
   font-family: var(--font-body);
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  width: 100%;
+  max-width: 100vw;
+  position: relative;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

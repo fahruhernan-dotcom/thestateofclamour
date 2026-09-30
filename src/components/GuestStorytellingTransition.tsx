@@ -408,7 +408,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
       ref={containerRef}
       id="the-guests"
       className="storytelling-container"
-      style={{ height: '360vh' }}
       aria-label="Scroll-Driven Storytelling — The Sanctuary Unsealed"
     >
       <div className="storytelling-sticky">

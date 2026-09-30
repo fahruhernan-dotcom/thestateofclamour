@@ -6,6 +6,7 @@
   width: 100%;
   background-color: #000000;
   z-index: 15;
+  height: 360vh;
 }
 
 .storytelling-sticky {
@@ -547,6 +548,10 @@
 
 /* Mobile Climax Welcome Overrides */
 @media (max-width: 767px) {
+  .storytelling-container {
+    height: 290vh !important;
+  }
+
   .story-welcome-ambient-glow {
     width: 95vw;
     height: 60vh;
