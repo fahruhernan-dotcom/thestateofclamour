@@ -48,9 +48,9 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
     const renderFrame = (progress: number) => {
       // Dimensions
       const initialHeight = isSmallMob
-        ? Math.min(vh * 0.42, 340)
+        ? Math.min(vh * 0.36, 285)
         : isMob
-        ? Math.min(vh * 0.46, 380)
+        ? Math.min(vh * 0.38, 305)
         : isTab
         ? Math.min(vh * 0.52, 470)
         : Math.min(vh * 0.58, 550);
@@ -498,40 +498,49 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
 
         {/* Mobile Editorial Layout */}
         <div className="storytelling-mobile-layer story-mobile-only">
-          {/* Top Editorial Header: Monumental & Clean */}
+          {/* Top Editorial Header: 2-line Monumental Title + Venue Subtitle */}
           <div ref={mobileTopRef} className="story-mobile-top-editorial">
-            <div className="story-mobile-kicker-row">
-              <span className="story-mobile-eyebrow">01 // THE GUESTS</span>
-              <span className="story-mobile-date-badge">30 — 31 OKT 2026</span>
-            </div>
             <h2 className="story-mobile-monument-title text-gold-metallic">
-              THE GUESTS
+              <span className="story-mobile-title-line">THE</span>
+              <span className="story-mobile-title-line">GUESTS</span>
             </h2>
-            <p className="story-mobile-sub-venue">
-              SWEAR IN CONTINENTAL · MIZU COMMONROOM
-            </p>
+            <div className="story-mobile-sub-venue-block">
+              <span className="story-mobile-sub-line">SWEAR IN CONTINENTAL</span>
+              <span className="story-mobile-sub-line">MIZU COMMONROOM</span>
+            </div>
           </div>
 
-          {/* Bottom Dock: Refined Artist Lineup & Integrated Scroll Cue */}
+          {/* Bottom Editorial: Enter Cue + Hairline Divider + 2-Column Schedule */}
           <div ref={mobileBottomRef} className="story-mobile-bottom-editorial">
-            <div ref={mobileCueRef} className="story-mobile-scroll-cue">
-              <span className="story-mobile-scroll-text">GULIR UNTUK MELANGKAH MASUK</span>
-              <span className="story-mobile-scroll-arrow">↓</span>
+            <div
+              ref={mobileCueRef}
+              className="story-mobile-enter-cue"
+              onClick={handleLineupScroll}
+              role="button"
+              tabIndex={0}
+              aria-label="Enter The Guests"
+            >
+              <span className="story-mobile-cue-text">ENTER THE GUESTS</span>
+              <span className="story-mobile-cue-arrow">↓</span>
             </div>
 
-            <div className="story-mobile-lineup-dock">
-              <div className="story-mobile-artist-item">
-                <span className="artist-item-day">DAY 1 // 30 OKT</span>
-                <span className="artist-item-name">MALVIN</span>
-                <span className="artist-item-time">22:00 WIB · MIZU</span>
+            <div className="story-mobile-horizontal-divider" />
+
+            <div className="story-mobile-schedule-grid">
+              {/* Day 1: Malvin */}
+              <div className="story-mobile-schedule-col text-left">
+                <span className="schedule-date-tag">30 OCT</span>
+                <span className="schedule-artist-name">MALVIN</span>
+                <span className="schedule-time-tag">22:00</span>
+                <span className="schedule-venue-tag">MIZU</span>
               </div>
 
-              <div className="story-mobile-dock-divider" />
-
-              <div className="story-mobile-artist-item text-right">
-                <span className="artist-item-day">DAY 2 // 31 OKT</span>
-                <span className="artist-item-name">FAR</span>
-                <span className="artist-item-time">23:30 WIB · MIZU</span>
+              {/* Day 2: Far */}
+              <div className="story-mobile-schedule-col text-right">
+                <span className="schedule-date-tag">31 OCT</span>
+                <span className="schedule-artist-name">FAR</span>
+                <span className="schedule-time-tag">23:30</span>
+                <span className="schedule-venue-tag">MIZU</span>
               </div>
             </div>
           </div>

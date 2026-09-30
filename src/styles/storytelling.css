@@ -398,93 +398,98 @@
   padding: calc(1rem + env(safe-area-inset-top)) 1.25rem calc(1rem + env(safe-area-inset-bottom));
 }
 
-/* Top Editorial Header: Monumental, Clean, Architectural */
+/* Top Editorial Header: Monumental 2-line title & venue */
 .story-mobile-top-editorial {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   width: 100%;
-  padding-top: 0.35rem;
+  padding-top: calc(0.35rem + env(safe-area-inset-top));
   will-change: transform, opacity;
 }
 
-.story-mobile-kicker-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 320px;
-  margin-bottom: 0.35rem;
-}
-
-.story-mobile-eyebrow {
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  letter-spacing: 0.24em;
-  color: var(--color-gold-antique);
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.story-mobile-date-badge {
-  font-family: var(--font-body);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  color: var(--color-crimson);
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
 .story-mobile-monument-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-family: var(--font-monumental);
-  font-size: clamp(1.65rem, 7.5vw, 2.15rem);
+  font-size: clamp(1.75rem, 8vw, 2.35rem);
   font-weight: 700;
-  letter-spacing: 0.14em;
-  line-height: 1.1;
-  margin: 0 0 0.3rem 0;
+  letter-spacing: 0.18em;
+  line-height: 0.98;
+  margin: 0;
+  text-transform: uppercase;
 }
 
-.story-mobile-sub-venue {
+.story-mobile-title-line {
+  display: block;
+}
+
+.story-mobile-sub-venue-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  margin-top: 0.65rem;
+}
+
+.story-mobile-sub-line {
   font-family: var(--font-body);
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
+  font-size: clamp(0.58rem, 2.4vw, 0.68rem);
+  letter-spacing: 0.26em;
   color: var(--color-ivory-dim);
   text-transform: uppercase;
-  margin: 0;
+  line-height: 1.35;
 }
 
-/* Bottom Editorial Dock: Refined Lineup & Integrated Scroll Cue */
+/* Bottom Editorial: Enter Cue + Hairline Divider + 2-Column Schedule */
 .story-mobile-bottom-editorial {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  gap: 0.75rem;
   margin-bottom: max(0.5rem, env(safe-area-inset-bottom));
   will-change: transform, opacity;
 }
 
-.story-mobile-scroll-cue {
+.story-mobile-enter-cue {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   font-family: var(--font-body);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
   color: var(--color-gold-antique);
   text-transform: uppercase;
-  padding: 0.35rem 0.85rem;
-  background: rgba(6, 7, 9, 0.72);
-  border: 1px solid rgba(197, 168, 105, 0.28);
+  padding: 0.45rem 1rem;
+  margin-bottom: 0.85rem;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
   border-radius: 9999px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  animation: storytellingPulse 2s ease-in-out infinite;
+  background: rgba(6, 7, 9, 0.65);
+  border: 1px solid rgba(197, 168, 105, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease;
 }
 
-.story-mobile-scroll-arrow {
-  font-size: 0.7rem;
+.story-mobile-enter-cue:active {
+  transform: translateY(2px);
+  background: rgba(197, 168, 105, 0.15);
+  color: #FFFFFF;
+}
+
+.story-mobile-cue-text {
+  display: inline-block;
+}
+
+.story-mobile-cue-arrow {
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--color-gold-antique);
   animation: bounceDown 1.5s infinite;
 }
 
@@ -493,62 +498,73 @@
   50% { transform: translateY(3px); }
 }
 
-.story-mobile-lineup-dock {
+.story-mobile-horizontal-divider {
+  width: 100%;
+  max-width: 360px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(197, 168, 105, 0.45) 15%,
+    rgba(197, 168, 105, 0.45) 85%,
+    transparent 100%
+  );
+  margin-bottom: 0.95rem;
+}
+
+.story-mobile-schedule-grid {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   width: 100%;
   max-width: 360px;
-  padding: 0.85rem 1.25rem;
-  background: rgba(13, 17, 23, 0.85);
-  border: 1px solid rgba(197, 168, 105, 0.28);
-  border-radius: 6px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85), 0 0 20px rgba(197, 168, 105, 0.08);
+  padding-inline: 0.25rem;
 }
 
-.story-mobile-artist-item {
+.story-mobile-schedule-col {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
 
-.story-mobile-artist-item.text-right {
+.story-mobile-schedule-col.text-right {
   text-align: right;
   align-items: flex-end;
 }
 
-.artist-item-day {
+.schedule-date-tag {
   font-family: var(--font-body);
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
   color: var(--color-crimson);
   text-transform: uppercase;
-  font-weight: 600;
-}
-
-.artist-item-name {
-  font-family: var(--font-monumental);
-  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--color-gold-antique);
-  line-height: 1.1;
 }
 
-.artist-item-time {
+.schedule-artist-name {
+  font-family: var(--font-monumental);
+  font-size: clamp(1.2rem, 5.5vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-gold-antique);
+  line-height: 1.05;
+  margin: 0.15rem 0;
+}
+
+.schedule-time-tag {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--color-ivory);
+  font-weight: 500;
+}
+
+.schedule-venue-tag {
   font-family: var(--font-body);
   font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.22em;
   color: var(--color-ivory-dim);
-}
-
-.story-mobile-dock-divider {
-  width: 1px;
-  height: 2.2rem;
-  background: linear-gradient(180deg, transparent, rgba(197, 168, 105, 0.4), transparent);
-  margin-inline: 0.75rem;
+  text-transform: uppercase;
 }
 
 /* Mobile Climax Welcome Overrides */
@@ -638,14 +654,14 @@
   }
 
   .story-mobile-monument-title {
-    font-size: clamp(1.4rem, 6.8vw, 1.85rem);
+    font-size: clamp(1.5rem, 7.2vw, 1.95rem);
   }
 
-  .artist-item-name {
-    font-size: 0.95rem;
+  .schedule-artist-name {
+    font-size: 1.15rem;
   }
 
-  .story-mobile-lineup-dock {
-    padding: 0.75rem 1rem;
+  .story-mobile-schedule-grid {
+    padding-inline: 0;
   }
 }
