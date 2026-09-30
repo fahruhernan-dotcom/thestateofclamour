@@ -86,19 +86,14 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, transparent 35%, rgba(6, 7, 9, 0.75) 100%);
+  background: linear-gradient(180deg, rgba(6, 7, 9, 0.5) 0%, transparent 20%, transparent 80%, rgba(6, 7, 9, 0.7) 100%);
 }
 
-/* Cinematic Video Dim Overlay (darkens video behind welcome text) */
+/* Cinematic Video Dim Overlay (uniform subtle film darkening without circular shape) */
 .storytelling-video-dim {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse at 50% 50%,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(6, 7, 9, 0.72) 50%,
-    rgba(6, 7, 9, 0.55) 100%
-  );
+  background: rgba(6, 7, 9, 0.4);
   pointer-events: none;
   z-index: 2;
   will-change: opacity;
@@ -221,30 +216,6 @@
   pointer-events: none;
 }
 
-.story-welcome-ambient-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) translateZ(0);
-  width: min(1100px, 110vw);
-  height: min(750px, 85vh);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(212, 175, 55, 0.12) 0%,
-    rgba(180, 130, 30, 0.08) 20%,
-    rgba(92, 13, 18, 0.18) 40%,
-    rgba(6, 7, 9, 0.45) 60%,
-    transparent 75%
-  );
-  border-radius: 50%;
-  pointer-events: none;
-  animation: welcomeGlowPulse 4s ease-in-out infinite alternate;
-}
-
-@keyframes welcomeGlowPulse {
-  0% { opacity: 0.85; transform: translate(-50%, -50%) scale(1) translateZ(0); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.04) translateZ(0); }
-}
 
 .story-welcome-content {
   position: relative;
@@ -573,10 +544,6 @@
     height: 290vh !important;
   }
 
-  .story-welcome-ambient-glow {
-    width: 95vw;
-    height: 60vh;
-  }
 
   .story-welcome-title {
     font-size: clamp(1.65rem, 7.5vw, 2.35rem);

@@ -579,9 +579,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
 
         {/* Climax Welcome Motion Reveal ("WELCOME TO THE ASSEMBLY") */}
         <div ref={welcomeOverlayRef} className="storytelling-arrival-overlay">
-          {/* Pre-computed Radial Backlight Glow without filter: blur() */}
-          <div className="story-welcome-ambient-glow" />
-
           <div className="story-welcome-content">
             {/* Monumental Welcome Headline */}
             <h2 className="story-welcome-title">
