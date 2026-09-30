@@ -636,27 +636,15 @@
     justify-content: center;
   }
 
-  .story-mobile-top-pill {
-    padding: 0.55rem 0.85rem;
+  .story-mobile-monument-title {
+    font-size: clamp(1.4rem, 6.8vw, 1.85rem);
   }
 
-  .story-mobile-kicker {
-    font-size: 0.48rem;
+  .artist-item-name {
+    font-size: 0.95rem;
   }
 
-  .story-mobile-title {
-    font-size: 0.82rem;
-  }
-
-  .story-mobile-artist-name {
-    font-size: 0.72rem;
-  }
-
-  .story-mobile-artist-meta {
-    font-size: 0.48rem;
-  }
-
-  .story-mobile-bottom {
-    padding: 0.65rem 0.85rem;
+  .story-mobile-lineup-dock {
+    padding: 0.75rem 1rem;
   }
 }

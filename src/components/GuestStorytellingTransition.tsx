@@ -59,9 +59,9 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
     const renderFrame = (progress: number) => {
       // Dimensions
       const initialHeight = isSmallMob
-        ? Math.min(vh * 0.52, 450)
+        ? Math.min(vh * 0.42, 340)
         : isMob
-        ? Math.min(vh * 0.55, 480)
+        ? Math.min(vh * 0.46, 380)
         : isTab
         ? Math.min(vh * 0.52, 470)
         : Math.min(vh * 0.58, 550);
@@ -77,10 +77,9 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
       // Pure hardware-composited integer scissor insets (Zero re-tessellation)
       const insetY = Math.max(0, Math.round((vh - currentHeight) / 2));
       const insetX = Math.max(0, Math.round((vw - currentWidth) / 2));
-      const roundRadius = Math.max(0, Math.round(6 * (1 - expansionProgress)));
 
       if (gpuCanvasRef.current) {
-        const clipStr = `inset(${insetY}px ${insetX}px ${insetY}px ${insetX}px round ${roundRadius}px)`;
+        const clipStr = `inset(${insetY}px ${insetX}px ${insetY}px ${insetX}px)`;
         gpuCanvasRef.current.style.clipPath = clipStr;
         gpuCanvasRef.current.style.setProperty('-webkit-clip-path', clipStr);
       }
