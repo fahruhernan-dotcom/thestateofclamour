@@ -11,6 +11,7 @@ export const HeroSection: React.FC<Props> = ({ event }) => {
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
   const revealLayerRef = useRef<HTMLDivElement | null>(null);
   const spotlightGlowRef = useRef<HTMLDivElement | null>(null);
+  const lightningVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const [isHeadlineHovered, setIsHeadlineHovered] = useState(false);
   const isHeadlineHoveredRef = useRef(false);
@@ -271,6 +272,20 @@ export const HeroSection: React.FC<Props> = ({ event }) => {
 
       {/* 2. Atmospheric Volumetric Dark Smoke & Fog Backdrop */}
       <div className="hero-smoke-backdrop" aria-hidden="true" />
+
+      {/* 2b. Lightning Storm Clouds Video Overlay (Striking Electrical Ambience) */}
+      <div className="hero-lightning-overlay" aria-hidden="true">
+        <video
+          ref={lightningVideoRef}
+          src="/assets/hero_lightning.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="hero-lightning-video"
+        />
+      </div>
 
       {/* 3. Reveal Horror Character Image Layer (BG_IMAGE_2) via CSS Radial Spotlight Mask */}
       <div
