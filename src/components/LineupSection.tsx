@@ -18,9 +18,10 @@ interface GuestCardProps {
   isClone?: boolean;
   isCardActive: boolean;
   isMobile: boolean;
-  onSelectArtist: (index: number) => void;
-  onSelectCard?: (cardIndex: number, artistIndex: number) => void;
-  onTriggerFlash: (id: string) => void;
+  isAudioPlaying: boolean;
+  onCardTap: (artist: Artist, cardIdx: number, artistIdx: number) => void;
+  onCardMouseEnter: (artist: Artist, cardIdx: number, artistIdx: number) => void;
+  onCardMouseLeave: () => void;
   onOpenModal: (artist: Artist) => void;
 }
 
@@ -32,14 +33,14 @@ const GuestCard: React.FC<GuestCardProps> = ({
   isClone,
   isCardActive,
   isMobile,
-  onSelectArtist,
-  onSelectCard,
-  onTriggerFlash,
+  isAudioPlaying,
+  onCardTap,
+  onCardMouseEnter,
+  onCardMouseLeave,
   onOpenModal,
 }) => {
   const cardRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   // Desktop Mouse Tilt without forced synchronous reflow
   const handleCardMouseMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -57,79 +58,43 @@ const GuestCard: React.FC<GuestCardProps> = ({
     card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px)`;
   };
 
-  // Sound only appears when cursor hovers over card!
-  const handleCardMouseEnter = () => {
-    onTriggerFlash(artist.id);
-    onSelectArtist(artistIndex);
-    if (onSelectCard) {
-      onSelectCard(cardIndex, artistIndex);
+  const handleMouseEnter = () => {
+    if (!isMobile) {
+      onCardMouseEnter(artist, cardIndex, artistIndex);
     }
+  };
 
-    // 1. Immediately silence Section 1 audio completely
-    silenceSec1();
-    setAudioOwner('sec2-lineup');
-
-    // 2. Mute other videos in #lineup to guarantee single-audio playback
-    const allVideos = document.querySelectorAll<HTMLVideoElement>('#lineup video');
-    allVideos.forEach((v) => {
-      if (v !== videoRef.current) {
-        v.muted = true;
+  const handleMouseLeave = () => {
+    if (!isMobile) {
+      if (cardRef.current) {
+        cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
       }
-    });
-
-    // 3. Unmute and play audio for hovered card
-    const video = videoRef.current;
-    if (video) {
-      video.volume = 0.95;
-      video.muted = false;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlayingAudio(true);
-          })
-          .catch(() => {
-            video.muted = true;
-            setIsPlayingAudio(false);
-            video.play().catch(() => {});
-          });
-      }
+      onCardMouseLeave();
     }
   };
 
-  // When cursor leaves card: mute audio back to silence
-  const handleCardMouseLeave = () => {
-    if (cardRef.current) {
-      cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-    }
-
-    const video = videoRef.current;
-    if (video) {
-      video.muted = true;
-    }
-    setIsPlayingAudio(false);
-
-    if (getAudioOwner() === 'sec2-lineup') {
-      setAudioOwner('none');
+  const handleCardClick = () => {
+    if (isMobile) {
+      // On mobile devices, tapping the card toggles the audio preview on/off
+      onCardTap(artist, cardIndex, artistIndex);
+    } else {
+      // On desktop, clicking the card opens the full event modal
+      onOpenModal(artist);
     }
   };
 
-  const handleCardTouch = () => {
-    handleCardMouseEnter();
-  };
-
-  // Video visuals loop smoothly in background (muted unless hovered)
+  // Video visuals loop smoothly in background (muted unless actively playing audio)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     if (!isMobile) {
-      // Desktop: Keep looping visually (muted by default)
+      // Desktop: Keep visuals looping smoothly in background
       if (video.paused) {
         video.play().catch(() => {});
       }
     } else {
-      // Mobile: Pause non-active clones to save memory
+      // Mobile: Pause non-active clones to save memory/battery
       if (!isCardActive && !video.paused) {
         video.pause();
       } else if (isCardActive && video.paused) {
@@ -138,18 +103,37 @@ const GuestCard: React.FC<GuestCardProps> = ({
     }
   }, [isMobile, isCardActive]);
 
+  // Synchronize audio state declaratively
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isAudioPlaying) {
+      video.volume = 0.95;
+      video.muted = false;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If browser autoplay policy blocked unmuted, fallback to muted play
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      }
+    } else {
+      video.muted = true;
+    }
+  }, [isAudioPlaying]);
+
   return (
     <article
       ref={cardRef}
-      className={`guest-card-container is-video-active ${isClone ? 'is-clone' : ''} ${isPlayingAudio ? 'is-playing-audio' : ''}`}
+      className={`guest-card-container is-video-active ${isClone ? 'is-clone' : ''} ${isAudioPlaying ? 'is-playing-audio' : ''}`}
       onMouseMove={handleCardMouseMove}
-      onMouseLeave={handleCardMouseLeave}
-      onMouseEnter={handleCardMouseEnter}
-      onTouchStart={handleCardTouch}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+      onClick={handleCardClick}
     >
-      <div
-        className="guest-portrait-frame"
-      >
+      <div className="guest-portrait-frame">
         {artist.videoUrl ? (
           <video
             ref={videoRef}
@@ -161,6 +145,11 @@ const GuestCard: React.FC<GuestCardProps> = ({
             loop
             playsInline
             preload="auto"
+            onEnded={(e) => {
+              const v = e.currentTarget;
+              v.currentTime = 0;
+              v.play().catch(() => {});
+            }}
           />
         ) : (
           <img
@@ -179,12 +168,10 @@ const GuestCard: React.FC<GuestCardProps> = ({
 
         {/* Portrait Dark Scrim */}
         <div className="guest-portrait-scrim" />
-
       </div>
 
       <div
         className="guest-card-info-pane"
-        onClick={() => onOpenModal(artist)}
         style={{ cursor: 'pointer' }}
         title="Buka detail event artis"
       >
@@ -192,7 +179,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
           <p className="guest-day-kicker">
             {artist.dayLabel} · {artist.performanceTime}
           </p>
-          {isPlayingAudio && (
+          {isAudioPlaying && (
             <span className="guest-sound-active-tag" title="Audio Preview Active">
               <span className="equalizer-bars mini">
                 <span className="bar bar-1" />
@@ -238,17 +225,53 @@ export const LineupSection: React.FC<Props> = ({
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isSectionVisible, setIsSectionVisible] = useState(false);
+  const [activeAudioArtistId, setActiveAudioArtistId] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const recenterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSelectArtist = useCallback((index: number) => {
-    setActiveArtistIndex(index);
+  const triggerFlash = useCallback((artistId: string) => {
+    setActiveFlashes((prev) => ({ ...prev, [artistId]: true }));
+    setTimeout(() => {
+      setActiveFlashes((prev) => ({ ...prev, [artistId]: false }));
+    }, 450);
   }, []);
 
-  const handleSelectCard = useCallback((cardIdx: number, artistIdx: number) => {
-    setActiveCardIndex(cardIdx);
-    setActiveArtistIndex(artistIdx);
+  const playArtistAudio = useCallback((artistId: string) => {
+    silenceSec1();
+    setAudioOwner('sec2-lineup');
+    setActiveAudioArtistId(artistId);
   }, []);
+
+  const stopArtistAudio = useCallback(() => {
+    setActiveAudioArtistId(null);
+    if (getAudioOwner() === 'sec2-lineup') {
+      setAudioOwner('none');
+    }
+  }, []);
+
+  const handleCardMouseEnter = useCallback((artist: Artist, cardIdx: number, artistIdx: number) => {
+    triggerFlash(artist.id);
+    setActiveArtistIndex(artistIdx);
+    setActiveCardIndex(cardIdx);
+    playArtistAudio(artist.id);
+  }, [playArtistAudio, triggerFlash]);
+
+  const handleCardMouseLeave = useCallback(() => {
+    stopArtistAudio();
+  }, [stopArtistAudio]);
+
+  const handleCardTap = useCallback((artist: Artist, cardIdx: number, artistIdx: number) => {
+    if (activeAudioArtistId === artist.id) {
+      // Toggle OFF if already playing
+      stopArtistAudio();
+    } else {
+      // Toggle ON
+      triggerFlash(artist.id);
+      setActiveArtistIndex(artistIdx);
+      setActiveCardIndex(cardIdx);
+      playArtistAudio(artist.id);
+    }
+  }, [activeAudioArtistId, playArtistAudio, stopArtistAudio, triggerFlash]);
 
   // 7 repetitions: Set 0, 1, 2, 3 (CENTER), 4, 5, 6
   // Set 0 has isClone = false, so on desktop only Set 0 is displayed in the 2-column grid.
@@ -276,15 +299,9 @@ export const LineupSection: React.FC<Props> = ({
     setIsSectionVisible(inView);
 
     if (!inView) {
-      const allVideos = document.querySelectorAll<HTMLVideoElement>('#lineup video');
-      allVideos.forEach((v) => {
-        v.muted = true;
-      });
-      if (getAudioOwner() === 'sec2-lineup') {
-        setAudioOwner('none');
-      }
+      stopArtistAudio();
     }
-  }, []);
+  }, [stopArtistAudio]);
 
   useEffect(() => {
     window.addEventListener('scroll', checkAudioEligibility, { passive: true });
@@ -316,18 +333,12 @@ export const LineupSection: React.FC<Props> = ({
     const handleOwnerChange = (e: Event) => {
       const customEvent = e as CustomEvent<{ owner: string }>;
       if (customEvent.detail?.owner === 'sec1-storytelling') {
-        const allVideos = document.querySelectorAll<HTMLVideoElement>('#lineup video');
-        allVideos.forEach((v) => {
-          v.muted = true;
-        });
+        stopArtistAudio();
       }
     };
 
     const handleSec2Silenced = () => {
-      const allVideos = document.querySelectorAll<HTMLVideoElement>('#lineup video');
-      allVideos.forEach((v) => {
-        v.muted = true;
-      });
+      stopArtistAudio();
     };
 
     window.addEventListener('how:audio-owner-change', handleOwnerChange);
@@ -337,7 +348,7 @@ export const LineupSection: React.FC<Props> = ({
       window.removeEventListener('how:audio-owner-change', handleOwnerChange);
       window.removeEventListener('how:audio-sec2-silenced', handleSec2Silenced);
     };
-  }, []);
+  }, [stopArtistAudio]);
 
   // Desktop needs only 1 set (2 cards). Mobile gets 7 repetitions for endless infinite scroll.
   const carouselItems = useMemo(() => {
@@ -369,14 +380,8 @@ export const LineupSection: React.FC<Props> = ({
     return list;
   }, [artists, isMobile]);
 
-  const triggerFlash = (artistId: string) => {
-    setActiveFlashes((prev) => ({ ...prev, [artistId]: true }));
-    setTimeout(() => {
-      setActiveFlashes((prev) => ({ ...prev, [artistId]: false }));
-    }, 450);
-  };
-
   const handleOpenModal = (artist: Artist) => {
+    stopArtistAudio();
     setIsSectionVisible(false); // silence audio when modal is opened
     if ((artist.id === 'art-malvin' || artist.id === 'art-basboi') && onOpenNight1) {
       onOpenNight1();
@@ -450,8 +455,17 @@ export const LineupSection: React.FC<Props> = ({
   const handleScroll = () => {
     const closestIdx = getClosestCardIndex();
     setActiveCardIndex(closestIdx);
+    const newArtistIdx = closestIdx % artists.length;
     if (artists.length > 0) {
-      setActiveArtistIndex(closestIdx % artists.length);
+      setActiveArtistIndex(newArtistIdx);
+    }
+
+    // If audio is active on mobile, switch to newly centered artist seamlessly
+    if (isMobile && activeAudioArtistId !== null && artists.length > 0) {
+      const currentArtist = artists[newArtistIdx];
+      if (currentArtist && currentArtist.id !== activeAudioArtistId) {
+        playArtistAudio(currentArtist.id);
+      }
     }
 
     if (recenterTimerRef.current) {
@@ -484,6 +498,9 @@ export const LineupSection: React.FC<Props> = ({
       targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       setActiveCardIndex(targetChildIdx);
       setActiveArtistIndex(targetArtistIdx);
+      if (isMobile && activeAudioArtistId !== null) {
+        playArtistAudio(artists[targetArtistIdx].id);
+      }
     }
   };
 
@@ -496,7 +513,11 @@ export const LineupSection: React.FC<Props> = ({
     if (nextCard) {
       nextCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       setActiveCardIndex(nextIdx);
-      setActiveArtistIndex(nextIdx % artists.length);
+      const nextArtistIdx = nextIdx % artists.length;
+      setActiveArtistIndex(nextArtistIdx);
+      if (isMobile && activeAudioArtistId !== null) {
+        playArtistAudio(artists[nextArtistIdx].id);
+      }
     }
   };
 
@@ -509,7 +530,11 @@ export const LineupSection: React.FC<Props> = ({
     if (prevCard) {
       prevCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       setActiveCardIndex(prevIdx);
-      setActiveArtistIndex((prevIdx + artists.length) % artists.length);
+      const prevArtistIdx = (prevIdx + artists.length) % artists.length;
+      setActiveArtistIndex(prevArtistIdx);
+      if (isMobile && activeAudioArtistId !== null) {
+        playArtistAudio(artists[prevArtistIdx].id);
+      }
     }
   };
 
@@ -548,10 +573,11 @@ export const LineupSection: React.FC<Props> = ({
               isClone={item.isClone}
               isCardActive={isCardActive}
               isMobile={isMobile}
+              isAudioPlaying={isSectionVisible && activeAudioArtistId === item.artist.id}
               isFlashing={!!activeFlashes[item.artist.id]}
-              onSelectArtist={handleSelectArtist}
-              onSelectCard={handleSelectCard}
-              onTriggerFlash={triggerFlash}
+              onCardTap={handleCardTap}
+              onCardMouseEnter={handleCardMouseEnter}
+              onCardMouseLeave={handleCardMouseLeave}
               onOpenModal={handleOpenModal}
             />
           );

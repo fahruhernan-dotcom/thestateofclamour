@@ -21,9 +21,6 @@ export const silenceSec1 = () => {
   const storyVideos = document.querySelectorAll<HTMLVideoElement>('.storytelling-photo-img, #the-guests video');
   storyVideos.forEach((v) => {
     v.muted = true;
-    if (!v.paused) {
-      v.pause();
-    }
   });
   if (currentAudioOwner === 'sec1-storytelling') {
     currentAudioOwner = 'none';
