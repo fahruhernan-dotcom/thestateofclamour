@@ -1,6 +1,6 @@
 /* ==========================================================================
-   CRYPTIC CEREMONIAL PRELOADER // THE STATE OF CLAMOUR (HOUSE OF WITNESSES)
-   Zero-Asset, Pure SVG & CSS Architecture with Shutter Split Unsealing
+   THE STATE OF CLAMOUR // LUXURY CINEMATIC PRELOADER
+   Official 3D Chrome Emblem with Deep Nocturnal Crimson Atmosphere
    ========================================================================== */
 
 .cryptic-preloader-root {
@@ -13,35 +13,31 @@
   pointer-events: auto;
   user-select: none;
   overflow: hidden;
-  background: transparent;
+  background-color: #030406;
 }
 
-/* Dual Shutter Curtains (Split Vertically on Unseal) */
+/* Dual Seamless Velvet Vault Shutters (No middle seam line) */
 .preloader-shutter {
   position: absolute;
   left: 0;
   right: 0;
   width: 100%;
   height: 50.5%;
-  background-color: #050608;
+  background-color: #030406;
   z-index: 1;
-  transition: transform 0.85s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
   will-change: transform;
 }
 
 .preloader-shutter-top {
   top: 0;
-  border-bottom: 1px solid rgba(197, 168, 105, 0.25);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
 }
 
 .preloader-shutter-bottom {
   bottom: 0;
-  border-top: 1px solid rgba(197, 168, 105, 0.25);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
 }
 
-/* Unsealing Shutter Trigger */
+/* Shutter Unsealing Animation */
 .cryptic-preloader-root.is-unsealing .preloader-shutter-top {
   transform: translate3d(0, -100%, 0);
 }
@@ -50,14 +46,14 @@
   transform: translate3d(0, 100%, 0);
 }
 
-/* Film Grain Texture over Loader */
+/* 35mm Analog Film Grain */
 .preloader-grain {
   position: absolute;
   inset: 0;
   z-index: 2;
-  opacity: 0.04;
+  opacity: 0.035;
   pointer-events: none;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 0);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 0);
   background-size: 3px 3px;
 }
 
@@ -70,16 +66,16 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cryptic-preloader-root.is-unsealing .preloader-core {
   opacity: 0;
-  transform: scale(1.12);
-  filter: drop-shadow(0 0 35px rgba(197, 168, 105, 0.8));
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 40px rgba(197, 168, 105, 0.9));
 }
 
-/* Volumetric Crimson & Gold Aura behind TSOC Logo */
+/* Volumetric Deep Blood-Red Ambient Light Aura */
 .preloader-aura {
   position: absolute;
   width: 320px;
@@ -87,171 +83,105 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(220, 20, 40, 0.35) 0%,
-    rgba(197, 168, 105, 0.18) 35%,
-    rgba(138, 21, 27, 0.15) 55%,
-    transparent 72%
+    rgba(220, 20, 40, 0.45) 0%,
+    rgba(160, 15, 30, 0.22) 40%,
+    rgba(197, 168, 105, 0.08) 60%,
+    transparent 75%
   );
-  filter: blur(32px);
-  animation: preloaderPulse 3s ease-in-out infinite alternate;
+  filter: blur(38px);
+  animation: preloaderPulse 3.6s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
-/* TSOC Emblem & Celestial Orbiting Ring */
+@media (min-width: 768px) {
+  .preloader-aura {
+    width: 460px;
+    height: 460px;
+    filter: blur(52px);
+  }
+}
+
+/* Emblem Container: Clean, Transparent, No Background */
 .preloader-emblem-wrap {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 270px;
+  max-width: 82vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.75rem;
+  margin-bottom: 2rem;
 }
 
 @media (min-width: 768px) {
   .preloader-emblem-wrap {
-    width: 270px;
-    height: 270px;
-    margin-bottom: 2rem;
-  }
-  .preloader-aura {
-    width: 400px;
-    height: 400px;
-    filter: blur(40px);
+    width: 360px;
+    margin-bottom: 2.5rem;
   }
 }
 
-/* Orbiting SVG Celestial Halo */
-.preloader-halo-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: visible;
-  z-index: 1;
-}
-
-/* Official 3D Chrome TSOC Logo */
-.preloader-logo-container {
-  position: relative;
-  width: 170px;
-  height: 170px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@media (min-width: 768px) {
-  .preloader-logo-container {
-    width: 210px;
-    height: 210px;
-  }
-}
-
+/* 3D Chrome Official Logo: Completely Transparent PNG */
 .preloader-logo-img {
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
   object-fit: contain;
-  mix-blend-mode: screen;
-  filter: drop-shadow(0 0 20px rgba(220, 20, 40, 0.55)) drop-shadow(0 0 35px rgba(197, 168, 105, 0.3));
-  animation: logoBreath 3.5s ease-in-out infinite alternate;
-  transform-origin: center center;
+  filter: drop-shadow(0 0 25px rgba(220, 20, 40, 0.65)) drop-shadow(0 0 45px rgba(197, 168, 105, 0.3));
+  animation: logoBreath 3.2s ease-in-out infinite alternate;
   will-change: transform, filter;
+  transform-origin: center center;
 }
 
-/* Chrome Sheen Sweep Light Reflection */
-.preloader-sheen-sweep {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-  background: linear-gradient(
-    115deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.35) 50%,
-    transparent 65%
-  );
-  mix-blend-mode: overlay;
-  animation: sheenSweep 4.2s ease-in-out infinite;
-  opacity: 0.7;
-}
-
-/* SVG Rotational Choreography */
-.sigil-outer-ring {
-  transform-origin: 100px 100px;
-  animation: sigilSpinClockwise 36s linear infinite;
-}
-
-.sigil-middle-star {
-  transform-origin: 100px 100px;
-  animation: sigilSpinCounter 28s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-
-/* Typography Cluster */
+/* Minimalist Luxury Progress Cluster */
 .preloader-meta-cluster {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  max-width: 320px;
+  width: 100%;
 }
 
-.preloader-kicker {
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.38em;
-  color: var(--color-gold-antique, #C5A869);
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-  opacity: 0.9;
-}
-
-/* Monumental Numeric Odometer */
+/* Monumental Numeric Counter */
 .preloader-counter-row {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .preloader-counter-value {
   font-family: var(--font-title, 'Cinzel', serif);
-  font-size: 2.75rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   color: var(--color-ivory, #E9E4DA);
   line-height: 1;
-  text-shadow: 0 0 20px rgba(197, 168, 105, 0.4);
+  text-shadow: 0 0 25px rgba(197, 168, 105, 0.45);
 }
 
 @media (min-width: 768px) {
   .preloader-counter-value {
-    font-size: 3.5rem;
+    font-size: 3.25rem;
   }
 }
 
 .preloader-counter-unit {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.15em;
   color: var(--color-gold-antique, #C5A869);
   margin-left: 0.35rem;
 }
 
-/* Hairline Progress Track */
+/* Hairline Luxury Progress Bar */
 .preloader-progress-track {
   position: relative;
-  width: 180px;
+  width: 150px;
   height: 2px;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 9999px;
   overflow: hidden;
-  margin-bottom: 1rem;
+  margin-bottom: 0.875rem;
 }
 
 .preloader-progress-bar {
@@ -262,74 +192,46 @@
   background: linear-gradient(
     90deg,
     #8A151B 0%,
-    #C5A869 60%,
+    #C5A869 65%,
     #FFF2D1 100%
   );
-  box-shadow: 0 0 10px rgba(197, 168, 105, 0.6);
+  box-shadow: 0 0 12px rgba(197, 168, 105, 0.7);
   border-radius: 9999px;
-  transition: width 0.12s ease-out;
+  transition: width 0.15s ease-out;
   will-change: width;
 }
 
-/* Real-Time Ritual Status Micro-Copy */
+/* Micro-Status Ritual Whisper */
 .preloader-status-text {
   font-family: var(--font-body, 'Inter', sans-serif);
   font-size: 0.5625rem;
-  letter-spacing: 0.28em;
-  color: var(--color-ivory-dim, #D1C9BC);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  color: rgba(209, 201, 188, 0.7);
   text-transform: uppercase;
   height: 1rem;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.3s ease;
 }
 
-/* Keyframe Animations */
+/* Animations */
 @keyframes preloaderPulse {
-  0% { transform: scale(0.92); opacity: 0.45; }
-  100% { transform: scale(1.10); opacity: 0.85; }
-}
-
-@keyframes sigilSpinClockwise {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes sigilSpinCounter {
-  0% { transform: rotate(0deg); }
-  50% { transform: rotate(-180deg); }
-  100% { transform: rotate(-360deg); }
-}
-
-@keyframes sigilBreathe {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(197, 168, 105, 0.4)); }
-  50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(220, 20, 40, 0.8)); }
+  0% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 0.9;
+  }
 }
 
 @keyframes logoBreath {
   0% {
-    transform: scale(0.97);
-    filter: drop-shadow(0 0 15px rgba(220, 20, 40, 0.5)) drop-shadow(0 0 25px rgba(197, 168, 105, 0.25));
+    transform: scale(0.985);
+    filter: drop-shadow(0 0 20px rgba(220, 20, 40, 0.5)) drop-shadow(0 0 35px rgba(197, 168, 105, 0.25));
   }
   100% {
-    transform: scale(1.03);
-    filter: drop-shadow(0 0 30px rgba(220, 20, 40, 0.85)) drop-shadow(0 0 45px rgba(197, 168, 105, 0.55));
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 35px rgba(220, 20, 40, 0.85)) drop-shadow(0 0 55px rgba(197, 168, 105, 0.5));
   }
 }
-
-@keyframes sheenSweep {
-  0% {
-    transform: translateX(-150%) skewX(-25deg);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.8;
-  }
-  45% {
-    transform: translateX(150%) skewX(-25deg);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(150%) skewX(-25deg);
-    opacity: 0;
-  }
-}
-
