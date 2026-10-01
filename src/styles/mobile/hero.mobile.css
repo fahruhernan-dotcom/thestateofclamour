@@ -1,0 +1,314 @@
+/* ========================================================================== */
+/* THE STATE OF CLAMOUR // DEDICATED MOBILE HERO & STORYTELLING STYLES         */
+/* 100% Isolated from Desktop Styles                                          */
+/* ========================================================================== */
+
+.hero-mobile-track {
+  position: relative;
+  width: 100%;
+  height: 280vh;
+  background-color: var(--color-void, #060709);
+  overflow-x: clip;
+}
+
+.hero-mobile-sticky {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #000000;
+}
+
+/* 1. Establishing Portrait Poster Layer (Uncut 9:16 Visual) */
+.hero-mobile-poster-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.hero-mobile-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+/* Initial Mobile Poster Metadata (Fades out smoothly on scroll) */
+.hero-mobile-initial-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 1.25rem var(--mobile-thumb-bottom-inset);
+  background: linear-gradient(
+    to top,
+    rgba(6, 7, 9, 0.92) 0%,
+    rgba(6, 7, 9, 0.65) 50%,
+    transparent 100%
+  );
+  pointer-events: auto;
+  transition: opacity 0.25s ease;
+  will-change: opacity, transform;
+}
+
+.hero-mobile-meta-date {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.6875rem;
+  letter-spacing: 0.26em;
+  color: var(--color-gold-antique, #C5A869);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.hero-mobile-meta-venue {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: var(--color-ivory-dim, #D1C9BC);
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+
+.hero-mobile-scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  color: var(--color-ivory, #E9E4DA);
+  text-transform: uppercase;
+  padding: 0.45rem 1.15rem;
+  background: rgba(17, 21, 31, 0.8);
+  border: 1px solid rgba(197, 168, 105, 0.35);
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  user-select: none;
+}
+
+.hero-mobile-scroll-cue:active {
+  transform: scale(0.96);
+  background: rgba(197, 168, 105, 0.2);
+}
+
+.hero-mobile-cue-arrow {
+  color: var(--color-gold-antique, #C5A869);
+  animation: mobileBounce 1.6s infinite;
+}
+
+@keyframes mobileBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+/* 2. Unmasking Central Portal Video Layer */
+.hero-mobile-portal-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.hero-mobile-portal-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 30px rgba(143, 29, 36, 0.25);
+  will-change: width, height, border-radius, opacity;
+}
+
+.hero-mobile-portal-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.hero-mobile-portal-hairline {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(197, 168, 105, 0.4);
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.hero-mobile-portal-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 45%,
+    rgba(6, 7, 9, 0.6) 90%,
+    rgba(6, 7, 9, 0.95) 100%
+  );
+  pointer-events: none;
+}
+
+/* 3. Mobile Storytelling Editorial Layer */
+.hero-mobile-editorial-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(1rem + env(safe-area-inset-top, 16px)) 1.25rem var(--mobile-thumb-bottom-inset);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.hero-mobile-top-editorial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.hero-mobile-monument-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: var(--mobile-headline-size, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 0.98;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.hero-mobile-sub-venue {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  letter-spacing: 0.24em;
+  color: var(--color-ivory-dim, #D1C9BC);
+  text-transform: uppercase;
+  margin-top: 0.6rem;
+}
+
+/* Bottom Dock: Schedule Grid */
+.hero-mobile-bottom-editorial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.hero-mobile-divider {
+  width: 100%;
+  max-width: 360px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(197, 168, 105, 0.45) 20%,
+    rgba(197, 168, 105, 0.45) 80%,
+    transparent 100%
+  );
+  margin-bottom: 0.85rem;
+}
+
+.hero-mobile-schedule-dock {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 360px;
+  padding: 0 0.25rem;
+}
+
+.hero-mobile-schedule-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.hero-mobile-schedule-item.align-right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.hero-mobile-sched-date {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--color-muted, #9CA3AF);
+  text-transform: uppercase;
+}
+
+.hero-mobile-sched-artist {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-gold-antique, #C5A869);
+  line-height: 1;
+}
+
+.hero-mobile-sched-meta {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  color: var(--color-ivory, #E9E4DA);
+  margin-top: 0.15rem;
+}
+
+/* 4. Climax Overlay ("WELCOME TO THE ASSEMBLY") */
+.hero-mobile-climax-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  pointer-events: none;
+  background: rgba(6, 7, 9, 0.55);
+  will-change: opacity, transform;
+}
+
+.hero-mobile-climax-title {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: clamp(1.85rem, 8vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  color: var(--color-ivory, #E9E4DA);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9);
+}
+
+.hero-mobile-climax-bar {
+  width: 48px;
+  height: 2px;
+  background: var(--color-gold-antique, #C5A869);
+  margin-top: 1.25rem;
+}

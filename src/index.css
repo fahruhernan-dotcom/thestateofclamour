@@ -7,6 +7,7 @@
 @import './styles/transitions.css';
 @import './styles/navbar.css';
 @import './styles/hero.css';
+@import './styles/mobile/hero.mobile.css';
 @import './styles/storytelling.css';
 @import './styles/lineup.css';
 @import './styles/tickets.css';

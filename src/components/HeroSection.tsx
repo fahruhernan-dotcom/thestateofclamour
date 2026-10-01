@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useCallback } from 'react';
 import { EventData } from '../types';
 import { silenceSec1, silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../utils/mediaPreloader';
+import { useIsMobile } from '../hooks/useIsMobile';
+import { HeroSectionMobile } from './mobile/HeroSectionMobile';
 
 interface Props {
   event: EventData;
@@ -17,6 +19,12 @@ const getFramePath = (index: number): string => {
 };
 
 export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <HeroSectionMobile event={event} onExploreGuests={onExploreGuests} />;
+  }
+
   const heroTrackRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const heroPosterContainerRef = useRef<HTMLDivElement | null>(null);
@@ -325,7 +333,11 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
     };
 
     // High performance adaptive full-bleed cinematic renderer (Zero pillarbox bars)
-    const renderImageToCanvas = (img: HTMLImageElement, progress: number = 0) => {
+    const renderImageToCanvas = (
+      img: HTMLImageElement,
+      progress: number = 0,
+      clearCanvas: boolean = true
+    ) => {
       if (!canvas || !ctx) return;
       const cw = canvas.width;
       const ch = canvas.height;
@@ -357,8 +369,10 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
         dy = 0;
       }
 
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, cw, ch);
+      if (clearCanvas) {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, cw, ch);
+      }
       ctx.drawImage(img, dx, dy, dw, dh);
 
       // Deepen to pure black underneath expanding Section 1 video
@@ -371,15 +385,41 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
 
     const drawFrame = (frameIndex: number, progress: number = 0) => {
       const isMobile = vw < 768;
-      // On mobile at scroll = 0, draw the uncropped portrait poster
-      if (isMobile && progress === 0 && mobilePosterImg && mobilePosterImg.complete && mobilePosterImg.naturalWidth > 0) {
-        renderImageToCanvas(mobilePosterImg, 0);
-        lastRenderedFrame = 0;
-        return;
+
+      if (isMobile) {
+        // Stage A: Pure uncropped portrait poster (progress 0.00 -> 0.12)
+        if (progress <= 0.12) {
+          if (mobilePosterImg && mobilePosterImg.complete && mobilePosterImg.naturalWidth > 0) {
+            renderImageToCanvas(mobilePosterImg, progress, true);
+            lastRenderedFrame = -1;
+            return;
+          }
+        }
+
+        // Stage B: Smooth cinematic crossfade into clean Frame 48 (progress 0.12 -> 0.20)
+        // Frame 48 has NO text, so mobile poster fades away with zero double-text ghosting
+        if (progress > 0.12 && progress < 0.20) {
+          const baseImg = images[48] || images[Math.max(48, Math.round(frameIndex))];
+          if (baseImg && baseImg.complete && baseImg.naturalWidth > 0) {
+            renderImageToCanvas(baseImg, progress, true);
+
+            if (mobilePosterImg && mobilePosterImg.complete && mobilePosterImg.naturalWidth > 0) {
+              const posterAlpha = Math.max(0, 1 - (progress - 0.12) / 0.08);
+              ctx.save();
+              ctx.globalAlpha = posterAlpha;
+              renderImageToCanvas(mobilePosterImg, progress, false);
+              ctx.restore();
+            }
+            lastRenderedFrame = 48;
+            return;
+          }
+        }
       }
 
-      const idx = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(frameIndex)));
-      if (idx === lastRenderedFrame && progress < 0.44 && !(isMobile && progress < 0.08)) return;
+      // Stage C: Standard video frame sequence (Desktop: 0 -> 191; Mobile: 48 -> 191)
+      const minFrame = isMobile ? 48 : 0;
+      const idx = Math.max(minFrame, Math.min(TOTAL_FRAMES - 1, Math.round(frameIndex)));
+      if (idx === lastRenderedFrame && progress < 0.44) return;
 
       let img = images[idx];
 
@@ -387,6 +427,7 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
         let bestIdx = -1;
         let minDiff = Infinity;
         for (const loadedIdx of loadedIndices) {
+          if (isMobile && loadedIdx < 48) continue; // Never fallback to wide text frames on mobile
           const diff = Math.abs(loadedIdx - idx);
           if (diff < minDiff) {
             minDiff = diff;
@@ -399,17 +440,7 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
       }
 
       if (img && img.complete && img.naturalWidth > 0) {
-        renderImageToCanvas(img, progress);
-
-        // On mobile, smoothly dissolve out the portrait poster during first tiny scroll (0.00 -> 0.08)
-        if (isMobile && mobilePosterImg && mobilePosterImg.complete && progress > 0 && progress < 0.08) {
-          const mobAlpha = Math.max(0, 1 - progress / 0.08);
-          ctx.save();
-          ctx.globalAlpha = mobAlpha;
-          renderImageToCanvas(mobilePosterImg, progress);
-          ctx.restore();
-        }
-
+        renderImageToCanvas(img, progress, true);
         lastRenderedFrame = idx;
       }
     };
