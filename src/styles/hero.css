@@ -1,188 +1,72 @@
 /* ========================================================================== */
-/* 2. SCENE 01: HERO SECTION (CINEMATIC FILM POSTER & SPOTLIGHT REVEAL)       */
+/* 2. SCENE 01: HERO SECTION (INTERACTIVE SCROLL CINEMATIC CAMERA STAGE)     */
 /* ========================================================================== */
 
-.hero-editorial-section {
+.hero-scroll-track {
+  --hero-track-height: 260vh;
   position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
   width: 100%;
+  height: var(--hero-track-height);
+  background-color: #000000;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .hero-scroll-track {
+    --hero-track-height: 220vh;
+  }
+}
+
+/* 1. Full-Bleed Sticky Stage (Locks in viewport during scroll scrub) */
+.hero-sticky-stage {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  overflow: hidden;
   background-color: #000000;
   padding: clamp(2rem, 5vh, 4rem) 1.5rem clamp(2rem, 4vh, 3.5rem);
 }
 
-/* 1. Base Sanctuary Monument Image (BG_IMAGE_1) */
-.hero-base-layer {
+/* 2. Pre-rendered Cinematic Background Video (Scrubbed strictly via scroll) */
+.hero-cinematic-video {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.hero-monument-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 60%;
+  object-position: center center;
   display: block;
   user-select: none;
   pointer-events: none;
-}
-
-/* 2. Volumetric Dark Smoke & Fog Backdrop */
-.hero-smoke-backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: 
-    linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0.15) 65%, rgba(0, 0, 0, 0.85) 100%),
-    url('/assets/hero_smoke_atmosphere.jpg') center bottom / cover no-repeat;
-  opacity: 0.5;
-  mix-blend-mode: screen;
-  animation: hero-smoke-drift 24s ease-in-out infinite alternate;
+  z-index: 1;
+  background-color: #000000;
   will-change: transform;
 }
 
-@keyframes hero-smoke-drift {
-  0% {
-    transform: scale(1.0) translateY(0);
-  }
-  100% {
-    transform: scale(1.04) translateY(-1.5%);
-  }
-}
-
-/* 2b. Lightning Storm Clouds Video Overlay (Sky Zone Only — NOT full hero) */
-.hero-lightning-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 55%;
-  z-index: 2;
-  pointer-events: none;
-  overflow: hidden;
-  mix-blend-mode: screen;
-  opacity: 0.78;
-  mask-image: linear-gradient(
-    180deg,
-    black 0%,
-    black 40%,
-    rgba(0, 0, 0, 0.5) 75%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    180deg,
-    black 0%,
-    black 40%,
-    rgba(0, 0, 0, 0.5) 75%,
-    transparent 100%
-  );
-}
-
-/* CSS Lightning Flash — replaces video for smooth performance */
-.hero-lightning-flash {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 120% 80% at 50% 20%,
-    rgba(200, 210, 255, 0.9) 0%,
-    rgba(150, 170, 220, 0.5) 25%,
-    rgba(100, 120, 180, 0.2) 50%,
-    transparent 75%
-  );
-  opacity: 0;
-  animation: lightning-flash 8s infinite;
-  pointer-events: none;
-}
-
-/* Natural lightning: quick double-flash, long pause, single flash */
-@keyframes lightning-flash {
-  0%    { opacity: 0; }
-  1%    { opacity: 0.7; }
-  1.5%  { opacity: 0.1; }
-  2%    { opacity: 0.9; }
-  3%    { opacity: 0; }
-  
-  40%   { opacity: 0; }
-  40.5% { opacity: 0.5; }
-  41%   { opacity: 0; }
-  
-  70%   { opacity: 0; }
-  70.3% { opacity: 0.6; }
-  70.6% { opacity: 0.15; }
-  71%   { opacity: 0.8; }
-  71.5% { opacity: 0; }
-  
-  100%  { opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-lightning-overlay {
-    display: none;
-  }
-}
-
-
-/* 3. Reveal Horror Character Image Layer (BG_IMAGE_2) with feathered mask spotlight */
-.hero-reveal-layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-  pointer-events: none;
-  overflow: hidden;
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* 4. Ambient Feathered Spotlight Edge Glow (260px radius = 520px diameter) */
-.hero-spotlight-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 520px;
-  height: 520px;
-  border-radius: 50%;
-  z-index: 4;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  background: radial-gradient(
-    circle at center,
-    rgba(235, 45, 65, 0.32) 0%,
-    rgba(197, 168, 105, 0.16) 32%,
-    rgba(185, 28, 28, 0.06) 64%,
-    transparent 100%
-  );
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
-}
-
-/* 5. Editorial Film Vignette (Preserves clear view of center architecture & red door) */
+/* 3. Editorial Film Vignette (Preserves clear center while deepening cinematic perimeter) */
 .hero-editorial-vignette {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 2;
   pointer-events: none;
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(0, 0, 0, 0.12) 0%,
-    rgba(0, 0, 0, 0.5) 65%,
-    rgba(0, 0, 0, 0.9) 100%
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.42) 65%,
+    rgba(0, 0, 0, 0.92) 100%
   );
 }
 
-/* 6. Cinematic Film Poster Container (Natural Eye Movement: IDENTITY → TITLE → RED ENTRANCE → META → ENTER) */
+/* 4. Cinematic Film Poster Container (Dissolves upward on camera approach) */
 .hero-poster-container {
   position: relative;
   z-index: 10;
@@ -198,6 +82,7 @@
   text-align: center;
   margin-inline: auto;
   pointer-events: auto;
+  will-change: opacity, transform;
 }
 
 /* Upper Poster Block */
@@ -227,7 +112,7 @@
   font-size: clamp(0.6875rem, 0.95vw, 0.8125rem);
   font-weight: 500;
   letter-spacing: 0.38em;
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(255, 255, 255, 0.72);
   text-transform: uppercase;
   margin-bottom: 1.25rem;
   display: inline-block;
@@ -254,11 +139,10 @@
   display: block;
 }
 
-
-/* Generous Negative Space: lets the architecture, fog, darkness, and glowing red entrance breathe */
+/* Generous Negative Space: lets the architecture, fog, and red entrance breathe */
 .hero-poster-spacer {
   flex: 1 1 auto;
-  min-height: clamp(100px, 18vh, 240px);
+  min-height: clamp(80px, 16vh, 200px);
   pointer-events: none;
 }
 
@@ -293,27 +177,60 @@
   font-size: clamp(0.7rem, 0.92vw, 0.8rem);
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.25rem;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
 }
 
 .hero-meta-date {
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .hero-meta-venue {
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Subtle Scroll Guidance Indicator */
+.hero-scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  user-select: none;
+}
+
+.hero-scroll-cue-text {
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  letter-spacing: 0.32em;
+  color: rgba(197, 168, 105, 0.85);
+  text-transform: uppercase;
+}
+
+.hero-scroll-cue-arrow {
+  color: rgba(197, 168, 105, 0.9);
+  font-size: 0.75rem;
+  animation: hero-cue-bounce 2.2s ease-in-out infinite;
+}
+
+@keyframes hero-cue-bounce {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
 }
 
 /* ========================================================================== */
-/* HERO MOBILE RESPONSIVE (Film Poster on Small Screens)                      */
+/* HERO MOBILE RESPONSIVE                                                     */
 /* ========================================================================== */
 
 @media (max-width: 768px) {
-  .hero-editorial-section {
-    min-height: 100svh;
+  .hero-sticky-stage {
     padding: 1.5rem 1.15rem calc(1.5rem + env(safe-area-inset-bottom));
   }
 
@@ -330,22 +247,18 @@
   }
 
   .hero-poster-spacer {
-    min-height: clamp(60px, 14vh, 140px);
+    min-height: clamp(50px, 12vh, 120px);
   }
 
   .hero-poster-meta {
     font-size: 0.6875rem;
     letter-spacing: 0.22em;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
 
-  .hero-spotlight-glow {
-    width: 280px;
-    height: 280px;
-  }
-
-  .hero-monument-img {
-    object-position: center 38%;
+  .hero-scroll-cue-text {
+    font-size: 0.5rem;
+    letter-spacing: 0.24em;
   }
 }
 
@@ -356,12 +269,10 @@
   }
 
   .hero-poster-spacer {
-    min-height: clamp(45px, 11vh, 100px);
+    min-height: clamp(40px, 10vh, 90px);
   }
 
   .hero-poster-container {
     min-height: calc(100svh - 3rem);
   }
 }
-
-
