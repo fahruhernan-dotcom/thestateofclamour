@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { startPreload, subscribePreloader } from '../utils/mediaPreloader';
+import { startPreload, subscribePreloader, startBackgroundPreloadRemaining } from '../utils/mediaPreloader';
 
 interface CrypticPreloaderProps {
   onComplete?: () => void;
@@ -34,24 +34,24 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       setIsVisible(true);
     }, 30);
 
-    // 3. Minimum display time: 600ms so animation is visible and elegant without lagging
+    // 3. Minimum display time: 750ms so preloader sequence is visible and elegant
     const minTimer = setTimeout(() => {
       minTimePassedRef.current = true;
-    }, 600);
+    }, 750);
 
-    // 4. Maximum failsafe timeout: 2.2s
+    // 4. Maximum failsafe timeout: 4.5s
     const safetyTimer = setTimeout(() => {
       realPercentRef.current = 100;
       minTimePassedRef.current = true;
-    }, 2200);
+    }, 4500);
 
-    // 5. Start media preloader pipeline
+    // 5. Start media preloader pipeline (loads real frames & recap video)
     startPreload();
     const unsubscribe = subscribePreloader((s) => {
       realPercentRef.current = s.percent;
     });
 
-    // 6. Smooth asymptotic interpolation loop (snappy & fluid)
+    // 6. Smooth asymptotic interpolation loop (fluid & responsive to actual load)
     const updateInterpolation = () => {
       const target = realPercentRef.current;
       const current = displayPercentRef.current;
@@ -59,7 +59,7 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       const effectiveTarget = !minTimePassedRef.current && target > 85 ? 85 : target;
 
       if (current < effectiveTarget) {
-        const step = Math.max(1.4, (effectiveTarget - current) * 0.18);
+        const step = Math.max(0.9, (effectiveTarget - current) * 0.16);
         const next = Math.min(effectiveTarget, current + step);
         displayPercentRef.current = next;
         setDisplayPercent(Math.floor(next));
@@ -70,17 +70,18 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
         displayPercentRef.current = 100;
         setDisplayPercent(100);
 
-        // Crisp 120ms hold at 100% so user registers unlock without sluggishness
+        // Crisp 150ms hold at 100% so user registers unlock without sluggishness
         setTimeout(() => {
           setIsFadingOut(true);
           document.body.style.overflow = originalOverflow;
+          startBackgroundPreloadRemaining();
           onComplete?.();
 
           // Unmount after smooth CSS fade-out finishes (0.7s)
           setTimeout(() => {
             setIsDismissed(true);
           }, 700);
-        }, 120);
+        }, 150);
 
         return;
       }

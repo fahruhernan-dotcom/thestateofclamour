@@ -1,5 +1,5 @@
 // Media Preloader & Scroll Gate Coordinator for THE STATE OF CLAMOUR
-// Fast & lightweight critical asset preloading for instant luxury entrance.
+// Truly preloads Section 1 Canvas Frames & Recap Video for stutter-free 120fps scrolling.
 
 export interface PreloaderState {
   loadedBytes: number;
@@ -9,15 +9,44 @@ export interface PreloaderState {
   isUnlocked: boolean;
 }
 
+export const TOTAL_MOBILE_FRAMES = 84;
+export const TOTAL_DESKTOP_FRAMES = 192;
+
 export const TARGET_VIDEOS = [
-  '/assets/hero_scroll_cinematic.mp4',
   '/assets/how2026_recap.mp4',
   '/assets/guest_malvin.mp4',
   '/assets/guest_far.mp4'
 ];
 
+export const getMobileFramePath = (index: number): string => {
+  const frameNum = Math.max(1, Math.min(TOTAL_MOBILE_FRAMES, index + 1));
+  const padded = String(frameNum).padStart(3, '0');
+  return `/assets/hero_mobile_frames/mf_${padded}.jpg`;
+};
+
+export const getDesktopFramePath = (index: number): string => {
+  const frameNum = Math.max(1, Math.min(TOTAL_DESKTOP_FRAMES, index + 1));
+  const padded = String(frameNum).padStart(3, '0');
+  return `/assets/hero_frames/f_${padded}.webp`;
+};
+
+const preloadedMobileFrames = new Map<number, HTMLImageElement>();
+const preloadedDesktopFrames = new Map<number, HTMLImageElement>();
 const cachedBlobUrls = new Map<string, string>();
 const listeners = new Set<(state: PreloaderState) => void>();
+
+export const getMobileFrame = (index: number): HTMLImageElement | undefined => {
+  return preloadedMobileFrames.get(index);
+};
+
+export const getDesktopFrame = (index: number): HTMLImageElement | undefined => {
+  return preloadedDesktopFrames.get(index);
+};
+
+export const getCachedVideoUrl = (url: string | null | undefined): string => {
+  if (!url) return '';
+  return cachedBlobUrls.get(url) || url;
+};
 
 let state: PreloaderState = {
   loadedBytes: 0,
@@ -25,11 +54,6 @@ let state: PreloaderState = {
   percent: 0,
   isComplete: false,
   isUnlocked: false
-};
-
-export const getCachedVideoUrl = (url: string | null | undefined): string => {
-  if (!url) return '';
-  return cachedBlobUrls.get(url) || url;
 };
 
 const notify = () => {
@@ -41,58 +65,114 @@ let preloadPromise: Promise<void> | null = null;
 export const startPreload = (): Promise<void> => {
   if (preloadPromise) return preloadPromise;
 
-  preloadPromise = (async () => {
-    // Critical visual assets required for immediate pristine paint
-    const criticalImages = [
-      '/assets/tsoc_logo_transparent.png',
-      '/assets/hero_scroll_poster_mobile_2k.jpg',
-      '/assets/how2026_recap_poster.jpg'
-    ];
+  preloadPromise = new Promise<void>((resolve) => {
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
 
-    let loadedCount = 0;
-    const totalAssets = criticalImages.length + 1; // images + font check
+    // Critical visual assets
+    const criticalImages = isMobile
+      ? ['/assets/tsoc_logo_transparent.png', '/assets/hero_scroll_poster_mobile_2k.jpg', '/assets/how2026_recap_poster.jpg']
+      : ['/assets/tsoc_logo_transparent.png', '/assets/how2026_recap_poster.jpg'];
 
-    const onAssetLoaded = () => {
-      loadedCount++;
-      const pct = Math.min(100, Math.round((loadedCount / totalAssets) * 100));
+    const totalFrames = isMobile ? TOTAL_MOBILE_FRAMES : TOTAL_DESKTOP_FRAMES;
+    const videoWeight = isMobile ? 18 : 25; // Weight recap video in progress calculation
+    const totalUnits = totalFrames + criticalImages.length + videoWeight;
+
+    let loadedUnits = 0;
+
+    const checkProgress = () => {
+      loadedUnits++;
+      const currentPct = Math.min(100, Math.round((loadedUnits / totalUnits) * 100));
       state = {
         ...state,
-        loadedBytes: loadedCount,
-        totalBytes: totalAssets,
-        percent: pct,
-        isComplete: pct >= 100,
-        isUnlocked: pct >= 100
+        loadedBytes: loadedUnits,
+        totalBytes: totalUnits,
+        percent: currentPct,
+        isComplete: currentPct >= 100,
+        isUnlocked: currentPct >= 100
       };
       notify();
+
+      if (currentPct >= 100) {
+        resolve();
+      }
     };
 
-    // Preload critical images in parallel
+    // 1. Preload Critical Images
     criticalImages.forEach((src) => {
       const img = new Image();
-      img.onload = onAssetLoaded;
-      img.onerror = onAssetLoaded;
+      img.onload = checkProgress;
+      img.onerror = checkProgress;
       img.src = src;
     });
 
-    // Check fonts readiness
-    if (typeof document !== 'undefined' && 'fonts' in document) {
-      document.fonts.ready
-        .then(() => onAssetLoaded())
-        .catch(() => onAssetLoaded());
-    } else {
-      onAssetLoaded();
+    // 2. Preload Canvas Frames in parallel batches
+    const loadFrame = (idx: number) => {
+      const img = new Image();
+      const src = isMobile ? getMobileFramePath(idx) : getDesktopFramePath(idx);
+      img.onload = () => {
+        if (isMobile) {
+          preloadedMobileFrames.set(idx, img);
+        } else {
+          preloadedDesktopFrames.set(idx, img);
+        }
+        checkProgress();
+      };
+      img.onerror = () => {
+        checkProgress();
+      };
+      img.src = src;
+    };
+
+    // Fire all frames (browsers automatically pipeline HTTP/2 requests)
+    for (let i = 0; i < totalFrames; i++) {
+      loadFrame(i);
     }
 
-    // Failsafe guarantee: ensure 100% within 1.2s max under all network conditions
+    // 3. Preload Section 1 Recap Video (/assets/how2026_recap.mp4)
+    fetch('/assets/how2026_recap.mp4')
+      .then(async (resp) => {
+        if (resp.ok) {
+          const blob = await resp.blob();
+          cachedBlobUrls.set('/assets/how2026_recap.mp4', URL.createObjectURL(blob));
+        }
+        // Account for video weight in progress
+        for (let w = 0; w < videoWeight; w++) {
+          checkProgress();
+        }
+      })
+      .catch(() => {
+        for (let w = 0; w < videoWeight; w++) {
+          checkProgress();
+        }
+      });
+
+    // 4. Safety maximum timeout: 4s to never trap user on slow connections
     setTimeout(() => {
       if (!state.isComplete) {
         state = { ...state, percent: 100, isComplete: true, isUnlocked: true };
         notify();
+        resolve();
       }
-    }, 1200);
-  })();
+    }, 4000);
+  });
 
   return preloadPromise;
+};
+
+// Background prefetch for Section 2 videos after Section 1 entrance is unsealed
+export const startBackgroundPreloadRemaining = () => {
+  const remaining = ['/assets/guest_malvin.mp4', '/assets/guest_far.mp4'];
+  remaining.forEach(async (url) => {
+    try {
+      const resp = await fetch(url);
+      if (resp.ok) {
+        const blob = await resp.blob();
+        cachedBlobUrls.set(url, URL.createObjectURL(blob));
+      }
+    } catch {
+      // Non-critical fallback
+    }
+  });
 };
 
 export const unlockScrollManually = () => {

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { EventData } from '../types';
 import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../utils/audioCoordinator';
-import { getCachedVideoUrl } from '../utils/mediaPreloader';
+import { getCachedVideoUrl, getDesktopFrame } from '../utils/mediaPreloader';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { HeroSectionMobile } from './mobile/HeroSectionMobile';
 
@@ -475,14 +475,27 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       };
     }
 
-    // Step 1: Immediately load Frame 1 (establishing shot)
-    const initialImg = new Image();
-    initialImg.src = getFramePath(0);
-    initialImg.onload = () => {
-      images[0] = initialImg;
-      loadedIndices.add(0);
+    // Step 0: Sync all desktop frames already preloaded by mediaPreloader
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
+      const preloaded = getDesktopFrame(i);
+      if (preloaded && preloaded.complete && preloaded.naturalWidth > 0) {
+        images[i] = preloaded;
+        loadedIndices.add(i);
+      }
+    }
+
+    // Step 1: Ensure Frame 1 is ready and rendered immediately
+    if (images[0] && images[0].complete && images[0].naturalWidth > 0) {
       drawFrame(0, 0);
-    };
+    } else {
+      const initialImg = new Image();
+      initialImg.src = getFramePath(0);
+      initialImg.onload = () => {
+        images[0] = initialImg;
+        loadedIndices.add(0);
+        drawFrame(0, 0);
+      };
+    }
 
     // Step 2: Progressive preloading of all 122 frames
     const loadRemainingFrames = () => {

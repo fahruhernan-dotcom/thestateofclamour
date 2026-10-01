@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { EventData } from '../../types';
 import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../../utils/audioCoordinator';
-import { getCachedVideoUrl } from '../../utils/mediaPreloader';
+import { getCachedVideoUrl, getMobileFrame } from '../../utils/mediaPreloader';
 
 interface Props {
   event: EventData;
@@ -395,14 +395,27 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas, { passive: true });
 
-    // Step 1: Preload Frame 1 immediately (identik dengan fallback poster)
-    const initialImg = new Image();
-    initialImg.src = getMobileFramePath(0);
-    initialImg.onload = () => {
-      images[0] = initialImg;
-      loadedIndices.add(0);
+    // Step 0: Sync all frames already preloaded by mediaPreloader
+    for (let i = 0; i < TOTAL_MOBILE_FRAMES; i++) {
+      const preloaded = getMobileFrame(i);
+      if (preloaded && preloaded.complete && preloaded.naturalWidth > 0) {
+        images[i] = preloaded;
+        loadedIndices.add(i);
+      }
+    }
+
+    // Step 1: Ensure Frame 1 is ready and rendered immediately
+    if (images[0] && images[0].complete && images[0].naturalWidth > 0) {
       drawFrame(0, 0);
-    };
+    } else {
+      const initialImg = new Image();
+      initialImg.src = getMobileFramePath(0);
+      initialImg.onload = () => {
+        images[0] = initialImg;
+        loadedIndices.add(0);
+        drawFrame(0, 0);
+      };
+    }
 
     // Step 2: Progressive background preloading of remaining frames
     const loadRemainingFrames = () => {
