@@ -15,5 +15,6 @@
 @import './styles/mobile/tickets.mobile.css';
 @import './styles/rundown.css';
 @import './styles/dossier.css';
+@import './styles/mobile/dossier.mobile.css';
 @import './styles/footer.css';
 @import './styles/responsive.css';

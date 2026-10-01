@@ -1,12 +1,20 @@
 import React from 'react';
 import { Shield, Sparkles, FileText, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { useIsMobile } from '../hooks/useIsMobile';
+import { RulesFAQMobile } from './mobile/RulesFAQMobile';
 
 interface Props {
   onOpenDossier: () => void;
   onToast?: (msg: string) => void;
 }
 
-export const RulesFAQ: React.FC<Props> = ({ onOpenDossier }) => {
+export const RulesFAQ: React.FC<Props> = ({ onOpenDossier, onToast }) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <RulesFAQMobile onOpenDossier={onOpenDossier} onToast={onToast} />;
+  }
+
   return (
     <section id="before-you-enter" className="cinematic-section">
       <h2 className="section-headline">

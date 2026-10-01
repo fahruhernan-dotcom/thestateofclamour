@@ -1,5 +1,7 @@
 import React from 'react';
 import { Artist } from '../types';
+import { useIsMobile } from '../hooks/useIsMobile';
+import { StageRundownMobile } from './mobile/StageRundownMobile';
 
 interface Props {
   artists: Artist[];
@@ -14,6 +16,19 @@ export const StageRundown: React.FC<Props> = ({
   onOpenNight2,
   onOpenFullDossier,
 }) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <StageRundownMobile
+        artists={_artists}
+        onOpenNight1={onOpenNight1}
+        onOpenNight2={onOpenNight2}
+        onOpenFullDossier={onOpenFullDossier}
+      />
+    );
+  }
+
   return (
     <section id="the-night" className="cinematic-section stage-rundown-section">
       <div className="stage-rundown-header-block">
