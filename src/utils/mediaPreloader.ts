@@ -78,8 +78,10 @@ export const startPreload = (): Promise<void> => {
     const totalUnits = totalFrames + criticalImages.length + videoWeight;
 
     let loadedUnits = 0;
+    let resolved = false;
 
     const checkProgress = () => {
+      if (resolved) return;
       loadedUnits++;
       const currentPct = Math.min(100, Math.round((loadedUnits / totalUnits) * 100));
       state = {
@@ -93,6 +95,8 @@ export const startPreload = (): Promise<void> => {
       notify();
 
       if (currentPct >= 100) {
+        resolved = true;
+        clearTimeout(safetyTimerId);
         resolve();
       }
     };
@@ -147,8 +151,9 @@ export const startPreload = (): Promise<void> => {
       });
 
     // 4. Safety maximum timeout: 4s to never trap user on slow connections
-    setTimeout(() => {
-      if (!state.isComplete) {
+    const safetyTimerId = setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
         state = { ...state, percent: 100, isComplete: true, isUnlocked: true };
         notify();
         resolve();

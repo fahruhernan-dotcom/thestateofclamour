@@ -15,6 +15,7 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
   const displayPercentRef = useRef<number>(0);
   const animFrameRef = useRef<number | null>(null);
   const minTimePassedRef = useRef<boolean>(false);
+  const completedRef = useRef<boolean>(false);
 
   // Status ritual label selector
   const getRitualStatus = (val: number): string => {
@@ -66,7 +67,8 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       }
 
       // Trigger smooth fade-out dissolve when complete
-      if (displayPercentRef.current >= 99.2 && minTimePassedRef.current) {
+      if (displayPercentRef.current >= 99.2 && minTimePassedRef.current && !completedRef.current) {
+        completedRef.current = true;
         displayPercentRef.current = 100;
         setDisplayPercent(100);
 

@@ -9,7 +9,10 @@ dist/
 /*.mp4
 /*.png
 /*.jpg
+/*.webm
 public/assets/*_orig.mp4
+public/assets/test_*.jpg
+public/assets/thumb_*.jpg
 
 # Raw source archives & build caches
 Source/

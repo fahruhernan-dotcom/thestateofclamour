@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { EventData } from '../../types';
-import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../../utils/audioCoordinator';
-import { getCachedVideoUrl, getMobileFrame } from '../../utils/mediaPreloader';
+import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio, fadeVideoVolume, cancelVideoFade } from '../../utils/audioCoordinator';
+import { getCachedVideoUrl, getMobileFrame, subscribePreloader } from '../../utils/mediaPreloader';
 
 interface Props {
   event: EventData;
@@ -66,31 +66,79 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       recapVideo.play().catch(() => {});
     }
 
-    const checkAudio = (inRange: boolean) => {
+    const updateAudioVolume = (p: number, trackRect?: DOMRect | null) => {
       if (!recapVideo) return;
+      if (!userInteractedRef.current) {
+        if (!recapVideo.muted) recapVideo.muted = true;
+        isAudioActiveRef.current = false;
+        return;
+      }
 
-      if (inRange && canSec1PlayAudio() && userInteractedRef.current) {
-        silenceSec2();
-        setAudioOwner('sec1-storytelling');
-        recapVideo.volume = 0.92;
-        recapVideo.muted = false;
-        const playPromise = recapVideo.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              isAudioActiveRef.current = true;
-            })
-            .catch(() => {
-              recapVideo.muted = true;
-              isAudioActiveRef.current = false;
-              recapVideo.play().catch(() => {});
-            });
+      if (!canSec1PlayAudio()) {
+        if (!recapVideo.muted) {
+          fadeVideoVolume(recapVideo, 0, 250, () => {
+            isAudioActiveRef.current = false;
+            if (getAudioOwner() === 'sec1-storytelling') setAudioOwner('none');
+          });
+        }
+        return;
+      }
+
+      const baseVolume = 0.92;
+      let targetVol = 0;
+
+      const rect = trackRect || (trackRef.current ? trackRef.current.getBoundingClientRect() : null);
+      const isExiting = rect ? rect.bottom < window.innerHeight : false;
+
+      if (isExiting && rect) {
+        // Boundary transition between Sec 1 and Sec 2:
+        // As hero track scrolls off screen (rect.bottom from 100vh down to 15vh),
+        // smoothly fade audio out to zero in direct proportion to scroll.
+        const exitRange = window.innerHeight * 0.85;
+        const exitProgress = Math.max(0, (rect.bottom - window.innerHeight * 0.15) / exitRange);
+        const exitFade = Math.pow(exitProgress, 1.25);
+        targetVol = baseVolume * 0.85 * exitFade;
+      } else if (p < 0.26) {
+        targetVol = 0;
+      } else if (p < 0.32) {
+        // Smooth entrance fade-in
+        const inFactor = (p - 0.26) / 0.06;
+        targetVol = baseVolume * inFactor;
+      } else if (p <= 0.94) {
+        // Core full-immersion storytelling
+        targetVol = baseVolume;
+      } else {
+        // 0.94 -> 1.00: subtle pre-taper near track end
+        const taper = 1 - 0.15 * ((p - 0.94) / 0.06);
+        targetVol = baseVolume * taper;
+      }
+
+      if (targetVol <= 0.01) {
+        if (!recapVideo.muted) {
+          fadeVideoVolume(recapVideo, 0, 200, () => {
+            recapVideo.muted = true;
+            isAudioActiveRef.current = false;
+            if (getAudioOwner() === 'sec1-storytelling') setAudioOwner('none');
+          });
         }
       } else {
-        recapVideo.muted = true;
-        isAudioActiveRef.current = false;
-        if (getAudioOwner() === 'sec1-storytelling') {
-          setAudioOwner('none');
+        cancelVideoFade(recapVideo);
+        if (recapVideo.muted) {
+          silenceSec2();
+          setAudioOwner('sec1-storytelling');
+          recapVideo.muted = false;
+          recapVideo.volume = targetVol;
+          recapVideo.play().then(() => {
+            isAudioActiveRef.current = true;
+            isSectionVisibleRef.current = true;
+          }).catch(() => {});
+        } else {
+          recapVideo.volume = targetVol;
+          isAudioActiveRef.current = true;
+          isSectionVisibleRef.current = true;
+          if (getAudioOwner() !== 'sec1-storytelling') {
+            setAudioOwner('sec1-storytelling');
+          }
         }
       }
     };
@@ -173,7 +221,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       }
 
       // ----------------------------------------------------------------------
-      // Stage 3 & 4: Section 1 Concert Card Emergence & Expansion (0.36 -> 1.00)
+      // Stage 3 & 4: Section 1 Concert Card Emergence & Expansion (0.26 -> 1.00)
+      // Video card appears alongside editorial text, expands to full-bleed by 0.44
       // ----------------------------------------------------------------------
       const baseCardW = Math.min(Math.round(vw * 0.82), 360);
       const baseCardH = Math.min(Math.round(baseCardW * 1.33), Math.round(vh * 0.48));
@@ -181,13 +230,13 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       const baseCardTop = Math.round((vh - baseCardH) / 2);
 
       if (gpuCanvasRef.current) {
-        if (p < 0.38) {
+        if (p < 0.26) {
           gpuCanvasRef.current.style.opacity = '0';
           gpuCanvasRef.current.style.pointerEvents = 'none';
           if (photoHairlineRef.current) photoHairlineRef.current.style.opacity = '0';
-        } else if (p < 0.46) {
+        } else if (p < 0.34) {
           // Card emerges rapidly from black void with gold hairline & red backlight
-          const fadeInP = Math.min(1, (p - 0.38) / 0.08);
+          const fadeInP = Math.min(1, (p - 0.26) / 0.08);
           gpuCanvasRef.current.style.opacity = fadeInP.toFixed(3);
           gpuCanvasRef.current.style.left = `${baseCardLeft}px`;
           gpuCanvasRef.current.style.top = `${baseCardTop}px`;
@@ -200,9 +249,9 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
           if (photoHairlineRef.current) {
             photoHairlineRef.current.style.opacity = (fadeInP * 0.75).toFixed(3);
           }
-        } else if (p <= 0.56) {
+        } else if (p <= 0.44) {
           // Morphing smoothly to 100vw x 100vh full-bleed
-          const expP = (p - 0.46) / 0.10;
+          const expP = (p - 0.34) / 0.10;
           const easedP = Math.pow(expP, 1.25);
 
           const curLeft = Math.round(baseCardLeft * (1 - easedP));
@@ -227,7 +276,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
             photoHairlineRef.current.style.opacity = borderOp.toFixed(3);
           }
         } else {
-          // EXTENDED FULLSCREEN PLATEAU (0.56 -> 1.00)
+          // EXTENDED FULLSCREEN PLATEAU (0.44 -> 1.00)
           gpuCanvasRef.current.style.opacity = '1';
           gpuCanvasRef.current.style.left = '0px';
           gpuCanvasRef.current.style.top = '0px';
@@ -244,8 +293,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       }
 
       // Camera push-in scale for recap concert video
-      if (recapVideo && p >= 0.38) {
-        const vidProgress = Math.max(0, (p - 0.38) / 0.62);
+      if (recapVideo && p >= 0.26) {
+        const vidProgress = Math.max(0, (p - 0.26) / 0.74);
         const scaleVal = (1 + 0.06 * Math.pow(vidProgress, 1.2)).toFixed(4);
         recapVideo.style.transform = `scale(${scaleVal}) translateZ(0)`;
       }
@@ -262,9 +311,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
 
       // ----------------------------------------------------------------------
       // Editorial Typography Layer (THE GUESTS, MALVIN, FAR)
-      // MUNCUL DULUAN saat kamera menembus pintu gotik & masuk kabut merah (p = 0.20 -> 0.28)
-      // Bebas dari tumpang tindih judul awal SWEAR IN CONTINENTAL (yang keluar di p <= 0.16)
-      // Video baru muncul di tengah belakangan (p = 0.38 -> 0.46)
+      // Muncul saat kamera menembus pintu gotik & masuk kabut merah (p = 0.20 -> 0.28)
+      // Video card muncul bersamaan (p = 0.26 -> 0.34), teks larut saat card expand (0.34 -> 0.42)
       // ----------------------------------------------------------------------
       let sec1TextOpacity = 0;
       let topDriftY = 0;
@@ -280,14 +328,14 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
         sec1TextOpacity = enterP;
         topDriftY = Math.round(16 * (1 - enterP));
         bottomDriftY = Math.round(-16 * (1 - enterP));
-      } else if (p <= 0.44) {
-        // Teks terbaca jelas & mantap di layar; video muncul di tengah pada p = 0.38
+      } else if (p <= 0.34) {
+        // Teks terbaca jelas & mantap di layar; video card muncul bersamaan
         sec1TextOpacity = 1;
         topDriftY = 0;
         bottomDriftY = 0;
-      } else if (p <= 0.54) {
-        // Saat video card membesar ke full-bleed (0.46 -> 0.56), teks bergeser keluar & larut
-        const expRatio = (p - 0.44) / 0.10;
+      } else if (p <= 0.42) {
+        // Saat video card membesar ke full-bleed, teks bergeser keluar & larut
+        const expRatio = (p - 0.34) / 0.08;
         sec1TextOpacity = Math.max(0, 1 - expRatio * 1.4);
         topDriftY = Math.round(-32 * expRatio);
         bottomDriftY = Math.round(32 * expRatio);
@@ -309,23 +357,23 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       }
 
       // ----------------------------------------------------------------------
-      // Stage 5: Climax Arrival ("WELCOME TO THE ASSEMBLY") (0.60 -> 0.98)
+      // Stage 5: Climax Arrival ("WELCOME TO THE ASSEMBLY") (0.52 -> 0.96)
       // ----------------------------------------------------------------------
       let welcomeOpacity = 0;
       let welcomeTranslateY = 24;
 
-      if (p < 0.60) {
+      if (p < 0.52) {
         welcomeOpacity = 0;
         welcomeTranslateY = 24;
-      } else if (p < 0.68) {
-        const wp = (p - 0.60) / 0.08;
+      } else if (p < 0.60) {
+        const wp = (p - 0.52) / 0.08;
         welcomeOpacity = wp;
         welcomeTranslateY = Math.round(24 * (1 - Math.pow(wp, 0.8)));
-      } else if (p <= 0.92) {
+      } else if (p <= 0.88) {
         welcomeOpacity = 1;
         welcomeTranslateY = 0;
-      } else if (p <= 0.98) {
-        const fadeP = (p - 0.92) / 0.06;
+      } else if (p <= 0.96) {
+        const fadeP = (p - 0.88) / 0.08;
         welcomeOpacity = Math.max(0, 1 - fadeP);
         welcomeTranslateY = Math.round(-16 * fadeP);
       } else {
@@ -343,33 +391,14 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       }
 
       // ----------------------------------------------------------------------
-      // Audio State Synchronization with Section 1 Video Runway
-      // Video is visible strictly between p = 0.38 and p = 0.98.
-      // Scrolling above (p < 0.38) or scrolling below (p > 0.98 / off-screen)
-      // immediately silences Section 1 audio.
+      // Audio State Synchronization with Section 1 Video Runway & Sec 2 Boundary
+      // Continuously calculates smooth volume based on video visibility & scroll boundary.
       // ----------------------------------------------------------------------
-      let isSec1Active = false;
       if (trackRef.current) {
         const rect = trackRef.current.getBoundingClientRect();
-        const scrollableDist = rect.height - window.innerHeight;
-        const rawProgress = scrollableDist > 0 ? (-rect.top) / scrollableDist : p;
-        const isWithinTrackView = rect.bottom > window.innerHeight * 0.15 && rect.top <= 0;
-        const isInVideoRange = rawProgress >= 0.38 && rawProgress <= 0.98;
-        isSec1Active = isWithinTrackView && isInVideoRange && canSec1PlayAudio();
+        updateAudioVolume(p, rect);
       } else {
-        isSec1Active = p >= 0.38 && p <= 0.98 && canSec1PlayAudio();
-      }
-
-      if (isSec1Active !== isSectionVisibleRef.current) {
-        isSectionVisibleRef.current = isSec1Active;
-        checkAudio(isSec1Active);
-      } else if (!isSec1Active && recapVideo && !recapVideo.muted) {
-        // Immediate safety enforcement
-        recapVideo.muted = true;
-        isAudioActiveRef.current = false;
-        if (getAudioOwner() === 'sec1-storytelling') {
-          setAudioOwner('none');
-        }
+        updateAudioVolume(p, null);
       }
     };
 
@@ -415,6 +444,19 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
         loadedIndices.add(0);
         drawFrame(0, 0);
       };
+    }
+
+    // Step 1b: Set recap video src from preloader cache (avoids double-fetching 33MB)
+    let unsubVideo: (() => void) | null = null;
+    if (recapVideo) {
+      unsubVideo = subscribePreloader((s) => {
+        if (s.isComplete) {
+          recapVideo.src = getCachedVideoUrl('/assets/how2026_recap.mp4');
+          recapVideo.play().catch(() => {});
+          unsubVideo?.();
+          unsubVideo = null;
+        }
+      });
     }
 
     // Step 2: Progressive background preloading of remaining frames
@@ -497,28 +539,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       const rawProgress = currentScroll / scrollableDistance;
       targetProgress = Math.max(0, Math.min(1, rawProgress));
 
-      // Immediate synchronous audio cutoff when scrolling out of bounds (zero delay, zero lag)
-      const isWithinTrackView = rect.bottom > window.innerHeight * 0.15 && rect.top <= 0;
-      const isInVideoRange = rawProgress >= 0.38 && rawProgress <= 0.98;
-      const isSec1Active = isWithinTrackView && isInVideoRange && canSec1PlayAudio();
-
-      if (!isSec1Active) {
-        if (recapVideo && !recapVideo.muted) {
-          recapVideo.muted = true;
-        }
-        isAudioActiveRef.current = false;
-        if (isSectionVisibleRef.current) {
-          isSectionVisibleRef.current = false;
-          if (getAudioOwner() === 'sec1-storytelling') {
-            setAudioOwner('none');
-          }
-        }
-      } else {
-        if (!isSectionVisibleRef.current) {
-          isSectionVisibleRef.current = true;
-          checkAudio(true);
-        }
-      }
+      // Synchronous scroll-based volume update (smooth fade out at Section 1 & 2 border)
+      updateAudioVolume(targetProgress, rect);
 
       requestTick();
     };
@@ -531,40 +553,28 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       userInteractedRef.current = true;
       if (!recapVideo || !trackRef.current) return;
       const rect = trackRef.current.getBoundingClientRect();
-      const scrollableDistance = rect.height - window.innerHeight;
-      const rawProgress = scrollableDistance > 0 ? (-rect.top) / scrollableDistance : 0;
-      const isWithinTrackView = rect.bottom > window.innerHeight * 0.15 && rect.top <= 0;
-      const isInVideoRange = rawProgress >= 0.38 && rawProgress <= 0.98;
-
-      if (isWithinTrackView && isInVideoRange && canSec1PlayAudio()) {
-        silenceSec2();
-        setAudioOwner('sec1-storytelling');
-        recapVideo.volume = 0.92;
-        recapVideo.muted = false;
-        recapVideo.play()
-          .then(() => {
-            isAudioActiveRef.current = true;
-            isSectionVisibleRef.current = true;
-          })
-          .catch(() => {
-            recapVideo.muted = true;
-            isAudioActiveRef.current = false;
-            recapVideo.play().catch(() => {});
-          });
-      }
+      updateAudioVolume(targetProgress, rect);
     };
 
     const handleOwnerChange = (e: Event) => {
       const customEvent = e as CustomEvent<{ owner: string }>;
       if (customEvent.detail?.owner === 'sec2-lineup') {
-        if (recapVideo) recapVideo.muted = true;
-        isAudioActiveRef.current = false;
+        if (recapVideo && !recapVideo.muted) {
+          fadeVideoVolume(recapVideo, 0, 200, () => {
+            recapVideo.muted = true;
+            isAudioActiveRef.current = false;
+          });
+        }
       }
     };
 
     const handleSec1Silenced = () => {
-      if (recapVideo) recapVideo.muted = true;
-      isAudioActiveRef.current = false;
+      if (recapVideo && !recapVideo.muted) {
+        fadeVideoVolume(recapVideo, 0, 200, () => {
+          recapVideo.muted = true;
+          isAudioActiveRef.current = false;
+        });
+      }
     };
 
     window.addEventListener('how:audio-owner-change', handleOwnerChange);
@@ -577,6 +587,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       isActive = false;
       clearTimeout(preloadTimer);
       if (rafId !== null) cancelAnimationFrame(rafId);
+      if (unsubVideo) unsubVideo();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('how:audio-owner-change', handleOwnerChange);
@@ -641,7 +652,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
           <div className="hero-mobile-portal-frame">
             <video
               ref={recapVideoRef}
-              src={getCachedVideoUrl('/assets/how2026_recap.mp4')}
               poster="/assets/how2026_recap_poster.jpg"
               className="hero-mobile-portal-video"
               autoPlay
