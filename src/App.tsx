@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { HomePage } from './pages/HomePage';
 import { NightOneEventPage } from './pages/NightOneEventPage';
 import { NightTwoEventPage } from './pages/NightTwoEventPage';
@@ -20,6 +20,36 @@ export const App: React.FC = () => {
   const [dossierInitialTab, setDossierInitialTab] = useState<'protocols' | 'architecture' | 'timetable' | 'guide'>('protocols');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [highlightedTicketId, setHighlightedTicketId] = useState<string | null>(null);
+
+  // Preserve home scroll position across page transitions
+  const homeScrollYRef = useRef<number>(0);
+
+  // Continuously track home scroll position while in home view
+  useEffect(() => {
+    if (currentView !== 'home') return;
+    const handleHomeScroll = () => {
+      homeScrollYRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+    };
+    window.addEventListener('scroll', handleHomeScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleHomeScroll);
+  }, [currentView]);
+
+  // Seamless home scroll restoration
+  const restoreHomeScroll = useCallback(() => {
+    const targetY = homeScrollYRef.current;
+    if (targetY > 0) {
+      window.scrollTo({ top: targetY, behavior: 'instant' });
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: targetY, behavior: 'instant' });
+        setTimeout(() => {
+          window.scrollTo({ top: targetY, behavior: 'instant' });
+        }, 50);
+        setTimeout(() => {
+          window.scrollTo({ top: targetY, behavior: 'instant' });
+        }, 160);
+      });
+    }
+  }, []);
 
   // Parse view from hash
   const parseViewFromHash = (hash: string): { view: ViewMode; tab?: 'protocols' | 'architecture' | 'timetable' | 'guide' } => {
@@ -46,10 +76,18 @@ export const App: React.FC = () => {
       if (tab) setDossierInitialTab(tab);
 
       if (view !== currentView) {
+        if (currentView === 'home' && view !== 'home') {
+          homeScrollYRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+        }
+
         setIsTransitioning(true);
         setTimeout(() => {
           setCurrentView(view);
-          window.scrollTo({ top: 0, behavior: 'instant' });
+          if (view === 'home') {
+            restoreHomeScroll();
+          } else {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }
           setTimeout(() => {
             setIsTransitioning(false);
           }, 80);
@@ -64,7 +102,8 @@ export const App: React.FC = () => {
 
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
-  }, [currentView]);
+  }, [currentView, restoreHomeScroll]);
+
 
   // Global Nocturnal Torchlight Lantern tracking
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -100,9 +139,14 @@ export const App: React.FC = () => {
     }
   };
 
-  // Smooth cinematic page navigation
+  // Smooth cinematic page navigation with intelligent scroll retention
   const navigateTo = (view: ViewMode, hash = '') => {
     if (currentView === view && window.location.hash === hash) return;
+
+    // Capture home scroll position before navigating away
+    if (currentView === 'home' && view !== 'home') {
+      homeScrollYRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+    }
 
     setIsTransitioning(true);
     setTimeout(() => {
@@ -112,13 +156,19 @@ export const App: React.FC = () => {
       } else {
         window.history.pushState(null, '', ' ');
       }
-      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      if (view === 'home') {
+        restoreHomeScroll();
+      } else {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
 
       setTimeout(() => {
         setIsTransitioning(false);
       }, 80);
     }, 180);
   };
+
 
   const handleOpenNight1 = () => {
     navigateTo('event-night-1', '#/event/night-1');
