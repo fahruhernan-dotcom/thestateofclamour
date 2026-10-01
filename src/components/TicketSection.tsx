@@ -1,6 +1,8 @@
 import React from 'react';
 import { Check, ShieldCheck, Flame } from 'lucide-react';
 import { TicketTier } from '../types';
+import { useIsMobile } from '../hooks/useIsMobile';
+import { TicketSectionMobile } from './mobile/TicketSectionMobile';
 
 interface Props {
   tickets: TicketTier[];
@@ -9,6 +11,18 @@ interface Props {
 }
 
 export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, onCheckout }) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <TicketSectionMobile
+        tickets={tickets}
+        highlightedTicketId={highlightedTicketId}
+        onCheckout={onCheckout}
+      />
+    );
+  }
+
   const formatIDR = (val: number) => {
     return 'Rp' + val.toLocaleString('id-ID');
   };

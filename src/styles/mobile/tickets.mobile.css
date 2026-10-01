@@ -1,0 +1,225 @@
+/* ========================================================================== */
+/* THE STATE OF CLAMOUR // DEDICATED MOBILE TICKETS STYLES                    */
+/* 100% Isolated from Desktop Styles                                          */
+/* ========================================================================== */
+
+.tickets-mobile-section {
+  position: relative;
+  width: 100%;
+  padding: 3.5rem var(--mobile-gutter, 1.25rem) calc(3.5rem + env(safe-area-inset-bottom, 16px));
+  background-color: var(--color-void, #060709);
+  overflow-x: clip;
+}
+
+.tickets-mobile-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.tickets-mobile-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: var(--color-gold-antique, #C5A869);
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.tickets-mobile-headline {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: var(--mobile-headline-size, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--color-ivory, #E9E4DA);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.tickets-mobile-subtext {
+  font-family: var(--font-editorial, 'Cormorant Garamond', serif);
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--color-muted, #9CA3AF);
+  margin-top: 0.4rem;
+  letter-spacing: 0.03em;
+}
+
+/* Vertical Stacked Cards */
+.tickets-mobile-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.ticket-mobile-card {
+  position: relative;
+  background: var(--color-surface-dark, #11151F);
+  border-radius: 6px;
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.ticket-mobile-card.is-active-tier {
+  border-color: rgba(197, 168, 105, 0.55);
+  box-shadow: 0 0 24px rgba(197, 168, 105, 0.12), 0 12px 32px rgba(0, 0, 0, 0.75);
+}
+
+.ticket-mobile-card.is-sold-out {
+  opacity: 0.65;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(17, 21, 31, 0.45);
+}
+
+/* Embossed Admission Seal Watermark */
+.ticket-mobile-seal-watermark {
+  position: absolute;
+  right: -25px;
+  bottom: -25px;
+  width: 140px;
+  height: 140px;
+  opacity: 0.045;
+  pointer-events: none;
+  color: var(--color-gold-antique, #C5A869);
+  z-index: 1;
+}
+
+/* Card Content Hierarchy */
+.ticket-mobile-card-top {
+  position: relative;
+  z-index: 2;
+}
+
+.ticket-mobile-tag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+
+.ticket-mobile-category {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--color-gold-antique, #C5A869);
+  text-transform: uppercase;
+}
+
+.ticket-mobile-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #000000;
+  background: var(--color-gold-antique, #C5A869);
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.ticket-mobile-title {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-ivory, #E9E4DA);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.ticket-mobile-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0.75rem 0;
+}
+
+.ticket-mobile-price {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--color-ivory, #E9E4DA);
+  margin-bottom: 0.85rem;
+  line-height: 1;
+}
+
+.ticket-mobile-perks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1.25rem;
+}
+
+.ticket-mobile-perk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.75rem;
+  color: var(--color-muted, #9CA3AF);
+  line-height: 1.35;
+}
+
+/* Touch Action CTA Button (Strict 48px Height) */
+.ticket-mobile-action-btn {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: var(--mobile-touch-target-generous, 48px);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  border: 1px solid var(--color-gold-antique, #C5A869);
+  background: var(--color-gold-antique, #C5A869);
+  color: #000000;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.ticket-mobile-action-btn:active {
+  transform: scale(0.98);
+}
+
+.ticket-mobile-action-btn.is-disabled {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-dim, #4B5563);
+  cursor: not-allowed;
+}
+
+.ticket-mobile-auth-guarantee {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  color: var(--color-muted, #9CA3AF);
+  text-transform: uppercase;
+}
