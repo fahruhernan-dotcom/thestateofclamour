@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 .hero-scroll-track {
-  --hero-track-height: 260vh;
+  --hero-track-height: 660vh;
   position: relative;
   width: 100%;
   height: var(--hero-track-height);
@@ -13,7 +13,7 @@
 
 @media (max-width: 768px) {
   .hero-scroll-track {
-    --hero-track-height: 220vh;
+    --hero-track-height: 560vh;
   }
 }
 
@@ -33,7 +33,7 @@
   align-items: center;
   text-align: center;
   background-color: #000000;
-  padding: 0 1.5rem clamp(2rem, 4vh, 3.5rem);
+  padding: 0;
 }
 
 /* 0. Instant Fallback Poster (Master Key Visual, zero-delay paint) */
@@ -43,7 +43,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
+  object-position: center 12%;
   display: block;
   user-select: none;
   pointer-events: none;
@@ -92,6 +92,7 @@
   margin-inline: auto;
   pointer-events: auto;
   will-change: opacity, transform;
+  padding: 0 1.5rem clamp(2rem, 4vh, 3.5rem);
 }
 
 /* Lower Poster Block */

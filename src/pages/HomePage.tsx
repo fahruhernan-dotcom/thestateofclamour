@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { HeroSection } from '../components/HeroSection';
-import { GuestStorytellingTransition } from '../components/GuestStorytellingTransition';
 import { LineupSection } from '../components/LineupSection';
 import { TicketSection } from '../components/TicketSection';
 import { StageRundown } from '../components/StageRundown';
@@ -40,11 +39,9 @@ export const HomePage: React.FC<Props> = ({
 
   return (
     <>
-      {/* Scene 01: Hero Section */}
-      <HeroSection event={event} />
-
-      {/* Transition: The Guests (Scroll-Driven Cinematic Transformation) */}
-      <GuestStorytellingTransition
+      {/* Unified Scene 01: Hero Approach & Section 1 Guest Storytelling */}
+      <HeroSection
+        event={event}
         onExploreGuests={() => {
           const el = document.getElementById('lineup');
           if (el) el.scrollIntoView({ behavior: 'smooth' });

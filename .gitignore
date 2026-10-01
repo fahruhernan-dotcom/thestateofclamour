@@ -7,4 +7,10 @@ dist/
 
 # Raw downloaded video assets in root (processed assets are in public/assets/)
 /*.mp4
+/*.png
+/*.jpg
 public/assets/*_orig.mp4
+
+# Raw source archives & build caches
+Source/
+*.tsbuildinfo

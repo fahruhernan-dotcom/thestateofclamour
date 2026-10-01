@@ -303,7 +303,7 @@ export const LineupSection: React.FC<Props> = ({
     const sec = sectionRef.current;
     if (!sec) return;
     const r = sec.getBoundingClientRect();
-    const inView = r.top < window.innerHeight * 0.75 && r.bottom > window.innerHeight * 0.15;
+    const inView = r.top < window.innerHeight * 0.35 && r.bottom > window.innerHeight * 0.15;
     setIsSectionVisible(inView);
 
     if (inView) {
