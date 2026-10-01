@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { Artist } from '../../types';
 import { silenceSec1, setAudioOwner, getAudioOwner } from '../../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../../utils/mediaPreloader';
@@ -16,7 +16,6 @@ export const LineupSectionMobile: React.FC<Props> = ({
   onOpenNight1,
   onOpenNight2,
 }) => {
-  const [selectedDay, setSelectedDay] = useState<'ALL' | 'DAY_1' | 'DAY_2'>('ALL');
   const [activeFlashes, setActiveFlashes] = useState<{ [key: string]: boolean }>({});
   const [activeAudioArtistId, setActiveAudioArtistId] = useState<string | null>(null);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
@@ -24,15 +23,11 @@ export const LineupSectionMobile: React.FC<Props> = ({
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
-  const filteredArtists = useMemo(() => {
-    if (selectedDay === 'DAY_1') {
-      return artists.filter(a => a.dayLabel?.includes('30') || a.id.includes('malvin') || a.id.includes('basboi'));
-    }
-    if (selectedDay === 'DAY_2') {
-      return artists.filter(a => a.dayLabel?.includes('31') || a.id.includes('far') || a.id.includes('elena'));
-    }
-    return artists;
-  }, [artists, selectedDay]);
+  // Touch drag state to differentiate between horizontal swipe and a clean tap
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startYRef = useRef(0);
+  const hasMovedRef = useRef(false);
 
   const triggerFlash = useCallback((artistId: string) => {
     setActiveFlashes(prev => ({ ...prev, [artistId]: true }));
@@ -46,7 +41,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
     setAudioOwner('sec2-lineup');
     setActiveAudioArtistId(artistId);
 
-    // Unmute target video
+    // Unmute target video, mute others
     Object.entries(videoRefs.current).forEach(([id, vid]) => {
       if (vid) {
         if (id === artistId) {
@@ -70,25 +65,43 @@ export const LineupSectionMobile: React.FC<Props> = ({
     });
   }, []);
 
-  const handleAudioToggle = (artist: Artist) => {
-    if (activeAudioArtistId === artist.id) {
-      stopArtistAudio();
-    } else {
-      triggerFlash(artist.id);
-      playArtistAudio(artist.id);
-    }
-  };
-
-  const handleOpenArtistDetail = (artist: Artist) => {
+  const handleOpenArtistDetail = useCallback((artist: Artist) => {
     stopArtistAudio();
     if ((artist.id === 'art-malvin' || artist.id === 'art-basboi' || artist.dayLabel?.includes('30')) && onOpenNight1) {
       onOpenNight1();
     } else if ((artist.id === 'art-far' || artist.id === 'art-elena' || artist.dayLabel?.includes('31')) && onOpenNight2) {
       onOpenNight2();
     }
+  }, [onOpenNight1, onOpenNight2, stopArtistAudio]);
+
+  // Touch / Pointer handlers to allow smooth drag while ensuring taps go to event detail
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    isDraggingRef.current = true;
+    hasMovedRef.current = false;
+    startXRef.current = e.clientX;
+    startYRef.current = e.clientY;
   };
 
-  // Scroll listener to update active index dot
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const deltaX = Math.abs(e.clientX - startXRef.current);
+    const deltaY = Math.abs(e.clientY - startYRef.current);
+
+    if (deltaX > 8 || deltaY > 8) {
+      hasMovedRef.current = true;
+    }
+  };
+
+  const handleCardPointerUp = (artist: Artist) => {
+    isDraggingRef.current = false;
+    // If the user tapped without dragging, immediately navigate to detail acara!
+    if (!hasMovedRef.current) {
+      triggerFlash(artist.id);
+      handleOpenArtistDetail(artist);
+    }
+  };
+
+  // Update active card index & audio when centered
   const handleScroll = () => {
     const el = carouselRef.current;
     if (!el || el.children.length === 0) return;
@@ -107,7 +120,14 @@ export const LineupSectionMobile: React.FC<Props> = ({
         closestIdx = i;
       }
     }
-    setActiveCardIndex(closestIdx);
+
+    if (closestIdx !== activeCardIndex) {
+      setActiveCardIndex(closestIdx);
+      const centeredArtist = artists[closestIdx];
+      if (centeredArtist) {
+        playArtistAudio(centeredArtist.id);
+      }
+    }
   };
 
   // Auto-silence when audio owner changes
@@ -124,52 +144,23 @@ export const LineupSectionMobile: React.FC<Props> = ({
 
   return (
     <section id="lineup" className="lineup-mobile-section" aria-label="Lineup Artis The State of Clamour">
+      {/* Desktop-Matched Clean Header */}
       <div className="lineup-mobile-header">
-        <span className="lineup-mobile-eyebrow">THE GUESTS</span>
-        <h2 className="lineup-mobile-headline">SWEAR IN CONTINENTAL</h2>
-        <p className="lineup-mobile-subtext">
-          When the gates unlock, the monumental silence breaks.
+        <h2 className="lineup-mobile-headline">THE GUESTS</h2>
+        <p className="lineup-mobile-subheadline">
+          When the gates unlock, the silence breaks.
         </p>
       </div>
 
-      {/* Day Filter Switcher */}
-      <div className="lineup-mobile-day-tabs" role="tablist" aria-label="Filter Hari Acara">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedDay === 'ALL'}
-          className={`lineup-mobile-tab-btn ${selectedDay === 'ALL' ? 'is-active' : ''}`}
-          onClick={() => setSelectedDay('ALL')}
-        >
-          ALL ARTISTS
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedDay === 'DAY_1'}
-          className={`lineup-mobile-tab-btn ${selectedDay === 'DAY_1' ? 'is-active' : ''}`}
-          onClick={() => setSelectedDay('DAY_1')}
-        >
-          DAY 1 · 30 OKT
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={selectedDay === 'DAY_2'}
-          className={`lineup-mobile-tab-btn ${selectedDay === 'DAY_2' ? 'is-active' : ''}`}
-          onClick={() => setSelectedDay('DAY_2')}
-        >
-          DAY 2 · 31 OKT
-        </button>
-      </div>
-
-      {/* Snap Carousel */}
+      {/* Smooth Touch Snap Carousel */}
       <div
         ref={carouselRef}
         onScroll={handleScroll}
-        className="lineup-mobile-carousel-wrap"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        className="lineup-mobile-carousel"
       >
-        {filteredArtists.map((artist) => {
+        {artists.map((artist) => {
           const isAudioPlaying = activeAudioArtistId === artist.id;
           const isFlashing = !!activeFlashes[artist.id];
 
@@ -177,15 +168,19 @@ export const LineupSectionMobile: React.FC<Props> = ({
             <article
               key={artist.id}
               className={`lineup-mobile-card ${isAudioPlaying ? 'is-playing-audio' : ''}`}
-              onClick={() => triggerFlash(artist.id)}
+              onPointerUp={() => handleCardPointerUp(artist)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Buka detail acara ${artist.name}`}
             >
-              <div className="lineup-mobile-card-media">
+              {/* Portrait Media Frame */}
+              <div className="lineup-mobile-portrait-frame">
                 {artist.videoUrl ? (
                   <video
                     ref={el => { videoRefs.current[artist.id] = el; }}
                     src={getCachedVideoUrl(artist.videoUrl) || artist.videoUrl}
                     poster={artist.posterUrl || artist.imageUrl}
-                    className="lineup-mobile-card-video"
+                    className="lineup-mobile-media-video"
                     autoPlay
                     muted
                     loop
@@ -196,20 +191,22 @@ export const LineupSectionMobile: React.FC<Props> = ({
                   <img
                     src={artist.imageUrl}
                     alt={artist.name}
-                    className="lineup-mobile-card-img"
+                    className="lineup-mobile-media-img"
                     loading="lazy"
                   />
                 )}
 
-                {/* Strobe Flash */}
+                {/* Strobe Camera Flash Flare */}
                 <div
                   className={`lineup-mobile-strobe-flash ${isFlashing ? 'is-flashing' : ''}`}
                   aria-hidden="true"
                 />
 
-                <div className="lineup-mobile-media-scrim" />
+                {/* Dark Vignette / Scrim Gradient */}
+                <div className="lineup-mobile-scrim" />
               </div>
 
+              {/* Info Pane Overlaid on Bottom of the Card */}
               <div className="lineup-mobile-info-pane">
                 <div className="lineup-mobile-kicker-row">
                   <span className="lineup-mobile-day-kicker">
@@ -217,7 +214,12 @@ export const LineupSectionMobile: React.FC<Props> = ({
                   </span>
                   {isAudioPlaying && (
                     <span className="lineup-mobile-sound-badge">
-                      <span>PREVIEW</span>
+                      <span className="lineup-mobile-eq-bars">
+                        <span className="lineup-mobile-eq-bar b-1" />
+                        <span className="lineup-mobile-eq-bar b-2" />
+                        <span className="lineup-mobile-eq-bar b-3" />
+                      </span>
+                      <span>LIVE</span>
                     </span>
                   )}
                 </div>
@@ -230,32 +232,17 @@ export const LineupSectionMobile: React.FC<Props> = ({
                   STAGE // {artist.stageName}
                 </span>
 
-                <div className="lineup-mobile-actions-row">
-                  <button
-                    type="button"
-                    className="lineup-mobile-audio-toggle"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAudioToggle(artist);
-                    }}
-                    aria-label={isAudioPlaying ? `Hentikan audio ${artist.name}` : `Putar audio ${artist.name}`}
-                  >
-                    {isAudioPlaying ? <VolumeX size={13} /> : <Volume2 size={13} />}
-                    <span>{isAudioPlaying ? 'MUTE' : 'PREVIEW'}</span>
-                  </button>
-
-                  <div
-                    className="lineup-mobile-detail-link"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenArtistDetail(artist);
-                    }}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <span>DETAIL ACARA</span>
-                    <ArrowRight size={13} />
-                  </div>
+                <div
+                  className="lineup-mobile-inspect-link"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenArtistDetail(artist);
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <span>LIHAT DETAIL EVENT</span>
+                  <ArrowRight size={13} />
                 </div>
               </div>
             </article>
@@ -265,10 +252,10 @@ export const LineupSectionMobile: React.FC<Props> = ({
 
       {/* Dots Indicator */}
       <div className="lineup-mobile-dots" aria-hidden="true">
-        {filteredArtists.map((artist, idx) => (
+        {artists.map((artist, idx) => (
           <div
             key={artist.id}
-            className={`lineup-mobile-dot ${activeCardIndex === idx ? 'is-active' : ''}`}
+            className={`lineup-mobile-dot-item ${activeCardIndex === idx ? 'is-active' : ''}`}
           />
         ))}
       </div>

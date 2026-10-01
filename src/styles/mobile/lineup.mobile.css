@@ -1,292 +1,255 @@
 /* ========================================================================== */
 /* THE STATE OF CLAMOUR // DEDICATED MOBILE LINEUP STYLES                      */
-/* 100% Isolated from Desktop Styles                                          */
+/* Matches Desktop Editorial Aesthetics 100% with Smooth Touch-Swipe           */
 /* ========================================================================== */
 
 .lineup-mobile-section {
   position: relative;
   width: 100%;
-  padding: 3.5rem 0 calc(3rem + env(safe-area-inset-bottom, 16px));
+  padding: 4rem 0 calc(3rem + env(safe-area-inset-bottom, 16px));
   background-color: var(--color-void, #060709);
   overflow-x: clip;
 }
 
-/* Header & Eyebrow */
+/* Header matches desktop .section-headline & .section-subheadline */
 .lineup-mobile-header {
   padding: 0 var(--mobile-gutter, 1.25rem);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   text-align: center;
-}
-
-.lineup-mobile-eyebrow {
-  display: inline-block;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  color: var(--color-gold-antique, #C5A869);
-  text-transform: uppercase;
-  margin-bottom: 0.35rem;
 }
 
 .lineup-mobile-headline {
   font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: var(--mobile-headline-size, 2rem);
+  font-size: clamp(2rem, 7vw, 2.75rem);
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   color: var(--color-ivory, #E9E4DA);
   line-height: 1.1;
   text-transform: uppercase;
+  margin: 0 0 0.5rem 0;
 }
 
-.lineup-mobile-subtext {
+.lineup-mobile-subheadline {
   font-family: var(--font-editorial, 'Cormorant Garamond', serif);
   font-style: italic;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   color: var(--color-muted, #9CA3AF);
-  margin-top: 0.4rem;
-  letter-spacing: 0.03em;
+  margin: 0;
+  letter-spacing: 0.04em;
 }
 
-/* Day Filter Tabs */
-.lineup-mobile-day-tabs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0 var(--mobile-gutter, 1.25rem);
-  margin-bottom: 1.75rem;
-}
-
-.lineup-mobile-tab-btn {
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 0.45rem 1rem;
-  border-radius: 9999px;
-  background: rgba(17, 21, 31, 0.7);
-  border: 1px solid rgba(197, 168, 105, 0.2);
-  color: var(--color-muted, #9CA3AF);
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-.lineup-mobile-tab-btn.is-active {
-  background: var(--color-gold-antique, #C5A869);
-  border-color: var(--color-gold-antique, #C5A869);
-  color: #000000;
-  box-shadow: 0 0 16px rgba(197, 168, 105, 0.35);
-}
-
-/* Touch Snap Carousel Container */
-.lineup-mobile-carousel-wrap {
+/* Smooth Touch-Swipe Carousel Container */
+.lineup-mobile-carousel {
   position: relative;
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
-  gap: 1rem;
-  padding: 0 calc(8vw) 1.5rem;
+  gap: 1.25rem;
+  padding: 0.5rem calc(8vw) 1.5rem;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  cursor: grab;
+  touch-action: pan-x pan-y;
 }
 
-.lineup-mobile-carousel-wrap::-webkit-scrollbar {
+.lineup-mobile-carousel::-webkit-scrollbar {
   display: none;
 }
 
-.lineup-mobile-carousel-wrap:active {
-  cursor: grabbing;
-}
-
-/* Individual Artist Card (Mobile 84vw Peek Affordance) */
+/* Individual Artist Card (Matches Desktop .guest-card-container) */
 .lineup-mobile-card {
   flex: 0 0 84vw;
-  max-width: 340px;
+  max-width: 360px;
   scroll-snap-align: center;
-  background: var(--color-surface-dark, #11151F);
-  border-radius: 6px;
-  border: 1px solid rgba(197, 168, 105, 0.2);
-  overflow: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  background: var(--color-surface-card, rgba(17, 21, 31, 0.75));
+  border: 1px solid var(--color-gold-hairline, rgba(197, 168, 105, 0.22));
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
   user-select: none;
-  touch-action: pan-y pinch-zoom;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 250ms ease, box-shadow 250ms ease, transform 150ms ease;
+}
+
+.lineup-mobile-card:active {
+  transform: scale(0.985);
 }
 
 .lineup-mobile-card.is-playing-audio {
-  border-color: rgba(197, 168, 105, 0.85);
-  box-shadow: 0 0 24px rgba(197, 168, 105, 0.25), 0 16px 40px rgba(0, 0, 0, 0.85);
+  border-color: var(--color-gold-antique, #C5A869);
+  box-shadow: 0 0 32px rgba(197, 168, 105, 0.35), 0 20px 50px rgba(0, 0, 0, 0.95);
 }
 
-/* Card Visual Frame */
-.lineup-mobile-card-media {
+/* Portrait Media Frame (Matches Desktop .guest-portrait-frame 720/934) */
+.lineup-mobile-portrait-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 9 / 13;
+  aspect-ratio: 720 / 934;
   overflow: hidden;
-  background-color: #000000;
+  background: #000000;
 }
 
-.lineup-mobile-card-video,
-.lineup-mobile-card-img {
+.lineup-mobile-media-img,
+.lineup-mobile-media-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center center;
   display: block;
+  pointer-events: none;
 }
 
-/* Concert Strobe Camera Flash Flare */
+/* Strobe Camera Flash Flare */
 .lineup-mobile-strobe-flash {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at 50% 40%,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.35) 45%,
-    transparent 80%
-  );
-  opacity: 0;
+  z-index: 4;
   pointer-events: none;
-  transition: opacity 0.08s ease-out;
-  mix-blend-mode: overlay;
-  z-index: 5;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(197, 168, 105, 0.4) 40%, transparent 80%);
+  mix-blend-mode: screen;
+  transition: opacity 250ms ease;
 }
 
 .lineup-mobile-strobe-flash.is-flashing {
-  opacity: 1;
-  animation: strobeFlashPulse 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: mobile-camera-flash 450ms ease-out forwards;
 }
 
-@keyframes strobeFlashPulse {
-  0% { opacity: 0.95; }
-  40% { opacity: 0.6; }
+@keyframes mobile-camera-flash {
+  0% { opacity: 0.9; filter: brightness(2); }
+  35% { opacity: 0.25; }
+  60% { opacity: 0.65; }
   100% { opacity: 0; }
 }
 
-.lineup-mobile-media-scrim {
+/* Dark Vignette / Scrim Gradient (Matches Desktop .guest-portrait-scrim) */
+.lineup-mobile-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 45%,
-    rgba(6, 7, 9, 0.75) 85%,
-    rgba(17, 21, 31, 0.98) 100%
-  );
+  z-index: 2;
+  background: linear-gradient(180deg, transparent 35%, rgba(6, 7, 9, 0.7) 65%, rgba(6, 7, 9, 0.98) 96%);
   pointer-events: none;
 }
 
-/* Card Info Pane */
+/* Info Pane Overlaid on Bottom (Matches Desktop .guest-card-info-pane) */
 .lineup-mobile-info-pane {
-  padding: 1.15rem 1.25rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  background: var(--color-surface-dark, #11151F);
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  padding: 1.75rem 1.5rem 1.35rem;
+  text-align: left;
+  z-index: 3;
+  pointer-events: none;
 }
 
+/* Kicker Row */
 .lineup-mobile-kicker-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.35rem;
 }
 
 .lineup-mobile-day-kicker {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.625rem;
-  letter-spacing: 0.22em;
-  color: var(--color-gold-antique, #C5A869);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
+  color: var(--color-gold-antique, #C5A869);
   font-weight: 600;
 }
 
+/* Live Equalizer Sound Badge */
 .lineup-mobile-sound-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.5625rem;
-  letter-spacing: 0.16em;
-  color: #000000;
-  background: var(--color-gold-antique, #C5A869);
-  padding: 0.18rem 0.5rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 9999px;
+  background: rgba(197, 168, 105, 0.18);
+  border: 1px solid rgba(197, 168, 105, 0.5);
+  color: var(--color-gold-antique, #C5A869);
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.55rem;
   font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
+.lineup-mobile-eq-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 9px;
+}
+
+.lineup-mobile-eq-bar {
+  width: 2px;
+  height: 2px;
+  background: var(--color-gold-antique, #C5A869);
+  border-radius: 1px;
+}
+
+.lineup-mobile-eq-bar.b-1 {
+  animation: mobile-eq-bounce 0.65s ease-in-out infinite alternate;
+}
+.lineup-mobile-eq-bar.b-2 {
+  animation: mobile-eq-bounce 0.85s ease-in-out infinite alternate 0.15s;
+}
+.lineup-mobile-eq-bar.b-3 {
+  animation: mobile-eq-bounce 0.5s ease-in-out infinite alternate 0.3s;
+}
+
+@keyframes mobile-eq-bounce {
+  0% { height: 2px; }
+  100% { height: 9px; }
+}
+
+/* Artist Name (Matches Desktop .guest-artist-name) */
 .lineup-mobile-artist-name {
   font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: 1.45rem;
+  font-size: 1.85rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--color-ivory, #E9E4DA);
-  margin: 0;
+  letter-spacing: 0.1em;
   line-height: 1.1;
+  color: var(--color-ivory, #E9E4DA);
+  margin: 0 0 0.35rem 0;
   text-transform: uppercase;
 }
 
+/* Stage Meta */
 .lineup-mobile-stage-meta {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
+  color: var(--color-muted, #9CA3AF);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Dedicated Link (Matches Desktop .guest-inspect-link) */
+.lineup-mobile-inspect-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.6875rem;
   letter-spacing: 0.2em;
-  color: var(--color-crimson, #8F1D24);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-/* Action Controls Row (Audio Tap Toggle & Detail Link) */
-.lineup-mobile-actions-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.lineup-mobile-audio-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.625rem;
-  letter-spacing: 0.18em;
-  color: var(--color-ivory-dim, #D1C9BC);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(197, 168, 105, 0.25);
-  border-radius: 4px;
-  padding: 0.4rem 0.75rem;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.lineup-mobile-audio-toggle:active {
-  background: rgba(197, 168, 105, 0.2);
-}
-
-.lineup-mobile-detail-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.625rem;
-  letter-spacing: 0.18em;
   color: var(--color-gold-antique, #C5A869);
   text-transform: uppercase;
-  cursor: pointer;
   font-weight: 600;
+  pointer-events: auto;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.lineup-mobile-detail-link:active {
-  transform: translateX(2px);
+.lineup-mobile-inspect-link:active {
+  transform: translateX(3px);
   color: #FFFFFF;
 }
 
@@ -295,11 +258,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  margin-top: 0.5rem;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
-.lineup-mobile-dot {
+.lineup-mobile-dot-item {
   width: 6px;
   height: 6px;
   border-radius: 9999px;
@@ -307,7 +270,7 @@
   transition: all 0.25s ease;
 }
 
-.lineup-mobile-dot.is-active {
-  width: 20px;
+.lineup-mobile-dot-item.is-active {
+  width: 22px;
   background: var(--color-gold-antique, #C5A869);
 }
