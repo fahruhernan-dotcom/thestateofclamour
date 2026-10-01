@@ -41,7 +41,14 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
 
   const handleAdvanceToLineup = useCallback(() => {
     silenceSec1();
+    if (recapVideoRef.current) {
+      recapVideoRef.current.muted = true;
+    }
     isAudioActiveRef.current = false;
+    isSectionVisibleRef.current = false;
+    if (getAudioOwner() === 'sec1-storytelling') {
+      setAudioOwner('none');
+    }
     if (onExploreGuests) {
       onExploreGuests();
     } else {
@@ -352,12 +359,33 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       }
 
       // ----------------------------------------------------------------------
-      // Audio State Synchronization with Section 1 Runway
+      // Audio State Synchronization with Section 1 Video Runway
+      // Video is visible strictly between p = 0.38 and p = 0.98.
+      // Scrolling above (p < 0.38) or scrolling below (p > 0.98 / off-screen)
+      // immediately silences Section 1 audio.
       // ----------------------------------------------------------------------
-      const isSec1Active = p >= 0.38 && p <= 1.00 && canSec1PlayAudio();
+      let isSec1Active = false;
+      if (trackRef.current) {
+        const rect = trackRef.current.getBoundingClientRect();
+        const scrollableDist = rect.height - window.innerHeight;
+        const rawProgress = scrollableDist > 0 ? (-rect.top) / scrollableDist : p;
+        const isWithinTrackView = rect.bottom > window.innerHeight * 0.15 && rect.top <= 0;
+        const isInVideoRange = rawProgress >= 0.38 && rawProgress <= 0.98;
+        isSec1Active = isWithinTrackView && isInVideoRange && canSec1PlayAudio();
+      } else {
+        isSec1Active = p >= 0.38 && p <= 0.98 && canSec1PlayAudio();
+      }
+
       if (isSec1Active !== isSectionVisibleRef.current) {
         isSectionVisibleRef.current = isSec1Active;
         checkAudio(isSec1Active);
+      } else if (!isSec1Active && recapVideo && !recapVideo.muted) {
+        // Immediate safety enforcement
+        recapVideo.muted = true;
+        isAudioActiveRef.current = false;
+        if (getAudioOwner() === 'sec1-storytelling') {
+          setAudioOwner('none');
+        }
       }
     };
 
@@ -469,16 +497,48 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       if (scrollableDistance <= 0) return;
 
       const currentScroll = -rect.top;
-      targetProgress = Math.max(0, Math.min(1, currentScroll / scrollableDistance));
+      const rawProgress = currentScroll / scrollableDistance;
+      targetProgress = Math.max(0, Math.min(1, rawProgress));
+
+      // Immediate synchronous audio cutoff when scrolling out of bounds (zero delay, zero lag)
+      const isWithinTrackView = rect.bottom > window.innerHeight * 0.15 && rect.top <= 0;
+      const isInVideoRange = rawProgress >= 0.38 && rawProgress <= 0.98;
+      const isSec1Active = isWithinTrackView && isInVideoRange && canSec1PlayAudio();
+
+      if (!isSec1Active) {
+        if (recapVideo && !recapVideo.muted) {
+          recapVideo.muted = true;
+        }
+        isAudioActiveRef.current = false;
+        if (isSectionVisibleRef.current) {
+          isSectionVisibleRef.current = false;
+          if (getAudioOwner() === 'sec1-storytelling') {
+            setAudioOwner('none');
+          }
+        }
+      } else {
+        if (!isSectionVisibleRef.current) {
+          isSectionVisibleRef.current = true;
+          checkAudio(true);
+        }
+      }
+
       requestTick();
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    // User gesture audio unlock
+    // User gesture audio unlock (triggered only on intentional touch/click)
     const unlockOnGesture = () => {
-      if (recapVideo && isSectionVisibleRef.current && canSec1PlayAudio()) {
+      if (!recapVideo || !trackRef.current) return;
+      const rect = trackRef.current.getBoundingClientRect();
+      const scrollableDistance = rect.height - window.innerHeight;
+      const rawProgress = scrollableDistance > 0 ? (-rect.top) / scrollableDistance : 0;
+      const isWithinTrackView = rect.bottom > window.innerHeight * 0.15 && rect.top <= 0;
+      const isInVideoRange = rawProgress >= 0.38 && rawProgress <= 0.98;
+
+      if (isWithinTrackView && isInVideoRange && canSec1PlayAudio()) {
         silenceSec2();
         setAudioOwner('sec1-storytelling');
         recapVideo.volume = 0.92;
@@ -486,6 +546,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
         recapVideo.play()
           .then(() => {
             isAudioActiveRef.current = true;
+            isSectionVisibleRef.current = true;
           })
           .catch(() => {});
       }
@@ -509,8 +570,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
     window.addEventListener('click', unlockOnGesture, { passive: true });
     window.addEventListener('pointerdown', unlockOnGesture, { passive: true });
     window.addEventListener('touchstart', unlockOnGesture, { passive: true });
-    window.addEventListener('wheel', unlockOnGesture, { passive: true });
-    window.addEventListener('scroll', unlockOnGesture, { passive: true });
 
     return () => {
       isActive = false;
@@ -523,8 +582,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       window.removeEventListener('click', unlockOnGesture);
       window.removeEventListener('pointerdown', unlockOnGesture);
       window.removeEventListener('touchstart', unlockOnGesture);
-      window.removeEventListener('wheel', unlockOnGesture);
-      window.removeEventListener('scroll', unlockOnGesture);
     };
   }, []);
 

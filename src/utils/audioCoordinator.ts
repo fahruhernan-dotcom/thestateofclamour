@@ -18,7 +18,9 @@ export const setAudioOwner = (owner: AudioSection) => {
 
 export const silenceSec1 = () => {
   if (typeof document === 'undefined') return;
-  const storyVideos = document.querySelectorAll<HTMLVideoElement>('.storytelling-photo-img, #the-guests video');
+  const storyVideos = document.querySelectorAll<HTMLVideoElement>(
+    '.storytelling-photo-img, #the-guests video, .hero-mobile-portal-video, #hero-mobile video'
+  );
   storyVideos.forEach((v) => {
     v.muted = true;
   });
@@ -32,7 +34,9 @@ export const silenceSec1 = () => {
 
 export const silenceSec2 = () => {
   if (typeof document === 'undefined') return;
-  const lineupVideos = document.querySelectorAll<HTMLVideoElement>('#lineup video');
+  const lineupVideos = document.querySelectorAll<HTMLVideoElement>(
+    '#lineup video, .lineup-mobile-media-video, .guest-portrait-video'
+  );
   lineupVideos.forEach((v) => {
     v.muted = true;
   });
@@ -51,7 +55,9 @@ export const isSec1AudioActive = (): boolean => {
   if (typeof document === 'undefined') return false;
   if (currentAudioOwner === 'sec1-storytelling') return true;
 
-  const storyVideo = document.querySelector<HTMLVideoElement>('.storytelling-photo-img, #the-guests video');
+  const storyVideo = document.querySelector<HTMLVideoElement>(
+    '.storytelling-photo-img, #the-guests video, .hero-mobile-portal-video, #hero-mobile video'
+  );
   if (storyVideo && !storyVideo.muted && !storyVideo.paused && storyVideo.volume > 0) {
     return true;
   }
@@ -70,13 +76,11 @@ export const canSec2PlayAudio = (): boolean => {
     return false;
   }
 
-  // 2. Section 1 container (#the-guests) position:
-  // Section 1 must have scrolled past 40% of viewport from the top.
-  // If Section 1's bottom has not scrolled past 40% of viewport, it is still transitioning out.
-  const sec1 = document.getElementById('the-guests');
+  // 2. Section 1 container position (desktop #the-guests, mobile #hero-mobile)
+  const sec1 = document.getElementById('hero-mobile') || document.getElementById('the-guests');
   if (sec1) {
     const r = sec1.getBoundingClientRect();
-    if (r.bottom > window.innerHeight * 0.40) {
+    if (r.bottom > window.innerHeight * 0.35) {
       return false;
     }
   }
@@ -85,7 +89,6 @@ export const canSec2PlayAudio = (): boolean => {
   const sec2 = document.getElementById('lineup');
   if (sec2) {
     const r2 = sec2.getBoundingClientRect();
-    // Top of lineup section must be comfortably in view (above 70% of viewport height)
     if (r2.top > window.innerHeight * 0.70) {
       return false;
     }
@@ -106,11 +109,11 @@ export const canSec1PlayAudio = (): boolean => {
     return false;
   }
 
-  // If Section 2 has scrolled up past 30% of viewport, user is in Section 2
+  // If Section 2 has scrolled up past 40% of viewport, user is viewing Section 2
   const sec2 = document.getElementById('lineup');
   if (sec2) {
     const r2 = sec2.getBoundingClientRect();
-    if (r2.top <= window.innerHeight * 0.30) {
+    if (r2.top <= window.innerHeight * 0.40) {
       return false;
     }
   }

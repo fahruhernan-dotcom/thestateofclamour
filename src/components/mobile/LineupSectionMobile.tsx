@@ -20,6 +20,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
   const [activeAudioArtistId, setActiveAudioArtistId] = useState<string | null>(null);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
 
+  const sectionRef = useRef<HTMLElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
@@ -130,7 +131,30 @@ export const LineupSectionMobile: React.FC<Props> = ({
     }
   };
 
-  // Auto-silence when audio owner changes
+  // Check section visibility: auto-stop artist audio when scrolling away (up or down),
+  // and guarantee Section 1 is silenced when Section 2 is in view
+  const checkLineupVisibility = useCallback(() => {
+    const sec = sectionRef.current;
+    if (!sec) return;
+    const r = sec.getBoundingClientRect();
+    const inView = r.top < window.innerHeight * 0.45 && r.bottom > window.innerHeight * 0.15;
+
+    if (inView) {
+      silenceSec1();
+    } else {
+      if (activeAudioArtistId !== null) {
+        stopArtistAudio();
+      }
+    }
+  }, [activeAudioArtistId, stopArtistAudio]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', checkLineupVisibility, { passive: true });
+    checkLineupVisibility();
+    return () => window.removeEventListener('scroll', checkLineupVisibility);
+  }, [checkLineupVisibility]);
+
+  // Auto-silence when audio owner changes or sec2 silenced
   useEffect(() => {
     const handleOwnerChange = (e: Event) => {
       const customEvent = e as CustomEvent<{ owner: string }>;
@@ -138,12 +162,20 @@ export const LineupSectionMobile: React.FC<Props> = ({
         stopArtistAudio();
       }
     };
+    const handleSec2Silenced = () => {
+      stopArtistAudio();
+    };
+
     window.addEventListener('how:audio-owner-change', handleOwnerChange);
-    return () => window.removeEventListener('how:audio-owner-change', handleOwnerChange);
+    window.addEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+    return () => {
+      window.removeEventListener('how:audio-owner-change', handleOwnerChange);
+      window.removeEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+    };
   }, [stopArtistAudio]);
 
   return (
-    <section id="lineup" className="lineup-mobile-section" aria-label="Lineup Artis The State of Clamour">
+    <section ref={sectionRef} id="lineup" className="lineup-mobile-section" aria-label="Lineup Artis The State of Clamour">
       {/* Desktop-Matched Clean Header */}
       <div className="lineup-mobile-header">
         <h2 className="lineup-mobile-headline">THE GUESTS</h2>
