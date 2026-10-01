@@ -7,7 +7,8 @@ interface CrypticPreloaderProps {
 
 export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }) => {
   const [displayPercent, setDisplayPercent] = useState<number>(0);
-  const [isUnsealing, setIsUnsealing] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
   const [isDismissed, setIsDismissed] = useState<boolean>(false);
 
   const realPercentRef = useRef<number>(0);
@@ -28,24 +29,29 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    // 2. Minimum display time: 1.3s so animation feels deliberate
+    // 2. Smooth fade-in entrance on mount
+    const enterTimer = setTimeout(() => {
+      setIsVisible(true);
+    }, 40);
+
+    // 3. Minimum display time: 1.4s so animation feels deliberate and smooth
     const minTimer = setTimeout(() => {
       minTimePassedRef.current = true;
-    }, 1300);
+    }, 1400);
 
-    // 3. Maximum failsafe timeout: 5s
+    // 4. Maximum failsafe timeout: 5s
     const safetyTimer = setTimeout(() => {
       realPercentRef.current = 100;
       minTimePassedRef.current = true;
     }, 5000);
 
-    // 4. Start media preloader pipeline
+    // 5. Start media preloader pipeline
     startPreload();
     const unsubscribe = subscribePreloader((s) => {
       realPercentRef.current = s.percent;
     });
 
-    // 5. Smooth asymptotic interpolation loop
+    // 6. Smooth asymptotic interpolation loop
     const updateInterpolation = () => {
       const target = realPercentRef.current;
       const current = displayPercentRef.current;
@@ -53,26 +59,28 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       const effectiveTarget = !minTimePassedRef.current && target > 88 ? 88 : target;
 
       if (current < effectiveTarget) {
-        const step = Math.max(0.6, (effectiveTarget - current) * 0.12);
+        const step = Math.max(0.5, (effectiveTarget - current) * 0.1);
         const next = Math.min(effectiveTarget, current + step);
         displayPercentRef.current = next;
         setDisplayPercent(Math.floor(next));
       }
 
-      // Trigger unsealing when complete
+      // Trigger smooth fade-out dissolve when complete
       if (displayPercentRef.current >= 99.5 && minTimePassedRef.current) {
         displayPercentRef.current = 100;
         setDisplayPercent(100);
 
+        // Brief hold at 100% so user sees completion before the dissolve begins
         setTimeout(() => {
-          setIsUnsealing(true);
+          setIsFadingOut(true);
           document.body.style.overflow = originalOverflow;
           onComplete?.();
 
+          // Unmount after smooth CSS fade-out finishes (1.1s)
           setTimeout(() => {
             setIsDismissed(true);
-          }, 950);
-        }, 200);
+          }, 1150);
+        }, 280);
 
         return;
       }
@@ -84,6 +92,7 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
 
     return () => {
       document.body.style.overflow = originalOverflow;
+      clearTimeout(enterTimer);
       clearTimeout(minTimer);
       clearTimeout(safetyTimer);
       unsubscribe();
@@ -97,17 +106,13 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
 
   return (
     <div
-      className={`cryptic-preloader-root ${isUnsealing ? 'is-unsealing' : ''}`}
+      className={`cryptic-preloader-root ${isVisible ? 'is-visible' : ''} ${isFadingOut ? 'is-fading-out' : ''}`}
       role="progressbar"
       aria-valuenow={displayPercent}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label="Loading The State of Clamour"
     >
-      {/* Seamless Velvet Vault Shutters */}
-      <div className="preloader-shutter preloader-shutter-top" aria-hidden="true" />
-      <div className="preloader-shutter preloader-shutter-bottom" aria-hidden="true" />
-
       {/* 35mm Analog Film Grain Texture */}
       <div className="preloader-grain" aria-hidden="true" />
 
