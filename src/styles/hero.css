@@ -36,6 +36,21 @@
   padding: 0 1.5rem clamp(2rem, 4vh, 3.5rem);
 }
 
+/* 0. Instant Fallback Poster (Master Key Visual, zero-delay paint) */
+.hero-cinematic-poster-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+  background-color: #000000;
+}
+
 /* 2. High-Performance Hardware-Composited Canvas (Instant 0.1ms GPU draw, locked 60/120fps) */
 .hero-cinematic-canvas {
   position: absolute;

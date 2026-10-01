@@ -242,6 +242,14 @@ export const HeroSection: React.FC<Props> = ({ event }) => {
       aria-label="The State of Clamour // Swear In Continental"
     >
       <div className="hero-sticky-stage">
+        {/* 0. Instant Fallback Poster (Master Key Visual from ffd189ab...png, paints immediately) */}
+        <img
+          src="/assets/hero_scroll_poster.jpg"
+          alt="The State of Clamour // Swear In Continental"
+          className="hero-cinematic-poster-fallback"
+          aria-hidden="true"
+        />
+
         {/* 1. High-Performance Hardware-Composited Canvas (60/120fps Silky Smooth Scrub) */}
         <canvas
           ref={canvasRef}
