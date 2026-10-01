@@ -1,11 +1,10 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { EventData } from '../../types';
-import { silenceSec1, silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../../utils/audioCoordinator';
+import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../../utils/mediaPreloader';
 
 interface Props {
   event: EventData;
-  onExploreGuests?: () => void;
 }
 
 const TOTAL_MOBILE_FRAMES = 84;
@@ -16,7 +15,8 @@ const getMobileFramePath = (index: number): string => {
   return `/assets/hero_mobile_frames/mf_${padded}.jpg`;
 };
 
-export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) => {
+export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
+
   const trackRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -40,23 +40,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
   const isSectionVisibleRef = useRef<boolean>(false);
   const userInteractedRef = useRef<boolean>(false);
 
-  const handleAdvanceToLineup = useCallback(() => {
-    silenceSec1();
-    if (recapVideoRef.current) {
-      recapVideoRef.current.muted = true;
-    }
-    isAudioActiveRef.current = false;
-    isSectionVisibleRef.current = false;
-    if (getAudioOwner() === 'sec1-storytelling') {
-      setAudioOwner('none');
-    }
-    if (onExploreGuests) {
-      onExploreGuests();
-    } else {
-      const el = document.getElementById('lineup');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [onExploreGuests]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -640,11 +623,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
           ref={gpuCanvasRef}
           className="hero-mobile-portal-stage"
           style={{ opacity: 0 }}
-          onClick={handleAdvanceToLineup}
-          role="button"
-          tabIndex={0}
-          aria-label="Masuk ke detail lineup acara"
         >
+
           <div className="hero-mobile-portal-frame">
             <video
               ref={recapVideoRef}
@@ -694,13 +674,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
           {/* Bottom Cluster: Schedule Grid */}
           <div ref={bottomEditorialRef} className="hero-mobile-bottom-editorial" style={{ opacity: 0 }}>
             <div className="hero-mobile-divider" />
-            <div
-              className="hero-mobile-schedule-dock"
-              onClick={handleAdvanceToLineup}
-              role="button"
-              tabIndex={0}
-              aria-label="Lihat jadwal lineup artis"
-            >
+            <div className="hero-mobile-schedule-dock">
+
               <div className="hero-mobile-schedule-item">
                 <span className="hero-mobile-sched-date">30 OKTOBER</span>
                 <span className="hero-mobile-sched-artist">MALVIN</span>

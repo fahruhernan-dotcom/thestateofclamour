@@ -1,13 +1,12 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { EventData } from '../types';
-import { silenceSec1, silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../utils/audioCoordinator';
+import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../utils/mediaPreloader';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { HeroSectionMobile } from './mobile/HeroSectionMobile';
 
 interface Props {
   event: EventData;
-  onExploreGuests?: () => void;
 }
 
 const TOTAL_FRAMES = 192;
@@ -18,7 +17,8 @@ const getFramePath = (index: number): string => {
   return `/assets/hero_frames/f_${padded}.webp`;
 };
 
-const HeroSectionDesktop: React.FC<Props> = ({ event, onExploreGuests }) => {
+const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
+
   const userInteractedRef = useRef<boolean>(false);
   const heroTrackRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -631,18 +631,8 @@ const HeroSectionDesktop: React.FC<Props> = ({ event, onExploreGuests }) => {
     };
   }, []);
 
-  const handleLineupScroll = useCallback(() => {
-    silenceSec1();
-    isPlayingAudioRef.current = false;
-    if (onExploreGuests) {
-      onExploreGuests();
-    } else {
-      const el = document.getElementById('lineup');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [onExploreGuests]);
-
   const venueLabel = event.venueCity && event.venueCity !== 'CENTRAL MONUMENT'
+
     ? `${event.venueCity} · ${event.venueName}`
     : 'BANDUNG · SECRET MONUMENT';
 
@@ -691,10 +681,11 @@ const HeroSectionDesktop: React.FC<Props> = ({ event, onExploreGuests }) => {
               <span className="hero-meta-venue">{venueLabel}</span>
             </div>
 
-            <div className="hero-scroll-indicator" onClick={handleLineupScroll} role="button" tabIndex={0} style={{ cursor: 'pointer' }} aria-label="Gulir ke gerbang">
+            <div className="hero-scroll-indicator" aria-hidden="true">
               <span className="hero-scroll-cue-text">GULIR UNTUK MEMASUKI GERBANG</span>
               <span className="hero-scroll-cue-arrow">↓</span>
             </div>
+
           </div>
         </div>
 

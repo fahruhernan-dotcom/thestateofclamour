@@ -303,13 +303,10 @@
   max-width: 360px;
   padding: 0 0.5rem;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
-  cursor: pointer;
+  cursor: default;
   -webkit-tap-highlight-color: transparent;
 }
 
-.hero-mobile-schedule-dock:active {
-  opacity: 0.85;
-}
 
 .hero-mobile-schedule-item {
   display: flex;

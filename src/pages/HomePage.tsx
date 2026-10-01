@@ -40,13 +40,8 @@ export const HomePage: React.FC<Props> = ({
   return (
     <>
       {/* Unified Scene 01: Hero Approach & Section 1 Guest Storytelling */}
-      <HeroSection
-        event={event}
-        onExploreGuests={() => {
-          const el = document.getElementById('lineup');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }}
-      />
+      <HeroSection event={event} />
+
 
       {/* Scene 02: The Guests (Concert Energy Spread with 3D Tilt & Strobe Flash) */}
       <LineupSection

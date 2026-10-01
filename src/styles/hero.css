@@ -151,7 +151,9 @@
   align-items: center;
   gap: 0.35rem;
   user-select: none;
+  pointer-events: none;
 }
+
 
 .hero-scroll-cue-text {
   font-family: var(--font-body);
