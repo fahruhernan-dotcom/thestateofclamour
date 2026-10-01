@@ -32,18 +32,18 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
     // 2. Smooth fade-in entrance on mount
     const enterTimer = setTimeout(() => {
       setIsVisible(true);
-    }, 40);
+    }, 30);
 
-    // 3. Minimum display time: 1.4s so animation feels deliberate and smooth
+    // 3. Minimum display time: 600ms so animation is visible and elegant without lagging
     const minTimer = setTimeout(() => {
       minTimePassedRef.current = true;
-    }, 1400);
+    }, 600);
 
-    // 4. Maximum failsafe timeout: 5s
+    // 4. Maximum failsafe timeout: 2.2s
     const safetyTimer = setTimeout(() => {
       realPercentRef.current = 100;
       minTimePassedRef.current = true;
-    }, 5000);
+    }, 2200);
 
     // 5. Start media preloader pipeline
     startPreload();
@@ -51,36 +51,36 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       realPercentRef.current = s.percent;
     });
 
-    // 6. Smooth asymptotic interpolation loop
+    // 6. Smooth asymptotic interpolation loop (snappy & fluid)
     const updateInterpolation = () => {
       const target = realPercentRef.current;
       const current = displayPercentRef.current;
 
-      const effectiveTarget = !minTimePassedRef.current && target > 88 ? 88 : target;
+      const effectiveTarget = !minTimePassedRef.current && target > 85 ? 85 : target;
 
       if (current < effectiveTarget) {
-        const step = Math.max(0.5, (effectiveTarget - current) * 0.1);
+        const step = Math.max(1.4, (effectiveTarget - current) * 0.18);
         const next = Math.min(effectiveTarget, current + step);
         displayPercentRef.current = next;
         setDisplayPercent(Math.floor(next));
       }
 
       // Trigger smooth fade-out dissolve when complete
-      if (displayPercentRef.current >= 99.5 && minTimePassedRef.current) {
+      if (displayPercentRef.current >= 99.2 && minTimePassedRef.current) {
         displayPercentRef.current = 100;
         setDisplayPercent(100);
 
-        // Brief hold at 100% so user sees completion before the dissolve begins
+        // Crisp 120ms hold at 100% so user registers unlock without sluggishness
         setTimeout(() => {
           setIsFadingOut(true);
           document.body.style.overflow = originalOverflow;
           onComplete?.();
 
-          // Unmount after smooth CSS fade-out finishes (1.1s)
+          // Unmount after smooth CSS fade-out finishes (0.7s)
           setTimeout(() => {
             setIsDismissed(true);
-          }, 1150);
-        }, 280);
+          }, 700);
+        }, 120);
 
         return;
       }

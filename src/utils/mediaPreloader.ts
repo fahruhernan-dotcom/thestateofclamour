@@ -1,5 +1,5 @@
 // Media Preloader & Scroll Gate Coordinator for THE STATE OF CLAMOUR
-// Ensures Section 2 (and transition) videos are 100% preloaded before unlocking scroll.
+// Fast & lightweight critical asset preloading for instant luxury entrance.
 
 export interface PreloaderState {
   loadedBytes: number;
@@ -21,7 +21,7 @@ const listeners = new Set<(state: PreloaderState) => void>();
 
 let state: PreloaderState = {
   loadedBytes: 0,
-  totalBytes: 32951018, // 10.5MB (hero) + 4.9MB + 6.1MB + 11.4MB
+  totalBytes: 100,
   percent: 0,
   isComplete: false,
   isUnlocked: false
@@ -42,87 +42,54 @@ export const startPreload = (): Promise<void> => {
   if (preloadPromise) return preloadPromise;
 
   preloadPromise = (async () => {
-    // Safety maximum timeout: unlock after 12s so slow connections are never trapped
-    const timeoutId = setTimeout(() => {
-      if (!state.isUnlocked) {
-        state = { ...state, isUnlocked: true, isComplete: true, percent: 100 };
+    // Critical visual assets required for immediate pristine paint
+    const criticalImages = [
+      '/assets/tsoc_logo_transparent.png',
+      '/assets/hero_scroll_poster_mobile_2k.jpg',
+      '/assets/how2026_recap_poster.jpg'
+    ];
+
+    let loadedCount = 0;
+    const totalAssets = criticalImages.length + 1; // images + font check
+
+    const onAssetLoaded = () => {
+      loadedCount++;
+      const pct = Math.min(100, Math.round((loadedCount / totalAssets) * 100));
+      state = {
+        ...state,
+        loadedBytes: loadedCount,
+        totalBytes: totalAssets,
+        percent: pct,
+        isComplete: pct >= 100,
+        isUnlocked: pct >= 100
+      };
+      notify();
+    };
+
+    // Preload critical images in parallel
+    criticalImages.forEach((src) => {
+      const img = new Image();
+      img.onload = onAssetLoaded;
+      img.onerror = onAssetLoaded;
+      img.src = src;
+    });
+
+    // Check fonts readiness
+    if (typeof document !== 'undefined' && 'fonts' in document) {
+      document.fonts.ready
+        .then(() => onAssetLoaded())
+        .catch(() => onAssetLoaded());
+    } else {
+      onAssetLoaded();
+    }
+
+    // Failsafe guarantee: ensure 100% within 1.2s max under all network conditions
+    setTimeout(() => {
+      if (!state.isComplete) {
+        state = { ...state, percent: 100, isComplete: true, isUnlocked: true };
         notify();
       }
-    }, 12000);
-
-    try {
-      const fileProgress: Record<string, number> = {};
-      const fileTotals: Record<string, number> = {
-        '/assets/hero_scroll_cinematic.mp4': 10560447,
-        '/assets/how2026_recap.mp4': 4906734,
-        '/assets/guest_malvin.mp4': 6080651,
-        '/assets/guest_far.mp4': 11403186
-      };
-
-      const updateProgress = () => {
-        const total = Object.values(fileTotals).reduce((a, b) => a + b, 0) || 22390571;
-        const loaded = Object.values(fileProgress).reduce((a, b) => a + b, 0);
-        const percent = Math.min(100, Math.round((loaded / total) * 100));
-        state = {
-          ...state,
-          loadedBytes: loaded,
-          totalBytes: total,
-          percent,
-          isComplete: percent >= 100,
-          isUnlocked: state.isUnlocked || percent >= 100
-        };
-        notify();
-      };
-
-      await Promise.all(
-        TARGET_VIDEOS.map(async (url) => {
-          try {
-            const resp = await fetch(url);
-            if (!resp.ok) return;
-
-            const cl = +(resp.headers.get('content-length') || 0);
-            if (cl > 0) {
-              fileTotals[url] = cl;
-            }
-
-            const reader = resp.body?.getReader();
-            if (!reader) {
-              const blob = await resp.blob();
-              cachedBlobUrls.set(url, URL.createObjectURL(blob));
-              fileProgress[url] = fileTotals[url] || blob.size;
-              updateProgress();
-              return;
-            }
-
-            const chunks: BlobPart[] = [];
-            let received = 0;
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              if (value) {
-                chunks.push(value);
-                received += value.length;
-                fileProgress[url] = received;
-                updateProgress();
-              }
-            }
-
-            const blob = new Blob(chunks, { type: 'video/mp4' });
-            cachedBlobUrls.set(url, URL.createObjectURL(blob));
-          } catch {
-            // Non-critical: if blob caching is blocked by browser policy/extension, falls back to direct URL streaming
-          }
-        })
-      );
-
-      clearTimeout(timeoutId);
-      state = { ...state, percent: 100, isComplete: true, isUnlocked: true };
-      notify();
-    } catch {
-      clearTimeout(timeoutId);
-      state = { ...state, percent: 100, isComplete: true, isUnlocked: true };
-      notify();
-    }
+    }, 1200);
   })();
 
   return preloadPromise;
@@ -142,3 +109,4 @@ export const subscribePreloader = (listener: (s: PreloaderState) => void) => {
     listeners.delete(listener);
   };
 };
+
