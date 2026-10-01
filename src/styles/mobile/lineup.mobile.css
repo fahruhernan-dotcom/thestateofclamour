@@ -1,0 +1,313 @@
+/* ========================================================================== */
+/* THE STATE OF CLAMOUR // DEDICATED MOBILE LINEUP STYLES                      */
+/* 100% Isolated from Desktop Styles                                          */
+/* ========================================================================== */
+
+.lineup-mobile-section {
+  position: relative;
+  width: 100%;
+  padding: 3.5rem 0 calc(3rem + env(safe-area-inset-bottom, 16px));
+  background-color: var(--color-void, #060709);
+  overflow-x: clip;
+}
+
+/* Header & Eyebrow */
+.lineup-mobile-header {
+  padding: 0 var(--mobile-gutter, 1.25rem);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.lineup-mobile-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: var(--color-gold-antique, #C5A869);
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.lineup-mobile-headline {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: var(--mobile-headline-size, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--color-ivory, #E9E4DA);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.lineup-mobile-subtext {
+  font-family: var(--font-editorial, 'Cormorant Garamond', serif);
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--color-muted, #9CA3AF);
+  margin-top: 0.4rem;
+  letter-spacing: 0.03em;
+}
+
+/* Day Filter Tabs */
+.lineup-mobile-day-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 var(--mobile-gutter, 1.25rem);
+  margin-bottom: 1.75rem;
+}
+
+.lineup-mobile-tab-btn {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  background: rgba(17, 21, 31, 0.7);
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  color: var(--color-muted, #9CA3AF);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.lineup-mobile-tab-btn.is-active {
+  background: var(--color-gold-antique, #C5A869);
+  border-color: var(--color-gold-antique, #C5A869);
+  color: #000000;
+  box-shadow: 0 0 16px rgba(197, 168, 105, 0.35);
+}
+
+/* Touch Snap Carousel Container */
+.lineup-mobile-carousel-wrap {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  gap: 1rem;
+  padding: 0 calc(8vw) 1.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.lineup-mobile-carousel-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.lineup-mobile-carousel-wrap:active {
+  cursor: grabbing;
+}
+
+/* Individual Artist Card (Mobile 84vw Peek Affordance) */
+.lineup-mobile-card {
+  flex: 0 0 84vw;
+  max-width: 340px;
+  scroll-snap-align: center;
+  background: var(--color-surface-dark, #11151F);
+  border-radius: 6px;
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  user-select: none;
+  touch-action: pan-y pinch-zoom;
+}
+
+.lineup-mobile-card.is-playing-audio {
+  border-color: rgba(197, 168, 105, 0.85);
+  box-shadow: 0 0 24px rgba(197, 168, 105, 0.25), 0 16px 40px rgba(0, 0, 0, 0.85);
+}
+
+/* Card Visual Frame */
+.lineup-mobile-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 13;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+.lineup-mobile-card-video,
+.lineup-mobile-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+
+/* Concert Strobe Camera Flash Flare */
+.lineup-mobile-strobe-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 40%,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.35) 45%,
+    transparent 80%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.08s ease-out;
+  mix-blend-mode: overlay;
+  z-index: 5;
+}
+
+.lineup-mobile-strobe-flash.is-flashing {
+  opacity: 1;
+  animation: strobeFlashPulse 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes strobeFlashPulse {
+  0% { opacity: 0.95; }
+  40% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+.lineup-mobile-media-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 45%,
+    rgba(6, 7, 9, 0.75) 85%,
+    rgba(17, 21, 31, 0.98) 100%
+  );
+  pointer-events: none;
+}
+
+/* Card Info Pane */
+.lineup-mobile-info-pane {
+  padding: 1.15rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--color-surface-dark, #11151F);
+}
+
+.lineup-mobile-kicker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lineup-mobile-day-kicker {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  color: var(--color-gold-antique, #C5A869);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.lineup-mobile-sound-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  color: #000000;
+  background: var(--color-gold-antique, #C5A869);
+  padding: 0.18rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+}
+
+.lineup-mobile-artist-name {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-ivory, #E9E4DA);
+  margin: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.lineup-mobile-stage-meta {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: var(--color-crimson, #8F1D24);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Action Controls Row (Audio Tap Toggle & Detail Link) */
+.lineup-mobile-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lineup-mobile-audio-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  color: var(--color-ivory-dim, #D1C9BC);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(197, 168, 105, 0.25);
+  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.lineup-mobile-audio-toggle:active {
+  background: rgba(197, 168, 105, 0.2);
+}
+
+.lineup-mobile-detail-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  color: var(--color-gold-antique, #C5A869);
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.lineup-mobile-detail-link:active {
+  transform: translateX(2px);
+  color: #FFFFFF;
+}
+
+/* Carousel Dots Indicator */
+.lineup-mobile-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+}
+
+.lineup-mobile-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.25s ease;
+}
+
+.lineup-mobile-dot.is-active {
+  width: 20px;
+  background: var(--color-gold-antique, #C5A869);
+}

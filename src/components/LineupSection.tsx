@@ -3,6 +3,8 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Artist } from '../types';
 import { silenceSec1, setAudioOwner, getAudioOwner, canSec2PlayAudio } from '../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../utils/mediaPreloader';
+import { useIsMobile } from '../hooks/useIsMobile';
+import { LineupSectionMobile } from './mobile/LineupSectionMobile';
 
 interface Props {
   artists: Artist[];
@@ -220,6 +222,19 @@ export const LineupSection: React.FC<Props> = ({
   onOpenNight1,
   onOpenNight2,
 }) => {
+  const isMobileDevice = useIsMobile();
+
+  if (isMobileDevice) {
+    return (
+      <LineupSectionMobile
+        artists={artists}
+        onToast={_onToast}
+        onOpenNight1={onOpenNight1}
+        onOpenNight2={onOpenNight2}
+      />
+    );
+  }
+
   const sectionRef = useRef<HTMLElement | null>(null);
   const [activeFlashes, setActiveFlashes] = useState<{ [key: string]: boolean }>({});
   const [activeArtistIndex, setActiveArtistIndex] = useState(0);
