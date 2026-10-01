@@ -10,6 +10,7 @@ export interface PreloaderState {
 }
 
 export const TARGET_VIDEOS = [
+  '/assets/hero_scroll_cinematic.mp4',
   '/assets/how2026_recap.mp4',
   '/assets/guest_malvin.mp4',
   '/assets/guest_far.mp4'
@@ -20,7 +21,7 @@ const listeners = new Set<(state: PreloaderState) => void>();
 
 let state: PreloaderState = {
   loadedBytes: 0,
-  totalBytes: 22390571, // 4.9MB + 6.1MB + 11.4MB
+  totalBytes: 32951018, // 10.5MB (hero) + 4.9MB + 6.1MB + 11.4MB
   percent: 0,
   isComplete: false,
   isUnlocked: false
@@ -52,6 +53,7 @@ export const startPreload = (): Promise<void> => {
     try {
       const fileProgress: Record<string, number> = {};
       const fileTotals: Record<string, number> = {
+        '/assets/hero_scroll_cinematic.mp4': 10560447,
         '/assets/how2026_recap.mp4': 4906734,
         '/assets/guest_malvin.mp4': 6080651,
         '/assets/guest_far.mp4': 11403186
