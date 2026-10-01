@@ -693,12 +693,6 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
               <span className="hero-meta-date">30 — 31 OCTOBER 2026</span>
               <span className="hero-meta-venue">{venueLabel}</span>
             </div>
-
-            <div className="hero-scroll-indicator" aria-hidden="true">
-              <span className="hero-scroll-cue-text">GULIR UNTUK MEMASUKI GERBANG</span>
-              <span className="hero-scroll-cue-arrow">↓</span>
-            </div>
-
           </div>
         </div>
 

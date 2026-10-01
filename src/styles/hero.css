@@ -130,7 +130,7 @@
   font-size: clamp(0.7rem, 0.92vw, 0.8rem);
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9);
 }
 
@@ -193,7 +193,7 @@
   .hero-poster-meta {
     font-size: 0.6875rem;
     letter-spacing: 0.22em;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
   }
 
   .hero-scroll-cue-text {
