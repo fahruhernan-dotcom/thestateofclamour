@@ -285,6 +285,7 @@
   line-height: 0.98;
   margin: 0;
   text-transform: uppercase;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 0, 0, 0.8);
 }
 
 .hero-mobile-title-subtext {
@@ -294,6 +295,7 @@
   letter-spacing: 0.05em;
   color: var(--color-muted, #9CA3AF);
   margin-top: 0.45rem;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
 }
 
 .hero-mobile-sub-venue {
@@ -304,6 +306,7 @@
   text-transform: uppercase;
   margin-top: 0.4rem;
   font-weight: 500;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
 }
 
 /* Bottom Dock: Schedule Grid */
@@ -336,6 +339,13 @@
   width: 100%;
   max-width: 360px;
   padding: 0 0.5rem;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-mobile-schedule-dock:active {
+  opacity: 0.85;
 }
 
 .hero-mobile-schedule-item {

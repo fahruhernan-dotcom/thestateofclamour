@@ -190,13 +190,13 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       const baseCardTop = Math.round((vh - baseCardH) / 2);
 
       if (gpuCanvasRef.current) {
-        if (p < 0.36) {
+        if (p < 0.38) {
           gpuCanvasRef.current.style.opacity = '0';
           gpuCanvasRef.current.style.pointerEvents = 'none';
           if (photoHairlineRef.current) photoHairlineRef.current.style.opacity = '0';
         } else if (p < 0.46) {
           // Card emerges rapidly from black void with gold hairline & red backlight
-          const fadeInP = Math.min(1, (p - 0.36) / 0.08);
+          const fadeInP = Math.min(1, (p - 0.38) / 0.08);
           gpuCanvasRef.current.style.opacity = fadeInP.toFixed(3);
           gpuCanvasRef.current.style.left = `${baseCardLeft}px`;
           gpuCanvasRef.current.style.top = `${baseCardTop}px`;
@@ -253,49 +253,67 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       }
 
       // Camera push-in scale for recap concert video
-      if (recapVideo && p >= 0.36) {
-        const vidProgress = Math.max(0, (p - 0.36) / 0.64);
+      if (recapVideo && p >= 0.38) {
+        const vidProgress = Math.max(0, (p - 0.38) / 0.62);
         const scaleVal = (1 + 0.06 * Math.pow(vidProgress, 1.2)).toFixed(4);
         recapVideo.style.transform = `scale(${scaleVal}) translateZ(0)`;
       }
 
       // Ambient glows
       if (bgAmbientRef.current) {
-        const ambientOp = Math.min(1, Math.max(0, (p - 0.34) * 3.0));
+        const ambientOp = Math.min(1, Math.max(0, (p - 0.20) * 3.0));
         bgAmbientRef.current.style.opacity = ambientOp.toFixed(3);
       }
       if (stageGlowRef.current) {
-        const glowOp = Math.min(1, Math.max(0, (p - 0.38) * 2.5));
+        const glowOp = Math.min(1, Math.max(0, (p - 0.24) * 2.5));
         stageGlowRef.current.style.opacity = glowOp.toFixed(3);
       }
 
       // ----------------------------------------------------------------------
       // Editorial Typography Layer (THE GUESTS, MALVIN, FAR)
+      // MUNCUL DULUAN saat kamera menembus pintu gotik & masuk kabut merah (p = 0.20 -> 0.28)
+      // Bebas dari tumpang tindih judul awal SWEAR IN CONTINENTAL (yang keluar di p <= 0.16)
+      // Video baru muncul di tengah belakangan (p = 0.38 -> 0.46)
       // ----------------------------------------------------------------------
       let sec1TextOpacity = 0;
-      let expRatio = 0;
+      let topDriftY = 0;
+      let bottomDriftY = 0;
 
-      if (p < 0.36) {
+      if (p < 0.20) {
         sec1TextOpacity = 0;
-      } else if (p < 0.46) {
-        sec1TextOpacity = Math.min(1, (p - 0.36) / 0.08);
+        topDriftY = 16;
+        bottomDriftY = -16;
+      } else if (p < 0.28) {
+        // Teks muncul mulus di atas kabut merah
+        const enterP = (p - 0.20) / 0.08;
+        sec1TextOpacity = enterP;
+        topDriftY = Math.round(16 * (1 - enterP));
+        bottomDriftY = Math.round(-16 * (1 - enterP));
+      } else if (p <= 0.44) {
+        // Teks terbaca jelas & mantap di layar; video muncul di tengah pada p = 0.38
+        sec1TextOpacity = 1;
+        topDriftY = 0;
+        bottomDriftY = 0;
       } else if (p <= 0.54) {
-        expRatio = (p - 0.46) / 0.08;
+        // Saat video card membesar ke full-bleed (0.46 -> 0.56), teks bergeser keluar & larut
+        const expRatio = (p - 0.44) / 0.10;
         sec1TextOpacity = Math.max(0, 1 - expRatio * 1.4);
+        topDriftY = Math.round(-32 * expRatio);
+        bottomDriftY = Math.round(32 * expRatio);
       } else {
         sec1TextOpacity = 0;
+        topDriftY = -32;
+        bottomDriftY = 32;
       }
 
       if (topEditorialRef.current) {
-        const driftY = Math.round(-30 * expRatio);
         topEditorialRef.current.style.opacity = sec1TextOpacity.toFixed(3);
-        topEditorialRef.current.style.transform = `translate3d(0, ${driftY}px, 0)`;
+        topEditorialRef.current.style.transform = `translate3d(0, ${topDriftY}px, 0)`;
       }
 
       if (bottomEditorialRef.current) {
-        const driftY = Math.round(30 * expRatio);
         bottomEditorialRef.current.style.opacity = sec1TextOpacity.toFixed(3);
-        bottomEditorialRef.current.style.transform = `translate3d(0, ${driftY}px, 0)`;
+        bottomEditorialRef.current.style.transform = `translate3d(0, ${bottomDriftY}px, 0)`;
         bottomEditorialRef.current.style.pointerEvents = sec1TextOpacity > 0.4 ? 'auto' : 'none';
       }
 
@@ -336,7 +354,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       // ----------------------------------------------------------------------
       // Audio State Synchronization with Section 1 Runway
       // ----------------------------------------------------------------------
-      const isSec1Active = p >= 0.36 && p <= 1.00 && canSec1PlayAudio();
+      const isSec1Active = p >= 0.38 && p <= 1.00 && canSec1PlayAudio();
       if (isSec1Active !== isSectionVisibleRef.current) {
         isSectionVisibleRef.current = isSec1Active;
         checkAudio(isSec1Active);
@@ -565,7 +583,15 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
         <div ref={stageGlowRef} className="hero-mobile-stage-glow" style={{ opacity: 0 }} />
 
         {/* Layer 3: Section 1 Concert Card (Morphs from Center Card to Full-Bleed) */}
-        <div ref={gpuCanvasRef} className="hero-mobile-portal-stage" style={{ opacity: 0 }}>
+        <div
+          ref={gpuCanvasRef}
+          className="hero-mobile-portal-stage"
+          style={{ opacity: 0 }}
+          onClick={handleAdvanceToLineup}
+          role="button"
+          tabIndex={0}
+          aria-label="Masuk ke detail lineup acara"
+        >
           <div className="hero-mobile-portal-frame">
             <video
               ref={recapVideoRef}
@@ -615,7 +641,13 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
           {/* Bottom Cluster: Schedule Grid */}
           <div ref={bottomEditorialRef} className="hero-mobile-bottom-editorial" style={{ opacity: 0 }}>
             <div className="hero-mobile-divider" />
-            <div className="hero-mobile-schedule-dock">
+            <div
+              className="hero-mobile-schedule-dock"
+              onClick={handleAdvanceToLineup}
+              role="button"
+              tabIndex={0}
+              aria-label="Lihat jadwal lineup artis"
+            >
               <div className="hero-mobile-schedule-item">
                 <span className="hero-mobile-sched-date">30 OKTOBER</span>
                 <span className="hero-mobile-sched-artist">MALVIN</span>
