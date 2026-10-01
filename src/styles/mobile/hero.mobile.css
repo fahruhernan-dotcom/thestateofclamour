@@ -6,7 +6,7 @@
 .hero-mobile-track {
   position: relative;
   width: 100%;
-  height: 280vh;
+  height: 350vh;
   background-color: var(--color-void, #060709);
   overflow-x: clip;
 }
@@ -25,7 +25,9 @@
   background-color: #000000;
 }
 
-/* 1. Establishing Portrait Poster Layer (Uncut 9:16 Visual) */
+/* -------------------------------------------------------------------------- */
+/* 1. Establishing 2K Portrait Poster Layer (Uncut 9:16 Visual)               */
+/* -------------------------------------------------------------------------- */
 .hero-mobile-poster-layer {
   position: absolute;
   inset: 0;
@@ -50,7 +52,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 5;
+  z-index: 6;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -58,12 +60,11 @@
   padding: 0 1.25rem var(--mobile-thumb-bottom-inset);
   background: linear-gradient(
     to top,
-    rgba(6, 7, 9, 0.92) 0%,
-    rgba(6, 7, 9, 0.65) 50%,
+    rgba(6, 7, 9, 0.95) 0%,
+    rgba(6, 7, 9, 0.70) 50%,
     transparent 100%
   );
   pointer-events: auto;
-  transition: opacity 0.25s ease;
   will-change: opacity, transform;
 }
 
@@ -96,19 +97,21 @@
   letter-spacing: 0.24em;
   color: var(--color-ivory, #E9E4DA);
   text-transform: uppercase;
-  padding: 0.45rem 1.15rem;
-  background: rgba(17, 21, 31, 0.8);
-  border: 1px solid rgba(197, 168, 105, 0.35);
+  padding: 0.5rem 1.25rem;
+  background: rgba(17, 21, 31, 0.85);
+  border: 1px solid rgba(197, 168, 105, 0.4);
   border-radius: 9999px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   cursor: pointer;
   user-select: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .hero-mobile-scroll-cue:active {
   transform: scale(0.96);
-  background: rgba(197, 168, 105, 0.2);
+  background: rgba(197, 168, 105, 0.25);
 }
 
 .hero-mobile-cue-arrow {
@@ -121,41 +124,121 @@
   50% { transform: translateY(3px); }
 }
 
-/* 2. Unmasking Central Portal Video Layer */
-.hero-mobile-portal-stage {
+/* -------------------------------------------------------------------------- */
+/* 2. Camera Fly-Through Gothic Doors Video Stage                             */
+/* -------------------------------------------------------------------------- */
+.hero-mobile-flythrough-stage {
   position: absolute;
   inset: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  overflow: hidden;
   pointer-events: none;
-  will-change: opacity, transform;
+  background-color: #000000;
+  will-change: opacity;
+}
+
+.hero-mobile-flythrough-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.hero-mobile-flythrough-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 45%,
+    rgba(6, 7, 9, 0.5) 85%,
+    rgba(6, 7, 9, 0.95) 100%
+  );
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. Ambient Glow Layers for Inner Sanctuary Emergence                       */
+/* -------------------------------------------------------------------------- */
+.hero-mobile-bg-ambient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(143, 29, 36, 0.22) 0%,
+    rgba(6, 7, 9, 0.85) 65%,
+    #000000 100%
+  );
+  z-index: 7;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.hero-mobile-stage-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  height: 90vw;
+  background: radial-gradient(
+    circle at center,
+    rgba(220, 20, 40, 0.16) 0%,
+    rgba(143, 29, 36, 0.08) 45%,
+    transparent 70%
+  );
+  z-index: 8;
+  pointer-events: none;
+  filter: blur(35px);
+  will-change: opacity;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. Section 1 Emerging Concert Video Card (Transforms into Full-Bleed)      */
+/* -------------------------------------------------------------------------- */
+.hero-mobile-portal-stage {
+  position: absolute;
+  z-index: 10;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: left, top, width, height, opacity, border-radius, box-shadow;
 }
 
 .hero-mobile-portal-frame {
   position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  border-radius: 4px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 30px rgba(143, 29, 36, 0.25);
-  will-change: width, height, border-radius, opacity;
+  border-radius: inherit;
 }
 
 .hero-mobile-portal-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
   display: block;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.hero-mobile-video-dim {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(6, 7, 9, 0.65);
+  pointer-events: none;
+  will-change: opacity;
 }
 
 .hero-mobile-portal-hairline {
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(197, 168, 105, 0.4);
+  border: 1px solid rgba(197, 168, 105, 0.55);
   pointer-events: none;
   border-radius: inherit;
-  transition: opacity 0.3s ease;
+  will-change: opacity;
 }
 
 .hero-mobile-portal-vignette {
@@ -163,14 +246,16 @@
   inset: 0;
   background: radial-gradient(
     circle at center,
-    transparent 45%,
-    rgba(6, 7, 9, 0.6) 90%,
-    rgba(6, 7, 9, 0.95) 100%
+    transparent 50%,
+    rgba(6, 7, 9, 0.55) 90%,
+    rgba(6, 7, 9, 0.85) 100%
   );
   pointer-events: none;
 }
 
-/* 3. Mobile Storytelling Editorial Layer */
+/* -------------------------------------------------------------------------- */
+/* 5. Mobile Storytelling Editorial Layer (Top Monument & Bottom Dock)        */
+/* -------------------------------------------------------------------------- */
 .hero-mobile-editorial-layer {
   position: absolute;
   inset: 0;
@@ -178,9 +263,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: calc(1rem + env(safe-area-inset-top, 16px)) 1.25rem var(--mobile-thumb-bottom-inset);
+  padding: calc(1.5rem + env(safe-area-inset-top, 16px)) 1.25rem var(--mobile-thumb-bottom-inset);
   pointer-events: none;
-  will-change: opacity, transform;
 }
 
 .hero-mobile-top-editorial {
@@ -189,6 +273,7 @@
   align-items: center;
   text-align: center;
   width: 100%;
+  will-change: opacity, transform;
 }
 
 .hero-mobile-monument-title {
@@ -196,7 +281,7 @@
   flex-direction: column;
   align-items: center;
   font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: var(--mobile-headline-size, 2rem);
+  font-size: var(--mobile-headline-size, 2.15rem);
   font-weight: 700;
   letter-spacing: 0.18em;
   line-height: 0.98;
@@ -204,13 +289,23 @@
   text-transform: uppercase;
 }
 
+.hero-mobile-title-subtext {
+  font-family: var(--font-editorial, 'Playfair Display', serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--color-muted, #9CA3AF);
+  margin-top: 0.45rem;
+}
+
 .hero-mobile-sub-venue {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.625rem;
+  font-size: 0.6rem;
   letter-spacing: 0.24em;
-  color: var(--color-ivory-dim, #D1C9BC);
+  color: var(--color-ivory, #E9E4DA);
   text-transform: uppercase;
-  margin-top: 0.6rem;
+  margin-top: 0.4rem;
+  font-weight: 500;
 }
 
 /* Bottom Dock: Schedule Grid */
@@ -219,6 +314,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  will-change: opacity, transform;
 }
 
 .hero-mobile-divider {
@@ -228,8 +324,8 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(197, 168, 105, 0.45) 20%,
-    rgba(197, 168, 105, 0.45) 80%,
+    rgba(197, 168, 105, 0.5) 20%,
+    rgba(197, 168, 105, 0.5) 80%,
     transparent 100%
   );
   margin-bottom: 0.85rem;
@@ -241,13 +337,13 @@
   justify-content: space-between;
   width: 100%;
   max-width: 360px;
-  padding: 0 0.25rem;
+  padding: 0 0.5rem;
 }
 
 .hero-mobile-schedule-item {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.2rem;
 }
 
 .hero-mobile-schedule-item.align-right {
@@ -257,30 +353,41 @@
 
 .hero-mobile-sched-date {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
   color: var(--color-muted, #9CA3AF);
   text-transform: uppercase;
 }
 
 .hero-mobile-sched-artist {
   font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--color-gold-antique, #C5A869);
   line-height: 1;
 }
 
 .hero-mobile-sched-meta {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.58rem;
-  letter-spacing: 0.16em;
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
   color: var(--color-ivory, #E9E4DA);
   margin-top: 0.15rem;
 }
 
-/* 4. Climax Overlay ("WELCOME TO THE ASSEMBLY") */
+.hero-mobile-sched-venue {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.5625rem;
+  letter-spacing: 0.24em;
+  color: var(--color-crimson, #DC1428);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 6. Climax Arrival Overlay ("WELCOME TO THE ASSEMBLY")                      */
+/* -------------------------------------------------------------------------- */
 .hero-mobile-climax-overlay {
   position: absolute;
   inset: 0;
@@ -292,23 +399,25 @@
   text-align: center;
   padding: 2rem;
   pointer-events: none;
-  background: rgba(6, 7, 9, 0.55);
   will-change: opacity, transform;
 }
 
 .hero-mobile-climax-title {
   font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: clamp(1.85rem, 8vw, 2.5rem);
+  font-size: clamp(1.85rem, 8.5vw, 2.65rem);
   font-weight: 700;
   letter-spacing: 0.18em;
-  line-height: 1.2;
+  line-height: 1.18;
   color: var(--color-ivory, #E9E4DA);
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
+  margin: 0;
+  text-transform: uppercase;
 }
 
 .hero-mobile-climax-bar {
-  width: 48px;
+  width: 52px;
   height: 2px;
   background: var(--color-gold-antique, #C5A869);
   margin-top: 1.25rem;
+  box-shadow: 0 0 12px rgba(197, 168, 105, 0.6);
 }
