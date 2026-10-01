@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Artist } from '../../types';
-import { silenceSec1, setAudioOwner, getAudioOwner } from '../../utils/audioCoordinator';
+import { silenceSec1, setAudioOwner, getAudioOwner, isSec1AudioActive } from '../../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../../utils/mediaPreloader';
 
 interface Props {
@@ -140,7 +140,9 @@ export const LineupSectionMobile: React.FC<Props> = ({
     const inView = r.top < window.innerHeight * 0.45 && r.bottom > window.innerHeight * 0.15;
 
     if (inView) {
-      silenceSec1();
+      if (isSec1AudioActive()) {
+        silenceSec1();
+      }
     } else {
       if (activeAudioArtistId !== null) {
         stopArtistAudio();

@@ -109,8 +109,8 @@ export const startPreload = (): Promise<void> => {
 
             const blob = new Blob(chunks, { type: 'video/mp4' });
             cachedBlobUrls.set(url, URL.createObjectURL(blob));
-          } catch (e) {
-            console.warn('Preload failed for', url, e);
+          } catch {
+            // Non-critical: if blob caching is blocked by browser policy/extension, falls back to direct URL streaming
           }
         })
       );

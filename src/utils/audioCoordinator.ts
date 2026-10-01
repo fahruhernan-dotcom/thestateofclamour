@@ -16,35 +16,57 @@ export const setAudioOwner = (owner: AudioSection) => {
   }
 };
 
+let isSilencingSec1 = false;
 export const silenceSec1 = () => {
-  if (typeof document === 'undefined') return;
-  const storyVideos = document.querySelectorAll<HTMLVideoElement>(
-    '.storytelling-photo-img, #the-guests video, .hero-mobile-portal-video, #hero-mobile video'
-  );
-  storyVideos.forEach((v) => {
-    v.muted = true;
-  });
-  if (currentAudioOwner === 'sec1-storytelling') {
-    currentAudioOwner = 'none';
-  }
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('how:audio-sec1-silenced'));
+  if (isSilencingSec1 || typeof document === 'undefined') return;
+  isSilencingSec1 = true;
+  try {
+    const storyVideos = document.querySelectorAll<HTMLVideoElement>(
+      '.storytelling-photo-img, #the-guests video, .hero-mobile-portal-video, #hero-mobile video'
+    );
+    let changed = false;
+    storyVideos.forEach((v) => {
+      if (!v.muted) {
+        v.muted = true;
+        changed = true;
+      }
+    });
+    if (currentAudioOwner === 'sec1-storytelling') {
+      currentAudioOwner = 'none';
+      changed = true;
+    }
+    if (changed && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('how:audio-sec1-silenced'));
+    }
+  } finally {
+    isSilencingSec1 = false;
   }
 };
 
+let isSilencingSec2 = false;
 export const silenceSec2 = () => {
-  if (typeof document === 'undefined') return;
-  const lineupVideos = document.querySelectorAll<HTMLVideoElement>(
-    '#lineup video, .lineup-mobile-media-video, .guest-portrait-video'
-  );
-  lineupVideos.forEach((v) => {
-    v.muted = true;
-  });
-  if (currentAudioOwner === 'sec2-lineup') {
-    currentAudioOwner = 'none';
-  }
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('how:audio-sec2-silenced'));
+  if (isSilencingSec2 || typeof document === 'undefined') return;
+  isSilencingSec2 = true;
+  try {
+    const lineupVideos = document.querySelectorAll<HTMLVideoElement>(
+      '#lineup video, .lineup-mobile-media-video, .guest-portrait-video'
+    );
+    let changed = false;
+    lineupVideos.forEach((v) => {
+      if (!v.muted) {
+        v.muted = true;
+        changed = true;
+      }
+    });
+    if (currentAudioOwner === 'sec2-lineup') {
+      currentAudioOwner = 'none';
+      changed = true;
+    }
+    if (changed && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('how:audio-sec2-silenced'));
+    }
+  } finally {
+    isSilencingSec2 = false;
   }
 };
 

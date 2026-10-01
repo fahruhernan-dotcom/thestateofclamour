@@ -18,13 +18,8 @@ const getFramePath = (index: number): string => {
   return `/assets/hero_frames/f_${padded}.webp`;
 };
 
-export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
-  const isMobile = useIsMobile();
-
-  if (isMobile) {
-    return <HeroSectionMobile event={event} onExploreGuests={onExploreGuests} />;
-  }
-
+const HeroSectionDesktop: React.FC<Props> = ({ event, onExploreGuests }) => {
+  const userInteractedRef = useRef<boolean>(false);
   const heroTrackRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const heroPosterContainerRef = useRef<HTMLDivElement | null>(null);
@@ -84,7 +79,7 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
         video.play().catch(() => {});
       }
 
-      if (inView && canSec1PlayAudio()) {
+      if (inView && canSec1PlayAudio() && userInteractedRef.current) {
         silenceSec2();
         setAudioOwner('sec1-storytelling');
         video.volume = 0.95;
@@ -582,6 +577,7 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
 
     // Global gesture listener to unlock audio when user interacts
     const unlockOnGesture = () => {
+      userInteractedRef.current = true;
       const video = photoImgRef.current;
       if (video && isSectionVisibleRef.current && canSec1PlayAudio()) {
         silenceSec2();
@@ -590,7 +586,11 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
         video.muted = false;
         video.play()
           .then(() => { isPlayingAudioRef.current = true; })
-          .catch(() => {});
+          .catch(() => {
+            video.muted = true;
+            isPlayingAudioRef.current = false;
+            video.play().catch(() => {});
+          });
       }
     };
 
@@ -615,8 +615,6 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
     window.addEventListener('pointerdown', unlockOnGesture, { passive: true });
     window.addEventListener('touchstart', unlockOnGesture, { passive: true });
     window.addEventListener('keydown', unlockOnGesture, { passive: true });
-    window.addEventListener('wheel', unlockOnGesture, { passive: true });
-    window.addEventListener('scroll', unlockOnGesture, { passive: true });
 
     return () => {
       isActive = false;
@@ -630,8 +628,6 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
       window.removeEventListener('pointerdown', unlockOnGesture);
       window.removeEventListener('touchstart', unlockOnGesture);
       window.removeEventListener('keydown', unlockOnGesture);
-      window.removeEventListener('wheel', unlockOnGesture);
-      window.removeEventListener('scroll', unlockOnGesture);
     };
   }, []);
 
@@ -859,6 +855,11 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
       </div>
     </section>
   );
+};
+
+export const HeroSection: React.FC<Props> = (props) => {
+  const isMobile = useIsMobile();
+  return isMobile ? <HeroSectionMobile {...props} /> : <HeroSectionDesktop {...props} />;
 };
 
 export default HeroSection;

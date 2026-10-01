@@ -38,6 +38,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
 
   const isAudioActiveRef = useRef<boolean>(false);
   const isSectionVisibleRef = useRef<boolean>(false);
+  const userInteractedRef = useRef<boolean>(false);
 
   const handleAdvanceToLineup = useCallback(() => {
     silenceSec1();
@@ -85,7 +86,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
     const checkAudio = (inRange: boolean) => {
       if (!recapVideo) return;
 
-      if (inRange && canSec1PlayAudio()) {
+      if (inRange && canSec1PlayAudio() && userInteractedRef.current) {
         silenceSec2();
         setAudioOwner('sec1-storytelling');
         recapVideo.volume = 0.92;
@@ -531,6 +532,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
 
     // User gesture audio unlock (triggered only on intentional touch/click)
     const unlockOnGesture = () => {
+      userInteractedRef.current = true;
       if (!recapVideo || !trackRef.current) return;
       const rect = trackRef.current.getBoundingClientRect();
       const scrollableDistance = rect.height - window.innerHeight;
@@ -548,7 +550,11 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
             isAudioActiveRef.current = true;
             isSectionVisibleRef.current = true;
           })
-          .catch(() => {});
+          .catch(() => {
+            recapVideo.muted = true;
+            isAudioActiveRef.current = false;
+            recapVideo.play().catch(() => {});
+          });
       }
     };
 
