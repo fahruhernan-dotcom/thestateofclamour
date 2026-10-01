@@ -40,7 +40,6 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
 
   // Section 1 Mobile Layout Refs
   const mobileTopRef = useRef<HTMLDivElement | null>(null);
-  const mobileCueRef = useRef<HTMLDivElement | null>(null);
   const mobileBottomRef = useRef<HTMLDivElement | null>(null);
 
   // Audio State
@@ -62,6 +61,7 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
     // Cache preloaded Image objects for Hero Canvas
     const images: (HTMLImageElement | null)[] = new Array(TOTAL_FRAMES).fill(null);
     const loadedIndices = new Set<number>();
+    let mobilePosterImg: HTMLImageElement | null = null;
 
     // Dimensions
     let vw = window.innerWidth;
@@ -114,7 +114,9 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
       // Base card dimensions for Section 1 (centered editorial concert card)
       const isMobile = vw < 768;
       const baseCardW = isMobile ? Math.min(vw * 0.84, 380) : Math.min(vw * 0.44, 480);
-      const baseCardH = Math.round(baseCardW * 1.33); // 3:4 portrait concert frame
+      const baseCardH = isMobile
+        ? Math.min(Math.round(baseCardW * 1.33), Math.round(vh * 0.48))
+        : Math.round(baseCardW * 1.33); // 3:4 portrait concert frame
       const baseCardLeft = Math.round((vw - baseCardW) / 2);
       const baseCardTop = Math.round((vh - baseCardH) / 2);
 
@@ -368,8 +370,16 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
     };
 
     const drawFrame = (frameIndex: number, progress: number = 0) => {
+      const isMobile = vw < 768;
+      // On mobile at scroll = 0, draw the uncropped portrait poster
+      if (isMobile && progress === 0 && mobilePosterImg && mobilePosterImg.complete && mobilePosterImg.naturalWidth > 0) {
+        renderImageToCanvas(mobilePosterImg, 0);
+        lastRenderedFrame = 0;
+        return;
+      }
+
       const idx = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(frameIndex)));
-      if (idx === lastRenderedFrame && progress < 0.44) return;
+      if (idx === lastRenderedFrame && progress < 0.44 && !(isMobile && progress < 0.08)) return;
 
       let img = images[idx];
 
@@ -390,6 +400,16 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
 
       if (img && img.complete && img.naturalWidth > 0) {
         renderImageToCanvas(img, progress);
+
+        // On mobile, smoothly dissolve out the portrait poster during first tiny scroll (0.00 -> 0.08)
+        if (isMobile && mobilePosterImg && mobilePosterImg.complete && progress > 0 && progress < 0.08) {
+          const mobAlpha = Math.max(0, 1 - progress / 0.08);
+          ctx.save();
+          ctx.globalAlpha = mobAlpha;
+          renderImageToCanvas(mobilePosterImg, progress);
+          ctx.restore();
+        }
+
         lastRenderedFrame = idx;
       }
     };
@@ -416,6 +436,18 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas, { passive: true });
+
+    // Step 0: Preload mobile portrait poster if on mobile device
+    if (window.innerWidth < 768) {
+      const mobImg = new Image();
+      mobImg.src = '/assets/hero_scroll_poster_mobile.jpg';
+      mobImg.onload = () => {
+        mobilePosterImg = mobImg;
+        if (targetProgress === 0) {
+          drawFrame(0, 0);
+        }
+      };
+    }
 
     // Step 1: Immediately load Frame 1 (establishing shot)
     const initialImg = new Image();
@@ -599,12 +631,15 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
 
       <div className="hero-sticky-stage">
         {/* 0. Instant Fallback Poster (Master Key Visual) */}
-        <img
-          src="/assets/hero_scroll_poster.jpg"
-          alt="The State of Clamour // Swear In Continental"
-          className="hero-cinematic-poster-fallback"
-          aria-hidden="true"
-        />
+        <picture className="hero-cinematic-poster-fallback" aria-hidden="true">
+          <source media="(max-width: 768px)" srcSet="/assets/hero_scroll_poster_mobile.jpg" />
+          <img
+            src="/assets/hero_scroll_poster.jpg"
+            alt="The State of Clamour // Swear In Continental"
+            className="hero-cinematic-poster-fallback-img"
+            aria-hidden="true"
+          />
+        </picture>
 
         {/* 1. Hardware-Composited Hero Canvas (Frames 1 -> 122) */}
         <canvas
@@ -629,7 +664,7 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
               <span className="hero-meta-venue">{venueLabel}</span>
             </div>
 
-            <div className="hero-scroll-indicator" aria-hidden="true">
+            <div className="hero-scroll-indicator" onClick={handleLineupScroll} role="button" tabIndex={0} style={{ cursor: 'pointer' }} aria-label="Gulir ke gerbang">
               <span className="hero-scroll-cue-text">GULIR UNTUK MEMASUKI GERBANG</span>
               <span className="hero-scroll-cue-arrow">↓</span>
             </div>
@@ -753,18 +788,6 @@ export const HeroSection: React.FC<Props> = ({ event, onExploreGuests }) => {
           </div>
 
           <div ref={mobileBottomRef} className="story-mobile-bottom-editorial" style={{ opacity: 0 }}>
-            <div
-              ref={mobileCueRef}
-              className="story-mobile-enter-cue"
-              onClick={handleLineupScroll}
-              role="button"
-              tabIndex={0}
-              aria-label="Enter The Guests"
-            >
-              <span className="story-mobile-cue-text">ENTER THE GUESTS</span>
-              <span className="story-mobile-cue-arrow">↓</span>
-            </div>
-
             <div className="story-mobile-horizontal-divider" />
 
             <div className="story-mobile-schedule-grid">

@@ -42,13 +42,29 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 12%;
   display: block;
   user-select: none;
   pointer-events: none;
   z-index: 0;
   background-color: #000000;
+}
+
+.hero-cinematic-poster-fallback img,
+.hero-cinematic-poster-fallback-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 12%;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .hero-cinematic-poster-fallback img,
+  .hero-cinematic-poster-fallback-img {
+    object-position: center center;
+  }
 }
 
 /* 2. High-Performance Hardware-Composited Canvas (Instant 0.1ms GPU draw, locked 60/120fps) */

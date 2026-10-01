@@ -414,43 +414,18 @@
   line-height: 1.35;
 }
 
-/* Bottom Editorial: Enter Cue + Hairline Divider + 2-Column Schedule */
+/* Bottom Editorial: Hairline Divider + 2-Column Schedule */
 .story-mobile-bottom-editorial {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  margin-bottom: max(1rem, env(safe-area-inset-bottom));
   will-change: transform, opacity;
 }
 
 .story-mobile-enter-cue {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  color: var(--color-gold-antique);
-  text-transform: uppercase;
-  padding: 0.45rem 1rem;
-  margin-bottom: 0.85rem;
-  cursor: pointer;
-  pointer-events: auto;
-  user-select: none;
-  border-radius: 9999px;
-  background: rgba(6, 7, 9, 0.65);
-  border: 1px solid rgba(197, 168, 105, 0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease;
-}
-
-.story-mobile-enter-cue:active {
-  transform: translateY(2px);
-  background: rgba(197, 168, 105, 0.15);
-  color: #FFFFFF;
+  display: none !important;
 }
 
 .story-mobile-cue-text {
