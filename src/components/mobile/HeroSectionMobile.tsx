@@ -8,16 +8,22 @@ interface Props {
   onExploreGuests?: () => void;
 }
 
+const TOTAL_MOBILE_FRAMES = 84;
+
+const getMobileFramePath = (index: number): string => {
+  const frameNum = Math.max(1, Math.min(TOTAL_MOBILE_FRAMES, index + 1));
+  const padded = String(frameNum).padStart(3, '0');
+  return `/assets/hero_mobile_frames/mf_${padded}.jpg`;
+};
+
 export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) => {
   const trackRef = useRef<HTMLElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // DOM Layer Refs for GPU-accelerated interpolation
-  const posterLayerRef = useRef<HTMLDivElement | null>(null);
+  // Initial poster metadata ref
   const initialMetaRef = useRef<HTMLDivElement | null>(null);
 
-  const flythroughStageRef = useRef<HTMLDivElement | null>(null);
-  const flythroughVideoRef = useRef<HTMLVideoElement | null>(null);
-
+  // Section 1 card & overlays
   const bgAmbientRef = useRef<HTMLDivElement | null>(null);
   const stageGlowRef = useRef<HTMLDivElement | null>(null);
 
@@ -45,27 +51,26 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
   }, [onExploreGuests]);
 
   useEffect(() => {
-    let rafId: number | null = null;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: false });
+    if (!ctx) return;
+
     let isActive = true;
+    let rafId: number | null = null;
+    let targetProgress = 0;
+    let currentFrame = 0;
+    let lastRenderedFrame = -1;
 
     // Viewport dimensions
     let vw = window.innerWidth;
     let vh = window.innerHeight;
 
-    let targetProgress = 0;
-    let targetFlythroughTime = 0;
-    let currentFlythroughTime = 0;
+    // Frame cache
+    const images: (HTMLImageElement | null)[] = new Array(TOTAL_MOBILE_FRAMES).fill(null);
+    const loadedIndices = new Set<number>();
 
-    const flythroughVideo = flythroughVideoRef.current;
     const recapVideo = recapVideoRef.current;
-
-    // Ensure flythrough video is paused so it strictly obeys scroll scrub
-    if (flythroughVideo) {
-      flythroughVideo.pause();
-      flythroughVideo.currentTime = 0;
-    }
-
-    // Ensure recap video plays muted in loop ready for unmasking
     if (recapVideo) {
       recapVideo.play().catch(() => {});
     }
@@ -99,11 +104,72 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       }
     };
 
-    const render = () => {
-      if (!isActive) return;
+    // Full-bleed cover draw to canvas
+    const renderImageToCanvas = (img: HTMLImageElement, progress: number) => {
+      if (!canvas || !ctx) return;
+      const cw = canvas.width;
+      const ch = canvas.height;
+      if (cw === 0 || ch === 0) return;
 
-      const p = targetProgress;
+      const imgW = img.naturalWidth || 540;
+      const imgH = img.naturalHeight || 960;
+      const canvasRatio = cw / ch;
+      const imgRatio = imgW / imgH;
 
+      let dw: number, dh: number, dx: number, dy: number;
+
+      if (canvasRatio > imgRatio) {
+        dw = cw;
+        dh = cw / imgRatio;
+        dx = 0;
+        dy = -(dh - ch) * 0.5;
+      } else {
+        dh = ch;
+        dw = ch * imgRatio;
+        dx = -(dw - cw) * 0.5;
+        dy = 0;
+      }
+
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, cw, ch);
+      ctx.drawImage(img, dx, dy, dw, dh);
+
+      // Deepen to pure black void when Section 1 begins expanding
+      if (progress >= 0.44) {
+        const fadeRatio = Math.min(1, (progress - 0.44) / 0.08);
+        ctx.fillStyle = `rgba(0, 0, 0, ${fadeRatio})`;
+        ctx.fillRect(0, 0, cw, ch);
+      }
+    };
+
+    const drawFrame = (frameIndex: number, progress: number) => {
+      const idx = Math.max(0, Math.min(TOTAL_MOBILE_FRAMES - 1, Math.round(frameIndex)));
+      if (idx === lastRenderedFrame && progress < 0.44) return;
+
+      let img = images[idx];
+
+      if (!img || !img.complete || img.naturalWidth === 0) {
+        let bestIdx = -1;
+        let minDiff = Infinity;
+        for (const loadedIdx of loadedIndices) {
+          const diff = Math.abs(loadedIdx - idx);
+          if (diff < minDiff) {
+            minDiff = diff;
+            bestIdx = loadedIdx;
+          }
+        }
+        if (bestIdx !== -1) {
+          img = images[bestIdx];
+        }
+      }
+
+      if (img && img.complete && img.naturalWidth > 0) {
+        renderImageToCanvas(img, progress);
+        lastRenderedFrame = idx;
+      }
+    };
+
+    const renderStageElements = (p: number) => {
       // ----------------------------------------------------------------------
       // Stage 1: Initial Establishing Shot & Poster Metadata (0.00 -> 0.16)
       // ----------------------------------------------------------------------
@@ -113,51 +179,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
         initialMetaRef.current.style.opacity = metaOp.toFixed(3);
         initialMetaRef.current.style.transform = `translate3d(0, ${metaY}px, 0)`;
         initialMetaRef.current.style.pointerEvents = metaOp > 0.15 ? 'auto' : 'none';
-      }
-
-      if (posterLayerRef.current) {
-        let posterAlpha = 1;
-        if (p > 0.08) {
-          posterAlpha = Math.max(0, 1 - (p - 0.08) / 0.08);
-        }
-        posterLayerRef.current.style.opacity = posterAlpha.toFixed(3);
-      }
-
-      // ----------------------------------------------------------------------
-      // Stage 2: Camera Fly-Through Gothic Doors Video Stage (0.08 -> 0.40)
-      // ----------------------------------------------------------------------
-      if (flythroughStageRef.current) {
-        let stageAlpha = 0;
-        if (p >= 0.08 && p <= 0.40) {
-          if (p < 0.16) {
-            stageAlpha = (p - 0.08) / 0.08;
-          } else if (p > 0.34) {
-            stageAlpha = Math.max(0, 1 - (p - 0.34) / 0.06);
-          } else {
-            stageAlpha = 1;
-          }
-        }
-        flythroughStageRef.current.style.opacity = stageAlpha.toFixed(3);
-      }
-
-      // Scrub flythrough video to exact door-entering timestamp
-      if (p >= 0.08 && p <= 0.38) {
-        const scrubNorm = Math.min(1, Math.max(0, (p - 0.08) / 0.28));
-        const dur = (flythroughVideo && flythroughVideo.duration) || 8.0;
-        targetFlythroughTime = scrubNorm * Math.max(0, dur - 0.1);
-      } else if (p > 0.38) {
-        const dur = (flythroughVideo && flythroughVideo.duration) || 8.0;
-        targetFlythroughTime = Math.max(0, dur - 0.1);
-      } else {
-        targetFlythroughTime = 0;
-      }
-
-      const timeDiff = targetFlythroughTime - currentFlythroughTime;
-      if (Math.abs(timeDiff) > 0.03) {
-        currentFlythroughTime += timeDiff * 0.35;
-        if (flythroughVideo && !flythroughVideo.seeking) {
-          flythroughVideo.currentTime = currentFlythroughTime;
-        }
       }
 
       // ----------------------------------------------------------------------
@@ -320,18 +341,106 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
         isSectionVisibleRef.current = isSec1Active;
         checkAudio(isSec1Active);
       }
+    };
 
-      // Keep RAF alive if flythrough video seeking or lerping is in progress
-      if (Math.abs(timeDiff) > 0.03) {
-        rafId = requestAnimationFrame(render);
+    const resizeCanvas = () => {
+      if (!canvas) return;
+      vw = window.innerWidth;
+      vh = window.innerHeight;
+
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.round(rect.width * dpr);
+      const h = Math.round(rect.height * dpr);
+
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+        lastRenderedFrame = -1;
+        drawFrame(currentFrame, targetProgress);
+      }
+      renderStageElements(targetProgress);
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+
+    // Step 1: Preload Frame 1 immediately (identik dengan fallback poster)
+    const initialImg = new Image();
+    initialImg.src = getMobileFramePath(0);
+    initialImg.onload = () => {
+      images[0] = initialImg;
+      loadedIndices.add(0);
+      drawFrame(0, 0);
+    };
+
+    // Step 2: Progressive background preloading of remaining frames
+    const loadRemainingFrames = () => {
+      let currentIdx = 1;
+      const batchSize = 12;
+
+      const loadNextBatch = () => {
+        if (!isActive || currentIdx >= TOTAL_MOBILE_FRAMES) return;
+        const end = Math.min(TOTAL_MOBILE_FRAMES, currentIdx + batchSize);
+
+        for (let i = currentIdx; i < end; i++) {
+          if (!images[i]) {
+            const img = new Image();
+            img.src = getMobileFramePath(i);
+            const capturedIdx = i;
+            img.onload = () => {
+              images[capturedIdx] = img;
+              loadedIndices.add(capturedIdx);
+              if (Math.round(currentFrame) === capturedIdx) {
+                drawFrame(capturedIdx, targetProgress);
+              }
+            };
+          }
+        }
+
+        currentIdx = end;
+        if (currentIdx < TOTAL_MOBILE_FRAMES && isActive) {
+          setTimeout(loadNextBatch, 20);
+        }
+      };
+
+      loadNextBatch();
+    };
+
+    const preloadTimer = setTimeout(loadRemainingFrames, 60);
+
+    // Animation Tick Loop
+    const tick = () => {
+      if (!isActive) return;
+
+      // Map progress to frames:
+      // 0.00 -> 0.38: Frames 0 -> 83 (kamera bergerak maju ke gerbang menara gotik, menembus pintu, masuk kegelapan)
+      // > 0.38: Frame 83 (keheningan kegelapan di mana kartu konser muncul)
+      let targetFrame: number;
+      if (targetProgress <= 0.38) {
+        targetFrame = (targetProgress / 0.38) * (TOTAL_MOBILE_FRAMES - 1);
       } else {
+        targetFrame = TOTAL_MOBILE_FRAMES - 1;
+      }
+
+      const diff = targetFrame - currentFrame;
+
+      if (Math.abs(diff) > 0.04) {
+        currentFrame += diff * 0.28;
+        drawFrame(currentFrame, targetProgress);
+        renderStageElements(targetProgress);
+        rafId = requestAnimationFrame(tick);
+      } else {
+        currentFrame = targetFrame;
+        drawFrame(currentFrame, targetProgress);
+        renderStageElements(targetProgress);
         rafId = null;
       }
     };
 
     const requestTick = () => {
       if (rafId === null && isActive) {
-        rafId = requestAnimationFrame(render);
+        rafId = requestAnimationFrame(tick);
       }
     };
 
@@ -346,14 +455,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       requestTick();
     };
 
-    const onResize = () => {
-      vw = window.innerWidth;
-      vh = window.innerHeight;
-      requestTick();
-    };
-
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize, { passive: true });
     onScroll();
 
     // User gesture audio unlock
@@ -394,9 +496,10 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
 
     return () => {
       isActive = false;
+      clearTimeout(preloadTimer);
       if (rafId !== null) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('how:audio-owner-change', handleOwnerChange);
       window.removeEventListener('how:audio-sec1-silenced', handleSec1Silenced);
       window.removeEventListener('click', unlockOnGesture);
@@ -422,16 +525,26 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
       <div id="the-guests" style={{ position: 'absolute', top: '38%', pointerEvents: 'none' }} />
 
       <div className="hero-mobile-sticky">
-        {/* Layer 1: Establishing 2K Portrait Poster (1536x2752 px) */}
-        <div ref={posterLayerRef} className="hero-mobile-poster-layer">
+        {/* Layer 0: Instant Fallback Poster (Zero-delay Paint, identical to Frame 1) */}
+        <div className="hero-mobile-poster-fallback">
           <img
             src="/assets/hero_scroll_poster_mobile_2k.jpg"
             alt="The State of Clamour // Swear In Continental"
-            className="hero-mobile-poster-img"
+            className="hero-mobile-poster-fallback-img"
           />
         </div>
 
-        {/* Layer 1b: Initial Poster Metadata (Date, Venue, Scroll Cue) */}
+        {/* Layer 1: Hardware-Composited Mobile Canvas (Frames 1 -> 84, locked 60/120fps) */}
+        <canvas
+          ref={canvasRef}
+          className="hero-mobile-canvas"
+          aria-hidden="true"
+        />
+
+        {/* Layer 1b: Editorial Film Vignette */}
+        <div className="hero-mobile-vignette" />
+
+        {/* Layer 1c: Initial Poster Metadata (Date, Venue, Scroll Cue) */}
         <div ref={initialMetaRef} className="hero-mobile-initial-meta">
           <span className="hero-mobile-meta-date">30 — 31 OCTOBER 2026</span>
           <span className="hero-mobile-meta-venue">{venueLabel}</span>
@@ -447,26 +560,11 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
           </div>
         </div>
 
-        {/* Layer 2: Camera Fly-Through Gothic Doors Video Stage */}
-        <div ref={flythroughStageRef} className="hero-mobile-flythrough-stage" style={{ opacity: 0 }}>
-          <video
-            ref={flythroughVideoRef}
-            src="/assets/hero_camera_doors.mp4"
-            className="hero-mobile-flythrough-video"
-            muted
-            playsInline
-            preload="auto"
-            tabIndex={-1}
-            aria-hidden="true"
-          />
-          <div className="hero-mobile-flythrough-vignette" />
-        </div>
-
-        {/* Layer 3: Ambient Glow & Atmospheric Background */}
+        {/* Layer 2: Ambient Glow & Atmospheric Background for Section 1 */}
         <div ref={bgAmbientRef} className="hero-mobile-bg-ambient" style={{ opacity: 0 }} />
         <div ref={stageGlowRef} className="hero-mobile-stage-glow" style={{ opacity: 0 }} />
 
-        {/* Layer 4: Section 1 Concert Card (Morphs from Center Card to Full-Bleed) */}
+        {/* Layer 3: Section 1 Concert Card (Morphs from Center Card to Full-Bleed) */}
         <div ref={gpuCanvasRef} className="hero-mobile-portal-stage" style={{ opacity: 0 }}>
           <div className="hero-mobile-portal-frame">
             <video
@@ -498,7 +596,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
           </div>
         </div>
 
-        {/* Layer 5: Mobile Storytelling Editorial Layer */}
+        {/* Layer 4: Mobile Storytelling Editorial Layer */}
         <div className="hero-mobile-editorial-layer">
           {/* Top Cluster: THE GUESTS */}
           <div ref={topEditorialRef} className="hero-mobile-top-editorial" style={{ opacity: 0 }}>
@@ -535,7 +633,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
           </div>
         </div>
 
-        {/* Layer 6: Climax Arrival ("WELCOME TO THE ASSEMBLY") */}
+        {/* Layer 5: Climax Arrival ("WELCOME TO THE ASSEMBLY") */}
         <div ref={climaxOverlayRef} className="hero-mobile-climax-overlay" style={{ opacity: 0 }}>
           <h2 className="hero-mobile-climax-title">
             WELCOME TO<br />THE ASSEMBLY

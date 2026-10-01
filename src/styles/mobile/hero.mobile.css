@@ -26,24 +26,57 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* 1. Establishing 2K Portrait Poster Layer (Uncut 9:16 Visual)               */
+/* 0. Instant Fallback Poster (Zero-delay Paint, identical to Frame 1)        */
 /* -------------------------------------------------------------------------- */
-.hero-mobile-poster-layer {
+.hero-mobile-poster-fallback {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 2;
+  display: block;
+  user-select: none;
   pointer-events: none;
-  will-change: opacity, transform;
+  z-index: 1;
+  background-color: #000000;
 }
 
-.hero-mobile-poster-img {
+.hero-mobile-poster-fallback-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
   display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 1. Hardware-Composited Mobile Canvas (Locked 60/120fps, Zero Jitter)       */
+/* -------------------------------------------------------------------------- */
+.hero-mobile-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+  z-index: 2;
+  background-color: transparent;
+}
+
+/* Editorial Film Vignette */
+.hero-mobile-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    transparent 45%,
+    rgba(6, 7, 9, 0.45) 85%,
+    rgba(6, 7, 9, 0.90) 100%
+  );
 }
 
 /* Initial Mobile Poster Metadata (Fades out smoothly on scroll) */
@@ -125,42 +158,7 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* 2. Camera Fly-Through Gothic Doors Video Stage                             */
-/* -------------------------------------------------------------------------- */
-.hero-mobile-flythrough-stage {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 4;
-  overflow: hidden;
-  pointer-events: none;
-  background-color: #000000;
-  will-change: opacity;
-}
-
-.hero-mobile-flythrough-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  display: block;
-}
-
-.hero-mobile-flythrough-vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    transparent 45%,
-    rgba(6, 7, 9, 0.5) 85%,
-    rgba(6, 7, 9, 0.95) 100%
-  );
-  pointer-events: none;
-}
-
-/* -------------------------------------------------------------------------- */
-/* 3. Ambient Glow Layers for Inner Sanctuary Emergence                       */
+/* 2. Ambient Glow Layers for Inner Sanctuary Emergence                       */
 /* -------------------------------------------------------------------------- */
 .hero-mobile-bg-ambient {
   position: absolute;
@@ -196,7 +194,7 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* 4. Section 1 Emerging Concert Video Card (Transforms into Full-Bleed)      */
+/* 3. Section 1 Emerging Concert Video Card (Transforms into Full-Bleed)      */
 /* -------------------------------------------------------------------------- */
 .hero-mobile-portal-stage {
   position: absolute;
@@ -254,7 +252,7 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* 5. Mobile Storytelling Editorial Layer (Top Monument & Bottom Dock)        */
+/* 4. Mobile Storytelling Editorial Layer (Top Monument & Bottom Dock)        */
 /* -------------------------------------------------------------------------- */
 .hero-mobile-editorial-layer {
   position: absolute;
@@ -386,7 +384,7 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* 6. Climax Arrival Overlay ("WELCOME TO THE ASSEMBLY")                      */
+/* 5. Climax Arrival Overlay ("WELCOME TO THE ASSEMBLY")                      */
 /* -------------------------------------------------------------------------- */
 .hero-mobile-climax-overlay {
   position: absolute;
