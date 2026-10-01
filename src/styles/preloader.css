@@ -1,0 +1,255 @@
+/* ==========================================================================
+   CRYPTIC CEREMONIAL PRELOADER // THE STATE OF CLAMOUR (HOUSE OF WITNESSES)
+   Zero-Asset, Pure SVG & CSS Architecture with Shutter Split Unsealing
+   ========================================================================== */
+
+.cryptic-preloader-root {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  user-select: none;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Dual Shutter Curtains (Split Vertically on Unseal) */
+.preloader-shutter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50.5%;
+  background-color: #050608;
+  z-index: 1;
+  transition: transform 0.85s cubic-bezier(0.77, 0, 0.175, 1);
+  will-change: transform;
+}
+
+.preloader-shutter-top {
+  top: 0;
+  border-bottom: 1px solid rgba(197, 168, 105, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.preloader-shutter-bottom {
+  bottom: 0;
+  border-top: 1px solid rgba(197, 168, 105, 0.25);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+}
+
+/* Unsealing Shutter Trigger */
+.cryptic-preloader-root.is-unsealing .preloader-shutter-top {
+  transform: translate3d(0, -100%, 0);
+}
+
+.cryptic-preloader-root.is-unsealing .preloader-shutter-bottom {
+  transform: translate3d(0, 100%, 0);
+}
+
+/* Film Grain Texture over Loader */
+.preloader-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.04;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 0);
+  background-size: 3px 3px;
+}
+
+/* Central Ceremonial Core */
+.preloader-core {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cryptic-preloader-root.is-unsealing .preloader-core {
+  opacity: 0;
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 35px rgba(197, 168, 105, 0.8));
+}
+
+/* Volumetric Crimson Aura behind Sigil */
+.preloader-aura {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(220, 20, 40, 0.28) 0%,
+    rgba(138, 21, 27, 0.16) 45%,
+    transparent 70%
+  );
+  filter: blur(28px);
+  animation: preloaderPulse 3.2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* Sacred Sigil Geometry (Pure SVG) */
+.preloader-sigil-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .preloader-sigil-wrap {
+    width: 168px;
+    height: 168px;
+  }
+  .preloader-aura {
+    width: 340px;
+    height: 340px;
+  }
+}
+
+.preloader-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* SVG Rotational Choreography */
+.sigil-outer-ring {
+  transform-origin: 100px 100px;
+  animation: sigilSpinClockwise 32s linear infinite;
+}
+
+.sigil-middle-star {
+  transform-origin: 100px 100px;
+  animation: sigilSpinCounter 24s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.sigil-inner-monogram {
+  transform-origin: 100px 100px;
+  animation: sigilBreathe 4s ease-in-out infinite;
+}
+
+/* Typography Cluster */
+.preloader-meta-cluster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 320px;
+}
+
+.preloader-kicker {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.38em;
+  color: var(--color-gold-antique, #C5A869);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+/* Monumental Numeric Odometer */
+.preloader-counter-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.preloader-counter-value {
+  font-family: var(--font-title, 'Cinzel', serif);
+  font-size: 2.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-ivory, #E9E4DA);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(197, 168, 105, 0.4);
+}
+
+@media (min-width: 768px) {
+  .preloader-counter-value {
+    font-size: 3.5rem;
+  }
+}
+
+.preloader-counter-unit {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--color-gold-antique, #C5A869);
+  margin-left: 0.35rem;
+}
+
+/* Hairline Progress Track */
+.preloader-progress-track {
+  position: relative;
+  width: 180px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.preloader-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    #8A151B 0%,
+    #C5A869 60%,
+    #FFF2D1 100%
+  );
+  box-shadow: 0 0 10px rgba(197, 168, 105, 0.6);
+  border-radius: 9999px;
+  transition: width 0.12s ease-out;
+  will-change: width;
+}
+
+/* Real-Time Ritual Status Micro-Copy */
+.preloader-status-text {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.5625rem;
+  letter-spacing: 0.28em;
+  color: var(--color-ivory-dim, #D1C9BC);
+  text-transform: uppercase;
+  height: 1rem;
+  transition: opacity 0.25s ease;
+}
+
+/* Keyframe Animations */
+@keyframes preloaderPulse {
+  0% { transform: scale(0.92); opacity: 0.45; }
+  100% { transform: scale(1.10); opacity: 0.85; }
+}
+
+@keyframes sigilSpinClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sigilSpinCounter {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(-180deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes sigilBreathe {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(197, 168, 105, 0.4)); }
+  50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(220, 20, 40, 0.8)); }
+}

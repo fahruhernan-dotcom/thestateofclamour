@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 import { initialEvent, initialTickets, initialArtists } from './data/eventData';
 import { Artist, EventData, TicketTier } from './types';
 import { Check } from 'lucide-react';
+import { CrypticPreloader } from './components/CrypticPreloader';
 
 type ViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier';
 
@@ -149,6 +150,9 @@ export const App: React.FC = () => {
       className="clamer-app-canvas"
       style={{ minHeight: '100vh', position: 'relative', backgroundColor: 'var(--color-void)' }}
     >
+      {/* Zero-Asset Ceremonial Entrance Preloader */}
+      <CrypticPreloader />
+
       {/* Top Precision Laser Transit Beam */}
       <div
         className={`page-transition-beam ${isTransitioning ? 'is-active' : ''}`}
