@@ -122,19 +122,21 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       <div className="preloader-core">
         <div className="preloader-aura" aria-hidden="true" />
 
-        <div className="preloader-sigil-wrap">
+        {/* Official 3D Chrome TSOC Emblem with Orbiting Celestial Rings */}
+        <div className="preloader-emblem-wrap">
+          {/* Orbiting Sacred Geometry Ring around Logo */}
           <svg
-            className="preloader-svg"
+            className="preloader-halo-svg"
             viewBox="0 0 200 200"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            {/* Outer Cardinal Ring with Gothic Hashmarks */}
+            {/* Outer Cardinal Ring with Gothic Dash Marks */}
             <g className="sigil-outer-ring">
               <circle
                 cx="100"
                 cy="100"
-                r="92"
+                r="95"
                 stroke="rgba(197, 168, 105, 0.45)"
                 strokeWidth="1.2"
                 strokeDasharray="4 6 12 6"
@@ -142,92 +144,64 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
               <circle
                 cx="100"
                 cy="100"
-                r="86"
-                stroke="rgba(220, 20, 40, 0.3)"
-                strokeWidth="0.75"
+                r="89"
+                stroke="rgba(220, 20, 40, 0.35)"
+                strokeWidth="0.8"
               />
-              {/* Cardinal Accents */}
-              <line x1="100" y1="4" x2="100" y2="12" stroke="#C5A869" strokeWidth="2" />
-              <line x1="100" y1="188" x2="100" y2="196" stroke="#C5A869" strokeWidth="2" />
-              <line x1="4" y1="100" x2="12" y2="100" stroke="#C5A869" strokeWidth="2" />
-              <line x1="188" y1="100" x2="196" y2="100" stroke="#C5A869" strokeWidth="2" />
-              
-              {/* Corner Diamond Markers */}
-              <polygon points="100,6 103,10 100,14 97,10" fill="#C5A869" />
-              <polygon points="100,186 103,190 100,194 97,190" fill="#C5A869" />
-              <polygon points="6,100 10,103 14,100 10,97" fill="#C5A869" />
-              <polygon points="186,100 190,103 194,100 190,97" fill="#C5A869" />
+              <line x1="100" y1="2" x2="100" y2="10" stroke="#C5A869" strokeWidth="2" />
+              <line x1="100" y1="190" x2="100" y2="198" stroke="#C5A869" strokeWidth="2" />
+              <line x1="2" y1="100" x2="10" y2="100" stroke="#C5A869" strokeWidth="2" />
+              <line x1="190" y1="100" x2="198" y2="100" stroke="#C5A869" strokeWidth="2" />
+
+              <polygon points="100,3 103,7 100,11 97,7" fill="#C5A869" />
+              <polygon points="100,189 103,193 100,197 97,193" fill="#C5A869" />
+              <polygon points="3,100 7,103 11,100 7,97" fill="#C5A869" />
+              <polygon points="189,100 193,103 197,100 193,97" fill="#C5A869" />
             </g>
 
-            {/* Sacred Dual Squares (Octagram) */}
+            {/* Sacred Octagram Dual Squares */}
             <g className="sigil-middle-star">
               <rect
-                x="44"
-                y="44"
-                width="112"
-                height="112"
-                stroke="rgba(197, 168, 105, 0.65)"
-                strokeWidth="1.2"
+                x="32"
+                y="32"
+                width="136"
+                height="136"
+                stroke="rgba(197, 168, 105, 0.28)"
+                strokeWidth="1"
                 fill="none"
               />
               <rect
-                x="44"
-                y="44"
-                width="112"
-                height="112"
-                stroke="rgba(220, 20, 40, 0.55)"
-                strokeWidth="1"
+                x="32"
+                y="32"
+                width="136"
+                height="136"
+                stroke="rgba(220, 20, 40, 0.28)"
+                strokeWidth="0.9"
                 fill="none"
                 transform="rotate(45 100 100)"
               />
-              <circle
-                cx="100"
-                cy="100"
-                r="56"
-                stroke="rgba(233, 228, 218, 0.25)"
-                strokeWidth="1"
-                strokeDasharray="2 4"
-              />
             </g>
-
-            {/* Inner Sanctuary Monogram: Cathedral Arch & Crown */}
-            <g className="sigil-inner-monogram">
-              <circle
-                cx="100"
-                cy="100"
-                r="38"
-                fill="#0A0B0E"
-                stroke="rgba(197, 168, 105, 0.85)"
-                strokeWidth="1.5"
-              />
-              {/* Gothic Cathedral Spire / Chevron Iconography */}
-              <path
-                d="M100 74 L114 96 L108 96 L100 84 L92 96 L86 96 Z"
-                fill="url(#goldGrad)"
-              />
-              <path
-                d="M100 88 L110 104 L105 104 L100 96 L95 104 L90 104 Z"
-                fill="rgba(220, 20, 40, 0.8)"
-              />
-              {/* Alchemical Pedestal Line */}
-              <line x1="88" y1="116" x2="112" y2="116" stroke="#C5A869" strokeWidth="1.5" />
-              <line x1="93" y1="120" x2="107" y2="120" stroke="#8A151B" strokeWidth="1" />
-              <circle cx="100" cy="110" r="2.5" fill="#E9E4DA" />
-            </g>
-
-            <defs>
-              <linearGradient id="goldGrad" x1="86" y1="74" x2="114" y2="96" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#FFF2D1" />
-                <stop offset="0.5" stopColor="#C5A869" />
-                <stop offset="1" stopColor="#8A6B2D" />
-              </linearGradient>
-            </defs>
           </svg>
+
+          {/* Official 3D Chrome TSOC Emblem */}
+          <div className="preloader-logo-container">
+            <img
+              src="/assets/tsoc_logo_web.jpg"
+              alt="The State of Clamor"
+              className="preloader-logo-img"
+              width={210}
+              height={210}
+              loading="eager"
+            />
+            {/* Chrome Specular Sheen Sweep */}
+            <div className="preloader-sheen-sweep" aria-hidden="true" />
+          </div>
         </div>
 
         {/* Ceremonial Text & Real-Time Progress */}
         <div className="preloader-meta-cluster">
-          <span className="preloader-kicker">THE STATE OF CLAMOUR</span>
+          <span className="preloader-kicker">CEREMONIAL ACCESS GATES</span>
+
           
           <div className="preloader-counter-row">
             <span className="preloader-counter-value">{formattedPercent}</span>

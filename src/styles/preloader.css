@@ -79,66 +79,116 @@
   filter: drop-shadow(0 0 35px rgba(197, 168, 105, 0.8));
 }
 
-/* Volumetric Crimson Aura behind Sigil */
+/* Volumetric Crimson & Gold Aura behind TSOC Logo */
 .preloader-aura {
   position: absolute;
-  width: 280px;
-  height: 280px;
+  width: 320px;
+  height: 320px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(220, 20, 40, 0.28) 0%,
-    rgba(138, 21, 27, 0.16) 45%,
-    transparent 70%
+    rgba(220, 20, 40, 0.35) 0%,
+    rgba(197, 168, 105, 0.18) 35%,
+    rgba(138, 21, 27, 0.15) 55%,
+    transparent 72%
   );
-  filter: blur(28px);
-  animation: preloaderPulse 3.2s ease-in-out infinite alternate;
+  filter: blur(32px);
+  animation: preloaderPulse 3s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
-/* Sacred Sigil Geometry (Pure SVG) */
-.preloader-sigil-wrap {
+/* TSOC Emblem & Celestial Orbiting Ring */
+.preloader-emblem-wrap {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 220px;
+  height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 }
 
 @media (min-width: 768px) {
-  .preloader-sigil-wrap {
-    width: 168px;
-    height: 168px;
+  .preloader-emblem-wrap {
+    width: 270px;
+    height: 270px;
+    margin-bottom: 2rem;
   }
   .preloader-aura {
-    width: 340px;
-    height: 340px;
+    width: 400px;
+    height: 400px;
+    filter: blur(40px);
   }
 }
 
-.preloader-svg {
+/* Orbiting SVG Celestial Halo */
+.preloader-halo-svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
   overflow: visible;
+  z-index: 1;
+}
+
+/* Official 3D Chrome TSOC Logo */
+.preloader-logo-container {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .preloader-logo-container {
+    width: 210px;
+    height: 210px;
+  }
+}
+
+.preloader-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 20px rgba(220, 20, 40, 0.55)) drop-shadow(0 0 35px rgba(197, 168, 105, 0.3));
+  animation: logoBreath 3.5s ease-in-out infinite alternate;
+  transform-origin: center center;
+  will-change: transform, filter;
+}
+
+/* Chrome Sheen Sweep Light Reflection */
+.preloader-sheen-sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 65%
+  );
+  mix-blend-mode: overlay;
+  animation: sheenSweep 4.2s ease-in-out infinite;
+  opacity: 0.7;
 }
 
 /* SVG Rotational Choreography */
 .sigil-outer-ring {
   transform-origin: 100px 100px;
-  animation: sigilSpinClockwise 32s linear infinite;
+  animation: sigilSpinClockwise 36s linear infinite;
 }
 
 .sigil-middle-star {
   transform-origin: 100px 100px;
-  animation: sigilSpinCounter 24s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: sigilSpinCounter 28s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.sigil-inner-monogram {
-  transform-origin: 100px 100px;
-  animation: sigilBreathe 4s ease-in-out infinite;
-}
 
 /* Typography Cluster */
 .preloader-meta-cluster {
@@ -253,3 +303,33 @@
   0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(197, 168, 105, 0.4)); }
   50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(220, 20, 40, 0.8)); }
 }
+
+@keyframes logoBreath {
+  0% {
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 15px rgba(220, 20, 40, 0.5)) drop-shadow(0 0 25px rgba(197, 168, 105, 0.25));
+  }
+  100% {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 30px rgba(220, 20, 40, 0.85)) drop-shadow(0 0 45px rgba(197, 168, 105, 0.55));
+  }
+}
+
+@keyframes sheenSweep {
+  0% {
+    transform: translateX(-150%) skewX(-25deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  45% {
+    transform: translateX(150%) skewX(-25deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(150%) skewX(-25deg);
+    opacity: 0;
+  }
+}
+
