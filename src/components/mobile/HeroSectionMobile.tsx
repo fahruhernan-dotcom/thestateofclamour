@@ -625,20 +625,10 @@ export const HeroSectionMobile: React.FC<Props> = ({ event, onExploreGuests }) =
         {/* Layer 1b: Editorial Film Vignette */}
         <div className="hero-mobile-vignette" />
 
-        {/* Layer 1c: Initial Poster Metadata (Date, Venue, Scroll Cue) */}
+        {/* Layer 1c: Initial Poster Metadata (Date, Venue) */}
         <div ref={initialMetaRef} className="hero-mobile-initial-meta">
           <span className="hero-mobile-meta-date">30 — 31 OCTOBER 2026</span>
           <span className="hero-mobile-meta-venue">{venueLabel}</span>
-          <div
-            className="hero-mobile-scroll-cue"
-            onClick={handleAdvanceToLineup}
-            role="button"
-            tabIndex={0}
-            aria-label="Gulir untuk memasuki gerbang"
-          >
-            <span>GULIR KE GERBANG</span>
-            <span className="hero-mobile-cue-arrow">↓</span>
-          </div>
         </div>
 
         {/* Layer 2: Ambient Glow & Atmospheric Background for Section 1 */}
