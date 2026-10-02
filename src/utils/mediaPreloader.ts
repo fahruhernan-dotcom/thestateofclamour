@@ -174,6 +174,11 @@ export const startPreload = (): Promise<void> => {
 
 // Background prefetch for Section 2 videos after Section 1 entrance is unsealed
 export const startBackgroundPreloadRemaining = () => {
+  // Mobile devices stream video progressively via native HTML5 Range requests.
+  // Avoid buffering 17.5MB of background video blobs into mobile RAM/cellular data.
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+  if (isMobile) return;
+
   const remaining = ['/assets/guest_malvin.mp4', '/assets/guest_far.mp4'];
   remaining.forEach(async (url) => {
     try {

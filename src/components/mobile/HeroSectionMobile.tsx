@@ -569,6 +569,21 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
     const onScroll = () => {
       if (!trackRef.current) return;
       const rect = trackRef.current.getBoundingClientRect();
+
+      // Viewport culling: If hero section is completely offscreen (scrolled past),
+      // pause recap video to free mobile GPU/CPU/battery and skip offscreen canvas rAF
+      if (rect.bottom < -100 || rect.top > window.innerHeight + 100) {
+        if (recapVideo && !recapVideo.paused) {
+          recapVideo.pause();
+        }
+        return;
+      }
+
+      // Resume recap video playback if user scrolled back into view
+      if (recapVideo && recapVideo.paused && targetProgress >= 0.26) {
+        recapVideo.play().catch(() => {});
+      }
+
       const scrollableDistance = rect.height - window.innerHeight;
       if (scrollableDistance <= 0) return;
 
@@ -588,10 +603,15 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
     // User gesture audio unlock (triggered on touch/click)
     const unlockOnGesture = () => {
       userInteractedRef.current = true;
-      if (!recapVideo) return;
+      if (!recapVideo || !trackRef.current) return;
+
+      const rect = trackRef.current.getBoundingClientRect();
+      // Only interact with recap video if Hero section is currently in viewport
+      const isInHeroView = rect.bottom >= 0 && rect.top <= window.innerHeight;
+      if (!isInHeroView) return;
 
       // In touch/click gesture: ensure video is playing
-      if (recapVideo.paused) {
+      if (recapVideo.paused && targetProgress >= 0.26) {
         recapVideo.play().catch(() => {
           recapVideo.muted = true;
           recapVideo.play().catch(() => {});
@@ -612,10 +632,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
         });
       }
 
-      if (trackRef.current) {
-        const rect = trackRef.current.getBoundingClientRect();
-        updateAudioVolume(targetProgress, rect);
-      }
+      updateAudioVolume(targetProgress, rect);
     };
 
     const handleOwnerChange = (e: Event) => {
@@ -667,7 +684,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
   return (
     <section
       ref={trackRef}
-      id="hero-mobile"
+      id="hero"
+      data-section="hero-mobile"
       className="hero-mobile-track"
       aria-label="The State of Clamour // Swear In Continental (Mobile)"
     >

@@ -6,6 +6,7 @@ import {
   setAudioOwner,
   getAudioOwner,
   isSec1AudioActive,
+  canSec2PlayAudio,
   crossfadeVideos,
   fadeVideoVolume,
 } from '../../utils/audioCoordinator';
@@ -186,7 +187,8 @@ export const LineupSectionMobile: React.FC<Props> = ({
         silenceSec1({ duration: 300 });
       }
       // If Section 2 is in view and no card audio is playing yet, start centered card smoothly
-      if (!currentPlayingIdRef.current) {
+      // only once Section 1 has cleared sufficiently or audio ownership is granted
+      if (!currentPlayingIdRef.current && canSec2PlayAudio()) {
         const targetArtist = artists[activeCardIndex] || artists[0];
         if (targetArtist) {
           playArtistAudio(targetArtist.id);
@@ -210,7 +212,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
     };
   }, [checkLineupVisibility]);
 
-  // Auto-silence when audio owner changes or sec2 silenced
+  // Auto-silence when audio owner changes or sec2 silenced; resume when sec1 finishes silencing
   useEffect(() => {
     const handleOwnerChange = (e: Event) => {
       const customEvent = e as CustomEvent<{ owner: string }>;
@@ -221,17 +223,22 @@ export const LineupSectionMobile: React.FC<Props> = ({
     const handleSec2Silenced = () => {
       stopArtistAudio();
     };
+    const handleSec1Silenced = () => {
+      checkLineupVisibility();
+    };
 
     window.addEventListener('how:audio-owner-change', handleOwnerChange);
     window.addEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+    window.addEventListener('how:audio-sec1-silenced', handleSec1Silenced);
     return () => {
       window.removeEventListener('how:audio-owner-change', handleOwnerChange);
       window.removeEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+      window.removeEventListener('how:audio-sec1-silenced', handleSec1Silenced);
       if (scrollSettlingTimerRef.current) {
         clearTimeout(scrollSettlingTimerRef.current);
       }
     };
-  }, [stopArtistAudio]);
+  }, [checkLineupVisibility, stopArtistAudio]);
 
   return (
     <section ref={sectionRef} id="lineup" className="lineup-mobile-section" aria-label="Lineup Artis The State of Clamour">
@@ -263,6 +270,13 @@ export const LineupSectionMobile: React.FC<Props> = ({
               className={`lineup-mobile-card ${isAudioPlaying ? 'is-playing-audio' : ''}`}
               onPointerUp={() => handleCardPointerUp(artist)}
               onPointerCancel={handlePointerCancel}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  triggerFlash(artist.id);
+                  handleOpenArtistDetail(artist);
+                }
+              }}
               role="button"
               tabIndex={0}
               aria-label={`Buka detail acara ${artist.name}`}

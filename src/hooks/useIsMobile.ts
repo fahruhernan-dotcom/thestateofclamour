@@ -14,9 +14,9 @@ export const useIsMobile = (): boolean => {
     if (typeof window === 'undefined') return false;
     // Prefer matchMedia over window.innerWidth for Safari reliability
     try {
-      return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`).matches;
+      return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
     } catch {
-      return window.innerWidth < MOBILE_BREAKPOINT;
+      return window.innerWidth <= MOBILE_BREAKPOINT;
     }
   });
 
@@ -25,7 +25,7 @@ export const useIsMobile = (): boolean => {
 
     let mediaQuery: MediaQueryList;
     try {
-      mediaQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+      mediaQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
     } catch {
       return;
     }

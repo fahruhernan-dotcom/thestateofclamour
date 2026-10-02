@@ -118,8 +118,15 @@ export const crossfadeVideos = (
         incoming.muted = false;
       } catch {}
     }
-    if (incoming.paused) {
-      incoming.play().catch(() => {});
+    const playPromise = incoming.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Mobile Safari & Chrome autoplay rejection safeguard:
+        // If unmuted playback is rejected during scroll/snap, immediately restore muted = true
+        // so the visual video keeps looping smoothly without freezing on screen.
+        incoming.muted = true;
+        incoming.play().catch(() => {});
+      });
     }
     fadeVideoVolume(incoming, targetVolume, durationMs, onComplete);
   }
@@ -139,7 +146,7 @@ export const silenceSec1 = (options?: SilenceOptions) => {
 
   try {
     const storyVideos = document.querySelectorAll<HTMLVideoElement>(
-      '.storytelling-photo-img, #the-guests video, .hero-mobile-portal-video, #hero-mobile video'
+      '.storytelling-photo-img, #the-guests video, .hero-mobile-portal-video, #hero video, #hero-mobile video'
     );
 
     if (currentAudioOwner === 'sec1-storytelling') {
@@ -216,7 +223,7 @@ export const isSec1AudioActive = (): boolean => {
   if (currentAudioOwner === 'sec1-storytelling') return true;
 
   const storyVideo = document.querySelector<HTMLVideoElement>(
-    '.storytelling-photo-img, #the-guests video, .hero-mobile-portal-video, #hero-mobile video'
+    '.storytelling-photo-img, #the-guests video, .hero-mobile-portal-video, #hero video, #hero-mobile video'
   );
   if (storyVideo && !storyVideo.muted && !storyVideo.paused && storyVideo.volume > 0.02) {
     return true;
@@ -236,8 +243,8 @@ export const canSec2PlayAudio = (): boolean => {
     return false;
   }
 
-  // 2. Section 1 container position (desktop #hero, mobile #hero-mobile)
-  const sec1 = document.getElementById('hero-mobile') || document.getElementById('hero');
+  // 2. Section 1 container position (desktop #hero, mobile #hero)
+  const sec1 = document.getElementById('hero') || document.getElementById('hero-mobile');
   if (sec1) {
     const r = sec1.getBoundingClientRect();
     if (r.bottom > window.innerHeight * 0.25) {
