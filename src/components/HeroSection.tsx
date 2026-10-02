@@ -75,6 +75,14 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       const video = photoImgRef.current;
       if (!video) return;
 
+      // Always guarantee visual playback whenever Section 1 card is emerging or active
+      if (p >= 0.26 && video.paused) {
+        video.play().catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      }
+
       if (!userInteractedRef.current) {
         if (!video.muted) video.muted = true;
         isPlayingAudioRef.current = false;
@@ -133,16 +141,25 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
         if (video.muted) {
           silenceSec2();
           setAudioOwner('sec1-storytelling');
-          video.muted = false;
           video.volume = targetVol;
+          video.muted = false;
           video.play().then(() => {
             isPlayingAudioRef.current = true;
             isSectionVisibleRef.current = true;
-          }).catch(() => {});
+          }).catch(() => {
+            video.muted = true;
+            video.play().catch(() => {});
+          });
         } else {
           video.volume = targetVol;
           isPlayingAudioRef.current = true;
           isSectionVisibleRef.current = true;
+          if (video.paused) {
+            video.play().catch(() => {
+              video.muted = true;
+              video.play().catch(() => {});
+            });
+          }
           if (getAudioOwner() !== 'sec1-storytelling') {
             setAudioOwner('sec1-storytelling');
           }
@@ -545,14 +562,30 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       };
     }
 
-    // Step 1b: Set recap video src from preloader cache (avoids double-fetching 33MB)
+    // Step 1b: Set recap video src from preloader cache if a blob was created
     let unsubVideo: (() => void) | null = null;
     const videoEl = photoImgRef.current;
     if (videoEl) {
+      videoEl.defaultMuted = true;
+      videoEl.muted = true;
+      videoEl.playsInline = true;
+      videoEl.setAttribute('playsinline', '');
+      videoEl.setAttribute('webkit-playsinline', '');
+      if (!videoEl.src) {
+        videoEl.src = getCachedVideoUrl('/assets/how2026_recap.mp4') || '/assets/how2026_recap.mp4';
+      }
+      videoEl.play().catch(() => {});
+
       unsubVideo = subscribePreloader((s) => {
         if (s.isComplete) {
-          videoEl.src = getCachedVideoUrl('/assets/how2026_recap.mp4');
-          videoEl.play().catch(() => {});
+          const cached = getCachedVideoUrl('/assets/how2026_recap.mp4');
+          if (cached && cached.startsWith('blob:') && videoEl.src !== cached) {
+            const prevTime = videoEl.currentTime;
+            const wasPaused = videoEl.paused;
+            videoEl.src = cached;
+            videoEl.currentTime = prevTime;
+            if (!wasPaused) videoEl.play().catch(() => {});
+          }
           unsubVideo?.();
           unsubVideo = null;
         }
@@ -657,6 +690,13 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
     // Global gesture listener to unlock audio when user interacts
     const unlockOnGesture = () => {
       userInteractedRef.current = true;
+      const video = photoImgRef.current;
+      if (video && video.paused) {
+        video.play().catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      }
       if (!heroTrackRef.current) return;
       const rect = heroTrackRef.current.getBoundingClientRect();
       updateAudioVolume(targetProgress, rect);
@@ -720,9 +760,6 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       className="hero-scroll-track"
       aria-label="The State of Clamour // Swear In Continental"
     >
-      {/* Anchor target for #the-guests linking */}
-      <div id="the-guests" style={{ position: 'absolute', top: '38%', pointerEvents: 'none' }} />
-
       <div className="hero-sticky-stage">
         {/* 0. Instant Fallback Poster (Master Key Visual) */}
         <picture className="hero-cinematic-poster-fallback" aria-hidden="true">
@@ -769,13 +806,14 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
           <div className="storytelling-photo-frame">
             <video
               ref={photoImgRef}
+              src={getCachedVideoUrl('/assets/how2026_recap.mp4') || '/assets/how2026_recap.mp4'}
               poster="/assets/how2026_recap_poster.jpg"
               className="storytelling-photo-img"
               autoPlay
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
               onEnded={() => {
                 if (photoImgRef.current) {
                   photoImgRef.current.currentTime = 0;

@@ -15,13 +15,13 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          // STRICT RULE: Navbar ONLY appears when reaching Section "THE GUESTS" and downwards.
-          // Zero navbar intrusion throughout the entire Hero entrance / monument / cathedral experience!
-          const guestsEl = document.getElementById('the-guests') || document.getElementById('lineup');
-          if (guestsEl) {
-            const guestsTop = guestsEl.getBoundingClientRect().top + window.scrollY;
-            const isAtGuestsOrBelow = window.scrollY >= (guestsTop - 120);
-            setIsScrolled(isAtGuestsOrBelow);
+          // STRICT RULE: Navbar ONLY appears when reaching Section 2 (The Guests / Lineup) and downwards.
+          // Zero navbar intrusion throughout the entire Hero entrance & Section 1 storytelling experience!
+          const lineupEl = document.getElementById('lineup');
+          if (lineupEl) {
+            const lineupTop = lineupEl.getBoundingClientRect().top + window.scrollY;
+            const isAtLineupOrBelow = window.scrollY >= (lineupTop - 60);
+            setIsScrolled(isAtLineupOrBelow);
           } else {
             setIsScrolled(false);
           }

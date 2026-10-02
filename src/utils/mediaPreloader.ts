@@ -133,22 +133,30 @@ export const startPreload = (): Promise<void> => {
     }
 
     // 3. Preload Section 1 Recap Video (/assets/how2026_recap.mp4)
-    fetch('/assets/how2026_recap.mp4')
-      .then(async (resp) => {
-        if (resp.ok) {
-          const blob = await resp.blob();
-          cachedBlobUrls.set('/assets/how2026_recap.mp4', URL.createObjectURL(blob));
-        }
-        // Account for video weight in progress
-        for (let w = 0; w < videoWeight; w++) {
-          checkProgress();
-        }
-      })
-      .catch(() => {
-        for (let w = 0; w < videoWeight; w++) {
-          checkProgress();
-        }
-      });
+    if (isMobile) {
+      // Mobile devices stream natively via HTML5 <video> with HTTP Range requests
+      // Avoid fetching 33MB into mobile RAM/cellular bandwidth
+      for (let w = 0; w < videoWeight; w++) {
+        checkProgress();
+      }
+    } else {
+      fetch('/assets/how2026_recap.mp4')
+        .then(async (resp) => {
+          if (resp.ok) {
+            const blob = await resp.blob();
+            cachedBlobUrls.set('/assets/how2026_recap.mp4', URL.createObjectURL(blob));
+          }
+          // Account for video weight in progress
+          for (let w = 0; w < videoWeight; w++) {
+            checkProgress();
+          }
+        })
+        .catch(() => {
+          for (let w = 0; w < videoWeight; w++) {
+            checkProgress();
+          }
+        });
+    }
 
     // 4. Safety maximum timeout: 4s to never trap user on slow connections
     const safetyTimerId = setTimeout(() => {

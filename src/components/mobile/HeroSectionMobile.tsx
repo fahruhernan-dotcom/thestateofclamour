@@ -63,11 +63,29 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
 
     const recapVideo = recapVideoRef.current;
     if (recapVideo) {
+      // Force mobile Safari & WebKit autoplay attributes
+      recapVideo.defaultMuted = true;
+      recapVideo.muted = true;
+      recapVideo.playsInline = true;
+      recapVideo.setAttribute('playsinline', '');
+      recapVideo.setAttribute('webkit-playsinline', '');
+      if (!recapVideo.src) {
+        recapVideo.src = getCachedVideoUrl('/assets/how2026_recap.mp4') || '/assets/how2026_recap.mp4';
+      }
       recapVideo.play().catch(() => {});
     }
 
     const updateAudioVolume = (p: number, trackRect?: DOMRect | null) => {
       if (!recapVideo) return;
+
+      // Always guarantee visual playback whenever Section 1 card is emerging or active
+      if (p >= 0.26 && recapVideo.paused) {
+        recapVideo.play().catch(() => {
+          recapVideo.muted = true;
+          recapVideo.play().catch(() => {});
+        });
+      }
+
       if (!userInteractedRef.current) {
         if (!recapVideo.muted) recapVideo.muted = true;
         isAudioActiveRef.current = false;
@@ -126,16 +144,29 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
         if (recapVideo.muted) {
           silenceSec2();
           setAudioOwner('sec1-storytelling');
-          recapVideo.muted = false;
           recapVideo.volume = targetVol;
+          recapVideo.muted = false;
           recapVideo.play().then(() => {
             isAudioActiveRef.current = true;
             isSectionVisibleRef.current = true;
-          }).catch(() => {});
+          }).catch(() => {
+            // CRITICAL MOBILE AUTOPLAY REJECTION SAFEGUARD:
+            // Mobile Safari & Chrome reject unmuted play during scroll.
+            // Immediately restore muted playback so the visual video keeps running!
+            recapVideo.muted = true;
+            isAudioActiveRef.current = false;
+            recapVideo.play().catch(() => {});
+          });
         } else {
           recapVideo.volume = targetVol;
           isAudioActiveRef.current = true;
           isSectionVisibleRef.current = true;
+          if (recapVideo.paused) {
+            recapVideo.play().catch(() => {
+              recapVideo.muted = true;
+              recapVideo.play().catch(() => {});
+            });
+          }
           if (getAudioOwner() !== 'sec1-storytelling') {
             setAudioOwner('sec1-storytelling');
           }
@@ -446,13 +477,19 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       };
     }
 
-    // Step 1b: Set recap video src from preloader cache (avoids double-fetching 33MB)
+    // Step 1b: Set recap video src from preloader cache if a blob was created
     let unsubVideo: (() => void) | null = null;
     if (recapVideo) {
       unsubVideo = subscribePreloader((s) => {
         if (s.isComplete) {
-          recapVideo.src = getCachedVideoUrl('/assets/how2026_recap.mp4');
-          recapVideo.play().catch(() => {});
+          const cached = getCachedVideoUrl('/assets/how2026_recap.mp4');
+          if (cached && cached.startsWith('blob:') && recapVideo.src !== cached) {
+            const prevTime = recapVideo.currentTime;
+            const wasPaused = recapVideo.paused;
+            recapVideo.src = cached;
+            recapVideo.currentTime = prevTime;
+            if (!wasPaused) recapVideo.play().catch(() => {});
+          }
           unsubVideo?.();
           unsubVideo = null;
         }
@@ -548,12 +585,37 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    // User gesture audio unlock (triggered only on intentional touch/click)
+    // User gesture audio unlock (triggered on touch/click)
     const unlockOnGesture = () => {
       userInteractedRef.current = true;
-      if (!recapVideo || !trackRef.current) return;
-      const rect = trackRef.current.getBoundingClientRect();
-      updateAudioVolume(targetProgress, rect);
+      if (!recapVideo) return;
+
+      // In touch/click gesture: ensure video is playing
+      if (recapVideo.paused) {
+        recapVideo.play().catch(() => {
+          recapVideo.muted = true;
+          recapVideo.play().catch(() => {});
+        });
+      }
+
+      // If user is currently in Section 1, attempt unmuting inside this direct user gesture!
+      if (targetProgress >= 0.26 && targetProgress <= 0.94 && canSec1PlayAudio()) {
+        silenceSec2();
+        setAudioOwner('sec1-storytelling');
+        recapVideo.volume = 0.92;
+        recapVideo.muted = false;
+        recapVideo.play().then(() => {
+          isAudioActiveRef.current = true;
+        }).catch(() => {
+          recapVideo.muted = true;
+          recapVideo.play().catch(() => {});
+        });
+      }
+
+      if (trackRef.current) {
+        const rect = trackRef.current.getBoundingClientRect();
+        updateAudioVolume(targetProgress, rect);
+      }
     };
 
     const handleOwnerChange = (e: Event) => {
@@ -609,9 +671,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       className="hero-mobile-track"
       aria-label="The State of Clamour // Swear In Continental (Mobile)"
     >
-      {/* Anchor target for #the-guests linking */}
-      <div id="the-guests" style={{ position: 'absolute', top: '38%', pointerEvents: 'none' }} />
-
       <div className="hero-mobile-sticky">
         {/* Layer 0: Instant Fallback Poster (Zero-delay Paint, identical to Frame 1) */}
         <div className="hero-mobile-poster-fallback">
@@ -652,13 +711,14 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
           <div className="hero-mobile-portal-frame">
             <video
               ref={recapVideoRef}
+              src={getCachedVideoUrl('/assets/how2026_recap.mp4') || '/assets/how2026_recap.mp4'}
               poster="/assets/how2026_recap_poster.jpg"
               className="hero-mobile-portal-video"
               autoPlay
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
               onEnded={() => {
                 if (recapVideoRef.current) {
                   recapVideoRef.current.currentTime = 0;
