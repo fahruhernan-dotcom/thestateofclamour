@@ -84,57 +84,61 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
     <>
       <header className={`cinematic-navbar ${isScrolled ? 'is-visible' : 'is-hidden'}`}>
         <nav className="navbar-inner-bar" role="navigation" aria-label="Official Assembly Navigation">
-          <a href="#hero" className="nav-brand-title">
-            THE STATE OF CLAMOUR
+          <a href="#hero" className="nav-brand-link" aria-label="Kembali ke atas">
+            <img
+              src="/apple-touch-icon.png"
+              alt="Clamour Emblem"
+              className="nav-brand-logo-img"
+              width="26"
+              height="26"
+            />
+            <span className="nav-brand-title">CLAMOUR</span>
           </a>
 
+          {/* Desktop Ultra-Minimalist Links with Bedimcode Rolling Text */}
           <div className="nav-links-cluster">
             <a
               href="#lineup"
               className={`nav-link-item ${activeTab === 'lineup' ? 'active' : ''}`}
             >
-              BINTANG TAMU
+              <span className="nav-roll-inner">
+                <span className="nav-roll-default">LINEUP</span>
+                <span className="nav-roll-hover" aria-hidden="true">LINEUP</span>
+              </span>
             </a>
-            <a
-              href="#the-passage"
-              className={`nav-link-item ${activeTab === 'the-passage' ? 'active' : ''}`}
-            >
-              TIKET ACARA
-            </a>
+            <span className="nav-links-dot" aria-hidden="true">·</span>
             <a
               href="#the-night"
               className={`nav-link-item ${activeTab === 'the-night' ? 'active' : ''}`}
             >
-              JADWAL ACARA
+              <span className="nav-roll-inner">
+                <span className="nav-roll-default">JADWAL</span>
+                <span className="nav-roll-hover" aria-hidden="true">JADWAL</span>
+              </span>
             </a>
-            <button
-              type="button"
-              onClick={onOpenDossier}
-              className="nav-link-item"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                color: 'var(--color-gold-antique)',
-                fontWeight: 700,
-              }}
-            >
-              DETAIL EVENT →
-            </button>
           </div>
 
-          {/* Mobile Hamburger Toggle */}
+          {/* Mobile Rotating Morphing Toggle */}
           <button
             type="button"
-            className="nav-mobile-toggle"
+            className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-active' : ''}`}
             onClick={() => setIsMobileMenuOpen(prev => !prev)}
             aria-label={isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'}
           >
-            {isMobileMenuOpen ? <X size={18} strokeWidth={2} /> : <Menu size={18} strokeWidth={2} />}
+            <span className="nav-toggle-icon nav-toggle-burger">
+              <Menu size={18} strokeWidth={2} />
+            </span>
+            <span className="nav-toggle-icon nav-toggle-close">
+              <X size={18} strokeWidth={2} />
+            </span>
           </button>
 
+          {/* Desktop CTA with Bedimcode Rolling Text */}
           <a href="#the-passage" className="nav-action-btn btn-press nav-action-desktop-only">
-            AMBIL TIKET →
+            <span className="nav-roll-inner">
+              <span className="nav-roll-default">AMBIL TIKET →</span>
+              <span className="nav-roll-hover" aria-hidden="true">AMBIL TIKET →</span>
+            </span>
           </a>
         </nav>
       </header>
@@ -147,7 +151,16 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
         <div className="mobile-nav-drawer-inner">
           {/* Close Header */}
           <div className="mobile-drawer-header">
-            <span className="mobile-drawer-brand">THE STATE OF CLAMOUR</span>
+            <div className="mobile-drawer-brand-group">
+              <img
+                src="/apple-touch-icon.png"
+                alt="Clamour Emblem"
+                className="mobile-drawer-logo"
+                width="24"
+                height="24"
+              />
+              <span className="mobile-drawer-brand">THE STATE OF CLAMOUR</span>
+            </div>
             <button
               type="button"
               className="mobile-drawer-close"

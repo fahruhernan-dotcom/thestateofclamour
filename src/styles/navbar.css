@@ -1,8 +1,10 @@
-/* 1. SCROLL-TRIGGERED MINIMALIST NAVBAR                                       */
 /* ========================================================================== */
+/* 1. SCROLL-TRIGGERED MINIMALIST CAPSULE NAVBAR                              */
+/* Inspired by Bedimcode Responsive Navbar Interaction & Clamour Visual Canon  */
+/* ========================================================================== */
+
 .cinematic-navbar {
   position: fixed;
-  /* inset-inline fallback for Safari iOS < 14.5 */
   left: 0;
   right: 0;
   top: 0;
@@ -11,14 +13,14 @@
   display: flex;
   -webkit-justify-content: center;
   justify-content: center;
-  padding: 0.65rem 1.25rem;
+  padding: 1.15rem 1.5rem;
   pointer-events: none;
   transition: opacity 350ms var(--ease-cinematic), transform 350ms var(--ease-cinematic);
 }
 
 .cinematic-navbar.is-hidden {
   opacity: 0;
-  transform: translateY(-15px);
+  transform: translateY(-16px);
 }
 
 .cinematic-navbar.is-visible {
@@ -29,32 +31,69 @@
 .navbar-inner-bar {
   pointer-events: auto;
   width: 100%;
-  max-width: 1040px;
+  max-width: 580px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.35rem 1.15rem;
-  background: rgba(13, 17, 23, 0.85);
+  padding: 0 0.5rem 0 0.75rem;
+  background: rgba(13, 17, 23, 0.88);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border: 1px solid var(--color-gold-hairline);
   border-radius: 9999px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75), 0 0 16px rgba(197, 168, 105, 0.05);
+  transition: border-color 300ms ease, box-shadow 300ms ease;
+}
+
+.navbar-inner-bar:hover {
+  border-color: rgba(197, 168, 105, 0.28);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.82), 0 0 24px rgba(197, 168, 105, 0.09);
+}
+
+/* Brand Link with Circular Seal */
+.nav-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  padding: 0.2rem 0.4rem;
+  border-radius: 9999px;
+}
+
+.nav-brand-logo-img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--color-gold-hairline);
+  box-shadow: 0 0 8px rgba(197, 168, 105, 0.15);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  object-fit: cover;
+}
+
+.nav-brand-link:hover .nav-brand-logo-img {
+  transform: rotate(30deg) scale(1.08);
+  border-color: var(--color-gold-antique);
 }
 
 .nav-brand-title {
   font-family: var(--font-monumental);
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
   font-weight: 700;
   color: var(--color-ivory);
-  text-decoration: none;
+  transition: color 200ms ease;
 }
 
+.nav-brand-link:hover .nav-brand-title {
+  color: var(--color-gold-antique);
+}
+
+/* Navigation Links (Desktop) */
 .nav-links-cluster {
   display: none;
   align-items: center;
-  gap: 1.35rem;
+  gap: 1.1rem;
 }
 
 @media (min-width: 768px) {
@@ -63,59 +102,156 @@
   }
 }
 
-.nav-link-item {
-  font-family: var(--font-body);
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--color-muted);
-  text-decoration: none;
-  transition: color 180ms ease;
+.nav-links-dot {
+  color: rgba(197, 168, 105, 0.35);
+  font-size: 0.75rem;
+  user-select: none;
 }
 
-.nav-link-item:hover, .nav-link-item.active {
-  color: var(--color-ivory);
+.nav-link-item {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+  padding: 0.3rem 0.25rem;
+  display: inline-block;
 }
+
+/* ========================================================================== */
+/* BEDIMCODE ROLLING TEXT MICRO-INTERACTION                                    */
+/* ========================================================================== */
+
+.nav-roll-inner {
+  position: relative;
+  display: block;
+  height: 1.25em;
+  line-height: 1.25em;
+  overflow: hidden;
+}
+
+.nav-roll-default,
+.nav-roll-hover {
+  display: block;
+  transition: transform 0.38s cubic-bezier(0.65, 0, 0.35, 1);
+  white-space: nowrap;
+}
+
+.nav-roll-hover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  color: var(--color-gold-antique);
+  font-weight: 700;
+}
+
+.nav-link-item:hover .nav-roll-default,
+.nav-link-item.active .nav-roll-default {
+  transform: translateY(-100%);
+}
+
+.nav-link-item:hover .nav-roll-hover,
+.nav-link-item.active .nav-roll-hover {
+  transform: translateY(-100%);
+}
+
+/* ========================================================================== */
+/* CTA BUTTON WITH BEDIMCODE ROLLING TEXT                                     */
+/* ========================================================================== */
 
 .nav-action-btn {
   font-family: var(--font-monumental);
-  font-size: 0.64rem;
-  letter-spacing: 0.15em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   font-weight: 700;
-  padding: 0.32rem 0.95rem;
+  height: 38px;
+  padding: 0 1.15rem;
   border-radius: 9999px;
   background: var(--color-oxblood);
   color: var(--color-ivory);
-  border: 1px solid rgba(143, 29, 36, 0.6);
+  border: 1px solid rgba(143, 29, 36, 0.65);
   text-decoration: none;
-  transition: all 200ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+}
+
+.nav-action-btn .nav-roll-hover {
+  color: #ffffff;
 }
 
 .nav-action-btn:hover {
   background: var(--color-crimson);
-  box-shadow: 0 0 15px var(--color-crimson-glow);
+  border-color: rgba(224, 49, 62, 0.85);
+  box-shadow: 0 0 20px var(--color-crimson-glow);
+}
+
+.nav-action-btn:hover .nav-roll-default {
+  transform: translateY(-100%);
+}
+
+.nav-action-btn:hover .nav-roll-hover {
+  transform: translateY(-100%);
 }
 
 /* ========================================================================== */
+/* BEDIMCODE ROTATING MORPHING TOGGLE (Mobile < 768px)                        */
+/* ========================================================================== */
 
-/* Mobile Hamburger Toggle (visible only on < 768px) */
 .nav-mobile-toggle {
   display: none;
-  background: transparent;
-  border: none;
-  -webkit-appearance: none; /* Reset Safari default button */
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-gold-hairline);
+  -webkit-appearance: none;
   color: var(--color-ivory);
   cursor: pointer;
-  padding: 0.25rem;
-  min-width: 38px;
-  min-height: 38px;
-  -webkit-align-items: center;
+  padding: 0;
   align-items: center;
-  -webkit-justify-content: center;
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+
+.nav-mobile-toggle:hover {
+  border-color: var(--color-gold-antique);
+  background: rgba(197, 168, 105, 0.1);
+}
+
+.nav-toggle-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.nav-toggle-burger {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.nav-toggle-close {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+.nav-mobile-toggle.is-active .nav-toggle-burger {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.nav-mobile-toggle.is-active .nav-toggle-close {
+  opacity: 1;
+  transform: rotate(0deg);
 }
 
 .nav-action-desktop-only {
@@ -173,9 +309,22 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 2rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--color-gold-hairline);
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.mobile-drawer-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mobile-drawer-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--color-gold-hairline);
 }
 
 .mobile-drawer-brand {
@@ -243,7 +392,7 @@
 
 .mobile-drawer-link-label {
   font-family: var(--font-monumental);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   color: var(--color-ivory);

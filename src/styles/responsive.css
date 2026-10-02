@@ -64,22 +64,22 @@
 @media (max-width: 640px) {
   /* Navbar adjustments */
   .cinematic-navbar {
-    padding: 0.45rem 0.65rem;
+    padding: 0.75rem 1rem;
   }
 
   .navbar-inner-bar {
-    padding: 0.3rem 0.85rem;
+    height: 48px;
+    padding: 0 0.45rem 0 0.75rem;
   }
 
   .nav-brand-title {
-    font-size: 0.65rem;
-    letter-spacing: 0.14em;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
   }
 
-  .nav-action-btn {
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    padding: 0.28rem 0.75rem;
+  .nav-brand-logo-img {
+    width: 24px;
+    height: 24px;
   }
 
   /* Scene 01: Hero Living Poster Mobile Optimization */
