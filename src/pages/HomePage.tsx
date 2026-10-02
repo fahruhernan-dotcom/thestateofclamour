@@ -40,7 +40,7 @@ export const HomePage: React.FC<Props> = ({
 
   return (
     <>
-      {/* Scroll-Triggered Minimalist Floating Navbar */}
+      {/* Floating Navbar (Appears strictly from Section The Guests and downwards) */}
       <FloatingNavbar onOpenDossier={() => onOpenFullDossier('timetable')} />
 
       {/* Unified Scene 01: Hero Approach & Section 1 Guest Storytelling */}

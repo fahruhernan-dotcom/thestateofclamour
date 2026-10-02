@@ -7,7 +7,7 @@ interface Props {
 
 export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeTab, setActiveTab] = useState<'the-guests' | 'the-passage' | 'the-night'>('the-guests');
+  const [activeTab, setActiveTab] = useState<'lineup' | 'the-passage' | 'the-night'>('lineup');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -15,11 +15,19 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          setIsScrolled(scrollY > 80);
+          // STRICT RULE: Navbar ONLY appears when reaching Section "THE GUESTS" and downwards.
+          // Zero navbar intrusion throughout the entire Hero entrance / monument / cathedral experience!
+          const guestsEl = document.getElementById('the-guests') || document.getElementById('lineup');
+          if (guestsEl) {
+            const guestsTop = guestsEl.getBoundingClientRect().top + window.scrollY;
+            const isAtGuestsOrBelow = window.scrollY >= (guestsTop - 120);
+            setIsScrolled(isAtGuestsOrBelow);
+          } else {
+            setIsScrolled(false);
+          }
 
-          const sections = ['the-night', 'the-passage', 'the-guests'] as const;
-          const scrollPos = scrollY + 250;
+          const sections = ['the-night', 'the-passage', 'lineup'] as const;
+          const scrollPos = window.scrollY + 250;
 
           for (const sectionId of sections) {
             const el = document.getElementById(sectionId);
@@ -35,6 +43,8 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial evaluation
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -80,8 +90,8 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
 
           <div className="nav-links-cluster">
             <a
-              href="#the-guests"
-              className={`nav-link-item ${activeTab === 'the-guests' ? 'active' : ''}`}
+              href="#lineup"
+              className={`nav-link-item ${activeTab === 'lineup' ? 'active' : ''}`}
             >
               BINTANG TAMU
             </a>
@@ -153,7 +163,7 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
             <button
               type="button"
               className="mobile-drawer-link"
-              onClick={() => handleMobileNavClick('#the-guests')}
+              onClick={() => handleMobileNavClick('#lineup')}
             >
               <span className="mobile-drawer-link-kicker">01</span>
               <span className="mobile-drawer-link-label">BINTANG TAMU</span>
