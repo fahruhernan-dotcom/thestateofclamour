@@ -22,10 +22,6 @@ export const TicketSectionMobile: React.FC<Props> = ({
   const targetInitial = initialIndex !== -1 ? initialIndex : 0;
   const [activeIndex, setActiveIndex] = useState(targetInitial);
 
-  const formatIDR = (val: number) => {
-    return 'Rp' + val.toLocaleString('id-ID');
-  };
-
   useEffect(() => {
     const sec = sectionRef.current;
     if (!sec) return;
@@ -153,8 +149,15 @@ export const TicketSectionMobile: React.FC<Props> = ({
           return (
             <article
               key={ticket.id}
-              className={`ticket-mobile-card ${isProtagonist ? 'is-protagonist' : ''} ${isActive ? 'is-active-tier' : ''} ${isSoldOut ? 'is-sold-out' : ''} ${isHighlighted ? 'is-spotlighted' : ''}`}
+              className={`ticket-mobile-card ${isProtagonist ? 'is-protagonist' : ''} ${ticket.id === 'tkt-vip' ? 'is-vip' : ''} ${isActive ? 'is-active-tier' : ''} ${isSoldOut ? 'is-sold-out' : ''} ${isHighlighted ? 'is-spotlighted' : ''}`}
             >
+              {/* Protagonist Crown Ribbon */}
+              {isProtagonist && (
+                <div className="ticket-mobile-protagonist-ribbon">
+                  <span>★ RECOMMENDED TIER</span>
+                </div>
+              )}
+
               {/* Embossed Watermark Seal */}
               <div className="ticket-mobile-seal-watermark" aria-hidden="true">
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -167,17 +170,19 @@ export const TicketSectionMobile: React.FC<Props> = ({
 
               <div className="ticket-mobile-card-top">
                 <div className="ticket-mobile-tag-row">
-                  <span className="ticket-mobile-category">{ticket.category}</span>
+                  <span className={`ticket-mobile-category ${isProtagonist ? 'is-protagonist-cat' : ''} ${ticket.id === 'tkt-vip' ? 'is-vip-cat' : ''}`}>
+                    {ticket.category}
+                  </span>
                   {isProtagonist && (
                     <span className="live-allocation-pulse-badge">
                       <span className="allocation-pulse-dot" />
                       <span>84% ALLOCATED</span>
                     </span>
                   )}
-                  {isActive && !isProtagonist && (
-                    <span className="live-allocation-pulse-badge">
+                  {ticket.id === 'tkt-vip' && (
+                    <span className="live-allocation-pulse-badge vip-pill">
                       <span className="allocation-pulse-dot subtle" />
-                      <span>AVAILABLE</span>
+                      <span>EXCLUSIVE</span>
                     </span>
                   )}
                   {isSoldOut && (
@@ -192,18 +197,19 @@ export const TicketSectionMobile: React.FC<Props> = ({
                 <div className="ticket-mobile-divider" />
 
                 <div className="ticket-mobile-price">
-                  {formatIDR(ticket.price)}
+                  <span className="ticket-mobile-price-curr">Rp</span>
+                  <span className="ticket-mobile-price-val">{ticket.price.toLocaleString('id-ID')}</span>
                 </div>
 
                 <div className="ticket-mobile-perks-list">
                   {ticket.perks.map((perk, i) => (
                     <div key={i} className="ticket-mobile-perk-item">
                       <Check
-                        size={14}
+                        size={13}
                         style={{
                           flexShrink: 0,
                           marginTop: '2px',
-                          color: isSoldOut ? 'var(--color-dim)' : 'var(--color-gold-antique)',
+                          color: isSoldOut ? 'var(--color-dim)' : isProtagonist ? 'var(--color-crimson)' : 'var(--color-gold-antique)',
                         }}
                       />
                       <span>{perk}</span>
@@ -212,7 +218,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
                 </div>
               </div>
 
-              <div>
+              <div className="ticket-mobile-card-bottom">
                 {isSoldOut ? (
                   <button
                     type="button"
@@ -225,15 +231,15 @@ export const TicketSectionMobile: React.FC<Props> = ({
                   <button
                     type="button"
                     onClick={() => onCheckout(ticket)}
-                    className={`ticket-mobile-action-btn ${isProtagonist ? 'is-protagonist-cta' : ''}`}
+                    className={`ticket-mobile-action-btn ${isProtagonist ? 'is-protagonist-cta' : ''} ${ticket.id === 'tkt-vip' ? 'is-vip-cta' : ''}`}
                   >
-                    <span>GET TICKETS →</span>
+                    <span>{ticket.id === 'tkt-vip' ? 'RESERVE VIP TABLE →' : 'GET TICKETS →'}</span>
                   </button>
                 )}
 
                 <div className="ticket-mobile-auth-guarantee">
-                  <ShieldCheck size={12} style={{ color: 'var(--color-gold-antique)' }} />
-                  <span>OFFICIAL VERIFIED PASS</span>
+                  <ShieldCheck size={11} style={{ color: 'var(--color-gold-antique)' }} />
+                  <span>OFFICIAL VERIFIED RFID PASS</span>
                 </div>
               </div>
             </article>

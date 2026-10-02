@@ -25,9 +25,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
-  opacity: 0.38;
-  filter: saturate(1.1) brightness(0.92);
+  object-position: center 15%;
+  opacity: 0.92;
+  filter: saturate(1.2) contrast(1.1) brightness(0.96);
 }
 
 .passage-mobile-cathedral-overlay {
@@ -35,11 +35,12 @@
   inset: 0;
   background:
     /* Top seamless fade from Section 2 */
-    linear-gradient(180deg, #060709 0%, rgba(6, 7, 9, 0.65) 10%, transparent 24%),
+    linear-gradient(180deg, #060709 0%, rgba(6, 7, 9, 0.45) 8%, transparent 20%),
     /* Bottom seamless fade to Section 4 */
-    linear-gradient(0deg, #060709 0%, rgba(6, 7, 9, 0.82) 12%, transparent 28%),
-    /* Radial center dark veil for card legibility */
-    radial-gradient(circle at 50% 40%, rgba(6, 7, 9, 0.38) 0%, rgba(6, 7, 9, 0.82) 78%, #060709 100%);
+    linear-gradient(0deg, #060709 0%, rgba(6, 7, 9, 0.55) 8%, transparent 20%),
+    /* Soft atmospheric ambient vignette */
+    radial-gradient(circle at 50% 35%, rgba(6, 7, 9, 0.1) 0%, rgba(6, 7, 9, 0.45) 60%, rgba(6, 7, 9, 0.8) 100%);
+  pointer-events: none;
 }
 
 /* Opening Chamber Header */
@@ -149,9 +150,9 @@
   max-width: 330px;
   scroll-snap-align: center;
   position: relative;
-  background: rgba(12, 16, 24, 0.88);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: rgba(10, 13, 20, 0.78);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
   border-radius: 6px;
   border: 1px solid rgba(197, 168, 105, 0.22);
   padding: 1.65rem 1.35rem 1.35rem;
@@ -159,10 +160,37 @@
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.82), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Antique Gold Corner Registration Brackets */
+.ticket-mobile-card::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 8px;
+  height: 8px;
+  border-top: 1px solid var(--color-gold-antique);
+  border-left: 1px solid var(--color-gold-antique);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.ticket-mobile-card::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 1px solid var(--color-gold-antique);
+  border-right: 1px solid var(--color-gold-antique);
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .ticket-mobile-card.is-active-tier {
@@ -172,29 +200,55 @@
 
 /* PROTAGONIST: Presale 01 */
 .ticket-mobile-card.is-protagonist {
-  border-color: rgba(197, 168, 105, 0.75);
-  background: linear-gradient(180deg, rgba(28, 34, 48, 0.95) 0%, rgba(15, 19, 26, 0.98) 100%);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.88), 0 0 32px rgba(143, 29, 36, 0.25);
+  padding-top: 2.1rem;
+  border-color: rgba(220, 38, 38, 0.85);
+  background: linear-gradient(180deg, rgba(28, 18, 24, 0.85) 0%, rgba(12, 10, 16, 0.92) 100%);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 32px rgba(220, 38, 38, 0.35);
 }
 
-.ticket-mobile-card.is-protagonist::before {
-  content: '';
+.ticket-mobile-protagonist-ribbon {
   position: absolute;
-  top: -20%;
-  left: 10%;
-  width: 80%;
-  height: 60%;
-  background: radial-gradient(circle, rgba(143, 29, 36, 0.2) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(20px);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(90deg, var(--color-oxblood), var(--color-crimson), var(--color-oxblood));
+  color: var(--color-ivory);
+  font-family: var(--font-monumental);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+  z-index: 3;
+}
+
+.ticket-mobile-category.is-protagonist-cat {
+  color: #F87171;
+  font-weight: 700;
+}
+
+/* VIP TIER */
+.ticket-mobile-card.is-vip {
+  border-color: rgba(197, 168, 105, 0.55);
+  background: linear-gradient(180deg, rgba(22, 19, 14, 0.8) 0%, rgba(10, 10, 12, 0.9) 100%);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(197, 168, 105, 0.08);
+}
+
+.ticket-mobile-category.is-vip-cat {
+  color: var(--color-gold-antique);
+  font-weight: 700;
 }
 
 /* Sold Out Tiers */
 .ticket-mobile-card.is-sold-out {
   opacity: 0.55;
   border-color: rgba(255, 255, 255, 0.06);
-  background: rgba(14, 18, 25, 0.55);
+  background: rgba(10, 12, 18, 0.65);
+  filter: grayscale(0.25);
 }
 
 .ticket-mobile-soldout-badge {
@@ -299,12 +353,25 @@
 }
 
 .ticket-mobile-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 0.85rem;
+}
+
+.ticket-mobile-price-curr {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-gold-antique, #C5A869);
+}
+
+.ticket-mobile-price-val {
   font-family: var(--font-monumental, 'Cinzel', serif);
   font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--color-ivory, #E9E4DA);
-  margin-bottom: 0.85rem;
   line-height: 1;
 }
 
@@ -368,6 +435,17 @@
 .ticket-mobile-action-btn.is-protagonist-cta:active {
   background: var(--color-crimson, #DC2626);
   border-color: var(--color-crimson, #DC2626);
+}
+
+.ticket-mobile-action-btn.is-vip-cta {
+  background: rgba(197, 168, 105, 0.15);
+  border-color: var(--color-gold-antique, #C5A869);
+  color: var(--color-gold-antique, #C5A869);
+}
+
+.ticket-mobile-action-btn.is-vip-cta:active {
+  background: var(--color-gold-antique, #C5A869);
+  color: #060709;
 }
 
 .ticket-mobile-action-btn.is-disabled {
