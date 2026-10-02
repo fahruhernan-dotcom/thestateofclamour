@@ -11,7 +11,7 @@
   display: flex;
   -webkit-justify-content: center;
   justify-content: center;
-  padding: 1.25rem 1.5rem;
+  padding: 0.65rem 1.25rem;
   pointer-events: none;
   transition: opacity 350ms var(--ease-cinematic), transform 350ms var(--ease-cinematic);
 }
@@ -29,23 +29,23 @@
 .navbar-inner-bar {
   pointer-events: auto;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1040px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.5rem;
+  padding: 0.35rem 1.15rem;
   background: rgba(13, 17, 23, 0.85);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border: 1px solid var(--color-gold-hairline);
   border-radius: 9999px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
 }
 
 .nav-brand-title {
   font-family: var(--font-monumental);
-  font-size: 0.8rem;
-  letter-spacing: 0.25em;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
   font-weight: 700;
   color: var(--color-ivory);
   text-decoration: none;
@@ -54,7 +54,7 @@
 .nav-links-cluster {
   display: none;
   align-items: center;
-  gap: 1.75rem;
+  gap: 1.35rem;
 }
 
 @media (min-width: 768px) {
@@ -65,10 +65,10 @@
 
 .nav-link-item {
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--color-muted);
   text-decoration: none;
   transition: color 180ms ease;
@@ -80,10 +80,10 @@
 
 .nav-action-btn {
   font-family: var(--font-monumental);
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
+  font-size: 0.64rem;
+  letter-spacing: 0.15em;
   font-weight: 700;
-  padding: 0.5rem 1.15rem;
+  padding: 0.32rem 0.95rem;
   border-radius: 9999px;
   background: var(--color-oxblood);
   color: var(--color-ivory);
@@ -107,9 +107,9 @@
   -webkit-appearance: none; /* Reset Safari default button */
   color: var(--color-ivory);
   cursor: pointer;
-  padding: 0.4rem;
-  min-width: 44px;
-  min-height: 44px;
+  padding: 0.25rem;
+  min-width: 38px;
+  min-height: 38px;
   -webkit-align-items: center;
   align-items: center;
   -webkit-justify-content: center;
