@@ -8,7 +8,7 @@
   width: 100%;
   padding: 4rem 0 calc(3rem + env(safe-area-inset-bottom, 16px));
   background-color: var(--color-void, #060709);
-  overflow-x: hidden; /* clip not supported on Safari iOS < 16 */
+  overflow-x: clip;
 }
 
 /* Header matches desktop .section-headline & .section-subheadline */
@@ -97,39 +97,21 @@
 .lineup-mobile-portrait-frame {
   position: relative;
   width: 100%;
-  /* aspect-ratio fallback for Safari iOS < 15 */
-  padding-top: 129.72%; /* 720/934 * 100 = ~129.72% */
-  height: 0;
+  aspect-ratio: 720 / 934;
   overflow: hidden;
   background: #000000;
 }
 
-@supports (aspect-ratio: 720 / 934) {
-  .lineup-mobile-portrait-frame {
-    aspect-ratio: 720 / 934;
-    padding-top: 0;
-    height: auto;
-  }
-}
-
 .lineup-mobile-media-img,
 .lineup-mobile-media-video {
-  position: absolute; /* fallback when portrait-frame uses padding-top */
-  top: 0;
-  left: 0;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
   display: block;
   pointer-events: none;
-}
-
-@supports (aspect-ratio: 720 / 934) {
-  .lineup-mobile-media-img,
-  .lineup-mobile-media-video {
-    position: static;
-  }
 }
 
 /* Strobe Camera Flash Flare */
