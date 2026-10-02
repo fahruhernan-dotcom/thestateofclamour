@@ -129,12 +129,17 @@ export const LineupSectionMobile: React.FC<Props> = ({
     isDraggingRef.current = false;
   };
 
-  const handleCardPointerUp = (artist: Artist) => {
+  const handleCardPointerUp = (artist: Artist, idx: number) => {
     isDraggingRef.current = false;
-    // If the user tapped without dragging, immediately navigate to detail acara!
+    // If the user tapped without dragging, toggle audio preview instead of navigating away!
     if (!hasMovedRef.current) {
-      triggerFlash(artist.id);
-      handleOpenArtistDetail(artist);
+      if (activeAudioArtistId === artist.id) {
+        stopArtistAudio();
+      } else {
+        triggerFlash(artist.id);
+        setActiveCardIndex(idx);
+        playArtistAudio(artist.id);
+      }
     }
   };
 
@@ -260,7 +265,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
         onPointerCancel={handlePointerCancel}
         className="lineup-mobile-carousel"
       >
-        {artists.map((artist) => {
+        {artists.map((artist, idx) => {
           const isAudioPlaying = activeAudioArtistId === artist.id;
           const isFlashing = !!activeFlashes[artist.id];
 
@@ -268,18 +273,24 @@ export const LineupSectionMobile: React.FC<Props> = ({
             <article
               key={artist.id}
               className={`lineup-mobile-card ${isAudioPlaying ? 'is-playing-audio' : ''}`}
-              onPointerUp={() => handleCardPointerUp(artist)}
+              onPointerUp={() => handleCardPointerUp(artist, idx)}
               onPointerCancel={handlePointerCancel}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
                   triggerFlash(artist.id);
-                  handleOpenArtistDetail(artist);
+                  if (activeAudioArtistId === artist.id) {
+                    stopArtistAudio();
+                  } else {
+                    setActiveCardIndex(idx);
+                    playArtistAudio(artist.id);
+                  }
                 }
               }}
               role="button"
               tabIndex={0}
-              aria-label={`Buka detail acara ${artist.name}`}
+              title={isAudioPlaying ? 'Ketuk untuk jeda preview audio' : 'Ketuk untuk putar preview audio'}
+              aria-label={`${artist.name} - ${artist.stageName}`}
             >
               {/* Portrait Media Frame */}
               <div className="lineup-mobile-portrait-frame">
@@ -342,12 +353,21 @@ export const LineupSectionMobile: React.FC<Props> = ({
 
                 <div
                   className="lineup-mobile-inspect-link"
+                  onPointerDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                  onPointerUp={(e) => {
+                    e.stopPropagation();
+                    handleOpenArtistDetail(artist);
+                  }}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleOpenArtistDetail(artist);
                   }}
                   role="button"
                   tabIndex={0}
+                  aria-label={`Lihat detail event untuk ${artist.name}`}
+                  title="Buka detail event acara"
                 >
                   <span>LIHAT DETAIL EVENT</span>
                   <ArrowRight size={13} />

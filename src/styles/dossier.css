@@ -1072,23 +1072,50 @@
   transform: translateX(4px);
 }
 
-/* Lineup Card Quick Inspect Link */
+/* Lineup Card Quick Inspect Link / Dedicated Action Button */
 .guest-inspect-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.75rem;
+  justify-content: flex-start;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+  padding: 0.5rem 0.95rem;
+  min-height: 42px;
+  background: rgba(197, 168, 105, 0.08);
+  border: 1px solid rgba(197, 168, 105, 0.35);
+  border-radius: 4px;
   font-family: var(--font-monumental);
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   color: var(--color-gold-antique);
   text-transform: uppercase;
-  transition: all 180ms ease;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  z-index: 4;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 200ms ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .guest-card-container:hover .guest-inspect-link {
+  border-color: rgba(197, 168, 105, 0.65);
   color: var(--color-ivory);
+}
+
+.guest-inspect-link:hover {
+  background: rgba(197, 168, 105, 0.22);
+  border-color: var(--color-gold-antique);
+  color: #FFFFFF !important;
+  box-shadow: 0 0 16px rgba(197, 168, 105, 0.25);
   transform: translateX(4px);
+}
+
+.guest-inspect-link:active {
+  transform: scale(0.97) translateX(2px);
+  background: rgba(197, 168, 105, 0.32);
 }
 
 /* Single Night Event Page Spotlight Card */

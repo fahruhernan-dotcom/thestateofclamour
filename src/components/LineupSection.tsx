@@ -45,9 +45,14 @@ const GuestCard: React.FC<GuestCardProps> = ({
   const cardRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // Desktop Mouse Tilt without forced synchronous reflow
+  const hasFinePointer = () => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  };
+
+  // Desktop Mouse Tilt: only applied on true cursor devices
   const handleCardMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (window.innerWidth < 768) return;
+    if (!hasFinePointer()) return;
     const card = cardRef.current;
     if (!card) return;
     const w = card.clientWidth || 360;
@@ -62,13 +67,14 @@ const GuestCard: React.FC<GuestCardProps> = ({
   };
 
   const handleMouseEnter = () => {
-    if (!isMobile) {
+    // Only preview audio on hover for cursor/mouse devices (avoids synthesized hover conflicts on iPad/touchscreens)
+    if (hasFinePointer()) {
       onCardMouseEnter(artist, cardIndex, artistIndex);
     }
   };
 
   const handleMouseLeave = () => {
-    if (!isMobile) {
+    if (hasFinePointer()) {
       if (cardRef.current) {
         cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
       }
@@ -77,13 +83,15 @@ const GuestCard: React.FC<GuestCardProps> = ({
   };
 
   const handleCardClick = () => {
-    if (isMobile) {
-      // On mobile devices, tapping the card toggles the audio preview on/off
-      onCardTap(artist, cardIndex, artistIndex);
-    } else {
-      // On desktop, clicking the card opens the full event modal
-      onOpenModal(artist);
+    // Tap or click on the card body toggles the artist audio preview on/off (both touch/iPad and cursor devices)
+    // Synchronously unlock and play video sound within the tap gesture for iOS Safari / iPadOS
+    const video = videoRef.current;
+    if (video && !isAudioPlaying) {
+      video.muted = false;
+      video.volume = 0.95;
+      video.play().catch(() => {});
     }
+    onCardTap(artist, cardIndex, artistIndex);
   };
 
   // Video visuals loop smoothly in background (muted unless actively playing audio)
@@ -135,6 +143,8 @@ const GuestCard: React.FC<GuestCardProps> = ({
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
       onClick={handleCardClick}
+      title={isAudioPlaying ? 'Klik untuk jeda preview audio' : 'Klik untuk putar preview audio'}
+      aria-label={`${artist.name} - ${artist.stageName}`}
     >
       <div className="guest-portrait-frame">
         {artist.videoUrl ? (
@@ -173,11 +183,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
         <div className="guest-portrait-scrim" />
       </div>
 
-      <div
-        className="guest-card-info-pane"
-        style={{ cursor: 'pointer' }}
-        title="Buka detail event artis"
-      >
+      <div className="guest-card-info-pane">
         <div className="guest-card-kicker-row">
           <p className="guest-day-kicker">
             {artist.dayLabel} · {artist.performanceTime}
@@ -200,12 +206,26 @@ const GuestCard: React.FC<GuestCardProps> = ({
           STAGE // {artist.stageName}
         </p>
 
-        {/* Dedicated Link to Detail Event Modal */}
+        {/* Dedicated Action Button to Detail Event Modal */}
         <div
           className="guest-inspect-link"
+          role="button"
+          tabIndex={0}
+          aria-label={`Lihat detail event untuk ${artist.name}`}
+          title="Buka detail event acara"
+          onPointerDown={(e) => {
+            e.stopPropagation();
+          }}
           onClick={(e) => {
             e.stopPropagation();
             onOpenModal(artist);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              e.stopPropagation();
+              onOpenModal(artist);
+            }
           }}
         >
           <span>LIHAT DETAIL EVENT</span>

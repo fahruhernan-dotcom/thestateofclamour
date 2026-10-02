@@ -185,7 +185,8 @@
 
   .guest-inspect-link {
     font-size: 0.68rem;
-    padding-top: 0.6rem;
+    min-height: 44px;
+    padding: 0.5rem 0.95rem;
   }
 
   /* Scene 03: Admission Cards */
