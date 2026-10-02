@@ -58,8 +58,10 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
     let isActive = true;
     let rafId: number | null = null;
     let targetProgress = 0;
+    let smoothProgress = 0;
     let currentFrame = 0;
     let lastRenderedFrame = -1;
+    let isInitialized = false;
 
     // Cache preloaded Image objects for Hero Canvas
     const images: (HTMLImageElement | null)[] = new Array(TOTAL_FRAMES).fill(null);
@@ -184,14 +186,17 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       const baseCardH = isMobile
         ? Math.min(Math.round(baseCardW * 1.33), Math.round(vh * 0.48))
         : Math.round(baseCardW * 1.33); // 3:4 portrait concert frame
-      const baseCardLeft = Math.round((vw - baseCardW) / 2);
-      const baseCardTop = Math.round((vh - baseCardH) / 2);
+      const baseCardLeft = (vw - baseCardW) / 2;
+      const baseCardTop = (vh - baseCardH) / 2;
 
       // 2. Section 1 Video Card & Unmasking Expansion
       // progress < 0.34: Hidden while camera approaches and enters cathedral doors into black
       // progress 0.34 -> 0.44: Small card emerges quickly over dark atmosphere with editorial text
-      // progress 0.44 -> 0.54: Swift, smooth expansion to 100vw x 100vh full-bleed
-      // progress 0.54 -> 1.00: EXTENDED FULLSCREEN RUNWAY (46% of total track) with Welcome Climax & continuous audio
+      // progress 0.44 -> 0.55: Swift, liquid-smooth expansion to 100vw x 100vh full-bleed (Smootherstep S-curve)
+      // progress 0.55 -> 1.00: EXTENDED FULLSCREEN RUNWAY with Welcome Climax & continuous audio
+      const EXP_START = 0.44;
+      const EXP_END = 0.55;
+
       if (progress < 0.34) {
         if (gpuCanvasRef.current) {
           gpuCanvasRef.current.style.opacity = '0';
@@ -200,36 +205,37 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
         if (photoHairlineRef.current) {
           photoHairlineRef.current.style.opacity = '0';
         }
-      } else if (progress < 0.44) {
+      } else if (progress < EXP_START) {
         // Section 1 Fades In quickly and smoothly over the dark atmosphere
         const fadeInP = Math.min(1, (progress - 0.34) / 0.08);
 
         if (gpuCanvasRef.current) {
           gpuCanvasRef.current.style.opacity = fadeInP.toFixed(3);
-          gpuCanvasRef.current.style.left = `${baseCardLeft}px`;
-          gpuCanvasRef.current.style.top = `${baseCardTop}px`;
-          gpuCanvasRef.current.style.width = `${baseCardW}px`;
-          gpuCanvasRef.current.style.height = `${baseCardH}px`;
+          gpuCanvasRef.current.style.left = `${baseCardLeft.toFixed(2)}px`;
+          gpuCanvasRef.current.style.top = `${baseCardTop.toFixed(2)}px`;
+          gpuCanvasRef.current.style.width = `${baseCardW.toFixed(2)}px`;
+          gpuCanvasRef.current.style.height = `${baseCardH.toFixed(2)}px`;
           gpuCanvasRef.current.style.borderRadius = '6px';
           gpuCanvasRef.current.style.clipPath = 'none';
           gpuCanvasRef.current.style.setProperty('-webkit-clip-path', 'none');
           gpuCanvasRef.current.style.pointerEvents = fadeInP > 0.5 ? 'auto' : 'none';
-          gpuCanvasRef.current.style.boxShadow = `0 0 40px rgba(220, 20, 40, ${(fadeInP * 0.45).toFixed(3)})`;
+          gpuCanvasRef.current.style.boxShadow = `0 0 35px rgba(220, 20, 40, ${(fadeInP * 0.40).toFixed(3)})`;
         }
 
         if (photoHairlineRef.current) {
           photoHairlineRef.current.style.opacity = (fadeInP * 0.75).toFixed(3);
         }
-      } else if (progress <= 0.54) {
-        // Smoothly and swiftly expand from centered card to 100vw x 100vh full-bleed
-        const expP = (progress - 0.44) / 0.10;
-        const easedP = Math.pow(expP, 1.25);
+      } else if (progress <= EXP_END) {
+        // Liquid-smooth expansion from centered card to 100vw x 100vh full-bleed
+        const expP = (progress - EXP_START) / (EXP_END - EXP_START);
+        // Ken Perlin's Smootherstep: 6t^5 - 15t^4 + 10t^3 (zero 1st & 2nd derivatives at both 0 and 1)
+        const easedP = expP * expP * expP * (expP * (expP * 6 - 15) + 10);
 
-        const curLeft = Math.round(baseCardLeft * (1 - easedP));
-        const curTop = Math.round(baseCardTop * (1 - easedP));
-        const curWidth = Math.round(baseCardW + (vw - baseCardW) * easedP);
-        const curHeight = Math.round(baseCardH + (vh - baseCardH) * easedP);
-        const curRadius = Math.max(0, Math.round(6 * (1 - easedP)));
+        const curLeft = (baseCardLeft * (1 - easedP)).toFixed(2);
+        const curTop = (baseCardTop * (1 - easedP)).toFixed(2);
+        const curWidth = (baseCardW + (vw - baseCardW) * easedP).toFixed(2);
+        const curHeight = (baseCardH + (vh - baseCardH) * easedP).toFixed(2);
+        const curRadius = Math.max(0, 6 * (1 - easedP)).toFixed(2);
 
         if (gpuCanvasRef.current) {
           gpuCanvasRef.current.style.opacity = '1';
@@ -242,16 +248,16 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
           gpuCanvasRef.current.style.setProperty('-webkit-clip-path', 'none');
           gpuCanvasRef.current.style.pointerEvents = 'auto';
 
-          const shadowOp = Math.max(0, 0.45 * (1 - expP * 2));
-          gpuCanvasRef.current.style.boxShadow = shadowOp > 0 ? `0 0 35px rgba(220, 20, 40, ${shadowOp.toFixed(3)})` : 'none';
+          const shadowOp = (0.40 * Math.pow(1 - easedP, 1.5)).toFixed(3);
+          gpuCanvasRef.current.style.boxShadow = Number(shadowOp) > 0.005 ? `0 0 35px rgba(220, 20, 40, ${shadowOp})` : 'none';
         }
 
         if (photoHairlineRef.current) {
-          const borderOp = Math.max(0, 0.75 * (1 - expP * 2.5));
+          const borderOp = Math.max(0, 0.75 * (1 - easedP * 2.0));
           photoHairlineRef.current.style.opacity = borderOp.toFixed(3);
         }
       } else {
-        // EXTENDED FULLSCREEN PLATEAU (0.54 -> 1.00)
+        // EXTENDED FULLSCREEN PLATEAU (EXP_END -> 1.00)
         if (gpuCanvasRef.current) {
           gpuCanvasRef.current.style.opacity = '1';
           gpuCanvasRef.current.style.left = '0px';
@@ -520,9 +526,9 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
         canvas.width = w;
         canvas.height = h;
         lastRenderedFrame = -1;
-        drawFrame(currentFrame, targetProgress);
+        drawFrame(currentFrame, smoothProgress);
       }
-      renderStageElements(targetProgress, currentFrame);
+      renderStageElements(smoothProgress, currentFrame);
     };
 
     resizeCanvas();
@@ -637,27 +643,34 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       // 0.34 -> 0.44: Frames 140 -> 191 (Pitch black background with subtle embers, Section 1 card emerges)
       // > 0.44: Frame 191 locked (Embers in darkness, Section 1 expands to fullscreen and holds)
       let targetFrame: number;
-      if (targetProgress <= 0.22) {
-        targetFrame = (targetProgress / 0.22) * 100;
-      } else if (targetProgress <= 0.34) {
-        targetFrame = 100 + ((targetProgress - 0.22) / 0.12) * (140 - 100);
-      } else if (targetProgress <= 0.44) {
-        targetFrame = 140 + ((targetProgress - 0.34) / 0.10) * (TOTAL_FRAMES - 1 - 140);
+      if (smoothProgress <= 0.22) {
+        targetFrame = (smoothProgress / 0.22) * 100;
+      } else if (smoothProgress <= 0.34) {
+        targetFrame = 100 + ((smoothProgress - 0.22) / 0.12) * (140 - 100);
+      } else if (smoothProgress <= 0.44) {
+        targetFrame = 140 + ((smoothProgress - 0.34) / 0.10) * (TOTAL_FRAMES - 1 - 140);
       } else {
         targetFrame = TOTAL_FRAMES - 1;
       }
 
-      const diff = targetFrame - currentFrame;
+      const pDiff = targetProgress - smoothProgress;
+      const fDiff = targetFrame - currentFrame;
 
-      if (Math.abs(diff) > 0.05) {
-        currentFrame += diff * 0.22;
-        drawFrame(currentFrame, targetProgress);
-        renderStageElements(targetProgress, currentFrame);
+      const pNeedsUpdate = Math.abs(pDiff) > 0.0001;
+      const fNeedsUpdate = Math.abs(fDiff) > 0.04;
+
+      if (pNeedsUpdate || fNeedsUpdate) {
+        // Continuous smooth exponential damping
+        smoothProgress += pDiff * 0.18;
+        currentFrame += fDiff * 0.24;
+        drawFrame(currentFrame, smoothProgress);
+        renderStageElements(smoothProgress, currentFrame);
         rafId = requestAnimationFrame(tick);
       } else {
+        smoothProgress = targetProgress;
         currentFrame = targetFrame;
-        drawFrame(currentFrame, targetProgress);
-        renderStageElements(targetProgress, currentFrame);
+        drawFrame(currentFrame, smoothProgress);
+        renderStageElements(smoothProgress, currentFrame);
         rafId = null;
       }
     };
@@ -678,8 +691,22 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       const progress = Math.max(0, Math.min(1, currentScroll / scrollableDistance));
       targetProgress = progress;
 
+      if (!isInitialized) {
+        isInitialized = true;
+        smoothProgress = progress;
+        if (progress <= 0.22) {
+          currentFrame = (progress / 0.22) * 100;
+        } else if (progress <= 0.34) {
+          currentFrame = 100 + ((progress - 0.22) / 0.12) * (140 - 100);
+        } else if (progress <= 0.44) {
+          currentFrame = 140 + ((progress - 0.34) / 0.10) * (TOTAL_FRAMES - 1 - 140);
+        } else {
+          currentFrame = TOTAL_FRAMES - 1;
+        }
+      }
+
       // Synchronous scroll-based volume update (smooth fade out at Section 1 & 2 border)
-      updateAudioVolume(targetProgress, rect);
+      updateAudioVolume(smoothProgress, rect);
 
       requestTick();
     };

@@ -50,8 +50,10 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
     let isActive = true;
     let rafId: number | null = null;
     let targetProgress = 0;
+    let smoothProgress = 0;
     let currentFrame = 0;
     let lastRenderedFrame = -1;
+    let isInitialized = false;
 
     // Viewport dimensions
     let vw = window.innerWidth;
@@ -282,14 +284,15 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
           }
         } else if (p <= 0.44) {
           // Morphing smoothly to 100vw x 100vh full-bleed
-          const expP = (p - 0.34) / 0.10;
-          const easedP = Math.pow(expP, 1.25);
+          const expP = Math.min(1, Math.max(0, (p - 0.34) / 0.10));
+          // Ken Perlin's Smootherstep: 6t^5 - 15t^4 + 10t^3
+          const easedP = expP * expP * expP * (expP * (expP * 6 - 15) + 10);
 
-          const curLeft = Math.round(baseCardLeft * (1 - easedP));
-          const curTop = Math.round(baseCardTop * (1 - easedP));
-          const curW = Math.round(baseCardW + (vw - baseCardW) * easedP);
-          const curH = Math.round(baseCardH + (vh - baseCardH) * easedP);
-          const curRadius = Math.max(0, Math.round(6 * (1 - easedP)));
+          const curLeft = (baseCardLeft * (1 - easedP)).toFixed(2);
+          const curTop = (baseCardTop * (1 - easedP)).toFixed(2);
+          const curW = (baseCardW + (vw - baseCardW) * easedP).toFixed(2);
+          const curH = (baseCardH + (vh - baseCardH) * easedP).toFixed(2);
+          const curRadius = Math.max(0, 6 * (1 - easedP)).toFixed(2);
 
           gpuCanvasRef.current.style.opacity = '1';
           gpuCanvasRef.current.style.left = `${curLeft}px`;
@@ -299,11 +302,11 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
           gpuCanvasRef.current.style.borderRadius = `${curRadius}px`;
           gpuCanvasRef.current.style.pointerEvents = 'auto';
 
-          const shadowOp = Math.max(0, 0.45 * (1 - expP * 2));
-          gpuCanvasRef.current.style.boxShadow = shadowOp > 0 ? `0 0 35px rgba(220, 20, 40, ${shadowOp.toFixed(3)})` : 'none';
+          const shadowOp = (0.40 * Math.pow(1 - easedP, 1.5)).toFixed(3);
+          gpuCanvasRef.current.style.boxShadow = Number(shadowOp) > 0.005 ? `0 0 35px rgba(220, 20, 40, ${shadowOp})` : 'none';
 
           if (photoHairlineRef.current) {
-            const borderOp = Math.max(0, 0.75 * (1 - expP * 2.5));
+            const borderOp = Math.max(0, 0.75 * (1 - easedP * 2.0));
             photoHairlineRef.current.style.opacity = borderOp.toFixed(3);
           }
         } else {
@@ -447,9 +450,9 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
         canvas.width = w;
         canvas.height = h;
         lastRenderedFrame = -1;
-        drawFrame(currentFrame, targetProgress);
+        drawFrame(currentFrame, smoothProgress);
       }
-      renderStageElements(targetProgress);
+      renderStageElements(smoothProgress);
     };
 
     resizeCanvas();
@@ -539,23 +542,29 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       // 0.00 -> 0.38: Frames 0 -> 83 (kamera bergerak maju ke gerbang menara gotik, menembus pintu, masuk kegelapan)
       // > 0.38: Frame 83 (keheningan kegelapan di mana kartu konser muncul)
       let targetFrame: number;
-      if (targetProgress <= 0.38) {
-        targetFrame = (targetProgress / 0.38) * (TOTAL_MOBILE_FRAMES - 1);
+      if (smoothProgress <= 0.38) {
+        targetFrame = (smoothProgress / 0.38) * (TOTAL_MOBILE_FRAMES - 1);
       } else {
         targetFrame = TOTAL_MOBILE_FRAMES - 1;
       }
 
-      const diff = targetFrame - currentFrame;
+      const pDiff = targetProgress - smoothProgress;
+      const fDiff = targetFrame - currentFrame;
 
-      if (Math.abs(diff) > 0.04) {
-        currentFrame += diff * 0.28;
-        drawFrame(currentFrame, targetProgress);
-        renderStageElements(targetProgress);
+      const pNeedsUpdate = Math.abs(pDiff) > 0.0001;
+      const fNeedsUpdate = Math.abs(fDiff) > 0.04;
+
+      if (pNeedsUpdate || fNeedsUpdate) {
+        smoothProgress += pDiff * 0.22;
+        currentFrame += fDiff * 0.28;
+        drawFrame(currentFrame, smoothProgress);
+        renderStageElements(smoothProgress);
         rafId = requestAnimationFrame(tick);
       } else {
+        smoothProgress = targetProgress;
         currentFrame = targetFrame;
-        drawFrame(currentFrame, targetProgress);
-        renderStageElements(targetProgress);
+        drawFrame(currentFrame, smoothProgress);
+        renderStageElements(smoothProgress);
         rafId = null;
       }
     };
@@ -591,8 +600,18 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       const rawProgress = currentScroll / scrollableDistance;
       targetProgress = Math.max(0, Math.min(1, rawProgress));
 
+      if (!isInitialized) {
+        isInitialized = true;
+        smoothProgress = targetProgress;
+        if (targetProgress <= 0.38) {
+          currentFrame = (targetProgress / 0.38) * (TOTAL_MOBILE_FRAMES - 1);
+        } else {
+          currentFrame = TOTAL_MOBILE_FRAMES - 1;
+        }
+      }
+
       // Synchronous scroll-based volume update (smooth fade out at Section 1 & 2 border)
-      updateAudioVolume(targetProgress, rect);
+      updateAudioVolume(smoothProgress, rect);
 
       requestTick();
     };
