@@ -59,6 +59,30 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
 
   return (
     <section id="the-passage" ref={sectionRef} className="cinematic-section">
+      {/* Cinematic Cathedral Atmospheric Backdrop */}
+      <div className="passage-cathedral-backdrop" aria-hidden="true">
+        <picture>
+          <source
+            media="(max-width: 767px)"
+            srcSet="/assets/cathedral_passage_mobile.webp"
+            type="image/webp"
+          />
+          <source
+            media="(min-width: 768px)"
+            srcSet="/assets/cathedral_passage_desktop.webp"
+            type="image/webp"
+          />
+          <img
+            src="/assets/cathedral_passage_desktop.png"
+            alt=""
+            className="passage-cathedral-img"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+        <div className="passage-cathedral-overlay" />
+      </div>
+
       {/* Opening Chamber Choreography */}
       <div className={`passage-header-zone ${isRevealed ? 'is-revealed' : ''}`}>
         <span className="section-eyebrow">THE THRESHOLD</span>

@@ -106,6 +106,24 @@ export const TicketSectionMobile: React.FC<Props> = ({
 
   return (
     <section id="the-passage" ref={sectionRef} className="tickets-mobile-section" aria-label="Tiket Masuk The State of Clamour">
+      {/* Mobile Cathedral Atmospheric Backdrop */}
+      <div className="passage-mobile-cathedral-backdrop" aria-hidden="true">
+        <picture>
+          <source
+            srcSet="/assets/cathedral_passage_mobile.webp"
+            type="image/webp"
+          />
+          <img
+            src="/assets/cathedral_passage_mobile.png"
+            alt=""
+            className="passage-mobile-cathedral-img"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+        <div className="passage-mobile-cathedral-overlay" />
+      </div>
+
       <div className={`tickets-mobile-header ${isRevealed ? 'is-revealed' : ''}`}>
         <span className="tickets-mobile-eyebrow">THE THRESHOLD</span>
         <h2 className="tickets-mobile-headline">THE PASSAGE</h2>

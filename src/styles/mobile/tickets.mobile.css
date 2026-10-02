@@ -9,10 +9,43 @@
   padding: 3.5rem 0 calc(3.5rem + env(safe-area-inset-bottom, 16px));
   background-color: var(--color-void, #060709);
   overflow-x: clip;
+  overflow-y: hidden;
+}
+
+/* Mobile Cathedral Atmospheric Backdrop */
+.passage-mobile-cathedral-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.passage-mobile-cathedral-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  opacity: 0.38;
+  filter: saturate(1.1) brightness(0.92);
+}
+
+.passage-mobile-cathedral-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Top seamless fade from Section 2 */
+    linear-gradient(180deg, #060709 0%, rgba(6, 7, 9, 0.65) 10%, transparent 24%),
+    /* Bottom seamless fade to Section 4 */
+    linear-gradient(0deg, #060709 0%, rgba(6, 7, 9, 0.82) 12%, transparent 28%),
+    /* Radial center dark veil for card legibility */
+    radial-gradient(circle at 50% 40%, rgba(6, 7, 9, 0.38) 0%, rgba(6, 7, 9, 0.82) 78%, #060709 100%);
 }
 
 /* Opening Chamber Header */
 .tickets-mobile-header {
+  position: relative;
+  z-index: 1;
   text-align: center;
   padding: 0 1.25rem;
   margin-bottom: 1.75rem;
@@ -85,6 +118,8 @@
 
 /* Horizontal Swipeable Cards Deck (Centered Initial on Presale 01) */
 .tickets-mobile-deck-carousel {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: row;
   gap: 1rem;
@@ -114,7 +149,9 @@
   max-width: 330px;
   scroll-snap-align: center;
   position: relative;
-  background: var(--color-surface-dark, #11151F);
+  background: rgba(12, 16, 24, 0.88);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   border-radius: 6px;
   border: 1px solid rgba(197, 168, 105, 0.22);
   padding: 1.65rem 1.35rem 1.35rem;
@@ -355,6 +392,8 @@
 
 /* Mobile Deck Pagination & Navigation Controls */
 .tickets-mobile-deck-controls {
+  position: relative;
+  z-index: 1;
   padding: 0 1.25rem;
   margin-top: 0.75rem;
   display: flex;
