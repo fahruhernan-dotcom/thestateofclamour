@@ -29,6 +29,7 @@ export const StageRundownMobile: React.FC<Props> = ({
         <article
           className="rundown-mobile-card"
           onClick={onOpenNight1}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenNight1(); } }}
           role="button"
           tabIndex={0}
           aria-label="Buka detail acara Malam I — Basboi"
@@ -39,6 +40,7 @@ export const StageRundownMobile: React.FC<Props> = ({
               alt="Night I — Basboi Swear In Continental Concert"
               className="rundown-mobile-banner-img"
               loading="lazy"
+              decoding="async"
             />
             <div className="rundown-mobile-banner-scrim" />
             <div className="rundown-mobile-badge-row">
@@ -73,6 +75,7 @@ export const StageRundownMobile: React.FC<Props> = ({
         <article
           className="rundown-mobile-card"
           onClick={onOpenNight2}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenNight2(); } }}
           role="button"
           tabIndex={0}
           aria-label="Buka detail acara Malam II — Elena Vex"
@@ -83,6 +86,7 @@ export const StageRundownMobile: React.FC<Props> = ({
               alt="Night II — Elena Vex Industrial Techno Assembly"
               className="rundown-mobile-banner-img"
               loading="lazy"
+              decoding="async"
             />
             <div className="rundown-mobile-banner-scrim" />
             <div className="rundown-mobile-badge-row">

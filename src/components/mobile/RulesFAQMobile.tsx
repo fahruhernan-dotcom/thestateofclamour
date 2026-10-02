@@ -123,16 +123,19 @@ export const RulesFAQMobile: React.FC<Props> = ({ onOpenDossier, onToast }) => {
           style={{
             background: 'none',
             border: 'none',
+            WebkitAppearance: 'none', /* Safari button reset */
             color: 'var(--color-gold-antique)',
             fontFamily: 'var(--font-body)',
             fontSize: '0.6875rem',
             letterSpacing: '0.2em',
-            textTransform: 'uppercase',
+            textTransform: 'uppercase' as const,
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.4rem',
             cursor: 'pointer',
             padding: '0.5rem',
+            WebkitTapHighlightColor: 'transparent',
+            touchAction: 'manipulation',
           }}
         >
           <span>LIHAT DETAIL EVENT LENGKAP</span>

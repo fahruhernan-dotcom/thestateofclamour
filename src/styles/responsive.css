@@ -84,11 +84,13 @@
 
   /* Scene 01: Hero Living Poster Mobile Optimization */
   .hero-editorial-section {
+    min-height: 100vh; /* svh fallback for Safari iOS < 15.4 */
     min-height: 100svh;
     padding: calc(var(--safe-top) + 0.85rem) 1.15rem calc(var(--safe-bottom) + 0.85rem);
   }
 
   .hero-poster-container {
+    min-height: calc(100vh - 3.5rem); /* svh fallback */
     min-height: calc(100svh - 3.5rem);
     padding: 0.5rem 0.25rem;
   }

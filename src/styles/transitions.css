@@ -56,7 +56,7 @@
 .page-view-wrapper {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: 100vh; /* 100dvh not needed here — just a wrapper */
 }
 
 .page-entrance-anim {
@@ -66,13 +66,14 @@
 @keyframes cinematicPageEntrance {
   0% {
     opacity: 0;
+    -webkit-transform: translateY(16px);
     transform: translateY(16px);
-    filter: blur(4px);
+    /* filter: blur() removed — causes Safari GPU crash on animation */
   }
   100% {
     opacity: 1;
+    -webkit-transform: none;
     transform: none;
-    filter: none;
   }
 }
 

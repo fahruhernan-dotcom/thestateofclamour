@@ -2,10 +2,14 @@
 /* ========================================================================== */
 .cinematic-navbar {
   position: fixed;
-  inset-inline: 0;
+  /* inset-inline fallback for Safari iOS < 14.5 */
+  left: 0;
+  right: 0;
   top: 0;
   z-index: 100;
+  display: -webkit-flex;
   display: flex;
+  -webkit-justify-content: center;
   justify-content: center;
   padding: 1.25rem 1.5rem;
   pointer-events: none;
@@ -100,12 +104,15 @@
   display: none;
   background: transparent;
   border: none;
+  -webkit-appearance: none; /* Reset Safari default button */
   color: var(--color-ivory);
   cursor: pointer;
   padding: 0.4rem;
   min-width: 44px;
   min-height: 44px;
+  -webkit-align-items: center;
   align-items: center;
+  -webkit-justify-content: center;
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -279,6 +286,7 @@
   cursor: pointer;
   text-align: center;
   min-height: 48px;
+  -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background 200ms ease, box-shadow 200ms ease;
