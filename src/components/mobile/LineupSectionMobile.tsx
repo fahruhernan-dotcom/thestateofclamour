@@ -1,7 +1,14 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Artist } from '../../types';
-import { silenceSec1, setAudioOwner, getAudioOwner, isSec1AudioActive } from '../../utils/audioCoordinator';
+import {
+  silenceSec1,
+  setAudioOwner,
+  getAudioOwner,
+  isSec1AudioActive,
+  crossfadeVideos,
+  fadeVideoVolume,
+} from '../../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../../utils/mediaPreloader';
 
 interface Props {
@@ -23,6 +30,8 @@ export const LineupSectionMobile: React.FC<Props> = ({
   const sectionRef = useRef<HTMLElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
+  const currentPlayingIdRef = useRef<string | null>(null);
+  const scrollSettlingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Touch drag state to differentiate between horizontal swipe and a clean tap
   const isDraggingRef = useRef(false);
@@ -38,31 +47,42 @@ export const LineupSectionMobile: React.FC<Props> = ({
   }, []);
 
   const playArtistAudio = useCallback((artistId: string) => {
-    silenceSec1();
+    silenceSec1({ duration: 300 });
     setAudioOwner('sec2-lineup');
     setActiveAudioArtistId(artistId);
 
-    // Unmute target video, mute others
+    const prevId = currentPlayingIdRef.current;
+    currentPlayingIdRef.current = artistId;
+
+    const outgoingVideo = prevId && prevId !== artistId ? videoRefs.current[prevId] : null;
+    const incomingVideo = videoRefs.current[artistId] || null;
+
+    // Smooth S-curve crossfade: ramps outgoing to 0 and incoming to 0.95 over 280ms
+    crossfadeVideos(outgoingVideo, incomingVideo, 0.95, 280);
+
+    // Mute any other background videos smoothly
     Object.entries(videoRefs.current).forEach(([id, vid]) => {
-      if (vid) {
-        if (id === artistId) {
-          vid.muted = false;
-          vid.volume = 0.95;
-          vid.play().catch(() => {});
-        } else {
+      if (vid && id !== artistId && id !== prevId && !vid.muted) {
+        fadeVideoVolume(vid, 0, 200, () => {
           vid.muted = true;
-        }
+        });
       }
     });
   }, []);
 
   const stopArtistAudio = useCallback(() => {
     setActiveAudioArtistId(null);
+    currentPlayingIdRef.current = null;
     if (getAudioOwner() === 'sec2-lineup') {
       setAudioOwner('none');
     }
+    // Smooth fade-out to zero before muting (eliminates click/pop)
     Object.values(videoRefs.current).forEach(vid => {
-      if (vid) vid.muted = true;
+      if (vid && !vid.muted) {
+        fadeVideoVolume(vid, 0, 250, () => {
+          vid.muted = true;
+        });
+      }
     });
   }, []);
 
@@ -108,7 +128,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
     }
   };
 
-  // Update active card index & audio when centered
+  // Update active card index & audio when centered with scroll settling protection
   const handleScroll = () => {
     const el = carouselRef.current;
     if (!el || el.children.length === 0) return;
@@ -130,10 +150,17 @@ export const LineupSectionMobile: React.FC<Props> = ({
 
     if (closestIdx !== activeCardIndex) {
       setActiveCardIndex(closestIdx);
-      const centeredArtist = artists[closestIdx];
-      if (centeredArtist) {
-        playArtistAudio(centeredArtist.id);
+
+      // Debounce audio transition (75ms): prevents audio thrashing/stuttering while dragging
+      if (scrollSettlingTimerRef.current) {
+        clearTimeout(scrollSettlingTimerRef.current);
       }
+      scrollSettlingTimerRef.current = setTimeout(() => {
+        const centeredArtist = artists[closestIdx];
+        if (centeredArtist) {
+          playArtistAudio(centeredArtist.id);
+        }
+      }, 75);
     }
   };
 
@@ -147,19 +174,31 @@ export const LineupSectionMobile: React.FC<Props> = ({
 
     if (inView) {
       if (isSec1AudioActive()) {
-        silenceSec1();
+        silenceSec1({ duration: 300 });
+      }
+      // If Section 2 is in view and no card audio is playing yet, start centered card smoothly
+      if (!currentPlayingIdRef.current) {
+        const targetArtist = artists[activeCardIndex] || artists[0];
+        if (targetArtist) {
+          playArtistAudio(targetArtist.id);
+        }
       }
     } else {
-      if (activeAudioArtistId !== null) {
+      if (currentPlayingIdRef.current !== null) {
         stopArtistAudio();
       }
     }
-  }, [activeAudioArtistId, stopArtistAudio]);
+  }, [activeCardIndex, artists, playArtistAudio, stopArtistAudio]);
 
   useEffect(() => {
     window.addEventListener('scroll', checkLineupVisibility, { passive: true });
     checkLineupVisibility();
-    return () => window.removeEventListener('scroll', checkLineupVisibility);
+    return () => {
+      window.removeEventListener('scroll', checkLineupVisibility);
+      if (scrollSettlingTimerRef.current) {
+        clearTimeout(scrollSettlingTimerRef.current);
+      }
+    };
   }, [checkLineupVisibility]);
 
   // Auto-silence when audio owner changes or sec2 silenced
@@ -179,6 +218,9 @@ export const LineupSectionMobile: React.FC<Props> = ({
     return () => {
       window.removeEventListener('how:audio-owner-change', handleOwnerChange);
       window.removeEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+      if (scrollSettlingTimerRef.current) {
+        clearTimeout(scrollSettlingTimerRef.current);
+      }
     };
   }, [stopArtistAudio]);
 
