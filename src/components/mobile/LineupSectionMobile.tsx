@@ -119,6 +119,15 @@ export const LineupSectionMobile: React.FC<Props> = ({
     }
   };
 
+  const handlePointerCancel = () => {
+    isDraggingRef.current = false;
+    hasMovedRef.current = false;
+  };
+
+  const handlePointerUp = () => {
+    isDraggingRef.current = false;
+  };
+
   const handleCardPointerUp = (artist: Artist) => {
     isDraggingRef.current = false;
     // If the user tapped without dragging, immediately navigate to detail acara!
@@ -240,6 +249,8 @@ export const LineupSectionMobile: React.FC<Props> = ({
         onScroll={handleScroll}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
         className="lineup-mobile-carousel"
       >
         {artists.map((artist) => {
@@ -251,6 +262,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
               key={artist.id}
               className={`lineup-mobile-card ${isAudioPlaying ? 'is-playing-audio' : ''}`}
               onPointerUp={() => handleCardPointerUp(artist)}
+              onPointerCancel={handlePointerCancel}
               role="button"
               tabIndex={0}
               aria-label={`Buka detail acara ${artist.name}`}

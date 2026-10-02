@@ -52,7 +52,10 @@
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS Safari */
   scrollbar-width: none;
-  touch-action: pan-x;
+  touch-action: pan-y pan-x;
+  touch-action: manipulation;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
 }
 
 .lineup-mobile-carousel::-webkit-scrollbar {
@@ -80,6 +83,7 @@
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y pan-x;
   touch-action: manipulation;
   transition: border-color 250ms ease, box-shadow 250ms ease, transform 150ms ease;
 }
