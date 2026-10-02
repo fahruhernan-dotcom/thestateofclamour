@@ -93,6 +93,38 @@ export const fadeVideoVolume = (
   activeFadeMap.set(video, raf);
 };
 
+/**
+ * Smoothly crossfades between two video elements.
+ * Ramps outgoing video volume down to 0 and mutes it.
+ * Ramps incoming video volume up to targetVolume.
+ */
+export const crossfadeVideos = (
+  outgoing: HTMLVideoElement | null,
+  incoming: HTMLVideoElement | null,
+  targetVolume: number = 0.95,
+  durationMs: number = 280,
+  onComplete?: () => void
+) => {
+  if (outgoing && outgoing !== incoming && !outgoing.muted) {
+    fadeVideoVolume(outgoing, 0, durationMs, () => {
+      outgoing.muted = true;
+    });
+  }
+  if (incoming) {
+    cancelVideoFade(incoming);
+    if (incoming.muted) {
+      try {
+        incoming.volume = 0;
+        incoming.muted = false;
+      } catch {}
+    }
+    if (incoming.paused) {
+      incoming.play().catch(() => {});
+    }
+    fadeVideoVolume(incoming, targetVolume, durationMs, onComplete);
+  }
+};
+
 export interface SilenceOptions {
   immediate?: boolean;
   duration?: number;
