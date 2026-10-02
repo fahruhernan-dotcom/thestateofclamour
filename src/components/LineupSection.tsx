@@ -411,9 +411,15 @@ const LineupSectionDesktop: React.FC<Props> = ({
   const handleOpenModal = (artist: Artist) => {
     stopArtistAudio();
     setIsSectionVisible(false); // silence audio when modal is opened
-    if ((artist.id === 'art-malvin' || artist.id === 'art-basboi') && onOpenNight1) {
+    const isDay1 =
+      artist.id === 'art-malvin' ||
+      artist.id === 'art-basboi' ||
+      artist.dayLabel?.toLowerCase().includes('1') ||
+      artist.dayLabel?.includes('30');
+
+    if (isDay1 && onOpenNight1) {
       onOpenNight1();
-    } else if ((artist.id === 'art-far' || artist.id === 'art-elena') && onOpenNight2) {
+    } else if (onOpenNight2) {
       onOpenNight2();
     }
   };

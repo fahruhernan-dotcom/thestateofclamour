@@ -60,20 +60,15 @@
 }
 
 .page-entrance-anim {
-  animation: cinematicPageEntrance 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: cinematicPageEntrance 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes cinematicPageEntrance {
   0% {
     opacity: 0;
-    -webkit-transform: translateY(16px);
-    transform: translateY(16px);
-    /* filter: blur() removed — causes Safari GPU crash on animation */
   }
   100% {
     opacity: 1;
-    -webkit-transform: none;
-    transform: none;
   }
 }
 

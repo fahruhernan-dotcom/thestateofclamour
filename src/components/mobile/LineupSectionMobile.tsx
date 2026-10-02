@@ -68,9 +68,15 @@ export const LineupSectionMobile: React.FC<Props> = ({
 
   const handleOpenArtistDetail = useCallback((artist: Artist) => {
     stopArtistAudio();
-    if ((artist.id === 'art-malvin' || artist.id === 'art-basboi' || artist.dayLabel?.includes('30')) && onOpenNight1) {
+    const isDay1 =
+      artist.id === 'art-malvin' ||
+      artist.id === 'art-basboi' ||
+      artist.dayLabel?.toLowerCase().includes('1') ||
+      artist.dayLabel?.includes('30');
+
+    if (isDay1 && onOpenNight1) {
       onOpenNight1();
-    } else if ((artist.id === 'art-far' || artist.id === 'art-elena' || artist.dayLabel?.includes('31')) && onOpenNight2) {
+    } else if (onOpenNight2) {
       onOpenNight2();
     }
   }, [onOpenNight1, onOpenNight2, stopArtistAudio]);

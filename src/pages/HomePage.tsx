@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { FloatingNavbar } from '../components/FloatingNavbar';
 import { HeroSection } from '../components/HeroSection';
 import { LineupSection } from '../components/LineupSection';
 import { TicketSection } from '../components/TicketSection';
@@ -39,6 +40,9 @@ export const HomePage: React.FC<Props> = ({
 
   return (
     <>
+      {/* Scroll-Triggered Minimalist Floating Navbar */}
+      <FloatingNavbar onOpenDossier={() => onOpenFullDossier('timetable')} />
+
       {/* Unified Scene 01: Hero Approach & Section 1 Guest Storytelling */}
       <HeroSection event={event} />
 
