@@ -303,27 +303,22 @@ const LineupSectionDesktop: React.FC<Props> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Check section visibility: auto-start lineup video & audio when Section 2 scrolls into view
+  // Check section visibility: if Section 2 scrolls out of view, stop audio
   const checkAudioEligibility = useCallback(() => {
     const sec = sectionRef.current;
     if (!sec) return;
     const r = sec.getBoundingClientRect();
-    const inView = r.top < window.innerHeight * 0.35 && r.bottom > window.innerHeight * 0.15;
+    const inView = r.top < window.innerHeight && r.bottom > 0;
     setIsSectionVisible(inView);
 
-    if (inView) {
-      if (canSec2PlayAudio()) {
-        const targetArtist = artists[activeArtistIndex] || artists[0];
-        if (targetArtist && activeAudioArtistId !== targetArtist.id) {
-          playArtistAudio(targetArtist.id);
-        }
-      }
-    } else {
+    // On desktop, audio is strictly controlled by mouse hover (onMouseEnter / onMouseLeave).
+    // If the entire section is scrolled out of view, ensure any playing audio is stopped.
+    if (!inView) {
       if (activeAudioArtistId !== null) {
         stopArtistAudio();
       }
     }
-  }, [artists, activeArtistIndex, activeAudioArtistId, playArtistAudio, stopArtistAudio]);
+  }, [activeAudioArtistId, stopArtistAudio]);
 
   useEffect(() => {
     window.addEventListener('scroll', checkAudioEligibility, { passive: true });
