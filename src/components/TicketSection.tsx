@@ -1,5 +1,5 @@
-import React from 'react';
-import { Check, ShieldCheck, Flame } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Check, ShieldCheck } from 'lucide-react';
 import { TicketTier } from '../types';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { TicketSectionMobile } from './mobile/TicketSectionMobile';
@@ -12,6 +12,27 @@ interface Props {
 
 export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, onCheckout }) => {
   const isMobile = useIsMobile();
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [isRevealed, setIsRevealed] = useState(false);
+
+  useEffect(() => {
+    const sec = sectionRef.current;
+    if (!sec) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsRevealed(true);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(sec);
+    return () => observer.disconnect();
+  }, []);
 
   if (isMobile) {
     return (
@@ -37,30 +58,39 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
   };
 
   return (
-    <section id="the-passage" className="cinematic-section">
-      <h2 className="section-headline">
-        THE PASSAGE
-      </h2>
+    <section id="the-passage" ref={sectionRef} className="cinematic-section">
+      {/* Opening Chamber Choreography */}
+      <div className={`passage-header-zone ${isRevealed ? 'is-revealed' : ''}`}>
+        <span className="section-eyebrow">THE THRESHOLD</span>
+        <h2 className="section-headline">THE PASSAGE</h2>
+        <p className="passage-hero-tagline">
+          Entry begins here.
+        </p>
 
-      <p className="section-subheadline">
-        Official passes into the nocturnal assembly.
-      </p>
+        {/* Antique Gold Hairline Draw */}
+        <div className="passage-divider-container" aria-hidden="true">
+          <div className="passage-hairline-draw" />
+        </div>
 
-      <p className="section-body-text">
-        All passes include verified RFID access to the venue. Early tiers unlock priority entry lanes. Select your tier below.
-      </p>
+        <p className="section-body-text passage-subtext-reveal">
+          All passes include verified RFID access to the venue. Select your tier below.
+        </p>
+      </div>
 
-      <div className="passage-matrix-grid">
-        {tickets.map((ticket) => {
+      {/* Sequential Reveal Grid (Staggered 120ms intervals) */}
+      <div className={`passage-matrix-grid ${isRevealed ? 'is-revealed' : ''}`}>
+        {tickets.map((ticket, index) => {
           const isSoldOut = ticket.status === 'sold_out';
           const isActive = ticket.status === 'active';
           const isHighlighted = highlightedTicketId === ticket.id;
+          const isProtagonist = ticket.id === 'tkt-presale1';
 
           return (
             <article
               key={ticket.id}
               onMouseMove={handleCardMouseMove}
-              className={`admission-document-card ${isActive ? 'is-active-tier' : ''} ${isSoldOut ? 'is-sold-out' : ''} ${isHighlighted ? 'is-spotlighted' : ''}`}
+              style={{ animationDelay: `${(index + 1) * 120}ms` }}
+              className={`admission-document-card ${isProtagonist ? 'is-protagonist' : ''} ${isActive ? 'is-active-tier' : ''} ${isSoldOut ? 'is-sold-out' : ''} ${isHighlighted ? 'is-spotlighted' : ''}`}
             >
               {/* Foil Specular Glint Layer */}
               <div className="card-foil-specular-layer" aria-hidden="true" />
@@ -82,11 +112,21 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
                   <p className="admission-category-tag">
                     {ticket.category}
                   </p>
-                  {isActive && (
-                    <span className="live-allocation-pulse-badge">
-                      <span className="pulse-dot" />
-                      <Flame size={12} style={{ color: 'var(--color-gold-antique)' }} />
+                  {isProtagonist && (
+                    <span className="live-allocation-pulse-badge" title="Real-time ticket chamber allocation">
+                      <span className="allocation-pulse-dot" />
                       <span>84% ALLOCATED</span>
+                    </span>
+                  )}
+                  {isActive && !isProtagonist && (
+                    <span className="live-allocation-pulse-badge">
+                      <span className="allocation-pulse-dot subtle" />
+                      <span>AVAILABLE</span>
+                    </span>
+                  )}
+                  {isSoldOut && (
+                    <span className="admission-soldout-tag">
+                      EXHAUSTED
                     </span>
                   )}
                 </div>
@@ -131,7 +171,7 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
                   <button
                     type="button"
                     onClick={() => onCheckout(ticket)}
-                    className="admission-action-btn btn-press"
+                    className={`admission-action-btn btn-press ${isProtagonist ? 'is-protagonist-cta' : ''}`}
                   >
                     <span>GET TICKETS →</span>
                   </button>
@@ -146,6 +186,15 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
           );
         })}
       </div>
+
+      {/* Outro Threshold Bar */}
+      <div className={`passage-outro-bar ${isRevealed ? 'is-revealed' : ''}`}>
+        <div className="passage-outro-line" />
+        <span className="passage-outro-label">VERIFIED RFID PASS</span>
+        <div className="passage-outro-line" />
+      </div>
     </section>
   );
 };
+
+export default TicketSection;
