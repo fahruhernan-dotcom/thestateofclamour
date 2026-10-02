@@ -8,7 +8,12 @@
   width: 100%;
   height: 350vh;
   background-color: var(--color-void, #060709);
-  overflow-x: hidden; /* clip not supported on Safari iOS < 16 */
+  /* IMPORTANT: Must use clip, NOT hidden.
+     overflow-x: hidden breaks position:sticky on .hero-mobile-sticky child.
+     overflow-x: clip does NOT create a scroll container, so sticky works.
+     Safari iOS < 16 that doesn't support clip will simply not clip overflow
+     (acceptable tradeoff vs completely broken hero animation). */
+  overflow-x: clip;
 }
 
 .hero-mobile-sticky {
