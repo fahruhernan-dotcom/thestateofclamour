@@ -33,7 +33,6 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
   const stageGlowRef = useRef<HTMLDivElement | null>(null);
   const bgAmbientRef = useRef<HTMLDivElement | null>(null);
   const videoDimRef = useRef<HTMLDivElement | null>(null);
-  const scrollCueRef = useRef<HTMLDivElement | null>(null);
 
   // Section 1 Desktop Clusters
   const clusterTopLeftRef = useRef<HTMLDivElement | null>(null);
@@ -329,9 +328,6 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
         clusterBottomRightRef.current.style.opacity = sec1TextOpacity.toFixed(3);
         clusterBottomRightRef.current.style.transform = `translate3d(${drift4X}px, ${drift4Y}px, 0) rotate(${rot4}deg)`;
         clusterBottomRightRef.current.style.pointerEvents = sec1TextOpacity > 0.4 ? 'auto' : 'none';
-      }
-      if (scrollCueRef.current) {
-        scrollCueRef.current.style.opacity = (sec1TextOpacity * (1 - expRatio * 1.5)).toFixed(3);
       }
 
       // Mobile Editorial
@@ -969,14 +965,6 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
             </h2>
             <div className="story-welcome-divider" />
           </div>
-        </div>
-
-        {/* 10. Scroll Cue (Desktop) */}
-        <div ref={scrollCueRef} className="storytelling-scroll-cue story-desktop-only" style={{ opacity: 0 }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.5625rem', letterSpacing: '0.35em', color: 'rgba(197, 168, 105, 0.85)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-            GULIR UNTUK MELANGKAH MASUK KE PERTEMUAN
-          </span>
-          <div className="storytelling-scroll-cue-line" />
         </div>
       </div>
     </section>

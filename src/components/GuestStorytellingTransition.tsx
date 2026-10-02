@@ -17,7 +17,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
   const welcomeOverlayRef = useRef<HTMLDivElement | null>(null);
   const stageGlowRef = useRef<HTMLDivElement | null>(null);
   const bgAmbientRef = useRef<HTMLDivElement | null>(null);
-  const scrollCueRef = useRef<HTMLDivElement | null>(null);
   const videoDimRef = useRef<HTMLDivElement | null>(null);
 
   // Audio State & Persistence
@@ -117,8 +116,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
       const drift4Y = Math.round(35 * progress);
       const rot4 = (1.5 * progress).toFixed(2);
 
-      const opCue = Math.max(0, 1 - progress / 0.10);
-
       // Desktop clusters
       if (clusterTopLeftRef.current) {
         clusterTopLeftRef.current.style.opacity = op1.toFixed(3);
@@ -139,9 +136,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
         clusterBottomRightRef.current.style.opacity = op4.toFixed(3);
         clusterBottomRightRef.current.style.transform = `translate3d(${drift4X}px, ${drift4Y}px, 0) rotate(${rot4}deg)`;
         clusterBottomRightRef.current.style.pointerEvents = op4 > 0.05 ? 'auto' : 'none';
-      }
-      if (scrollCueRef.current) {
-        scrollCueRef.current.style.opacity = opCue.toFixed(3);
       }
 
       // Mobile clusters — extended smooth fade (0.0 -> 0.30) to eliminate any black dead zone
@@ -584,14 +578,6 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
             {/* Golden Accent Divider */}
             <div className="story-welcome-divider" />
           </div>
-        </div>
-
-        {/* Initial Scroll Prompt (Desktop / Tablet only) */}
-        <div ref={scrollCueRef} className="storytelling-scroll-cue story-desktop-only">
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.5625rem', letterSpacing: '0.35em', color: 'rgba(197, 168, 105, 0.85)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-            GULIR UNTUK MELANGKAH MASUK KE PERTEMUAN
-          </span>
-          <div className="storytelling-scroll-cue-line" />
         </div>
       </div>
     </section>
