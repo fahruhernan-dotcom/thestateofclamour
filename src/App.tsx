@@ -178,10 +178,8 @@ export const App: React.FC = () => {
     navigateTo('event-night-2', '#/event/night-2');
   };
 
-  const handleOpenFullDossier = (tab: 'protocols' | 'architecture' | 'timetable' | 'guide' = 'protocols') => {
-    setDossierInitialTab(tab);
-    navigateTo('full-dossier', tab === 'protocols' ? '#dossier' : `#dossier-${tab}`);
-  };
+
+
 
   const handleBackToHome = () => {
     navigateTo('home', '');
@@ -231,7 +229,6 @@ export const App: React.FC = () => {
             highlightedTicketId={highlightedTicketId}
             onOpenNight1={handleOpenNight1}
             onOpenNight2={handleOpenNight2}
-            onOpenFullDossier={handleOpenFullDossier}
             onCheckout={handleCheckout}
             onScrollToTickets={handleScrollToTickets}
             onToast={showToast}

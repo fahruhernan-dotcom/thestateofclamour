@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FloatingNavbar } from '../components/FloatingNavbar';
+
 import { HeroSection } from '../components/HeroSection';
 import { LineupSection } from '../components/LineupSection';
 import { TicketSection } from '../components/TicketSection';
@@ -15,7 +15,7 @@ interface Props {
   highlightedTicketId: string | null;
   onOpenNight1: () => void;
   onOpenNight2: () => void;
-  onOpenFullDossier: (tab?: 'protocols' | 'architecture' | 'timetable' | 'guide') => void;
+
   onCheckout: (ticket: TicketTier) => void;
   onScrollToTickets: () => void;
   onToast: (msg: string) => void;
@@ -28,7 +28,7 @@ export const HomePage: React.FC<Props> = ({
   highlightedTicketId,
   onOpenNight1,
   onOpenNight2,
-  onOpenFullDossier,
+
   onCheckout,
   onScrollToTickets,
   onToast,
@@ -40,8 +40,7 @@ export const HomePage: React.FC<Props> = ({
 
   return (
     <>
-      {/* Floating Navbar (Appears strictly from Section The Guests and downwards) */}
-      <FloatingNavbar onOpenDossier={() => onOpenFullDossier('timetable')} />
+
 
       {/* Unified Scene 01: Hero Approach & Section 1 Guest Storytelling */}
       <HeroSection event={event} />
