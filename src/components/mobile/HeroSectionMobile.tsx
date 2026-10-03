@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { EventData } from '../../types';
 import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio, fadeVideoVolume, cancelVideoFade } from '../../utils/audioCoordinator';
-import { getCachedVideoUrl, getMobileFrame, subscribePreloader } from '../../utils/mediaPreloader';
+import { getMobileFrame } from '../../utils/mediaPreloader';
 
 interface Props {
   event: EventData;
@@ -39,6 +39,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
   const isAudioActiveRef = useRef<boolean>(false);
   const isSectionVisibleRef = useRef<boolean>(false);
   const userInteractedRef = useRef<boolean>(false);
+  const isPlayPendingRef = useRef<boolean>(false);
 
 
   useEffect(() => {
@@ -71,8 +72,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       recapVideo.playsInline = true;
       recapVideo.setAttribute('playsinline', '');
       recapVideo.setAttribute('webkit-playsinline', '');
-      if (!recapVideo.src) {
-        recapVideo.src = getCachedVideoUrl('/assets/how2026_recap.mp4') || '/assets/how2026_recap.mp4';
+      if (!recapVideo.src || !recapVideo.src.includes('/assets/how2026_recap.mp4')) {
+        recapVideo.src = '/assets/how2026_recap.mp4';
       }
       recapVideo.play().catch(() => {});
     }
@@ -81,11 +82,17 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       if (!recapVideo) return;
 
       // Always guarantee visual playback whenever Section 1 card is emerging or active
-      if (p >= 0.26 && recapVideo.paused) {
-        recapVideo.play().catch(() => {
-          recapVideo.muted = true;
-          recapVideo.play().catch(() => {});
-        });
+      if (p >= 0.26 && recapVideo.paused && !isPlayPendingRef.current) {
+        isPlayPendingRef.current = true;
+        recapVideo.play()
+          .then(() => {
+            isPlayPendingRef.current = false;
+          })
+          .catch(() => {
+            isPlayPendingRef.current = false;
+            recapVideo.muted = true;
+            recapVideo.play().catch(() => {});
+          });
       }
 
       if (!userInteractedRef.current) {
@@ -111,26 +118,30 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       const isExiting = rect ? rect.bottom < window.innerHeight : false;
 
       if (isExiting && rect) {
-        // Boundary transition between Sec 1 and Sec 2:
-        // As hero track scrolls off screen (rect.bottom from 100vh down to 15vh),
-        // smoothly fade audio out to zero in direct proportion to scroll.
+        // Boundary transition: smoothly fade audio out to zero if track is exiting viewport
         const exitRange = window.innerHeight * 0.85;
         const exitProgress = Math.max(0, (rect.bottom - window.innerHeight * 0.15) / exitRange);
         const exitFade = Math.pow(exitProgress, 1.25);
         targetVol = baseVolume * 0.85 * exitFade;
-      } else if (p < 0.26) {
+      } else if (p < 0.22) {
+        // Absolute silence before cathedral doors entrance
         targetVol = 0;
-      } else if (p < 0.32) {
-        // Smooth entrance fade-in
-        const inFactor = (p - 0.26) / 0.06;
-        targetVol = baseVolume * inFactor;
-      } else if (p <= 0.94) {
-        // Core full-immersion storytelling
+      } else if (p < 0.40) {
+        // Smooth cinematic swell as card emerges & expands to full-bleed (0.22 -> 0.40)
+        const inFactor = (p - 0.22) / 0.18;
+        const acousticCurve = Math.sin((inFactor * Math.PI) / 2);
+        targetVol = baseVolume * acousticCurve;
+      } else if (p <= 0.80) {
+        // Core full-immersion concert storytelling
         targetVol = baseVolume;
+      } else if (p < 0.96) {
+        // Noticeable, cinematic decrescendo fade-out before Section 2 arrives (0.80 -> 0.96)
+        const outFactor = (0.96 - p) / 0.16;
+        const acousticCurve = Math.sin((outFactor * Math.PI) / 2);
+        targetVol = baseVolume * acousticCurve;
       } else {
-        // 0.94 -> 1.00: subtle pre-taper near track end
-        const taper = 1 - 0.15 * ((p - 0.94) / 0.06);
-        targetVol = baseVolume * taper;
+        // Complete silence before Section 2 (The Lineup) takes over
+        targetVol = 0;
       }
 
       if (targetVol <= 0.01) {
@@ -421,7 +432,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       }
 
       if (videoDimRef.current) {
-        videoDimRef.current.style.opacity = (welcomeOpacity * 0.50).toFixed(3);
+        videoDimRef.current.style.opacity = '0';
       }
 
       // ----------------------------------------------------------------------
@@ -478,25 +489,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
         loadedIndices.add(0);
         drawFrame(0, 0);
       };
-    }
-
-    // Step 1b: Set recap video src from preloader cache if a blob was created
-    let unsubVideo: (() => void) | null = null;
-    if (recapVideo) {
-      unsubVideo = subscribePreloader((s) => {
-        if (s.isComplete) {
-          const cached = getCachedVideoUrl('/assets/how2026_recap.mp4');
-          if (cached && cached.startsWith('blob:') && recapVideo.src !== cached) {
-            const prevTime = recapVideo.currentTime;
-            const wasPaused = recapVideo.paused;
-            recapVideo.src = cached;
-            recapVideo.currentTime = prevTime;
-            if (!wasPaused) recapVideo.play().catch(() => {});
-          }
-          unsubVideo?.();
-          unsubVideo = null;
-        }
-      });
     }
 
     // Step 2: Progressive background preloading of remaining frames
@@ -638,10 +630,9 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       }
 
       // If user is currently in Section 1, attempt unmuting inside this direct user gesture!
-      if (targetProgress >= 0.26 && targetProgress <= 0.94 && canSec1PlayAudio()) {
+      if (targetProgress >= 0.22 && targetProgress < 0.96 && canSec1PlayAudio()) {
         silenceSec2();
         setAudioOwner('sec1-storytelling');
-        recapVideo.volume = 0.92;
         recapVideo.muted = false;
         recapVideo.play().then(() => {
           isAudioActiveRef.current = true;
@@ -685,7 +676,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       isActive = false;
       clearTimeout(preloadTimer);
       if (rafId !== null) cancelAnimationFrame(rafId);
-      if (unsubVideo) unsubVideo();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('how:audio-owner-change', handleOwnerChange);
@@ -748,7 +738,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
           <div className="hero-mobile-portal-frame">
             <video
               ref={recapVideoRef}
-              src={getCachedVideoUrl('/assets/how2026_recap.mp4') || '/assets/how2026_recap.mp4'}
+              src="/assets/how2026_recap.mp4"
               poster="/assets/how2026_recap_poster.jpg"
               className="hero-mobile-portal-video"
               autoPlay
@@ -811,14 +801,6 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Layer 5: Climax Arrival ("WELCOME TO THE ASSEMBLY") */}
-        <div ref={climaxOverlayRef} className="hero-mobile-climax-overlay" style={{ opacity: 0 }}>
-          <h2 className="hero-mobile-climax-title">
-            WELCOME TO<br />THE ASSEMBLY
-          </h2>
-          <div className="hero-mobile-climax-bar" />
         </div>
       </div>
     </section>

@@ -17,9 +17,8 @@ export const TicketSectionMobile: React.FC<Props> = ({
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
 
-  // Default to Presale 01 (index 2) so mobile users immediately see the available active ticket
-  const initialIndex = tickets.findIndex((t) => t.id === 'tkt-presale1');
-  const targetInitial = initialIndex !== -1 ? initialIndex : 0;
+  // Default to the first ticket on mobile
+  const targetInitial = 0;
   const [activeIndex, setActiveIndex] = useState(targetInitial);
 
   useEffect(() => {
@@ -41,19 +40,29 @@ export const TicketSectionMobile: React.FC<Props> = ({
     return () => observer.disconnect();
   }, []);
 
-  // Center on Presale 01 immediately on initial mount
+  // Center on Presale 01 immediately on initial mount (horizontal carousel only, never scrolls the window)
   useEffect(() => {
     const el = carouselRef.current;
     if (!el || tickets.length === 0) return;
 
-    const timer = setTimeout(() => {
+    const centerTarget = () => {
       const targetCard = el.children[targetInitial] as HTMLElement | undefined;
       if (targetCard) {
-        targetCard.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+        const targetLeft = targetCard.offsetLeft - (el.clientWidth - targetCard.clientWidth) / 2;
+        el.scrollTo({ left: Math.max(0, targetLeft), behavior: 'instant' });
       }
-    }, 60);
+    };
 
-    return () => clearTimeout(timer);
+    // Re-run after layout/fonts settle so the recommended card is reliably centered
+    const raf = requestAnimationFrame(centerTarget);
+    const timer = setTimeout(centerTarget, 60);
+    const timer2 = setTimeout(centerTarget, 350);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+      clearTimeout(timer2);
+    };
   }, [targetInitial, tickets.length]);
 
   const handleScroll = () => {
@@ -85,7 +94,8 @@ export const TicketSectionMobile: React.FC<Props> = ({
     if (!el) return;
     const card = el.children[idx] as HTMLElement | undefined;
     if (card) {
-      card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const targetLeft = card.offsetLeft - (el.clientWidth - card.clientWidth) / 2;
+      el.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
       setActiveIndex(idx);
     }
   };
@@ -140,16 +150,16 @@ export const TicketSectionMobile: React.FC<Props> = ({
         onScroll={handleScroll}
         className={`tickets-mobile-deck-carousel ${isRevealed ? 'is-revealed' : ''}`}
       >
-        {tickets.map((ticket) => {
+        {tickets.map((ticket, cardIdx) => {
           const isSoldOut = ticket.status === 'sold_out';
           const isActive = ticket.status === 'active';
           const isHighlighted = highlightedTicketId === ticket.id;
-          const isProtagonist = ticket.id === 'tkt-presale1';
+          const isProtagonist = false;
 
           return (
             <article
               key={ticket.id}
-              className={`ticket-mobile-card ${isProtagonist ? 'is-protagonist' : ''} ${ticket.id === 'tkt-vip' ? 'is-vip' : ''} ${isActive ? 'is-active-tier' : ''} ${isSoldOut ? 'is-sold-out' : ''} ${isHighlighted ? 'is-spotlighted' : ''}`}
+              className={`ticket-mobile-card ${cardIdx === activeIndex ? 'is-focused' : ''} ${isProtagonist ? 'is-protagonist' : ''} ${ticket.id === 'tkt-vip' ? 'is-vip' : ''} ${isActive ? 'is-active-tier' : ''} ${isSoldOut ? 'is-sold-out' : ''} ${isHighlighted ? 'is-spotlighted' : ''}`}
             >
               {/* Protagonist Crown Ribbon */}
               {isProtagonist && (
@@ -173,10 +183,10 @@ export const TicketSectionMobile: React.FC<Props> = ({
                   <span className={`ticket-mobile-category ${isProtagonist ? 'is-protagonist-cat' : ''} ${ticket.id === 'tkt-vip' ? 'is-vip-cat' : ''}`}>
                     {ticket.category}
                   </span>
-                  {isProtagonist && (
+                  {!isSoldOut && (ticket.quota != null || ticket.badgeLabel) && (
                     <span className="live-allocation-pulse-badge">
                       <span className="allocation-pulse-dot" />
-                      <span>84% ALLOCATED</span>
+                      <span>{ticket.quota != null ? `LIMITED · ${ticket.quota} SLOTS` : ticket.badgeLabel?.toUpperCase()}</span>
                     </span>
                   )}
                   {ticket.id === 'tkt-vip' && (

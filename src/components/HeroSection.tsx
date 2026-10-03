@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { EventData } from '../types';
 import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio, fadeVideoVolume, cancelVideoFade } from '../utils/audioCoordinator';
-import { getCachedVideoUrl, getDesktopFrame, subscribePreloader } from '../utils/mediaPreloader';
+import { getDesktopFrame } from '../utils/mediaPreloader';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { HeroSectionMobile } from './mobile/HeroSectionMobile';
 
@@ -47,6 +47,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
   // Audio State
   const isPlayingAudioRef = useRef(false);
   const isSectionVisibleRef = useRef(false);
+  const isPlayPendingRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -77,11 +78,17 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       if (!video) return;
 
       // Always guarantee visual playback whenever Section 1 card is emerging or active
-      if (p >= 0.26 && video.paused) {
-        video.play().catch(() => {
-          video.muted = true;
-          video.play().catch(() => {});
-        });
+      if (p >= 0.26 && video.paused && !isPlayPendingRef.current) {
+        isPlayPendingRef.current = true;
+        video.play()
+          .then(() => {
+            isPlayPendingRef.current = false;
+          })
+          .catch(() => {
+            isPlayPendingRef.current = false;
+            video.muted = true;
+            video.play().catch(() => {});
+          });
       }
 
       if (!userInteractedRef.current) {
@@ -114,19 +121,25 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
         const exitProgress = Math.max(0, (rect.bottom - window.innerHeight * 0.15) / exitRange);
         const exitFade = Math.pow(exitProgress, 1.25);
         targetVol = baseVolume * 0.85 * exitFade;
-      } else if (p < 0.34) {
+      } else if (p < 0.28) {
+        // Complete silence before cathedral doors entrance
         targetVol = 0;
-      } else if (p < 0.40) {
-        // Smooth entrance fade-in
-        const inFactor = (p - 0.34) / 0.06;
-        targetVol = baseVolume * inFactor;
-      } else if (p <= 0.94) {
-        // Core full-immersion storytelling
+      } else if (p < 0.44) {
+        // Smooth cinematic swell as doors open & card emerges (0.28 -> 0.44)
+        const inFactor = (p - 0.28) / 0.16;
+        const acousticCurve = Math.sin((inFactor * Math.PI) / 2);
+        targetVol = baseVolume * acousticCurve;
+      } else if (p <= 0.82) {
+        // Core full-immersion concert storytelling
         targetVol = baseVolume;
+      } else if (p < 0.96) {
+        // Noticeable, cinematic decrescendo fade-out before Section 2 arrives (0.82 -> 0.96)
+        const outFactor = (0.96 - p) / 0.14;
+        const acousticCurve = Math.sin((outFactor * Math.PI) / 2);
+        targetVol = baseVolume * acousticCurve;
       } else {
-        // 0.94 -> 1.00: subtle pre-taper near track end
-        const taper = 1 - 0.15 * ((p - 0.94) / 0.06);
-        targetVol = baseVolume * taper;
+        // Complete silence before Section 2 (The Lineup) takes over
+        targetVol = 0;
       }
 
       if (targetVol <= 0.01) {
@@ -382,7 +395,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       }
 
       if (videoDimRef.current) {
-        videoDimRef.current.style.opacity = (welcomeOpacity * 0.55).toFixed(3);
+        videoDimRef.current.style.opacity = '0';
       }
 
       // 5. Section 1 Audio State Synchronization with Video Runway & Sec 2 Boundary
@@ -564,8 +577,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       };
     }
 
-    // Step 1b: Set recap video src from preloader cache if a blob was created
-    let unsubVideo: (() => void) | null = null;
+    // Step 1b: Set recap video properties and initiate playback
     const videoEl = photoImgRef.current;
     if (videoEl) {
       videoEl.defaultMuted = true;
@@ -573,25 +585,10 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       videoEl.playsInline = true;
       videoEl.setAttribute('playsinline', '');
       videoEl.setAttribute('webkit-playsinline', '');
-      if (!videoEl.src) {
-        videoEl.src = getCachedVideoUrl('/assets/how2026_recap.mp4') || '/assets/how2026_recap.mp4';
+      if (!videoEl.src || !videoEl.src.includes('/assets/how2026_recap.mp4')) {
+        videoEl.src = '/assets/how2026_recap.mp4';
       }
       videoEl.play().catch(() => {});
-
-      unsubVideo = subscribePreloader((s) => {
-        if (s.isComplete) {
-          const cached = getCachedVideoUrl('/assets/how2026_recap.mp4');
-          if (cached && cached.startsWith('blob:') && videoEl.src !== cached) {
-            const prevTime = videoEl.currentTime;
-            const wasPaused = videoEl.paused;
-            videoEl.src = cached;
-            videoEl.currentTime = prevTime;
-            if (!wasPaused) videoEl.play().catch(() => {});
-          }
-          unsubVideo?.();
-          unsubVideo = null;
-        }
-      });
     }
 
     // Step 2: Progressive preloading of all 122 frames
@@ -759,7 +756,6 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       isActive = false;
       clearTimeout(timer);
       if (rafId !== null) cancelAnimationFrame(rafId);
-      if (unsubVideo) unsubVideo();
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('how:audio-owner-change', handleOwnerChange);
@@ -829,7 +825,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
           <div className="storytelling-photo-frame">
             <video
               ref={photoImgRef}
-              src={getCachedVideoUrl('/assets/how2026_recap.mp4') || '/assets/how2026_recap.mp4'}
+              src="/assets/how2026_recap.mp4"
               poster="/assets/how2026_recap_poster.jpg"
               className="storytelling-photo-img"
               autoPlay
@@ -920,50 +916,6 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
                 MIZU COMMONROOM
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* 8. Section 1 Mobile Layout */}
-        <div className="storytelling-mobile-layer story-mobile-only">
-          <div ref={mobileTopRef} className="story-mobile-top-editorial" style={{ opacity: 0 }}>
-            <h2 className="story-mobile-monument-title text-gold-metallic">
-              <span className="story-mobile-title-line">THE</span>
-              <span className="story-mobile-title-line">GUESTS</span>
-            </h2>
-            <div className="story-mobile-sub-venue-block">
-              <span className="story-mobile-sub-line">SWEAR IN CONTINENTAL</span>
-              <span className="story-mobile-sub-line">MIZU COMMONROOM</span>
-            </div>
-          </div>
-
-          <div ref={mobileBottomRef} className="story-mobile-bottom-editorial" style={{ opacity: 0 }}>
-            <div className="story-mobile-horizontal-divider" />
-
-            <div className="story-mobile-schedule-grid">
-              <div className="story-mobile-schedule-col text-left">
-                <span className="schedule-date-tag">30 OCT</span>
-                <span className="schedule-artist-name">MALVIN</span>
-                <span className="schedule-time-tag">22:00</span>
-                <span className="schedule-venue-tag">MIZU</span>
-              </div>
-
-              <div className="story-mobile-schedule-col text-right">
-                <span className="schedule-date-tag">31 OCT</span>
-                <span className="schedule-artist-name">FAR</span>
-                <span className="schedule-time-tag">23:30</span>
-                <span className="schedule-venue-tag">MIZU</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 9. Climax Arrival Overlay: "WELCOME TO THE ASSEMBLY" */}
-        <div ref={welcomeOverlayRef} className="storytelling-arrival-overlay" style={{ opacity: 0 }}>
-          <div className="story-welcome-content">
-            <h2 className="story-welcome-title">
-              WELCOME TO<br />THE ASSEMBLY
-            </h2>
-            <div className="story-welcome-divider" />
           </div>
         </div>
       </div>

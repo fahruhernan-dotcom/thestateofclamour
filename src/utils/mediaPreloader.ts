@@ -74,27 +74,40 @@ export const startPreload = (): Promise<void> => {
       : ['/assets/tsoc_logo_transparent.png', '/assets/how2026_recap_poster.jpg'];
 
     const totalFrames = isMobile ? TOTAL_MOBILE_FRAMES : TOTAL_DESKTOP_FRAMES;
-    const videoWeight = isMobile ? 18 : 25; // Weight recap video in progress calculation
-    const totalUnits = totalFrames + criticalImages.length + videoWeight;
-
-    let loadedUnits = 0;
+    
+    let loadedFrames = 0;
+    let loadedImages = 0;
+    let videoRatio = 0;
+    let isVideoReady = false;
     let resolved = false;
 
-    const checkProgress = () => {
+    const computeAndNotify = () => {
       if (resolved) return;
-      loadedUnits++;
-      const currentPct = Math.min(100, Math.round((loadedUnits / totalUnits) * 100));
+
+      const framesRatio = totalFrames > 0 ? loadedFrames / totalFrames : 1;
+      const imagesRatio = criticalImages.length > 0 ? loadedImages / criticalImages.length : 1;
+
+      // Real Weighted Distribution:
+      // 50% Canvas frames + 35% Section 1 Video Buffer + 15% Core Posters
+      const calculatedPct = Math.min(100, Math.round(
+        (framesRatio * 50) +
+        (videoRatio * 35) +
+        (imagesRatio * 15)
+      ));
+
+      const isReadyToUnlock = calculatedPct >= 99 && (videoRatio >= 0.8 || isVideoReady);
+
       state = {
         ...state,
-        loadedBytes: loadedUnits,
-        totalBytes: totalUnits,
-        percent: currentPct,
-        isComplete: currentPct >= 100,
-        isUnlocked: currentPct >= 100
+        loadedBytes: loadedFrames + loadedImages,
+        totalBytes: totalFrames + criticalImages.length,
+        percent: calculatedPct,
+        isComplete: isReadyToUnlock,
+        isUnlocked: isReadyToUnlock
       };
       notify();
 
-      if (currentPct >= 100) {
+      if (isReadyToUnlock) {
         resolved = true;
         clearTimeout(safetyTimerId);
         resolve();
@@ -104,8 +117,14 @@ export const startPreload = (): Promise<void> => {
     // 1. Preload Critical Images
     criticalImages.forEach((src) => {
       const img = new Image();
-      img.onload = checkProgress;
-      img.onerror = checkProgress;
+      img.onload = () => {
+        loadedImages++;
+        computeAndNotify();
+      };
+      img.onerror = () => {
+        loadedImages++;
+        computeAndNotify();
+      };
       img.src = src;
     });
 
@@ -119,10 +138,12 @@ export const startPreload = (): Promise<void> => {
         } else {
           preloadedDesktopFrames.set(idx, img);
         }
-        checkProgress();
+        loadedFrames++;
+        computeAndNotify();
       };
       img.onerror = () => {
-        checkProgress();
+        loadedFrames++;
+        computeAndNotify();
       };
       img.src = src;
     };
@@ -132,33 +153,71 @@ export const startPreload = (): Promise<void> => {
       loadFrame(i);
     }
 
-    // 3. Preload Section 1 Recap Video (/assets/how2026_recap.mp4)
-    if (isMobile) {
-      // Mobile devices stream natively via HTML5 <video> with HTTP Range requests
-      // Avoid fetching 33MB into mobile RAM/cellular bandwidth
-      for (let w = 0; w < videoWeight; w++) {
-        checkProgress();
-      }
-    } else {
-      fetch('/assets/how2026_recap.mp4')
-        .then(async (resp) => {
-          if (resp.ok) {
-            const blob = await resp.blob();
-            cachedBlobUrls.set('/assets/how2026_recap.mp4', URL.createObjectURL(blob));
-          }
-          // Account for video weight in progress
-          for (let w = 0; w < videoWeight; w++) {
-            checkProgress();
-          }
-        })
-        .catch(() => {
-          for (let w = 0; w < videoWeight; w++) {
-            checkProgress();
-          }
-        });
+    // 3. Genuine HTML5 Video Preload & Buffer Gate for Section 1 Recap Video
+    // Instead of faking progress, instantiate an HTML5 video and listen to real buffer ranges
+    try {
+      const videoPreloadEl = document.createElement('video');
+      videoPreloadEl.preload = 'auto';
+      videoPreloadEl.muted = true;
+      videoPreloadEl.playsInline = true;
+      videoPreloadEl.setAttribute('playsinline', '');
+      videoPreloadEl.setAttribute('webkit-playsinline', '');
+
+      const checkVideoBuffer = () => {
+        if (isVideoReady) return;
+        if (videoPreloadEl.buffered.length > 0) {
+          const bufferedSeconds = videoPreloadEl.buffered.end(videoPreloadEl.buffered.length - 1);
+          const duration = videoPreloadEl.duration || 28;
+          // Target: At least 6 seconds buffered ahead (or 100% of duration) guarantees zero-lag start
+          const targetBuffer = Math.min(duration, 6);
+          const currentBufferRatio = Math.min(1, bufferedSeconds / targetBuffer);
+          videoRatio = Math.max(videoRatio, currentBufferRatio);
+          computeAndNotify();
+        }
+      };
+
+      videoPreloadEl.addEventListener('loadedmetadata', () => {
+        checkVideoBuffer();
+      });
+
+      videoPreloadEl.addEventListener('progress', () => {
+        checkVideoBuffer();
+      });
+
+      videoPreloadEl.addEventListener('loadeddata', () => {
+        videoRatio = Math.max(videoRatio, 0.45);
+        checkVideoBuffer();
+      });
+
+      videoPreloadEl.addEventListener('canplay', () => {
+        videoRatio = Math.max(videoRatio, 0.85);
+        checkVideoBuffer();
+      });
+
+      videoPreloadEl.addEventListener('canplaythrough', () => {
+        // canplaythrough: Browser heuristic certifies video can play through without buffering
+        videoRatio = 1.0;
+        isVideoReady = true;
+        computeAndNotify();
+      });
+
+      videoPreloadEl.addEventListener('error', () => {
+        // Network fallback: Don't trap user if video fails
+        videoRatio = 1.0;
+        isVideoReady = true;
+        computeAndNotify();
+      });
+
+      videoPreloadEl.src = '/assets/how2026_recap.mp4';
+      videoPreloadEl.load();
+    } catch {
+      // In non-DOM environment or if video constructor fails
+      videoRatio = 1.0;
+      isVideoReady = true;
+      computeAndNotify();
     }
 
-    // 4. Safety maximum timeout: 4s to never trap user on slow connections
+    // 4. Safety maximum failsafe timeout: 10s on severely throttled 2G networks
     const safetyTimerId = setTimeout(() => {
       if (!resolved) {
         resolved = true;
@@ -166,7 +225,7 @@ export const startPreload = (): Promise<void> => {
         notify();
         resolve();
       }
-    }, 4000);
+    }, 10000);
   });
 
   return preloadPromise;

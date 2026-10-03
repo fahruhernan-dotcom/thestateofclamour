@@ -231,3 +231,27 @@
     filter: drop-shadow(0 0 35px rgba(220, 20, 40, 0.85)) drop-shadow(0 0 55px rgba(197, 168, 105, 0.5));
   }
 }
+
+/* Graceful Connection Bypass Button */
+.preloader-bypass-btn {
+  margin-top: 1.25rem;
+  padding: 0.45rem 1.25rem;
+  background: transparent;
+  border: 1px solid rgba(197, 168, 105, 0.4);
+  color: var(--color-gold-antique, #C5A869);
+  font-family: var(--font-title, 'Cinzel', serif);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.preloader-bypass-btn:hover {
+  background: rgba(197, 168, 105, 0.12);
+  border-color: rgba(197, 168, 105, 0.85);
+  box-shadow: 0 0 16px rgba(197, 168, 105, 0.35);
+  color: #FFF2D1;
+}

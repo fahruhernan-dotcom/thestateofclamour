@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { startPreload, subscribePreloader, startBackgroundPreloadRemaining } from '../utils/mediaPreloader';
+import { startPreload, subscribePreloader, startBackgroundPreloadRemaining, unlockScrollManually } from '../utils/mediaPreloader';
 
 interface CrypticPreloaderProps {
   onComplete?: () => void;
@@ -10,6 +10,7 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
   const [isDismissed, setIsDismissed] = useState<boolean>(false);
+  const [showBypassButton, setShowBypassButton] = useState<boolean>(false);
 
   const realPercentRef = useRef<number>(0);
   const displayPercentRef = useRef<number>(0);
@@ -17,12 +18,30 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
   const minTimePassedRef = useRef<boolean>(false);
   const completedRef = useRef<boolean>(false);
 
-  // Status ritual label selector
+  // Status ritual label selector tied to genuine loading milestones
   const getRitualStatus = (val: number): string => {
-    if (val < 30) return 'NOCTURNAL COMMENCEMENT';
-    if (val < 65) return 'UNSEALING ARCHIVES';
-    if (val < 95) return 'BREAKING THE SILENCE';
+    if (val < 25) return 'INITIALIZING SANCTUARY ARCHIVES';
+    if (val < 55) return 'SYNCING NOCTURNAL FRAMES';
+    if (val < 85) return 'BUFFERING CEREMONIAL FOOTAGE';
+    if (val < 100) return 'ALIGNING AUDIO-VISUAL VEIL';
     return 'SANCTUARY UNLOCKED';
+  };
+
+  const handleManualBypass = () => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    displayPercentRef.current = 100;
+    setDisplayPercent(100);
+
+    setIsFadingOut(true);
+    document.body.style.overflow = '';
+    unlockScrollManually();
+    startBackgroundPreloadRemaining();
+    onComplete?.();
+
+    setTimeout(() => {
+      setIsDismissed(true);
+    }, 700);
   };
 
   useEffect(() => {
@@ -40,19 +59,31 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       minTimePassedRef.current = true;
     }, 750);
 
-    // 4. Maximum failsafe timeout: 4.5s
-    const safetyTimer = setTimeout(() => {
-      realPercentRef.current = 100;
-      minTimePassedRef.current = true;
-    }, 4500);
+    // 4. Graceful bypass button reveal if network is very slow (after 7s)
+    const bypassTimer = setTimeout(() => {
+      if (!completedRef.current) {
+        setShowBypassButton(true);
+      }
+    }, 7000);
 
-    // 5. Start media preloader pipeline (loads real frames & recap video)
+    // 5. Ultimate safety failsafe timeout: 12s (for emergency/offline situations)
+    const safetyTimer = setTimeout(() => {
+      if (!completedRef.current) {
+        realPercentRef.current = 100;
+        minTimePassedRef.current = true;
+      }
+    }, 12000);
+
+    // 6. Start genuine media preloader pipeline (monitors real frames & video buffer)
     startPreload();
     const unsubscribe = subscribePreloader((s) => {
       realPercentRef.current = s.percent;
+      if (s.isComplete) {
+        realPercentRef.current = 100;
+      }
     });
 
-    // 6. Smooth asymptotic interpolation loop (fluid & responsive to actual load)
+    // 7. Smooth asymptotic interpolation loop (fluid & responsive to actual load)
     const updateInterpolation = () => {
       const target = realPercentRef.current;
       const current = displayPercentRef.current;
@@ -60,13 +91,13 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       const effectiveTarget = !minTimePassedRef.current && target > 85 ? 85 : target;
 
       if (current < effectiveTarget) {
-        const step = Math.max(0.9, (effectiveTarget - current) * 0.16);
+        const step = Math.max(0.7, (effectiveTarget - current) * 0.14);
         const next = Math.min(effectiveTarget, current + step);
         displayPercentRef.current = next;
         setDisplayPercent(Math.floor(next));
       }
 
-      // Trigger smooth fade-out dissolve when complete
+      // Trigger smooth fade-out dissolve when real progress reaches completion
       if (displayPercentRef.current >= 99.2 && minTimePassedRef.current && !completedRef.current) {
         completedRef.current = true;
         displayPercentRef.current = 100;
@@ -97,6 +128,7 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       document.body.style.overflow = originalOverflow;
       clearTimeout(enterTimer);
       clearTimeout(minTimer);
+      clearTimeout(bypassTimer);
       clearTimeout(safetyTimer);
       unsubscribe();
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
@@ -154,8 +186,20 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
           <span className="preloader-status-text">
             {getRitualStatus(displayPercent)}
           </span>
+
+          {/* Graceful Slow Connection Bypass */}
+          {showBypassButton && !completedRef.current && (
+            <button
+              type="button"
+              onClick={handleManualBypass}
+              className="preloader-bypass-btn"
+            >
+              ENTER SANCTUARY &rarr;
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 };
+

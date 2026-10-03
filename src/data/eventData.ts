@@ -23,54 +23,33 @@ export const initialAnnouncement: Announcement = {
   badgeText: 'DISPATCH'
 };
 
+// Official checkout destination for every ticket tier
+export const TICKET_URL = 'https://artatix.co.id/event/swear_in_continental';
+
 export const initialTickets: TicketTier[] = [
   {
-    id: 'tkt-blind',
+    id: 'tkt-blind-day1',
     eventId: 'evt-clamour-2026',
-    name: 'Blind Ticket',
-    category: '1 Night Pass',
-    price: 75000,
-    perks: ['Single night admission', 'General assembly access'],
-    status: 'sold_out',
-    ticketUrl: 'https://artatix.co.id',
-    badgeLabel: null,
+    name: 'BLIND TICKET DAY 1',
+    category: '1 Night Pass · 30 Oct',
+    price: 50000,
+    perks: ['Admission Day 1 · 30 October', 'General assembly access'],
+    status: 'active',
+    ticketUrl: TICKET_URL,
+    badgeLabel: 'Blind Ticket',
     sortOrder: 1
   },
   {
-    id: 'tkt-early',
+    id: 'tkt-blind-day2',
     eventId: 'evt-clamour-2026',
-    name: 'Early Bird',
-    category: '2 Nights Pass',
-    price: 99000,
-    perks: ['Full 2-night admission', 'Priority entry before 22:00'],
-    status: 'sold_out',
-    ticketUrl: 'https://artatix.co.id',
-    badgeLabel: null,
+    name: 'BLIND TICKET DAY 2',
+    category: '1 Night Pass · 31 Oct',
+    price: 50000,
+    perks: ['Admission Day 2 · 31 October', 'General assembly access'],
+    status: 'active',
+    ticketUrl: TICKET_URL,
+    badgeLabel: 'Blind Ticket',
     sortOrder: 2
-  },
-  {
-    id: 'tkt-presale1',
-    eventId: 'evt-clamour-2026',
-    name: 'Presale 01',
-    category: '2 Nights Pass',
-    price: 129000,
-    perks: ['Full 2-night admission', 'General access to all stages'],
-    status: 'active',
-    ticketUrl: 'https://artatix.co.id',
-    badgeLabel: 'Active Tier',
-    sortOrder: 3
-  },
-  {
-    id: 'tkt-vip',
-    eventId: 'evt-clamour-2026',
-    name: 'VIP Assembly Table',
-    category: 'VIP Experience',
-    price: 2500000,
-    perks: ['Admission for 6 guests', 'Dedicated table reservation', 'Elevated sound mezzanine view'],
-    status: 'active',
-    ticketUrl: 'https://artatix.co.id',
-    badgeLabel: 'Limited Tables',
-    sortOrder: 4
   }
 ];
 

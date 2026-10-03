@@ -104,8 +104,8 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
             const isSoldOut = ticket.status === 'sold_out';
             const isActive = ticket.status === 'active';
             const isHighlighted = highlightedTicketId === ticket.id;
-            const isProtagonist = ticket.id === 'tkt-presale1';
-            const isVip = ticket.id === 'tkt-vip';
+            const isProtagonist = false;
+            const isVip = false;
 
             return (
               <article
@@ -142,10 +142,10 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
                     <p className={`admission-category-tag ${isProtagonist ? 'is-protagonist-cat' : ''} ${isVip ? 'is-vip-cat' : ''}`}>
                       {ticket.category}
                     </p>
-                    {isProtagonist && (
-                      <span className="live-allocation-pulse-badge" title="Real-time ticket chamber allocation">
+                    {!isSoldOut && (ticket.quota != null || ticket.badgeLabel) && (
+                      <span className="live-allocation-pulse-badge" title="Ticket allocation">
                         <span className="allocation-pulse-dot" />
-                        <span>84% ALLOCATED</span>
+                        <span>{ticket.quota != null ? `LIMITED · ${ticket.quota} SLOTS` : ticket.badgeLabel?.toUpperCase()}</span>
                       </span>
                     )}
                     {isVip && (

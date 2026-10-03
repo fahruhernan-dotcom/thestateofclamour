@@ -100,6 +100,11 @@ export const App: React.FC = () => {
     if (initial.tab) setDossierInitialTab(initial.tab);
     setCurrentView(initial.view);
 
+    // Ensure fresh page load starts at the very top (Hero arrival) unless deep-linked by hash
+    if (!window.location.hash || window.location.hash === '#' || window.location.hash === '') {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
   }, [currentView, restoreHomeScroll]);

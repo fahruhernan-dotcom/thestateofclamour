@@ -27,6 +27,7 @@ export interface TicketTier {
   status: TicketStatus;
   ticketUrl: string;
   badgeLabel?: string | null;
+  quota?: number | null;
   sortOrder: number;
 }
 

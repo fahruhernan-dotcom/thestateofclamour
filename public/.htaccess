@@ -1,0 +1,102 @@
+# ----------------------------------------------------------------------
+# THE STATE OF CLAMOUR — Apache / LiteSpeed Production Configuration
+# Optimized for cPanel / Cloud Hosting
+# ----------------------------------------------------------------------
+
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # 2. Direct access for existing physical files (CSS, JS, WebP, MP4, MP3, SVG, etc.)
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # 3. Direct access for existing physical directories
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 4. Fallback to index.html for Single Page Application routing
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Proper MIME Types & Media Support
+# ----------------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType application/xml .xml
+  AddType image/svg+xml .svg
+  AddType image/webp .webp
+  AddType image/x-icon .ico
+  AddType application/manifest+json .webmanifest
+  AddType text/plain .txt
+  AddType audio/mpeg .mp3
+  AddType audio/wav .wav
+  AddType audio/ogg .ogg
+  AddType video/mp4 .mp4
+  AddType video/webm .webm
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+</IfModule>
+
+# ----------------------------------------------------------------------
+# GZIP / Deflate Compression
+# ----------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml application/rss+xml image/svg+xml
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Browser Caching Headers
+# ----------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+  
+  # HTML pages & Webmanifest
+  ExpiresByType text/html "access plus 1 hour"
+  ExpiresByType application/manifest+json "access plus 1 day"
+  
+  # CSS & JavaScript (Vite hashes filenames)
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  
+  # Media, Frames & Audio
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType audio/mpeg "access plus 1 year"
+  ExpiresByType audio/wav "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 year"
+  ExpiresByType video/webm "access plus 1 year"
+  
+  # Fonts
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Security & CORS Headers
+# ----------------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Video & Audio Streaming: Guarantee Byte-Range Support (HTTP 206 Partial Content)
+  <FilesMatch "\.(mp4|webm|mp3|wav|ogg)$">
+    Header set Accept-Ranges bytes
+  </FilesMatch>
+
+  # Allow crawler & bot access to icons and manifest
+  <FilesMatch "\.(ico|png|svg|webmanifest|xml|txt)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+</IfModule>
