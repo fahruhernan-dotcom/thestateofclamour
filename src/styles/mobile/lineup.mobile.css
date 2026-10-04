@@ -305,3 +305,46 @@
   width: 22px;
   background: var(--color-gold-antique, #C5A869);
 }
+
+/* ========================================================================== */
+/* TEASER FLYER CARD (static poster + audio-only track)                       */
+/* ========================================================================== */
+
+/* Audio-only media: kept in DOM for play/unmute + crossfade, visually hidden
+   (not display:none, so iOS Safari keeps playing audio). */
+.lineup-mobile-audio-only-media {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Poster is 3:4 — match the frame so the full flyer stays visible */
+.lineup-mobile-card.is-flyer-card .lineup-mobile-portrait-frame {
+  aspect-ratio: 3 / 4;
+}
+
+.lineup-mobile-card.is-flyer-card .lineup-mobile-scrim {
+  display: none;
+}
+
+/* Info pane sits BELOW the poster instead of overlaying its typography */
+.lineup-mobile-card.is-flyer-card .lineup-mobile-info-pane {
+  position: relative;
+  padding: 1.1rem 1.25rem 1.25rem;
+  background: linear-gradient(180deg, rgba(10, 6, 8, 0.96) 0%, rgba(6, 7, 9, 1) 100%);
+  border-top: 1px solid var(--color-gold-hairline, rgba(197, 168, 105, 0.22));
+}
+
+.lineup-mobile-card.is-flyer-card .lineup-mobile-artist-name {
+  font-size: 1.4rem;
+}
+
+/* Single-card guestlist (teaser mode): center the card, no swipe affordance */
+.lineup-mobile-carousel.is-single-guest {
+  -webkit-justify-content: center;
+  justify-content: center;
+  overflow-x: hidden;
+}

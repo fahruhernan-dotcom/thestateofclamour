@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import { silenceSec1, silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio } from '../utils/audioCoordinator';
+import { IS_LINEUP_TEASER_MODE } from '../data/eventData';
 
 interface Props {
   onExploreGuests?: () => void;
@@ -436,7 +437,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
             {/* Top-Right Cluster: Performer 01 (Malvin) */}
             <div ref={clusterTopRightRef} className="story-cluster-top-right">
               <div style={{ fontFamily: 'var(--font-monumental)', fontSize: '2rem', fontWeight: 700, letterSpacing: '0.14em', color: 'var(--color-gold-antique)', lineHeight: 1 }}>
-                MALVIN
+                {IS_LINEUP_TEASER_MODE ? '?' : 'MALVIN'}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
                 <span>30 OKTOBER</span>
@@ -470,7 +471,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
             {/* Bottom-Right Cluster: Performer 02 (Far) */}
             <div ref={clusterBottomRightRef} className="story-cluster-bottom-right">
               <div style={{ fontFamily: 'var(--font-monumental)', fontSize: '1.75rem', fontWeight: 600, letterSpacing: '0.14em', color: 'var(--color-gold-antique)', lineHeight: 1 }}>
-                FAR
+                {IS_LINEUP_TEASER_MODE ? '?' : 'FAR'}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
                 <span>31 OKTOBER</span>
@@ -515,18 +516,18 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
             <div className="story-mobile-horizontal-divider" />
 
             <div className="story-mobile-schedule-grid">
-              {/* Day 1: Malvin */}
+              {/* Day 1: Malvin / ? */}
               <div className="story-mobile-schedule-col text-left">
                 <span className="schedule-date-tag">30 OCT</span>
-                <span className="schedule-artist-name">MALVIN</span>
+                <span className="schedule-artist-name">{IS_LINEUP_TEASER_MODE ? '?' : 'MALVIN'}</span>
                 <span className="schedule-time-tag">22:00</span>
                 <span className="schedule-venue-tag">MIZU</span>
               </div>
 
-              {/* Day 2: Far */}
+              {/* Day 2: Far / ? */}
               <div className="story-mobile-schedule-col text-right">
                 <span className="schedule-date-tag">31 OCT</span>
-                <span className="schedule-artist-name">FAR</span>
+                <span className="schedule-artist-name">{IS_LINEUP_TEASER_MODE ? '?' : 'FAR'}</span>
                 <span className="schedule-time-tag">23:30</span>
                 <span className="schedule-venue-tag">MIZU</span>
               </div>

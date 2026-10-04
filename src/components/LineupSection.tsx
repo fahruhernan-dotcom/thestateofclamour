@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Artist } from '../types';
+import { IS_LINEUP_TEASER_MODE } from '../data/eventData';
 import { silenceSec1, setAudioOwner, getAudioOwner, canSec2PlayAudio, isSec1AudioActive } from '../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../utils/mediaPreloader';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -44,6 +45,10 @@ const GuestCard: React.FC<GuestCardProps> = ({
 }) => {
   const cardRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Flyer card: static poster visual + audio-only source (e.g. Gothic poster with Far's track)
+  const isFlyerCard = !artist.videoUrl && !!artist.audioPreviewUrl;
+  const mediaSrc = artist.videoUrl || artist.audioPreviewUrl || null;
 
   const hasFinePointer = () => {
     if (typeof window === 'undefined') return false;
@@ -138,7 +143,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
   return (
     <article
       ref={cardRef}
-      className={`guest-card-container is-video-active ${isClone ? 'is-clone' : ''} ${isAudioPlaying ? 'is-playing-audio' : ''}`}
+      className={`guest-card-container is-video-active ${isFlyerCard ? 'is-flyer-card' : ''} ${isClone ? 'is-clone' : ''} ${isAudioPlaying ? 'is-playing-audio' : ''}`}
       onMouseMove={handleCardMouseMove}
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
@@ -147,12 +152,21 @@ const GuestCard: React.FC<GuestCardProps> = ({
       aria-label={`${artist.name} - ${artist.stageName}`}
     >
       <div className="guest-portrait-frame">
-        {artist.videoUrl ? (
+        {isFlyerCard && (
+          <img
+            src={artist.imageUrl}
+            alt={`${artist.name} — official flyer`}
+            className="guest-portrait-img"
+            loading="lazy"
+          />
+        )}
+        {mediaSrc ? (
           <video
             ref={videoRef}
-            src={getCachedVideoUrl(artist.videoUrl) || artist.videoUrl}
-            poster={artist.posterUrl || artist.imageUrl}
-            className="guest-portrait-video"
+            src={getCachedVideoUrl(mediaSrc) || mediaSrc}
+            poster={isFlyerCard ? undefined : (artist.posterUrl || artist.imageUrl)}
+            className={isFlyerCard ? 'guest-audio-only-media' : 'guest-portrait-video'}
+            aria-hidden={isFlyerCard ? true : undefined}
             autoPlay
             muted
             loop
@@ -206,31 +220,33 @@ const GuestCard: React.FC<GuestCardProps> = ({
           STAGE // {artist.stageName}
         </p>
 
-        {/* Dedicated Action Button to Detail Event Modal */}
-        <div
-          className="guest-inspect-link"
-          role="button"
-          tabIndex={0}
-          aria-label={`Lihat detail event untuk ${artist.name}`}
-          title="Buka detail event acara"
-          onPointerDown={(e) => {
-            e.stopPropagation();
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpenModal(artist);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
+        {/* Dedicated Action Button to Detail Event Modal (hidden during teaser mode) */}
+        {!IS_LINEUP_TEASER_MODE && (
+          <div
+            className="guest-inspect-link"
+            role="button"
+            tabIndex={0}
+            aria-label={`Lihat detail event untuk ${artist.name}`}
+            title="Buka detail event acara"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+            }}
+            onClick={(e) => {
               e.stopPropagation();
               onOpenModal(artist);
-            }
-          }}
-        >
-          <span>LIHAT DETAIL EVENT</span>
-          <ArrowRight size={13} />
-        </div>
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                onOpenModal(artist);
+              }
+            }}
+          >
+            <span>LIHAT DETAIL EVENT</span>
+            <ArrowRight size={13} />
+          </div>
+        )}
       </div>
     </article>
   );
@@ -424,6 +440,7 @@ const LineupSectionDesktop: React.FC<Props> = ({
   }, [artists, isMobile]);
 
   const handleOpenModal = (artist: Artist) => {
+    if (IS_LINEUP_TEASER_MODE) return;
     stopArtistAudio();
     setIsSectionVisible(false); // silence audio when modal is opened
     const isDay1 =
@@ -697,7 +714,7 @@ const LineupSectionDesktop: React.FC<Props> = ({
         onPointerUp={finishDrag}
         onPointerCancel={finishDrag}
         onClickCapture={handleClickCapture}
-        className="guests-editorial-grid"
+        className={`guests-editorial-grid ${artists.length === 1 ? 'is-single-guest' : ''}`}
         style={{ marginTop: '2.5rem' }}
       >
         {carouselItems.map((item, index) => {

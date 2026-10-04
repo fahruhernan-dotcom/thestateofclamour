@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { EventData } from '../../types';
 import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio, fadeVideoVolume, cancelVideoFade } from '../../utils/audioCoordinator';
 import { getMobileFrame } from '../../utils/mediaPreloader';
+import { IS_LINEUP_TEASER_MODE } from '../../data/eventData';
 
 interface Props {
   event: EventData;
@@ -686,9 +687,9 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
     };
   }, []);
 
-  const venueLabel = event.venueCity && event.venueCity !== 'CENTRAL MONUMENT'
+  const venueLabel = event.venueCity && event.venueName
     ? `${event.venueCity} · ${event.venueName}`
-    : 'BANDUNG · SECRET MONUMENT';
+    : 'SURAKARTA · MIZU COMMONROOM';
 
   return (
     <section
@@ -788,14 +789,14 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
 
               <div className="hero-mobile-schedule-item">
                 <span className="hero-mobile-sched-date">30 OKTOBER</span>
-                <span className="hero-mobile-sched-artist">MALVIN</span>
+                <span className="hero-mobile-sched-artist">{IS_LINEUP_TEASER_MODE ? '?' : 'MALVIN'}</span>
                 <span className="hero-mobile-sched-meta">22:00 WIB</span>
                 <span className="hero-mobile-sched-venue">MIZU COMMONROOM</span>
               </div>
 
               <div className="hero-mobile-schedule-item align-right">
                 <span className="hero-mobile-sched-date">31 OKTOBER</span>
-                <span className="hero-mobile-sched-artist">FAR</span>
+                <span className="hero-mobile-sched-artist">{IS_LINEUP_TEASER_MODE ? '?' : 'FAR'}</span>
                 <span className="hero-mobile-sched-meta">23:30 WIB</span>
                 <span className="hero-mobile-sched-venue">MIZU COMMONROOM</span>
               </div>

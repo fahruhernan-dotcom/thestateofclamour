@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { EventData } from '../types';
 import { silenceSec2, setAudioOwner, getAudioOwner, canSec1PlayAudio, fadeVideoVolume, cancelVideoFade } from '../utils/audioCoordinator';
 import { getDesktopFrame } from '../utils/mediaPreloader';
+import { IS_LINEUP_TEASER_MODE } from '../data/eventData';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { HeroSectionMobile } from './mobile/HeroSectionMobile';
 
@@ -767,10 +768,9 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
     };
   }, []);
 
-  const venueLabel = event.venueCity && event.venueCity !== 'CENTRAL MONUMENT'
-
+  const venueLabel = event.venueCity && event.venueName
     ? `${event.venueCity} · ${event.venueName}`
-    : 'BANDUNG · SECRET MONUMENT';
+    : 'SURAKARTA · MIZU COMMONROOM';
 
   return (
     <section
@@ -868,10 +868,10 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
               </div>
             </div>
 
-            {/* Top-Right Cluster: MALVIN */}
+            {/* Top-Right Cluster: MALVIN / ? */}
             <div ref={clusterTopRightRef} className="story-cluster-top-right" style={{ opacity: 0 }}>
               <div style={{ fontFamily: 'var(--font-monumental)', fontSize: '2rem', fontWeight: 700, letterSpacing: '0.14em', color: 'var(--color-gold-antique)', lineHeight: 1 }}>
-                MALVIN
+                {IS_LINEUP_TEASER_MODE ? '?' : 'MALVIN'}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
                 <span>30 OKTOBER</span>
@@ -902,10 +902,10 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
               </span>
             </div>
 
-            {/* Bottom-Right Cluster: FAR */}
+            {/* Bottom-Right Cluster: FAR / ? */}
             <div ref={clusterBottomRightRef} className="story-cluster-bottom-right" style={{ opacity: 0 }}>
               <div style={{ fontFamily: 'var(--font-monumental)', fontSize: '1.75rem', fontWeight: 600, letterSpacing: '0.14em', color: 'var(--color-gold-antique)', lineHeight: 1 }}>
-                FAR
+                {IS_LINEUP_TEASER_MODE ? '?' : 'FAR'}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
                 <span>31 OKTOBER</span>

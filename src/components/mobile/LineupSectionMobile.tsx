@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Artist } from '../../types';
+import { IS_LINEUP_TEASER_MODE } from '../../data/eventData';
 import {
   silenceSec1,
   setAudioOwner,
@@ -88,6 +89,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
   }, []);
 
   const handleOpenArtistDetail = useCallback((artist: Artist) => {
+    if (IS_LINEUP_TEASER_MODE) return;
     stopArtistAudio();
     const isDay1 =
       artist.id === 'art-malvin' ||
@@ -263,16 +265,19 @@ export const LineupSectionMobile: React.FC<Props> = ({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
-        className="lineup-mobile-carousel"
+        className={`lineup-mobile-carousel ${artists.length === 1 ? 'is-single-guest' : ''}`}
       >
         {artists.map((artist, idx) => {
           const isAudioPlaying = activeAudioArtistId === artist.id;
           const isFlashing = !!activeFlashes[artist.id];
+          // Flyer card: static poster visual + audio-only source (e.g. Gothic poster with Far's track)
+          const isFlyerCard = !artist.videoUrl && !!artist.audioPreviewUrl;
+          const mediaSrc = artist.videoUrl || artist.audioPreviewUrl || null;
 
           return (
             <article
               key={artist.id}
-              className={`lineup-mobile-card ${isAudioPlaying ? 'is-playing-audio' : ''}`}
+              className={`lineup-mobile-card ${isFlyerCard ? 'is-flyer-card' : ''} ${isAudioPlaying ? 'is-playing-audio' : ''}`}
               onPointerUp={() => handleCardPointerUp(artist, idx)}
               onPointerCancel={handlePointerCancel}
               onKeyDown={(e) => {
@@ -294,12 +299,21 @@ export const LineupSectionMobile: React.FC<Props> = ({
             >
               {/* Portrait Media Frame */}
               <div className="lineup-mobile-portrait-frame">
-                {artist.videoUrl ? (
+                {isFlyerCard && (
+                  <img
+                    src={artist.imageUrl}
+                    alt={`${artist.name} — official flyer`}
+                    className="lineup-mobile-media-img"
+                    loading="lazy"
+                  />
+                )}
+                {mediaSrc ? (
                   <video
                     ref={el => { videoRefs.current[artist.id] = el; }}
-                    src={getCachedVideoUrl(artist.videoUrl) || artist.videoUrl}
-                    poster={artist.posterUrl || artist.imageUrl}
-                    className="lineup-mobile-media-video"
+                    src={getCachedVideoUrl(mediaSrc) || mediaSrc}
+                    poster={isFlyerCard ? undefined : (artist.posterUrl || artist.imageUrl)}
+                    className={isFlyerCard ? 'lineup-mobile-audio-only-media' : 'lineup-mobile-media-video'}
+                    aria-hidden={isFlyerCard ? true : undefined}
                     autoPlay
                     muted
                     loop
@@ -351,42 +365,46 @@ export const LineupSectionMobile: React.FC<Props> = ({
                   STAGE // {artist.stageName}
                 </span>
 
-                <div
-                  className="lineup-mobile-inspect-link"
-                  onPointerDown={(e) => {
-                    e.stopPropagation();
-                  }}
-                  onPointerUp={(e) => {
-                    e.stopPropagation();
-                    handleOpenArtistDetail(artist);
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleOpenArtistDetail(artist);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Lihat detail event untuk ${artist.name}`}
-                  title="Buka detail event acara"
-                >
-                  <span>LIHAT DETAIL EVENT</span>
-                  <ArrowRight size={13} />
-                </div>
+                {!IS_LINEUP_TEASER_MODE && (
+                  <div
+                    className="lineup-mobile-inspect-link"
+                    onPointerDown={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onPointerUp={(e) => {
+                      e.stopPropagation();
+                      handleOpenArtistDetail(artist);
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenArtistDetail(artist);
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Lihat detail event untuk ${artist.name}`}
+                    title="Buka detail event acara"
+                  >
+                    <span>LIHAT DETAIL EVENT</span>
+                    <ArrowRight size={13} />
+                  </div>
+                )}
               </div>
             </article>
           );
         })}
       </div>
 
-      {/* Dots Indicator */}
-      <div className="lineup-mobile-dots" aria-hidden="true">
-        {artists.map((artist, idx) => (
-          <div
-            key={artist.id}
-            className={`lineup-mobile-dot-item ${activeCardIndex === idx ? 'is-active' : ''}`}
-          />
-        ))}
-      </div>
+      {/* Dots Indicator (hidden when only a single card is shown, e.g. teaser flyer) */}
+      {artists.length > 1 && (
+        <div className="lineup-mobile-dots" aria-hidden="true">
+          {artists.map((artist, idx) => (
+            <div
+              key={artist.id}
+              className={`lineup-mobile-dot-item ${activeCardIndex === idx ? 'is-active' : ''}`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };

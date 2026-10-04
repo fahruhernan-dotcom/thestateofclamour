@@ -4,7 +4,7 @@ import { NightOneEventPage } from './pages/NightOneEventPage';
 import { NightTwoEventPage } from './pages/NightTwoEventPage';
 import { EventDetailsPage } from './pages/EventDetailsPage';
 import { Footer } from './components/Footer';
-import { initialEvent, initialTickets, initialArtists } from './data/eventData';
+import { initialEvent, initialTickets, initialArtists, archivedIndividualArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
 import { Artist, EventData, TicketTier } from './types';
 import { Check } from 'lucide-react';
 import { CrypticPreloader } from './components/CrypticPreloader';
@@ -53,6 +53,9 @@ export const App: React.FC = () => {
 
   // Parse view from hash
   const parseViewFromHash = (hash: string): { view: ViewMode; tab?: 'protocols' | 'architecture' | 'timetable' | 'guide' } => {
+    if (IS_LINEUP_TEASER_MODE) {
+      return { view: 'home' };
+    }
     if (hash === '#/event/night-1' || hash === '#event-night-1' || hash === '#night-1') {
       return { view: 'event-night-1' };
     }
@@ -176,10 +179,12 @@ export const App: React.FC = () => {
 
 
   const handleOpenNight1 = () => {
+    if (IS_LINEUP_TEASER_MODE) return;
     navigateTo('event-night-1', '#/event/night-1');
   };
 
   const handleOpenNight2 = () => {
+    if (IS_LINEUP_TEASER_MODE) return;
     navigateTo('event-night-2', '#/event/night-2');
   };
 
@@ -242,7 +247,7 @@ export const App: React.FC = () => {
 
         {currentView === 'event-night-1' && (
           <NightOneEventPage
-            artists={artists}
+            artists={archivedIndividualArtists}
             tickets={tickets}
             onBack={handleBackToHome}
             onCheckout={handleCheckout}
@@ -252,7 +257,7 @@ export const App: React.FC = () => {
 
         {currentView === 'event-night-2' && (
           <NightTwoEventPage
-            artists={artists}
+            artists={archivedIndividualArtists}
             tickets={tickets}
             onBack={handleBackToHome}
             onCheckout={handleCheckout}

@@ -8,8 +8,8 @@ export const initialEvent: EventData = {
   description: 'Two nights of nocturnal sound and monumental assembly.',
   startDate: '2026-10-30T21:00:00+07:00',
   endDate: '2026-10-31T04:00:00+07:00',
-  venueName: 'SECRET MONUMENT',
-  venueCity: 'CENTRAL MONUMENT',
+  venueName: 'MIZU COMMONROOM',
+  venueCity: 'SURAKARTA',
   heroVideoUrl: '/assets/hero_monument.mp4',
   heroPosterUrl: '/assets/hero_monument.jpg',
   isActive: true
@@ -53,7 +53,17 @@ export const initialTickets: TicketTier[] = [
   }
 ];
 
-export const initialArtists: Artist[] = [
+// ---------------------------------------------------------------------------
+// LINEUP TEASER MODE
+// true  -> guestlist shows ONE flyer card (Gothic poster) playing Far's audio.
+// false -> guestlist shows the individual guest cards (Malvin & Far) again.
+// When the official per-guest flyers are ready, update imageUrl/posterUrl
+// below and flip this flag to false. No component logic needs to change.
+// ---------------------------------------------------------------------------
+export const IS_LINEUP_TEASER_MODE = true;
+
+// Individual guests (hidden while teaser mode is on — data & logic kept intact)
+export const archivedIndividualArtists: Artist[] = [
   {
     id: 'art-malvin',
     eventId: 'evt-clamour-2026',
@@ -81,3 +91,22 @@ export const initialArtists: Artist[] = [
     sortOrder: 2
   }
 ];
+
+// Flyer card: static poster visual (videoUrl null) + Far's track as audio-only source
+export const teaserFlyerArtist: Artist = {
+  id: 'art-teaser-flyer',
+  eventId: 'evt-clamour-2026',
+  name: 'Swear In Continental',
+  dayLabel: '30 — 31 Oktober',
+  stageName: 'Mizu Commonroom',
+  performanceTime: '21:00 WIB',
+  imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+  videoUrl: null,
+  posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+  audioPreviewUrl: '/assets/guest_far.mp4',
+  sortOrder: 1
+};
+
+export const initialArtists: Artist[] = IS_LINEUP_TEASER_MODE
+  ? [teaserFlyerArtist]
+  : archivedIndividualArtists;

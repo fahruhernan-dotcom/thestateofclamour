@@ -410,3 +410,49 @@
     50% { transform: translateX(4px); }
   }
 }
+
+/* ========================================================================== */
+/* TEASER FLYER CARD (static poster + audio-only track)                       */
+/* ========================================================================== */
+
+/* Audio-only media element: stays in the DOM so play/unmute logic works,
+   but is visually hidden (not display:none, to keep iOS/Safari playback). */
+.guest-audio-only-media {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Poster is 3:4 — match the frame so the full flyer stays visible */
+.guest-card-container.is-flyer-card .guest-portrait-frame {
+  aspect-ratio: 3 / 4;
+  max-height: none;
+}
+
+/* Keep flyer artwork clean: no dark scrim over the poster */
+.guest-card-container.is-flyer-card .guest-portrait-scrim {
+  display: none;
+}
+
+/* Info pane sits BELOW the poster instead of overlaying its typography */
+.guest-card-container.is-flyer-card .guest-card-info-pane {
+  position: relative;
+  padding: 1.25rem 1.5rem 1.5rem;
+  background: linear-gradient(180deg, rgba(10, 6, 8, 0.96) 0%, rgba(6, 7, 9, 1) 100%);
+  border-top: 1px solid var(--color-gold-hairline);
+}
+
+.guest-card-container.is-flyer-card .guest-artist-name {
+  font-size: 1.6rem;
+}
+
+/* Single-card guestlist (teaser mode): center the card monumentally */
+@media (min-width: 769px) {
+  .guests-editorial-grid.is-single-guest {
+    grid-template-columns: minmax(0, 440px);
+    justify-content: center;
+  }
+}
