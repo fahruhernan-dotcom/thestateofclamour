@@ -86,7 +86,7 @@ export const StageRundown: React.FC<Props> = ({
 
             {/* Clean Typographic Metadata Strip (Zero Pill Box Clutter) */}
             <div className="event-roster-meta-strip">
-              <span className="event-meta-unit">PINTU 21:00 WIB</span>
+              <span className="event-meta-unit">PINTU 20:00 WIB</span>
               <span className="event-meta-dot">·</span>
               <span className="event-meta-unit">SHOW 22:30 WIB</span>
               <span className="event-meta-dot">·</span>
@@ -146,7 +146,7 @@ export const StageRundown: React.FC<Props> = ({
 
             {/* Clean Typographic Metadata Strip (Zero Pill Box Clutter) */}
             <div className="event-roster-meta-strip">
-              <span className="event-meta-unit">PINTU 21:00 WIB</span>
+              <span className="event-meta-unit">PINTU 20:00 WIB</span>
               <span className="event-meta-dot">·</span>
               <span className="event-meta-unit">SHOW 00:00 WIB</span>
               <span className="event-meta-dot">·</span>

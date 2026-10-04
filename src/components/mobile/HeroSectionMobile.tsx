@@ -687,9 +687,9 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
     };
   }, []);
 
-  const venueLabel = event.venueCity && event.venueName
+  const venueLabel = event.venueCity
     ? `${event.venueCity} · ${event.venueName}`
-    : 'SURAKARTA · MIZU COMMONROOM';
+    : (event.venueName || 'MIZU COMMONROOM');
 
   return (
     <section
@@ -790,14 +790,14 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
               <div className="hero-mobile-schedule-item">
                 <span className="hero-mobile-sched-date">30 OKTOBER</span>
                 <span className="hero-mobile-sched-artist">{IS_LINEUP_TEASER_MODE ? '?' : 'MALVIN'}</span>
-                <span className="hero-mobile-sched-meta">22:00 WIB</span>
+                <span className="hero-mobile-sched-meta">20:00 WIB</span>
                 <span className="hero-mobile-sched-venue">MIZU COMMONROOM</span>
               </div>
 
               <div className="hero-mobile-schedule-item align-right">
                 <span className="hero-mobile-sched-date">31 OKTOBER</span>
                 <span className="hero-mobile-sched-artist">{IS_LINEUP_TEASER_MODE ? '?' : 'FAR'}</span>
-                <span className="hero-mobile-sched-meta">23:30 WIB</span>
+                <span className="hero-mobile-sched-meta">20:00 WIB</span>
                 <span className="hero-mobile-sched-venue">MIZU COMMONROOM</span>
               </div>
             </div>

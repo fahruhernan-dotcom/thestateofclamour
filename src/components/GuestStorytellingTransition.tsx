@@ -442,7 +442,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
                 <span>30 OKTOBER</span>
                 <span style={{ color: 'var(--color-oxblood)' }}>·</span>
-                <span style={{ color: 'var(--color-gold-antique)' }}>22:00 WIB</span>
+                <span style={{ color: 'var(--color-gold-antique)' }}>20:00 WIB</span>
               </div>
               <div style={{ marginTop: '0.35rem', fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.24em', color: 'var(--color-crimson)', textTransform: 'uppercase', fontWeight: 600 }}>
                 MIZU COMMONROOM
@@ -476,7 +476,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
                 <span>31 OKTOBER</span>
                 <span style={{ color: 'var(--color-oxblood)' }}>·</span>
-                <span style={{ color: 'var(--color-gold-antique)' }}>23:30 WIB</span>
+                <span style={{ color: 'var(--color-gold-antique)' }}>20:00 WIB</span>
               </div>
               <div style={{ marginTop: '0.35rem', fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.24em', color: 'var(--color-crimson)', textTransform: 'uppercase', fontWeight: 600 }}>
                 MIZU COMMONROOM
@@ -520,7 +520,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
               <div className="story-mobile-schedule-col text-left">
                 <span className="schedule-date-tag">30 OCT</span>
                 <span className="schedule-artist-name">{IS_LINEUP_TEASER_MODE ? '?' : 'MALVIN'}</span>
-                <span className="schedule-time-tag">22:00</span>
+                <span className="schedule-time-tag">20:00</span>
                 <span className="schedule-venue-tag">MIZU</span>
               </div>
 
@@ -528,7 +528,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
               <div className="story-mobile-schedule-col text-right">
                 <span className="schedule-date-tag">31 OCT</span>
                 <span className="schedule-artist-name">{IS_LINEUP_TEASER_MODE ? '?' : 'FAR'}</span>
-                <span className="schedule-time-tag">23:30</span>
+                <span className="schedule-time-tag">20:00</span>
                 <span className="schedule-venue-tag">MIZU</span>
               </div>
             </div>

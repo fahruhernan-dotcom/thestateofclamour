@@ -768,9 +768,9 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
     };
   }, []);
 
-  const venueLabel = event.venueCity && event.venueName
+  const venueLabel = event.venueCity
     ? `${event.venueCity} · ${event.venueName}`
-    : 'SURAKARTA · MIZU COMMONROOM';
+    : (event.venueName || 'MIZU COMMONROOM');
 
   return (
     <section
@@ -876,7 +876,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
                 <span>30 OKTOBER</span>
                 <span style={{ color: 'var(--color-oxblood)' }}>·</span>
-                <span style={{ color: 'var(--color-gold-antique)' }}>22:00 WIB</span>
+                <span style={{ color: 'var(--color-gold-antique)' }}>20:00 WIB</span>
               </div>
               <div style={{ marginTop: '0.35rem', fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.24em', color: 'var(--color-crimson)', textTransform: 'uppercase', fontWeight: 600 }}>
                 MIZU COMMONROOM
@@ -910,7 +910,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.45rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-ivory)' }}>
                 <span>31 OKTOBER</span>
                 <span style={{ color: 'var(--color-oxblood)' }}>·</span>
-                <span style={{ color: 'var(--color-gold-antique)' }}>23:30 WIB</span>
+                <span style={{ color: 'var(--color-gold-antique)' }}>20:00 WIB</span>
               </div>
               <div style={{ marginTop: '0.35rem', fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.24em', color: 'var(--color-crimson)', textTransform: 'uppercase', fontWeight: 600 }}>
                 MIZU COMMONROOM

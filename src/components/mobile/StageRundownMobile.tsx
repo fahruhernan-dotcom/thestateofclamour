@@ -57,7 +57,7 @@ export const StageRundownMobile: React.FC<Props> = ({
             </p>
 
             <div className="rundown-mobile-meta-strip">
-              <span>PINTU 21:00</span>
+              <span>PINTU 20:00</span>
               <span>·</span>
               <span>SHOW 22:30</span>
               <span>·</span>
@@ -103,7 +103,7 @@ export const StageRundownMobile: React.FC<Props> = ({
             </p>
 
             <div className="rundown-mobile-meta-strip">
-              <span>PINTU 21:30</span>
+              <span>PINTU 20:00</span>
               <span>·</span>
               <span>SHOW 00:00</span>
               <span>·</span>

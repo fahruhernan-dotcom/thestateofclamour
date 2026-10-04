@@ -196,7 +196,7 @@ export const EventDetailsPage: React.FC<Props> = ({
               <div className="protocol-entry-content">
                 <h3 className="protocol-entry-title">JENDELA WAKTU MASUK, BATAS CUTOFF & MASUK KEMBALI</h3>
                 <p className="protocol-entry-text">
-                  Gerbang dibuka pukul 21:00 WIB setiap malam. Untuk menjaga kenyamanan aliran penonton dan kapasitas ruangan, batas waktu ketat diberlakukan.
+                  Gerbang dibuka pukul 20:00 WIB setiap malam. Untuk menjaga kenyamanan aliran penonton dan kapasitas ruangan, batas waktu ketat diberlakukan.
                 </p>
                 <div className="protocol-entry-specs">
                   <div className="spec-check-item">
@@ -382,7 +382,7 @@ export const EventDetailsPage: React.FC<Props> = ({
             <div className="dossier-faq-card">
               <h3 className="dossier-faq-q">Bagaimana cara penukaran gelang RFID?</h3>
               <p className="dossier-faq-a">
-                Tunjukkan e-tiket barcode resmi dari Artatix bersama KTP/SIM/Paspor fisik asli Anda di loket penukaran gerbang. Anda akan menerima gelang RFID terenkripsi yang berfungsi sebagai tiket akses masuk sekaligus dompet pembayaran nontunai. Loket penukaran dibuka mulai pukul 19:30 WIB (90 menit sebelum pintu dibuka).
+                Tunjukkan e-tiket barcode resmi dari Artatix bersama KTP/SIM/Paspor fisik asli Anda di loket penukaran gerbang. Anda akan menerima gelang RFID terenkripsi yang berfungsi sebagai tiket akses masuk sekaligus dompet pembayaran nontunai. Loket penukaran dibuka mulai pukul 19:00 WIB (60 menit sebelum pintu dibuka).
               </p>
             </div>
 

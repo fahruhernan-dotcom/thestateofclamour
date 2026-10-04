@@ -6,10 +6,10 @@ export const initialEvent: EventData = {
   title: 'THE STATE OF CLAMOUR',
   tagline: 'SWEAR IN CONTINENTAL',
   description: 'Two nights of nocturnal sound and monumental assembly.',
-  startDate: '2026-10-30T21:00:00+07:00',
+  startDate: '2026-10-30T20:00:00+07:00',
   endDate: '2026-10-31T04:00:00+07:00',
   venueName: 'MIZU COMMONROOM',
-  venueCity: 'SURAKARTA',
+  venueCity: '',
   heroVideoUrl: '/assets/hero_monument.mp4',
   heroPosterUrl: '/assets/hero_monument.jpg',
   isActive: true
@@ -18,7 +18,7 @@ export const initialEvent: EventData = {
 export const initialAnnouncement: Announcement = {
   id: 'ann-clamour-01',
   eventId: 'evt-clamour-2026',
-  message: 'SWEAR IN CONTINENTAL · 30 — 31 OCTOBER 2026 · GATES UNSEALED 21:00',
+  message: 'SWEAR IN CONTINENTAL · 30 — 31 OCTOBER 2026 · GATES UNSEALED 20:00',
   isEnabled: false,
   badgeText: 'DISPATCH'
 };
@@ -70,7 +70,7 @@ export const archivedIndividualArtists: Artist[] = [
     name: 'Malvin',
     dayLabel: 'Day 1',
     stageName: 'Mizu Commonroom',
-    performanceTime: '22:00 WIB',
+    performanceTime: '20:00 WIB',
     imageUrl: '/assets/guest_malvin_poster.png',
     videoUrl: '/assets/guest_malvin.mp4',
     posterUrl: '/assets/guest_malvin_poster.png',
@@ -83,7 +83,7 @@ export const archivedIndividualArtists: Artist[] = [
     name: 'Far',
     dayLabel: 'Day 2',
     stageName: 'Mizu Commonroom',
-    performanceTime: '23:30 WIB',
+    performanceTime: '20:00 WIB',
     imageUrl: '/assets/guest_far_poster.png',
     videoUrl: '/assets/guest_far.mp4',
     posterUrl: '/assets/guest_far_poster.png',
@@ -92,18 +92,18 @@ export const archivedIndividualArtists: Artist[] = [
   }
 ];
 
-// Flyer card: static poster visual (videoUrl null) + Far's track as audio-only source
+// Flyer card: static poster visual (videoUrl null, audioPreviewUrl null)
 export const teaserFlyerArtist: Artist = {
   id: 'art-teaser-flyer',
   eventId: 'evt-clamour-2026',
   name: 'Swear In Continental',
   dayLabel: '30 — 31 Oktober',
   stageName: 'Mizu Commonroom',
-  performanceTime: '21:00 WIB',
+  performanceTime: '20:00 WIB',
   imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
   videoUrl: null,
   posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
-  audioPreviewUrl: '/assets/guest_far.mp4',
+  audioPreviewUrl: null,
   sortOrder: 1
 };
 

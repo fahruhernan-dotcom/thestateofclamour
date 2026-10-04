@@ -96,7 +96,7 @@ export const NightOneEventPage: React.FC<Props> = ({
           </div>
           <div className="spec-metric-block">
             <span className="spec-metric-label">WAKTU</span>
-            <span className="spec-metric-val">GERBANG 21:00 // SHOW 22:30</span>
+            <span className="spec-metric-val">GERBANG 20:00 // SHOW 22:30</span>
           </div>
         </div>
       </header>
@@ -181,7 +181,7 @@ export const NightOneEventPage: React.FC<Props> = ({
           <div className="timetable-timeline-list">
             <div className="timeline-entry-row">
               <div className="timeline-time-col">
-                <span className="timeline-hour">21:00</span>
+                <span className="timeline-hour">20:00</span>
                 <span className="timeline-meridiem">WIB</span>
               </div>
               <div className="timeline-content-col">

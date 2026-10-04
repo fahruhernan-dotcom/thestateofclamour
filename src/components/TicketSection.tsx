@@ -205,10 +205,7 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
                       onClick={() => onCheckout(ticket)}
                       className={`admission-action-btn btn-press ${isProtagonist ? 'is-protagonist-cta' : ''} ${isVip ? 'is-vip-cta' : ''}`}
                     >
-                      <span className="nav-roll-inner">
-                        <span className="nav-roll-default">{isVip ? 'RESERVE VIP TABLE →' : 'GET TICKETS →'}</span>
-                        <span className="nav-roll-hover" aria-hidden="true">{isVip ? 'RESERVE VIP TABLE →' : 'GET TICKETS →'}</span>
-                      </span>
+                      <span>{isVip ? 'RESERVE VIP TABLE →' : 'GET TICKETS →'}</span>
                     </button>
                   )}
 
