@@ -160,12 +160,21 @@ export const App: React.FC = () => {
       }, remainingMs);
     }
 
-    // Passive sync only when visitor changes URL query (?tier=early_bird / ?tier=blind) or hash
+    // Sync when tab wakes from sleep or visitor refocuses the window
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        syncTicketsWithScheduleAndArtatix();
+      }
+    };
+
+    // Passive sync when visitor changes URL query (?tier=early_bird / ?tier=blind) or hash
+    window.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
     window.addEventListener('popstate', syncTicketsWithScheduleAndArtatix);
 
     return () => {
       if (timerId) clearTimeout(timerId);
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
       window.removeEventListener('popstate', syncTicketsWithScheduleAndArtatix);
     };
