@@ -104,7 +104,7 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
             const isSoldOut = ticket.status === 'sold_out';
             const isActive = ticket.status === 'active';
             const isHighlighted = highlightedTicketId === ticket.id;
-            const isProtagonist = false;
+            const isProtagonist = Boolean(ticket.isProtagonist || ticket.id === 'tkt-early-2days');
             const isVip = false;
 
             return (

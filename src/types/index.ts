@@ -29,6 +29,7 @@ export interface TicketTier {
   badgeLabel?: string | null;
   quota?: number | null;
   sortOrder: number;
+  isProtagonist?: boolean;
 }
 
 export interface Artist {

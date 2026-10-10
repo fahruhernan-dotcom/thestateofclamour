@@ -4,7 +4,7 @@ import { NightOneEventPage } from './pages/NightOneEventPage';
 import { NightTwoEventPage } from './pages/NightTwoEventPage';
 import { EventDetailsPage } from './pages/EventDetailsPage';
 import { Footer } from './components/Footer';
-import { initialEvent, initialTickets, initialArtists, archivedIndividualArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
+import { initialEvent, getActiveTickets, EARLY_BIRD_RELEASE_TIME, initialArtists, archivedIndividualArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
 import { Artist, EventData, TicketTier } from './types';
 import { Check } from 'lucide-react';
 import { CrypticPreloader } from './components/CrypticPreloader';
@@ -13,7 +13,7 @@ type ViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier';
 
 export const App: React.FC = () => {
   const [event] = useState<EventData>(initialEvent);
-  const [tickets] = useState<TicketTier[]>(initialTickets);
+  const [tickets, setTickets] = useState<TicketTier[]>(getActiveTickets);
   const [artists] = useState<Artist[]>(initialArtists);
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
@@ -127,6 +127,34 @@ export const App: React.FC = () => {
       setToastMessage(null);
     }, 3200);
   };
+
+  // Automated Early Bird Ticket Release Scheduler (Sunday, 11 Oct 2026 at 19:00 WIB)
+  useEffect(() => {
+    const syncTickets = () => {
+      setTickets(getActiveTickets());
+    };
+
+    const releaseTimestamp = new Date(EARLY_BIRD_RELEASE_TIME).getTime();
+    const remainingMs = releaseTimestamp - Date.now();
+
+    let timerId: ReturnType<typeof setTimeout> | null = null;
+    if (remainingMs > 0) {
+      timerId = setTimeout(() => {
+        syncTickets();
+        showToast('LOKET EARLY BIRD TELAH DIBUKA RESMI!');
+      }, remainingMs);
+    }
+
+    // Support live QA preview via URL query (?tier=early_bird / ?tier=blind) and hash changes
+    window.addEventListener('hashchange', syncTickets);
+    window.addEventListener('popstate', syncTickets);
+
+    return () => {
+      if (timerId) clearTimeout(timerId);
+      window.removeEventListener('hashchange', syncTickets);
+      window.removeEventListener('popstate', syncTickets);
+    };
+  }, []);
 
   const handleCheckout = (ticket: TicketTier) => {
     showToast(`Membuka loket tiket resmi untuk ${ticket.name}...`);

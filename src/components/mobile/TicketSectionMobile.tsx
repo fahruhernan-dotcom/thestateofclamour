@@ -17,8 +17,9 @@ export const TicketSectionMobile: React.FC<Props> = ({
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
 
-  // Default to the first ticket on mobile
-  const targetInitial = 0;
+  // Default to the protagonist ticket (e.g. 2 Days Pass) if present, otherwise first ticket
+  const protagonistIdx = tickets.findIndex(t => t.isProtagonist || t.id === 'tkt-early-2days');
+  const targetInitial = protagonistIdx !== -1 ? protagonistIdx : 0;
   const [activeIndex, setActiveIndex] = useState(targetInitial);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
     return () => observer.disconnect();
   }, []);
 
-  // Center on Presale 01 immediately on initial mount (horizontal carousel only, never scrolls the window)
+  // Center on protagonist / recommended tier on initial mount
   useEffect(() => {
     const el = carouselRef.current;
     if (!el || tickets.length === 0) return;
@@ -50,6 +51,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
       if (targetCard) {
         const targetLeft = targetCard.offsetLeft - (el.clientWidth - targetCard.clientWidth) / 2;
         el.scrollTo({ left: Math.max(0, targetLeft), behavior: 'instant' });
+        setActiveIndex(targetInitial);
       }
     };
 
@@ -63,7 +65,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
       clearTimeout(timer);
       clearTimeout(timer2);
     };
-  }, [targetInitial, tickets.length]);
+  }, [targetInitial, tickets]);
 
   const handleScroll = () => {
     const el = carouselRef.current;
@@ -154,7 +156,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
           const isSoldOut = ticket.status === 'sold_out';
           const isActive = ticket.status === 'active';
           const isHighlighted = highlightedTicketId === ticket.id;
-          const isProtagonist = false;
+          const isProtagonist = Boolean(ticket.isProtagonist || ticket.id === 'tkt-early-2days');
 
           return (
             <article
