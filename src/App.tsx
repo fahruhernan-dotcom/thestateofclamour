@@ -145,7 +145,7 @@ export const App: React.FC = () => {
       });
     };
 
-    // Initial sync
+    // Single initial sync on page load
     syncTicketsWithScheduleAndArtatix();
 
     // Release timer for 19:00 WIB
@@ -160,24 +160,12 @@ export const App: React.FC = () => {
       }, remainingMs);
     }
 
-    // Cron-style periodic polling every 45 seconds to track real-time Artatix sold-out changes
-    const pollIntervalId = setInterval(syncTicketsWithScheduleAndArtatix, 45000);
-
-    // Instant sync when visitor returns to tab or changes URL parameters
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        syncTicketsWithScheduleAndArtatix();
-      }
-    };
-
-    window.addEventListener('visibilitychange', handleVisibilityChange);
+    // Passive sync only when visitor changes URL query (?tier=early_bird / ?tier=blind) or hash
     window.addEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
     window.addEventListener('popstate', syncTicketsWithScheduleAndArtatix);
 
     return () => {
       if (timerId) clearTimeout(timerId);
-      clearInterval(pollIntervalId);
-      window.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
       window.removeEventListener('popstate', syncTicketsWithScheduleAndArtatix);
     };

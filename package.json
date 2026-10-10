@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/zip-dist.mjs",
     "zip": "node scripts/zip-dist.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "watch:artatix": "node scripts/watch-artatix.mjs",
+    "sync:artatix": "node scripts/sync-artatix.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.475.0",
