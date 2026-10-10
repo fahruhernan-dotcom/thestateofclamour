@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * scripts/sync-artatix.mjs
- * Utility script to verify live ticket status on Artatix (swear_in_continental/ticket).
+ * CLI Utility to query official Artatix API directly and report live ticket availability.
  * 
  * Usage:
  *   node scripts/sync-artatix.mjs
@@ -9,54 +9,61 @@
 
 import https from 'node:https';
 
-const ARTATIX_URL = 'https://artatix.co.id/event/swear_in_continental/ticket';
-const ARTATIX_EVENT_URL = 'https://artatix.co.id/event/swear_in_continental';
+const API_URL = 'https://api.artatix.co.id/api/v1/customer/ticket/swear_in_continental?isTicketExclusive=0&isMerch=0';
 
-function fetchUrl(url) {
+function fetchArtatix() {
   return new Promise((resolve, reject) => {
-    https.get(url, {
+    https.get(API_URL, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+        'Accept': 'application/json, text/plain, */*',
+        'Origin': 'https://artatix.co.id',
+        'Referer': 'https://artatix.co.id/'
       }
     }, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
-      res.on('end', () => resolve({ statusCode: res.statusCode, data }));
+      res.on('end', () => {
+        try {
+          resolve({ status: res.statusCode, json: JSON.parse(data) });
+        } catch (e) {
+          reject(new Error(`Failed to parse JSON: ${data.slice(0, 100)}`));
+        }
+      });
     }).on('error', reject);
   });
 }
 
-async function checkArtatix() {
-  console.log('🔍 [Artatix Sync] Fetching:', ARTATIX_URL);
-  try {
-    const res = await fetchUrl(ARTATIX_URL);
-    console.log(`📡 [Artatix Sync] HTTP Status: ${res.statusCode}`);
+async function run() {
+  console.log('🔍 [Artatix Live Monitor] Querying official API:');
+  console.log(`   Endpoint: ${API_URL}\n`);
 
-    if (res.statusCode !== 200) {
-      console.warn(`⚠️ [Artatix Sync] Non-200 status code received: ${res.statusCode}`);
+  try {
+    const { status, json } = await fetchArtatix();
+    if (status !== 200 || !json.data) {
+      console.error(`❌ HTTP Status: ${status}`, json);
       return;
     }
 
-    const html = res.data;
-    const hasEarlyBird = /early\s*bird/i.test(html);
-    const hasBlind = /blind\s*ticket/i.test(html);
-    const has100k = /100\.000/i.test(html);
-    const has180k = /180\.000/i.test(html);
-    const has50k = /50\.000/i.test(html);
+    const tickets = json.data;
+    console.log(`📡 [Status: 200 OK] — Found ${tickets.length} ticket(s) published on Artatix:\n`);
 
-    console.log('\n📊 [Artatix Sync Result Report]:');
-    console.log(`- URL: ${ARTATIX_URL}`);
-    console.log(`- Mentions 'Early Bird': ${hasEarlyBird ? 'YES' : 'NO'}`);
-    console.log(`- Mentions 'Blind Ticket': ${hasBlind ? 'YES' : 'NO'}`);
-    console.log(`- Mentions Rp 50.000: ${has50k ? 'YES' : 'NO'}`);
-    console.log(`- Mentions Rp 100.000: ${has100k ? 'YES' : 'NO'}`);
-    console.log(`- Mentions Rp 180.000: ${has180k ? 'YES' : 'NO'}`);
+    console.table(tickets.map(t => ({
+      ID: t.id,
+      Nama: t.name,
+      Kategori: t.category,
+      Harga: `Rp ${Number(t.price).toLocaleString('id-ID')}`,
+      Stok: t.stock,
+      Status: t.status,
+      'Sold Out?': (t.status?.toLowerCase().includes('sold') || t.stock <= 0) ? '🔴 YA (HABIS)' : '🟢 TIDAK (TERSEDIA)'
+    })));
 
-    console.log('\n✅ Local eventData.ts schedule is configured for: 2026-10-11T19:00:00+07:00 (Minggu, 19:00 WIB)');
+    console.log('\n💡 [Sinkronisasi Web]:');
+    console.log('   - Web kita otomatis mem-poll API ini secara berkala (cron interval 45 detik).');
+    console.log('   - Jika Artatix menyatakan tiket habis, tombol di web otomatis menjadi "CAPACITY REACHED".');
   } catch (err) {
     console.error('❌ [Artatix Sync Error]:', err.message);
   }
 }
 
-checkArtatix();
+run();

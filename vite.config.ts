@@ -6,6 +6,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    host: true
+    host: true,
+    proxy: {
+      '/api-artatix': {
+        target: 'https://api.artatix.co.id/api/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-artatix/, '')
+      }
+    }
   }
 });

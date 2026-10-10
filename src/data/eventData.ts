@@ -67,7 +67,6 @@ export const earlyBirdTickets: TicketTier[] = [
     status: 'active',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Early Bird',
-    quota: 30,
     sortOrder: 1
   },
   {
@@ -80,7 +79,6 @@ export const earlyBirdTickets: TicketTier[] = [
     status: 'active',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Early Bird',
-    quota: 30,
     sortOrder: 2
   },
   {
@@ -93,7 +91,6 @@ export const earlyBirdTickets: TicketTier[] = [
     status: 'active',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Best Value',
-    quota: 20,
     isProtagonist: true,
     sortOrder: 3
   }

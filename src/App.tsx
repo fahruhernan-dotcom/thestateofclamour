@@ -8,6 +8,7 @@ import { initialEvent, getActiveTickets, EARLY_BIRD_RELEASE_TIME, initialArtists
 import { Artist, EventData, TicketTier } from './types';
 import { Check } from 'lucide-react';
 import { CrypticPreloader } from './components/CrypticPreloader';
+import { fetchLiveArtatixTickets } from './services/artatixService';
 
 type ViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier';
 
@@ -128,31 +129,57 @@ export const App: React.FC = () => {
     }, 3200);
   };
 
-  // Automated Early Bird Ticket Release Scheduler (Sunday, 11 Oct 2026 at 19:00 WIB)
+  // Automated Early Bird Ticket Release Scheduler & Dynamic Artatix Sold-Out Sync
   useEffect(() => {
-    const syncTickets = () => {
-      setTickets(getActiveTickets());
+    const syncTicketsWithScheduleAndArtatix = () => {
+      const scheduledTickets = getActiveTickets();
+      fetchLiveArtatixTickets(scheduledTickets).then((result) => {
+        if (result.isLive && Object.keys(result.statusMap).length > 0) {
+          setTickets(scheduledTickets.map((t) => ({
+            ...t,
+            status: result.statusMap[t.id] ?? t.status
+          })));
+        } else {
+          setTickets(scheduledTickets);
+        }
+      });
     };
 
+    // Initial sync
+    syncTicketsWithScheduleAndArtatix();
+
+    // Release timer for 19:00 WIB
     const releaseTimestamp = new Date(EARLY_BIRD_RELEASE_TIME).getTime();
     const remainingMs = releaseTimestamp - Date.now();
 
     let timerId: ReturnType<typeof setTimeout> | null = null;
     if (remainingMs > 0) {
       timerId = setTimeout(() => {
-        syncTickets();
+        syncTicketsWithScheduleAndArtatix();
         showToast('LOKET EARLY BIRD TELAH DIBUKA RESMI!');
       }, remainingMs);
     }
 
-    // Support live QA preview via URL query (?tier=early_bird / ?tier=blind) and hash changes
-    window.addEventListener('hashchange', syncTickets);
-    window.addEventListener('popstate', syncTickets);
+    // Cron-style periodic polling every 45 seconds to track real-time Artatix sold-out changes
+    const pollIntervalId = setInterval(syncTicketsWithScheduleAndArtatix, 45000);
+
+    // Instant sync when visitor returns to tab or changes URL parameters
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        syncTicketsWithScheduleAndArtatix();
+      }
+    };
+
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
+    window.addEventListener('popstate', syncTicketsWithScheduleAndArtatix);
 
     return () => {
       if (timerId) clearTimeout(timerId);
-      window.removeEventListener('hashchange', syncTickets);
-      window.removeEventListener('popstate', syncTickets);
+      clearInterval(pollIntervalId);
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
+      window.removeEventListener('popstate', syncTicketsWithScheduleAndArtatix);
     };
   }, []);
 
