@@ -4,7 +4,7 @@ import { NightOneEventPage } from './pages/NightOneEventPage';
 import { NightTwoEventPage } from './pages/NightTwoEventPage';
 import { EventDetailsPage } from './pages/EventDetailsPage';
 import { Footer } from './components/Footer';
-import { initialEvent, getActiveTickets, EARLY_BIRD_RELEASE_TIME, initialArtists, archivedIndividualArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
+import { initialEvent, getActiveTickets, initialArtists, archivedIndividualArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
 import { Artist, EventData, TicketTier } from './types';
 import { Check } from 'lucide-react';
 import { CrypticPreloader } from './components/CrypticPreloader';
@@ -148,18 +148,6 @@ export const App: React.FC = () => {
     // Single initial sync on page load
     syncTicketsWithScheduleAndArtatix();
 
-    // Release timer for 19:00 WIB
-    const releaseTimestamp = new Date(EARLY_BIRD_RELEASE_TIME).getTime();
-    const remainingMs = releaseTimestamp - Date.now();
-
-    let timerId: ReturnType<typeof setTimeout> | null = null;
-    if (remainingMs > 0) {
-      timerId = setTimeout(() => {
-        syncTicketsWithScheduleAndArtatix();
-        showToast('LOKET EARLY BIRD TELAH DIBUKA RESMI!');
-      }, remainingMs);
-    }
-
     // Sync when tab wakes from sleep or visitor refocuses the window
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -173,7 +161,6 @@ export const App: React.FC = () => {
     window.addEventListener('popstate', syncTicketsWithScheduleAndArtatix);
 
     return () => {
-      if (timerId) clearTimeout(timerId);
       window.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
       window.removeEventListener('popstate', syncTicketsWithScheduleAndArtatix);

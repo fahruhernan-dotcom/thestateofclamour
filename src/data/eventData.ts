@@ -26,10 +26,8 @@ export const initialAnnouncement: Announcement = {
 // Official checkout destination for every ticket tier
 export const TICKET_URL = 'https://artatix.co.id/event/swear_in_continental/ticket';
 
-// Release timestamp for Early Bird: Sunday, 11 October 2026 at 19:00:00 WIB
-export const EARLY_BIRD_RELEASE_TIME = '2026-10-11T19:00:00+07:00';
-
-export const blindTickets: TicketTier[] = [
+// Archived Blind Tickets (Day 1 & Day 2 passes - Sold Out)
+export const archivedBlindTickets: TicketTier[] = [
   {
     id: 'tkt-blind-day1',
     eventId: 'evt-clamour-2026',
@@ -37,7 +35,7 @@ export const blindTickets: TicketTier[] = [
     category: '1 Night Pass · 30 Oct',
     price: 50000,
     perks: ['Admission Day 1 · 30 October', 'General assembly access'],
-    status: 'active',
+    status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Blind Ticket',
     sortOrder: 1
@@ -49,13 +47,14 @@ export const blindTickets: TicketTier[] = [
     category: '1 Night Pass · 31 Oct',
     price: 50000,
     perks: ['Admission Day 2 · 31 October', 'General assembly access'],
-    status: 'active',
+    status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Blind Ticket',
     sortOrder: 2
   }
 ];
 
+// Active Early Bird Tickets (Day 1, Day 2, and 2 Days Pass)
 export const earlyBirdTickets: TicketTier[] = [
   {
     id: 'tkt-early-day1',
@@ -96,25 +95,11 @@ export const earlyBirdTickets: TicketTier[] = [
   }
 ];
 
-export const isEarlyBirdActive = (releaseTime = EARLY_BIRD_RELEASE_TIME): boolean => {
-  if (typeof window !== 'undefined') {
-    const searchParams = new URLSearchParams(window.location.search);
-    const hash = window.location.hash;
-    if (searchParams.get('tier') === 'early_bird' || hash.includes('preview-early-bird')) {
-      return true;
-    }
-    if (searchParams.get('tier') === 'blind' || hash.includes('preview-blind')) {
-      return false;
-    }
-  }
-  return Date.now() >= new Date(releaseTime).getTime();
-};
-
 export const getActiveTickets = (): TicketTier[] => {
-  return isEarlyBirdActive() ? earlyBirdTickets : blindTickets;
+  return earlyBirdTickets;
 };
 
-export const initialTickets: TicketTier[] = getActiveTickets();
+export const initialTickets: TicketTier[] = earlyBirdTickets;
 
 // ---------------------------------------------------------------------------
 // LINEUP TEASER MODE
