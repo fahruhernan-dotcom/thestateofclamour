@@ -32,63 +32,75 @@ function cleanStr(val: string): string {
 }
 
 /**
+ * Official Artatix Ticket IDs mapped to local tier IDs
+ */
+export const ARTATIX_ID_MAP: Record<string, number> = {
+  'tkt-early-day1': 22389,
+  'tkt-early-day2': 22390,
+  'tkt-early-2days': 22391,
+  'tkt-blind-day1': 22394,
+  'tkt-blind-day2': 22395,
+};
+
+/**
  * Resilient matcher between an Artatix ticket item and a local TicketTier.
  */
 export function matchArtatixItemToTier(
   artatixItem: ArtatixTicketItem,
   localTier: TicketTier
 ): boolean {
-  const aText = cleanStr(`${artatixItem.name} ${artatixItem.category}`);
-  const lText = cleanStr(`${localTier.name} ${localTier.category} ${localTier.id}`);
-  const aPrice = Math.round(parseFloat(artatixItem.price) || 0);
-
-  // Exact ID match if configured
+  // 1. Direct ID match from known map
+  if (ARTATIX_ID_MAP[localTier.id] === artatixItem.id) {
+    return true;
+  }
   if (localTier.id.includes(String(artatixItem.id))) {
     return true;
   }
 
-  // 1. Blind Ticket Matching
+  const aText = cleanStr(`${artatixItem.name} ${artatixItem.category}`);
+  const lText = cleanStr(`${localTier.name} ${localTier.category} ${localTier.id}`);
+  const aPrice = Math.round(parseFloat(artatixItem.price) || 0);
+
+  // 2. Blind Ticket Matching
   if (lText.includes('blind') && aText.includes('blind')) {
-    if ((lText.includes('day 1') || lText.includes('30')) && (aText.includes('day 1') || aText.includes('30'))) {
+    if ((lText.includes('day 1') || lText.includes('day1')) && (aText.includes('day 1') || aText.includes('day1'))) {
       return true;
     }
-    if ((lText.includes('day 2') || lText.includes('31')) && (aText.includes('day 2') || aText.includes('31'))) {
-      return true;
-    }
-  }
-
-  // 2. Early Bird 2 Days Pass Matching (Price 180.000 or '2 days' / '2 day' / 'pass')
-  if (
-    (lText.includes('early') || lText.includes('bird')) &&
-    (lText.includes('2 day') || lText.includes('2days') || lText.includes('pass'))
-  ) {
-    if (aPrice === 180000) return true;
-    if (
-      (aText.includes('early') || aText.includes('bird')) &&
-      (aText.includes('2 day') || aText.includes('2days') || aText.includes('terusan') || aText.includes('pass'))
-    ) {
+    if ((lText.includes('day 2') || lText.includes('day2')) && (aText.includes('day 2') || aText.includes('day2'))) {
       return true;
     }
   }
 
-  // 3. Early Bird Single Day Matching (Price 100.000)
+  // 3. Early Bird 2 Days Pass Matching
+  const isLocal2Day = lText.includes('2 day') || lText.includes('2days') || lText.includes('pass') || localTier.id === 'tkt-early-2days';
+  const isArtatix2Day = aText.includes('2 day') || aText.includes('2days') || aText.includes('terusan') || aText.includes('pass');
+
+  if (isLocal2Day) {
+    return isArtatix2Day;
+  }
+
+  // If local tier is single day, it must NEVER match a 2-day pass
+  if (isArtatix2Day) {
+    return false;
+  }
+
+  // 4. Early Bird Single Day Matching
   if (
     (lText.includes('early') || lText.includes('bird')) &&
     (aText.includes('early') || aText.includes('bird'))
   ) {
-    if ((lText.includes('day 1') || lText.includes('30')) && (aText.includes('day 1') || aText.includes('30'))) {
+    if ((lText.includes('day 1') || lText.includes('day1')) && (aText.includes('day 1') || aText.includes('day1'))) {
       return true;
     }
-    if ((lText.includes('day 2') || lText.includes('31')) && (aText.includes('day 2') || aText.includes('31'))) {
+    if ((lText.includes('day 2') || lText.includes('day2')) && (aText.includes('day 2') || aText.includes('day2'))) {
       return true;
     }
   }
 
-  // 4. Price-level match if tier is same category
+  // 5. Price-level match fallback if single day
   if (aPrice > 0 && aPrice === localTier.price) {
     if (lText.includes('day 1') && aText.includes('day 1')) return true;
     if (lText.includes('day 2') && aText.includes('day 2')) return true;
-    if (localTier.id === 'tkt-early-2days' && aPrice === 180000) return true;
   }
 
   return false;

@@ -231,23 +231,19 @@ export const TicketSectionMobile: React.FC<Props> = ({
               </div>
 
               <div className="ticket-mobile-card-bottom">
-                {isSoldOut ? (
-                  <button
-                    type="button"
-                    disabled
-                    className="ticket-mobile-action-btn is-disabled"
-                  >
-                    CAPACITY REACHED
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => onCheckout(ticket)}
-                    className={`ticket-mobile-action-btn ${isProtagonist ? 'is-protagonist-cta' : ''} ${ticket.id === 'tkt-vip' ? 'is-vip-cta' : ''}`}
-                  >
-                    <span>{ticket.id === 'tkt-vip' ? 'RESERVE VIP TABLE →' : 'GET TICKETS →'}</span>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => onCheckout(ticket)}
+                  className={`ticket-mobile-action-btn ${isProtagonist ? 'is-protagonist-cta' : ''} ${ticket.id === 'tkt-vip' ? 'is-vip-cta' : ''} ${isSoldOut ? 'is-sold-out-cta' : ''}`}
+                >
+                  <span>
+                    {isSoldOut
+                      ? 'CAPACITY REACHED →'
+                      : ticket.id === 'tkt-vip'
+                        ? 'RESERVE VIP TABLE →'
+                        : 'GET TICKETS →'}
+                  </span>
+                </button>
 
                 <div className="ticket-mobile-auth-guarantee">
                   <ShieldCheck size={11} style={{ color: 'var(--color-gold-antique)' }} />

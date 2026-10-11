@@ -191,23 +191,19 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
 
                 {/* Card Action Footer */}
                 <div className="admission-card-footer">
-                  {isSoldOut ? (
-                    <button
-                      type="button"
-                      disabled
-                      className="admission-action-btn is-disabled"
-                    >
-                      CAPACITY REACHED
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => onCheckout(ticket)}
-                      className={`admission-action-btn btn-press ${isProtagonist ? 'is-protagonist-cta' : ''} ${isVip ? 'is-vip-cta' : ''}`}
-                    >
-                      <span>{isVip ? 'RESERVE VIP TABLE →' : 'GET TICKETS →'}</span>
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => onCheckout(ticket)}
+                    className={`admission-action-btn btn-press ${isProtagonist ? 'is-protagonist-cta' : ''} ${isVip ? 'is-vip-cta' : ''} ${isSoldOut ? 'is-sold-out-cta' : ''}`}
+                  >
+                    <span>
+                      {isSoldOut
+                        ? 'CAPACITY REACHED →'
+                        : isVip
+                          ? 'RESERVE VIP TABLE →'
+                          : 'GET TICKETS →'}
+                    </span>
+                  </button>
 
                   <div className="admission-auth-guarantee">
                     <ShieldCheck size={11} style={{ color: 'var(--color-gold-antique)', flexShrink: 0 }} />
