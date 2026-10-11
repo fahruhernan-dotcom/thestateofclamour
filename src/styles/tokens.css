@@ -60,12 +60,19 @@ html {
 }
 
 html {
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 96px;
   background-color: var(--color-void);
   color-scheme: dark;
   /* Firefox standard */
   scrollbar-width: thin;
   scrollbar-color: rgba(197, 168, 105, 0.32) var(--color-void);
+}
+
+#lineup,
+#the-passage,
+#the-night,
+.cinematic-section {
+  scroll-margin-top: 96px;
 }
 
 /* Chrome, Edge, Safari & Webkit Browsers */
@@ -110,11 +117,18 @@ body {
   font-family: var(--font-body);
   width: 100%;
   max-width: 100vw;
+  overflow-x: hidden;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Prevent Safari callout popup on long press */
   -webkit-touch-callout: none;
+}
+
+.clamer-app-canvas {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
 }
 
 /* Universal Mobile Touch Ergonomics */

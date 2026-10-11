@@ -6,12 +6,14 @@ interface Props {
   tickets: TicketTier[];
   highlightedTicketId?: string | null;
   onCheckout: (ticket: TicketTier) => void;
+  onOpenReservasi?: () => void;
 }
 
 export const TicketSectionMobile: React.FC<Props> = ({
   tickets,
   highlightedTicketId,
   onCheckout,
+  onOpenReservasi,
 }) => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
@@ -294,6 +296,42 @@ export const TicketSectionMobile: React.FC<Props> = ({
         <div className="tickets-mobile-status-text">
           <span className="tickets-mobile-step-pill">{activeIndex + 1} / {tickets.length}</span>
           <span className="tickets-mobile-tier-name">{tickets[activeIndex]?.name}</span>
+        </div>
+
+        {/* Mobile VIP Table & Sofa Callout */}
+        <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
+          <a
+            href="#/reservasi"
+            onClick={(e) => {
+              if (onOpenReservasi) {
+                e.preventDefault();
+                onOpenReservasi();
+              }
+            }}
+            className="btn-press"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              width: '100%',
+              maxWidth: '320px',
+              padding: '0.75rem 1rem',
+              borderRadius: '9999px',
+              background: 'rgba(197, 168, 105, 0.08)',
+              border: '1px solid var(--color-gold-hairline)',
+              color: 'var(--color-gold-antique)',
+              fontFamily: 'var(--font-monumental)',
+              fontSize: '0.66rem',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textDecoration: 'none',
+              textAlign: 'center',
+              cursor: 'pointer'
+            }}
+          >
+            <span>INGIN SOFA PRIVAT? RESERVASI MEJA VIP →</span>
+          </a>
         </div>
       </div>
     </section>

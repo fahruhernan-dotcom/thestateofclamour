@@ -6,10 +6,11 @@
 .tickets-mobile-section {
   position: relative;
   width: 100%;
-  padding: 3.5rem 0 calc(3.5rem + env(safe-area-inset-bottom, 16px));
+  padding: calc(6rem + env(safe-area-inset-top, 0px)) 0 calc(4rem + env(safe-area-inset-bottom, 16px));
   background-color: var(--color-void, #060709);
   overflow-x: clip;
   overflow-y: hidden;
+  scroll-margin-top: 84px;
 }
 
 /* Mobile Cathedral Atmospheric Backdrop */

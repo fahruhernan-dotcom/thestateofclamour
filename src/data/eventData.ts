@@ -26,6 +26,10 @@ export const initialAnnouncement: Announcement = {
 // Official checkout destination for every ticket tier
 export const TICKET_URL = 'https://artatix.co.id/event/swear_in_continental/ticket';
 
+// Official Social Channels
+export const OFFICIAL_INSTAGRAM_URL = 'https://www.instagram.com/thestateofclamor/?hl=en';
+export const OFFICIAL_TIKTOK_URL = 'https://www.tiktok.com/@thestateofclamor';
+
 // Archived Blind Tickets (Day 1 & Day 2 passes - Sold Out)
 export const archivedBlindTickets: TicketTier[] = [
   {
@@ -54,7 +58,7 @@ export const archivedBlindTickets: TicketTier[] = [
   }
 ];
 
-// Active Early Bird Tickets (Day 1, Day 2, and 2 Days Pass)
+// Active Early Bird Tickets (Day 1, Day 2, and 2 Days Pass - Dynamic sync via Artatix API)
 export const earlyBirdTickets: TicketTier[] = [
   {
     id: 'tkt-early-day1',

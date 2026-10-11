@@ -1,41 +1,136 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Menu, X, Instagram } from 'lucide-react';
+import '../styles/navbar.css';
+
+export type NavViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier' | 'denah' | 'reservasi';
 
 interface Props {
+  currentView?: NavViewMode;
   onOpenDossier?: () => void;
+  onNavigate?: (view: NavViewMode, hash?: string, scrollTargetId?: string) => void;
 }
 
-export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activeTab, setActiveTab] = useState<'lineup' | 'the-passage' | 'the-night'>('lineup');
+export const FloatingNavbar: React.FC<Props> = ({
+  currentView = 'home',
+  onOpenDossier,
+  onNavigate
+}) => {
+  // Track whether navbar is at the top of Section 2 (subtle gradient) or scrolled (frosted glass)
+  const [isAtTop, setIsAtTop] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    if (currentView === 'home') {
+      const el = typeof document !== 'undefined' ? document.getElementById('lineup') : null;
+      if (el) {
+        return el.getBoundingClientRect().top > -100;
+      }
+      return true;
+    }
+    return window.scrollY <= 30;
+  });
+
+  // Track scroll direction & visibility (Section 1 Hero -> hidden, Section 2 -> visible)
+  const [isVisible, setIsVisible] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    if (currentView === 'home') {
+      const el = typeof document !== 'undefined' ? document.getElementById('lineup') : null;
+      return el ? el.getBoundingClientRect().top <= 140 : false;
+    }
+    return true;
+  });
+  const [activeTab, setActiveTab] = useState<string>('lineup');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const lastScrollYRef = useRef(0);
 
   useEffect(() => {
+    lastScrollYRef.current = window.scrollY;
+    const initialY = window.scrollY;
+
+    if (currentView === 'home') {
+      const lineupEl = document.getElementById('lineup');
+      if (lineupEl) {
+        const rect = lineupEl.getBoundingClientRect();
+        if (rect.top > 200) {
+          setIsVisible(false);
+          setIsAtTop(true);
+        } else if (rect.top <= 140 && rect.top > -100) {
+          setIsVisible(true);
+          setIsAtTop(true);
+        } else if (rect.top <= -100) {
+          setIsVisible(true);
+          setIsAtTop(false);
+        }
+      } else {
+        setIsVisible(false);
+        setIsAtTop(true);
+      }
+    } else {
+      setIsVisible(true);
+      setIsAtTop(initialY <= 30);
+    }
+
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          // STRICT RULE: Navbar ONLY appears when reaching Section 2 (The Guests / Lineup) and downwards.
-          // Zero navbar intrusion throughout the entire Hero entrance & Section 1 storytelling experience!
-          const lineupEl = document.getElementById('lineup');
-          if (lineupEl) {
-            const lineupTop = lineupEl.getBoundingClientRect().top + window.scrollY;
-            const isAtLineupOrBelow = window.scrollY >= (lineupTop - 60);
-            setIsScrolled(isAtLineupOrBelow);
+          const currentY = window.scrollY;
+
+          if (currentView === 'home') {
+            // ========================================================
+            // LANDING PAGE (BERANDA) - IDLIX STREAMING CINEMA HEADER:
+            // 1. Hero Section 1: 100% clean & hidden
+            // 2. Section 2 Headline Arrival: In-place fade-in dissolve (top cinema gradient)
+            // 3. Scroll deeper into cards: Silky transition to deep frosted glass sticky header
+            // ========================================================
+            const lineupEl = document.getElementById('lineup');
+            if (lineupEl) {
+              const rect = lineupEl.getBoundingClientRect();
+
+              // Still inside Section 1 / Hero (Lineup hasn't arrived yet)
+              if (rect.top > 200) {
+                setIsVisible(false);
+                setIsAtTop(true);
+              }
+              // Section 2 Headline ("THE GUESTS: When the gates unlock...") -> Fade-in (Top Cinema Gradient)
+              else if (rect.top <= 140 && rect.top > -100) {
+                setIsVisible(true);
+                setIsAtTop(true);
+              }
+              // Scrolled deeper into Section 2 Lineup & beyond -> Sticky Frosted Glass (Permanent Companion)
+              else if (rect.top <= -100) {
+                setIsAtTop(false);
+                setIsVisible(true);
+              }
+            } else {
+              setIsVisible(false);
+              setIsAtTop(true);
+            }
           } else {
-            setIsScrolled(false);
+            // ========================================================
+            // SUBPAGES (MALAM I, MALAM II, DENAH, RESERVASI, DOSSIER)
+            // ========================================================
+            if (currentY <= 30) {
+              setIsAtTop(true);
+            } else if (currentY > 30) {
+              setIsAtTop(false);
+            }
+
+            setIsVisible(true);
           }
 
-          const sections = ['the-night', 'the-passage', 'lineup'] as const;
-          const scrollPos = window.scrollY + 250;
-
-          for (const sectionId of sections) {
-            const el = document.getElementById(sectionId);
-            if (el && el.offsetTop <= scrollPos) {
-              setActiveTab(sectionId);
-              break;
+          // Active tab tracking for home sections
+          if (currentView === 'home') {
+            const el = document.getElementById('lineup');
+            if (el) {
+              const rect = el.getBoundingClientRect();
+              if (rect.top <= 200 && rect.bottom >= 150) {
+                setActiveTab('lineup');
+              } else {
+                setActiveTab('');
+              }
             }
           }
+
+          lastScrollYRef.current = currentY;
           ticking = false;
         });
         ticking = true;
@@ -43,10 +138,8 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // Initial evaluation
-    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentView]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -64,83 +157,214 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
     setIsMobileMenuOpen(false);
   }, []);
 
-  const handleMobileNavClick = useCallback((href: string) => {
+  const handleNavClick = useCallback((targetView: NavViewMode, hash = '', scrollTargetId = '') => {
     closeMobileMenu();
-    // Small delay to let body scroll unlock before scrolling
-    setTimeout(() => {
-      const el = document.querySelector(href);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }, 80);
-  }, [closeMobileMenu]);
 
-  const handleMobileDossier = useCallback(() => {
+    if (onNavigate) {
+      onNavigate(targetView, hash, scrollTargetId);
+    } else {
+      if (hash) window.location.hash = hash;
+    }
+
+    if (currentView === 'home' && targetView === 'home' && scrollTargetId) {
+      setTimeout(() => {
+        const el = document.getElementById(scrollTargetId);
+        if (el) {
+          if (scrollTargetId === 'hero') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            const navbarOffset = window.innerWidth <= 768 ? 76 : 92;
+            const targetY = el.getBoundingClientRect().top + window.scrollY - navbarOffset;
+            window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+          }
+        }
+      }, 50);
+    }
+  }, [closeMobileMenu, onNavigate, currentView]);
+
+  const handleOpenDossierTab = useCallback(() => {
     closeMobileMenu();
     if (onOpenDossier) {
       setTimeout(() => onOpenDossier(), 80);
+    } else if (onNavigate) {
+      onNavigate('full-dossier', '#dossier');
     }
-  }, [closeMobileMenu, onOpenDossier]);
+  }, [closeMobileMenu, onOpenDossier, onNavigate]);
+
+  // Direct handlers for streaming navigation
+  const handleHomeClick = () => handleNavClick('home', '', 'hero');
+  const handleNight1Click = () => handleNavClick('event-night-1', '#/event/night-1');
+  const handleNight2Click = () => handleNavClick('event-night-2', '#/event/night-2');
+  
+  const handleLineupClick = () => {
+    if (currentView === 'home') {
+      handleNavClick('home', '#lineup', 'lineup');
+    } else {
+      const el = document.getElementById('spotlight');
+      if (el) {
+        const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      } else {
+        handleNavClick('home', '#lineup', 'lineup');
+      }
+    }
+  };
+
+  const handleTicketClick = () => {
+    if (currentView === 'event-night-1' || currentView === 'event-night-2') {
+      const el = document.getElementById('tickets');
+      if (el) {
+        const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        return;
+      }
+    }
+    handleNavClick('home', '#the-passage', 'the-passage');
+  };
+
+  const handleDenahClick = () => {
+    if (currentView === 'event-night-1' || currentView === 'event-night-2') {
+      const el = document.getElementById('denah');
+      if (el) {
+        const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        return;
+      }
+    }
+    handleNavClick('event-night-1', '#/event/night-1#denah', 'denah');
+  };
+
+  const handleReservasiClick = () => {
+    if (currentView === 'event-night-1' || currentView === 'event-night-2') {
+      const el = document.getElementById('reservasi');
+      if (el) {
+        const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        return;
+      }
+    }
+    handleNavClick('event-night-1', '#/event/night-1#reservasi', 'reservasi');
+  };
 
   return (
     <>
-      <header className={`cinematic-navbar ${isScrolled ? 'is-visible' : 'is-hidden'}`}>
-        <nav className="navbar-inner-bar" role="navigation" aria-label="Official Assembly Navigation">
-          <a href="#hero" className="nav-brand-link" aria-label="Kembali ke atas">
+      {/* Morphing Navbar: Flush Top Bar -> Floating Sticky Pill */}
+      <header
+        className={`cinematic-navbar fixed left-0 right-0 top-0 z-[100] flex justify-center pointer-events-none ${
+          isVisible || isMobileMenuOpen ? 'is-visible' : 'is-hidden'
+        }`}
+      >
+        <div
+          className={`navbar-capsule-bar pointer-events-auto ${
+            isAtTop ? 'is-at-top' : 'is-morphed'
+          }`}
+        >
+          {/* Brand Logo & Home Return */}
+          <button
+            type="button"
+            className="site-logo-action nav-brand-link"
+            onClick={handleHomeClick}
+            aria-label="Kembali ke Beranda The State of Clamour"
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+          >
             <img
               src="/apple-touch-icon.png"
               alt="Clamour Emblem"
-              className="nav-brand-logo-img"
-              width="26"
-              height="26"
+              className="nav-brand-logo-img logo-img"
+              width="24"
+              height="24"
             />
-            <span className="nav-brand-title">CLAMOUR</span>
-          </a>
+            <span className="nav-brand-title site-logo-lockup">CLAMOUR</span>
+          </button>
 
-          {/* Desktop Ultra-Minimalist Links with Bedimcode Rolling Text */}
-          <div className="nav-links-cluster">
-            <a
-              href="#lineup"
-              className={`nav-link-item ${activeTab === 'lineup' ? 'active' : ''}`}
+          {/* Desktop Minimal Navigation Links (Only 3 Core Items, IDLIX Pill Nav) */}
+          <nav className="header-desktop-nav nav-links-cluster items-center gap-1.5" aria-label="Menu">
+            {/* MALAM I */}
+            <button
+              type="button"
+              className={`header-nav-link header-nav-text nav-link-item ${
+                currentView === 'event-night-1' ? 'header-nav-link--active active-pill' : ''
+              }`}
+              onClick={handleNight1Click}
+              title="Dossier Malam I"
+              style={{ background: 'transparent', cursor: 'pointer' }}
+            >
+              <span className="nav-roll-inner">
+                <span className="nav-roll-default">MALAM I</span>
+                <span className="nav-roll-hover" aria-hidden="true">MALAM I</span>
+              </span>
+            </button>
+
+            <span className="nav-links-dot" aria-hidden="true">·</span>
+
+            {/* MALAM II */}
+            <button
+              type="button"
+              className={`header-nav-link header-nav-text nav-link-item ${
+                currentView === 'event-night-2' ? 'header-nav-link--active active-pill' : ''
+              }`}
+              onClick={handleNight2Click}
+              title="Dossier Malam II"
+              style={{ background: 'transparent', cursor: 'pointer' }}
+            >
+              <span className="nav-roll-inner">
+                <span className="nav-roll-default">MALAM II</span>
+                <span className="nav-roll-hover" aria-hidden="true">MALAM II</span>
+              </span>
+            </button>
+
+            <span className="nav-links-dot" aria-hidden="true">·</span>
+
+            {/* LINEUP */}
+            <button
+              type="button"
+              className={`header-nav-link header-nav-text nav-link-item ${
+                currentView === 'home' && activeTab === 'lineup' ? 'header-nav-link--active active-pill' : ''
+              }`}
+              onClick={handleLineupClick}
+              title="Teaser Lineup Spotlight"
+              style={{ background: 'transparent', cursor: 'pointer' }}
             >
               <span className="nav-roll-inner">
                 <span className="nav-roll-default">LINEUP</span>
                 <span className="nav-roll-hover" aria-hidden="true">LINEUP</span>
               </span>
-            </a>
-            <span className="nav-links-dot" aria-hidden="true">·</span>
-            <a
-              href="#the-night"
-              className={`nav-link-item ${activeTab === 'the-night' ? 'active' : ''}`}
+            </button>
+          </nav>
+
+          {/* Right Action & Mobile Toggle */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Mobile Menu Toggle */}
+            <button
+              type="button"
+              className={`nav-mobile-toggle header-mobile-menu-trigger ${isMobileMenuOpen ? 'is-active' : ''}`}
+              onClick={() => setIsMobileMenuOpen(prev => !prev)}
+              aria-label={isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'}
             >
-              <span className="nav-roll-inner">
-                <span className="nav-roll-default">JADWAL</span>
-                <span className="nav-roll-hover" aria-hidden="true">JADWAL</span>
+              <span className="nav-toggle-icon nav-toggle-burger">
+                <Menu size={18} strokeWidth={2} />
               </span>
-            </a>
+              <span className="nav-toggle-icon nav-toggle-close">
+                <X size={18} strokeWidth={2} />
+              </span>
+            </button>
+
+            {/* Desktop Right CTA Button */}
+            <div className="nav-action-desktop-only">
+              <button
+                type="button"
+                className="nav-action-btn btn-press"
+                onClick={handleTicketClick}
+                style={{ cursor: 'pointer' }}
+              >
+                <span className="nav-roll-inner">
+                  <span className="nav-roll-default">TIKET →</span>
+                  <span className="nav-roll-hover" aria-hidden="true">TIKET →</span>
+                </span>
+              </button>
+            </div>
           </div>
-
-          {/* Mobile Rotating Morphing Toggle */}
-          <button
-            type="button"
-            className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-active' : ''}`}
-            onClick={() => setIsMobileMenuOpen(prev => !prev)}
-            aria-label={isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'}
-          >
-            <span className="nav-toggle-icon nav-toggle-burger">
-              <Menu size={18} strokeWidth={2} />
-            </span>
-            <span className="nav-toggle-icon nav-toggle-close">
-              <X size={18} strokeWidth={2} />
-            </span>
-          </button>
-
-          {/* Desktop CTA with Bedimcode Rolling Text */}
-          <a href="#the-passage" className="nav-action-btn btn-press nav-action-desktop-only">
-            <span className="nav-roll-inner">
-              <span className="nav-roll-default">AMBIL TIKET →</span>
-              <span className="nav-roll-hover" aria-hidden="true">AMBIL TIKET →</span>
-            </span>
-          </a>
-        </nav>
+        </div>
       </header>
 
       {/* Mobile Frosted Glass Navigation Drawer */}
@@ -175,22 +399,33 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
           <nav className="mobile-drawer-links" aria-label="Mobile Navigation">
             <button
               type="button"
-              className="mobile-drawer-link"
-              onClick={() => handleMobileNavClick('#lineup')}
+              className={`mobile-drawer-link ${currentView === 'home' ? 'is-active' : ''}`}
+              onClick={handleHomeClick}
             >
               <span className="mobile-drawer-link-kicker">01</span>
-              <span className="mobile-drawer-link-label">BINTANG TAMU</span>
+              <span className="mobile-drawer-link-label">BERANDA RESMI</span>
             </button>
 
             <div className="mobile-drawer-divider" />
 
             <button
               type="button"
-              className="mobile-drawer-link"
-              onClick={() => handleMobileNavClick('#the-passage')}
+              className={`mobile-drawer-link ${currentView === 'event-night-1' ? 'is-active' : ''}`}
+              onClick={handleNight1Click}
             >
               <span className="mobile-drawer-link-kicker">02</span>
-              <span className="mobile-drawer-link-label">TIKET ACARA</span>
+              <span className="mobile-drawer-link-label">MALAM I · 30 OKT (SWEAR IN CONTINENTAL)</span>
+            </button>
+
+            <div className="mobile-drawer-divider" />
+
+            <button
+              type="button"
+              className={`mobile-drawer-link ${currentView === 'event-night-2' ? 'is-active' : ''}`}
+              onClick={handleNight2Click}
+            >
+              <span className="mobile-drawer-link-kicker">03</span>
+              <span className="mobile-drawer-link-label">MALAM II · 31 OKT (THE UNDER-VAULT)</span>
             </button>
 
             <div className="mobile-drawer-divider" />
@@ -198,35 +433,103 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
             <button
               type="button"
               className="mobile-drawer-link"
-              onClick={() => handleMobileNavClick('#the-night')}
+              onClick={handleTicketClick}
             >
-              <span className="mobile-drawer-link-kicker">03</span>
-              <span className="mobile-drawer-link-label">JADWAL ACARA</span>
+              <span className="mobile-drawer-link-kicker">04</span>
+              <span className="mobile-drawer-link-label">TIKET RESMI (ARTATIX)</span>
             </button>
 
             <div className="mobile-drawer-divider" />
 
             <button
               type="button"
-              className="mobile-drawer-link mobile-drawer-link-gold"
-              onClick={handleMobileDossier}
+              className="mobile-drawer-link"
+              onClick={handleDenahClick}
             >
-              <span className="mobile-drawer-link-kicker">✦</span>
-              <span className="mobile-drawer-link-label">DETAIL EVENT</span>
+              <span className="mobile-drawer-link-kicker">05</span>
+              <span className="mobile-drawer-link-label">DENAH &amp; ORIENTASI VENUE</span>
+            </button>
+
+            <div className="mobile-drawer-divider" />
+
+            <button
+              type="button"
+              className="mobile-drawer-link"
+              onClick={handleReservasiClick}
+            >
+              <span className="mobile-drawer-link-kicker">06</span>
+              <span className="mobile-drawer-link-label">RESERVASI VIP (SOFA &amp; TABLE)</span>
+            </button>
+
+            <div className="mobile-drawer-divider" />
+
+            <button
+              type="button"
+              className="mobile-drawer-link"
+              onClick={handleOpenDossierTab}
+            >
+              <span className="mobile-drawer-link-kicker">07</span>
+              <span className="mobile-drawer-link-label">PANDUAN &amp; FAQ</span>
             </button>
           </nav>
 
-          {/* Bottom CTA */}
+          {/* Bottom CTA & Social Dispatch */}
           <div className="mobile-drawer-bottom">
             <button
               type="button"
               className="mobile-drawer-cta"
-              onClick={() => handleMobileNavClick('#the-passage')}
+              onClick={() => handleNavClick('home', '#the-passage', 'the-passage')}
             >
               AMBIL TIKET →
             </button>
+
+            {/* Official Social Dispatch Links */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginTop: '0.5rem' }}>
+              <a
+                href="https://www.instagram.com/thestateofclamor/?hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  color: 'var(--color-gold-antique)',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.12em',
+                  textDecoration: 'none'
+                }}
+              >
+                <Instagram size={15} />
+                <span>@thestateofclamor</span>
+              </a>
+
+              <span style={{ color: 'var(--color-dim)', fontSize: '0.7rem' }}>·</span>
+
+              <a
+                href="https://www.tiktok.com/@thestateofclamor"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  color: 'var(--color-gold-antique)',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.12em',
+                  textDecoration: 'none'
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z" />
+                </svg>
+                <span>TikTok</span>
+              </a>
+            </div>
+
             <span className="mobile-drawer-meta">
-              SWEAR IN CONTINENTAL · 30–31 OKT 2026
+              MIZU COMMONROOM · 30–31 OKT 2026
             </span>
           </div>
         </div>
@@ -234,3 +537,4 @@ export const FloatingNavbar: React.FC<Props> = ({ onOpenDossier }) => {
     </>
   );
 };
+export default FloatingNavbar;

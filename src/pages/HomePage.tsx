@@ -15,7 +15,7 @@ interface Props {
   highlightedTicketId: string | null;
   onOpenNight1: () => void;
   onOpenNight2: () => void;
-
+  onOpenReservasi?: () => void;
   onCheckout: (ticket: TicketTier) => void;
   onScrollToTickets: () => void;
   onToast: (msg: string) => void;
@@ -28,7 +28,7 @@ export const HomePage: React.FC<Props> = ({
   highlightedTicketId,
   onOpenNight1,
   onOpenNight2,
-
+  onOpenReservasi,
   onCheckout,
   onScrollToTickets,
   onToast,
@@ -59,6 +59,7 @@ export const HomePage: React.FC<Props> = ({
         tickets={tickets}
         highlightedTicketId={highlightedTicketId}
         onCheckout={onCheckout}
+        onOpenReservasi={onOpenReservasi}
       />
 
 

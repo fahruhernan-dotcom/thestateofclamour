@@ -246,7 +246,7 @@ export const EventDetailsPage: React.FC<Props> = ({
               <h3 className="sanctuary-card-title">THE MAIN ASSEMBLY HALL</h3>
               <p className="sanctuary-card-meta">PROFIL SUARA: SUB-BASS RESONANCE // KAPASITAS: 2.500</p>
               <p className="sanctuary-card-desc">
-                Aula utama bersejarah dengan pilar-pilar monolitik megah, sistem tata suara line-array 360 derajat, dan panggung pertunjukan konser live penuh energi yang dipimpin oleh Basboi.
+                Aula utama bersejarah dengan pilar-pilar monolitik megah, sistem tata suara line-array 360 derajat, dan panggung pertunjukan konser live penuh energi yang dipimpin oleh Secret Headliner (TBA).
               </p>
               <ul className="sanctuary-facilities-list">
                 <li>Sistem tata suara kustom dengan penguatan frekuensi sub-bass bertenaga tinggi</li>
@@ -260,7 +260,7 @@ export const EventDetailsPage: React.FC<Props> = ({
               <h3 className="sanctuary-card-title">THE UNDER-VAULT</h3>
               <p className="sanctuary-card-meta">PROFIL SUARA: INDUSTRIAL TECHNO // KAPASITAS: 1.200</p>
               <p className="sanctuary-card-desc">
-                Ruang beton bawah tanah yang didedikasikan untuk ketukan perkusi cepat, modular synth hipnotik, dan kurasi musik elektronik gelap oleh Elena Vex dan DJ residen underground.
+                Ruang beton bawah tanah yang didedikasikan untuk ketukan perkusi cepat, modular synth hipnotik, dan kurasi musik elektronik gelap oleh Secret Headliner (TBA) dan DJ residen underground.
               </p>
               <ul className="sanctuary-facilities-list">
                 <li>Langit-langit beton dengan peredaman khusus untuk dentuman bass yang menggetarkan tubuh</li>
@@ -323,7 +323,7 @@ export const EventDetailsPage: React.FC<Props> = ({
               </div>
               <div className="dossier-tt-row highlight">
                 <span className="tt-col-time">22:30 — 00:00</span>
-                <span className="tt-col-artist">BASBOI [LIVE HEADLINE CONCERT]</span>
+                <span className="tt-col-artist">SECRET HEADLINER [LIVE HEADLINE CONCERT]</span>
                 <span className="tt-col-stage">MAIN ASSEMBLY HALL</span>
               </div>
               <div className="dossier-tt-row">
@@ -350,7 +350,7 @@ export const EventDetailsPage: React.FC<Props> = ({
               </div>
               <div className="dossier-tt-row highlight">
                 <span className="tt-col-time">22:30 — 00:30</span>
-                <span className="tt-col-artist">ELENA VEX [EXTENDED LIVE TECHNO SET]</span>
+                <span className="tt-col-artist">SECRET HEADLINER [EXTENDED LIVE TECHNO SET]</span>
                 <span className="tt-col-stage">THE UNDER-VAULT</span>
               </div>
               <div className="dossier-tt-row">

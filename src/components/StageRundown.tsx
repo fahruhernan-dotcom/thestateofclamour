@@ -60,8 +60,8 @@ export const StageRundown: React.FC<Props> = ({
           {/* Cinematic Atmospheric Banner */}
           <div className="event-roster-banner-wrap">
             <img
-              src="/assets/guest_basboi.jpg"
-              alt="Night I — Basboi Swear In Continental Concert"
+              src="/assets/day1_billboard_assembly.jpg"
+              alt="Night I — Swear In Continental Concert"
               className="event-roster-banner-img"
               loading="lazy"
             />
@@ -75,9 +75,9 @@ export const StageRundown: React.FC<Props> = ({
           <div className="event-roster-body">
             <div className="event-roster-header">
               <h3 className="event-roster-title">
-                NIGHT I — BASBOI
+                NIGHT I — SWEAR IN CONTINENTAL
               </h3>
-              <p className="event-roster-tagline">SWEAR IN CONTINENTAL CONCERT</p>
+              <p className="event-roster-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             </div>
 
             <p className="event-roster-desc">
@@ -120,8 +120,8 @@ export const StageRundown: React.FC<Props> = ({
           {/* Cinematic Atmospheric Banner */}
           <div className="event-roster-banner-wrap">
             <img
-              src="/assets/guest_elena.jpg"
-              alt="Night II — Elena Vex Subterranean Modular Techno"
+              src="/assets/day2_billboard_vault.jpg"
+              alt="Night II — The Under-Vault Modular Techno"
               className="event-roster-banner-img"
               loading="lazy"
             />
@@ -135,9 +135,9 @@ export const StageRundown: React.FC<Props> = ({
           <div className="event-roster-body">
             <div className="event-roster-header">
               <h3 className="event-roster-title">
-                NIGHT II — ELENA VEX
+                NIGHT II — THE UNDER-VAULT
               </h3>
-              <p className="event-roster-tagline">SUBTERRANEAN MODULAR TECHNO</p>
+              <p className="event-roster-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             </div>
 
             <p className="event-roster-desc">

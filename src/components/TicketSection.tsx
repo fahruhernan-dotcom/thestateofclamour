@@ -8,9 +8,15 @@ interface Props {
   tickets: TicketTier[];
   highlightedTicketId?: string | null;
   onCheckout: (ticket: TicketTier) => void;
+  onOpenReservasi?: () => void;
 }
 
-export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, onCheckout }) => {
+export const TicketSection: React.FC<Props> = ({
+  tickets,
+  highlightedTicketId,
+  onCheckout,
+  onOpenReservasi,
+}) => {
   const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
@@ -40,6 +46,7 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
         tickets={tickets}
         highlightedTicketId={highlightedTicketId}
         onCheckout={onCheckout}
+        onOpenReservasi={onOpenReservasi}
       />
     );
   }
@@ -213,6 +220,39 @@ export const TicketSection: React.FC<Props> = ({ tickets, highlightedTicketId, o
               </article>
             );
           })}
+        </div>
+
+        {/* VIP Sofa & Floor Plan Gateway Callout */}
+        <div style={{ textAlign: 'center', marginTop: '2.5rem', marginBottom: '1rem' }}>
+          <a
+            href="#/reservasi"
+            onClick={(e) => {
+              if (onOpenReservasi) {
+                e.preventDefault();
+                onOpenReservasi();
+              }
+            }}
+            className="btn-press"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.65rem',
+              padding: '0.85rem 1.6rem',
+              borderRadius: '9999px',
+              background: 'rgba(197, 168, 105, 0.08)',
+              border: '1px solid var(--color-gold-hairline)',
+              color: 'var(--color-gold-antique)',
+              fontFamily: 'var(--font-monumental)',
+              fontSize: '0.74rem',
+              fontWeight: 700,
+              letterSpacing: '0.15em',
+              textDecoration: 'none',
+              cursor: 'pointer',
+              transition: 'all 250ms ease'
+            }}
+          >
+            <span>INGIN SOFA PRIVAT &amp; LAYANAN BUTLER? RESERVASI MEJA VIP →</span>
+          </a>
         </div>
 
         {/* Outro Threshold Bar */}

@@ -1,35 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ArrowLeft,
   Clock,
   MapPin,
+  ShieldCheck,
   Sparkles,
   Volume2,
-  CheckCircle2,
   Check,
   Flame,
-  Shield,
-  EyeOff,
-  ShieldCheck
+  Share2,
+  Lock,
+  Ticket,
+  Star,
+  ChevronDown
 } from 'lucide-react';
-import { Artist, TicketTier } from '../types';
+import { TicketTier } from '../types';
+import { EventVenueMapSection } from '../components/event/EventVenueMapSection';
+import { EventReservationSection } from '../components/event/EventReservationSection';
+import '../styles/streaming-event.css';
 
 interface Props {
-  artists: Artist[];
   tickets: TicketTier[];
+  initialPackageId?: string;
   onBack: () => void;
   onCheckout: (ticket: TicketTier) => void;
   onViewNight1?: () => void;
+  onToast?: (msg: string) => void;
 }
 
 export const NightTwoEventPage: React.FC<Props> = ({
-  artists,
   tickets,
+  initialPackageId,
   onBack,
   onCheckout,
   onViewNight1,
+  onToast,
 }) => {
-  const elena = artists.find(a => a.id === 'art-elena') || artists[1] || artists[0];
+  const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>(initialPackageId);
+  const [activeSection, setActiveSection] = useState<'spotlight' | 'rundown' | 'denah' | 'reservasi' | 'tickets' | 'panduan'>('spotlight');
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const card = e.currentTarget;
@@ -40,126 +48,326 @@ export const NightTwoEventPage: React.FC<Props> = ({
     card.style.setProperty('--foil-y', y);
   };
 
-  return (
-    <main className="event-dossier-page event-single-night-page">
-      {/* Top Bar Navigation */}
-      <nav className="dossier-top-bar" aria-label="Navigasi event malam dua">
-        <button
-          type="button"
-          onClick={onBack}
-          className="dossier-back-btn btn-press"
-        >
-          <ArrowLeft size={16} />
-          <span>KEMBALI KE BERANDA</span>
-        </button>
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const offset = 80;
+      const targetY = el.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    }
+  };
 
-        <div className="dossier-doc-stamp">
-          <span>EVENT BRIEF // NIGHT II</span>
+  const handleSelectZoneForReservation = (packageId?: string) => {
+    if (packageId) {
+      setSelectedPackageId(packageId);
+    }
+    scrollToSection('reservasi');
+  };
+
+  const handleShare = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+      onToast?.('Tautan Malam II berhasil disalin ke papan klip!');
+    } else {
+      onToast?.('Tautan: ' + window.location.href);
+    }
+  };
+
+  return (
+    <main className="streaming-event-page event-single-night-page">
+      {/* ---------------------------------------------------------------------- */}
+      {/* 1. CINEMATIC BILLBOARD HERO (STREAMING / NETFLIX STYLE)                 */}
+      {/* ---------------------------------------------------------------------- */}
+      <section className="streaming-billboard">
+        {/* Full-bleed visual backdrop */}
+        <div className="streaming-backdrop-wrap">
+          <img
+            src="/assets/day2_billboard_vault.jpg"
+            alt="The State of Clamour Night 2 The Under-Vault"
+            className="streaming-backdrop-img"
+          />
         </div>
 
-        {onViewNight1 && (
+        {/* Gradient Scrims for readability */}
+        <div className="streaming-scrim-top" />
+        <div className="streaming-scrim-left" />
+        <div className="streaming-scrim-bottom" />
+
+        {/* Billboard Hero Content Overlay */}
+        <div className="streaming-hero-content">
+          {/* Breadcrumb Navigation Bar */}
+          <div className="streaming-breadcrumb-row">
+            <button
+              type="button"
+              onClick={onBack}
+              className="streaming-back-link btn-press"
+              aria-label="Kembali ke Beranda"
+            >
+              <ArrowLeft size={13} />
+              <span>Kembali ke Beranda</span>
+            </button>
+            <span className="streaming-breadcrumb-sep">/</span>
+            <span className="streaming-kicker-tag">THE STATE OF CLAMOUR · CHAPTER 01</span>
+          </div>
+
+          {/* Title Treatment with Crisp Box Styling (The Mentalist style) */}
+          <div className="streaming-title-treatment">
+            <span className="streaming-title-prefix">NIGHT II</span>
+            <span className="streaming-title-bracket">THE UNDER-VAULT</span>
+          </div>
+
+          {/* Genre / Sonic Attributes Strip */}
+          <div className="streaming-genre-strip">
+            <span>Modular Synthesizer</span>
+            <span className="streaming-genre-dot">·</span>
+            <span>Sub-Bass 28Hz Industrial</span>
+            <span className="streaming-genre-dot">·</span>
+            <span>Granite Vault Acoustics</span>
+            <span className="streaming-genre-dot">·</span>
+            <span>Analog Live Set 140 BPM</span>
+          </div>
+
+          {/* Action Buttons Cluster (Watchlist · Favourite · Add to collection · Share) */}
+          <div className="streaming-actions-cluster">
+            <button
+              type="button"
+              onClick={() => scrollToSection('tickets')}
+              className="streaming-pill-btn is-ticket btn-press"
+            >
+              <Ticket size={14} />
+              <span>Ambil Tiket</span>
+              <span className="streaming-pill-count">31 Okt</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollToSection('reservasi')}
+              className="streaming-pill-btn btn-press"
+            >
+              <Sparkles size={14} />
+              <span>Reservasi VIP</span>
+              <span className="streaming-pill-count">Sofa</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollToSection('denah')}
+              className="streaming-pill-btn btn-press"
+            >
+              <MapPin size={14} />
+              <span>Denah Venue</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleShare}
+              className="streaming-pill-btn btn-press"
+              title="Bagikan Acara Ini"
+            >
+              <Share2 size={14} />
+              <span>Bagikan</span>
+            </button>
+          </div>
+
+          {/* Metadata Row */}
+          <div className="streaming-metadata-line">
+            <span>31 OKT 2026</span>
+            <span className="streaming-meta-dot">·</span>
+            <span>THE UNDER-VAULT</span>
+            <span className="streaming-meta-dot">·</span>
+            <span className="streaming-badge-box">18+ ONLY</span>
+            <span className="streaming-meta-dot">·</span>
+            <span className="streaming-meta-star">
+              <Star size={13} fill="#eab308" color="#eab308" />
+              <span>9.9 SOUND CURATION</span>
+            </span>
+            <span className="streaming-meta-dot">·</span>
+            <span className="streaming-badge-box is-tba">HEADLINER TBA</span>
+          </div>
+
+          {/* Narrative Synopsis (Clean 2-sentence logline) */}
+          <p className="streaming-synopsis-text">
+            Malam kedua babak perdana The State of Clamour membawa audiens menyelami kedalaman The Under-Vault. Identitas headliner tamu malam kedua masih tersimpan dalam status rahasia dan akan diumumkan pada transmisi berikutnya.
+          </p>
+
+          {/* Host / Collective Branding Emblem (Warner Bros style) */}
+          <div className="streaming-studio-emblem">
+            <img src="/assets/tsoc_logo_transparent.png" alt="TSOC Logo" />
+            <div className="streaming-studio-text-wrap">
+              <span className="streaming-studio-label">HOUSE OF WHISPERS</span>
+              <span className="streaming-studio-sub">NOCTURNAL PRODUCTION</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Scroll Cue to guide users down into dossier */}
+        <div className="streaming-scroll-cue" onClick={() => scrollToSection('spotlight')}>
+          <span className="streaming-scroll-label">EKSPLORASI DOSSIER</span>
+          <ChevronDown size={14} className="streaming-scroll-arrow" />
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------------- */}
+      {/* 2. IN-PAGE STICKY SECTION NAVIGATOR                                    */}
+      {/* ---------------------------------------------------------------------- */}
+      <nav className="streaming-nav-bar" aria-label="Lompat ke bagian acara">
+        <div className="streaming-nav-inner">
+          {/* Night Selector Tabs (Season Switcher DNA) */}
+          <div className="streaming-night-tabs">
+            {onViewNight1 && (
+              <button
+                type="button"
+                onClick={onViewNight1}
+                className="streaming-night-tab is-switch"
+                title="Beralih ke Dossier Malam I"
+              >
+                ← MALAM I · 30 OKT
+              </button>
+            )}
+            <span className="streaming-night-tab is-active">MALAM II · 31 OKT</span>
+          </div>
+          <div className="streaming-nav-divider" />
+
           <button
             type="button"
-            onClick={onViewNight1}
-            className="dossier-ticket-quick-btn btn-press"
+            onClick={() => { setActiveSection('spotlight'); scrollToSection('spotlight'); }}
+            className={`streaming-nav-link ${activeSection === 'spotlight' ? 'is-active' : ''}`}
           >
-            <span>← NIGHT I</span>
+            HEADLINER RAHASIA
           </button>
-        )}
+          <button
+            type="button"
+            onClick={() => { setActiveSection('rundown'); scrollToSection('rundown'); }}
+            className={`streaming-nav-link ${activeSection === 'rundown' ? 'is-active' : ''}`}
+          >
+            RUNDOWN ACARA
+          </button>
+          <button
+            type="button"
+            onClick={() => { setActiveSection('denah'); scrollToSection('denah'); }}
+            className={`streaming-nav-link ${activeSection === 'denah' ? 'is-active' : ''}`}
+          >
+            DENAH VENUE
+          </button>
+          <button
+            type="button"
+            onClick={() => { setActiveSection('reservasi'); scrollToSection('reservasi'); }}
+            className={`streaming-nav-link ${activeSection === 'reservasi' ? 'is-active' : ''}`}
+          >
+            RESERVASI VIP
+          </button>
+          <button
+            type="button"
+            onClick={() => { setActiveSection('tickets'); scrollToSection('tickets'); }}
+            className={`streaming-nav-link ${activeSection === 'tickets' ? 'is-active' : ''}`}
+          >
+            TIKET RESMI
+          </button>
+          <button
+            type="button"
+            onClick={() => { setActiveSection('panduan'); scrollToSection('panduan'); }}
+            className={`streaming-nav-link ${activeSection === 'panduan' ? 'is-active' : ''}`}
+          >
+            PANDUAN
+          </button>
+        </div>
       </nav>
 
-      {/* Hero Header Event Night II */}
-      <header className="dossier-hero-header">
-        <div className="section-eyebrow">
-          <span>SABTU, 31 OKTOBER 2026 // NIGHT II</span>
-        </div>
-        <h1 className="dossier-main-headline text-gold-metallic">
-          NIGHT II — ELENA VEX
-        </h1>
-        <p className="dossier-subheadline">
-          Perjalanan sonik modular hardware techno dan frekuensi sub-bass di bunker The Under-Vault.
-        </p>
-
-        {/* Technical Ledger Key Specs */}
-        <div className="dossier-specs-strip">
-          <div className="spec-metric-block">
-            <span className="spec-metric-label">TANGGAL</span>
-            <span className="spec-metric-val">31 OKT 2026</span>
-          </div>
-          <div className="spec-metric-block">
-            <span className="spec-metric-label">HEADLINER</span>
-            <span className="spec-metric-val">{elena ? elena.name : 'ELENA VEX'}</span>
-          </div>
-          <div className="spec-metric-block">
-            <span className="spec-metric-label">PANGGUNG</span>
-            <span className="spec-metric-val">THE UNDER-VAULT</span>
-          </div>
-          <div className="spec-metric-block">
-            <span className="spec-metric-label">WAKTU</span>
-            <span className="spec-metric-val">GERBANG 20:00 // SHOW 00:00</span>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Single Event Body Container */}
-      <div className="dossier-body-container" style={{ maxWidth: '1060px', margin: '0 auto', padding: '0 1.5rem 5rem' }}>
+      {/* ---------------------------------------------------------------------- */}
+      {/* 3. MAIN DOSSIER BODY CONTAINER                                         */}
+      {/* ---------------------------------------------------------------------- */}
+      <div className="streaming-section-container">
         
-        {/* Spotlight Showcase: Elena Vex & The Under-Vault */}
-        <section className="night-spotlight-section" style={{ marginBottom: '3rem' }}>
-          <div className="night-spotlight-card">
-            <div className="night-spotlight-visual">
+        {/* Spotlight Showcase: Teaser Headliner Night II */}
+        <section id="spotlight" style={{ marginBottom: '4rem', scrollMarginTop: '80px' }}>
+          <div className="streaming-section-header">
+            <div>
+              <span className="streaming-section-subtitle" style={{ color: '#eb5757' }}>HEADLINER MALAM KEDUA</span>
+              <h2 className="streaming-section-title">PENAMPIL UTAMA // PHASE 01 TEASER</h2>
+            </div>
+            <span className="streaming-badge-box is-tba">DIUMUMKAN SEGERA</span>
+          </div>
+
+          <div
+            className="streaming-spotlight-card"
+            style={{
+              borderColor: 'rgba(235, 87, 87, 0.35)'
+            }}
+          >
+            {/* Visual Teaser with Mystery Aura */}
+            <div className="streaming-spotlight-visual">
               <img
-                src={elena?.imageUrl || '/assets/guest_elena.jpg'}
-                alt="Elena Vex Live"
-                className="night-spotlight-img"
+                src="/assets/day2_billboard_vault.jpg"
+                alt="Headliner Rahasia Malam 2"
+                className="streaming-spotlight-img"
               />
-              <div className="night-spotlight-badge">
-                <Sparkles size={13} style={{ color: 'var(--color-gold-antique)' }} />
-                <span>HEADLINER MALAM II</span>
+              <div className="streaming-spotlight-mystery-overlay">
+                <div
+                  className="streaming-mystery-icon"
+                  style={{
+                    borderColor: 'rgba(235, 87, 87, 0.5)',
+                    color: '#eb5757',
+                    background: 'rgba(235, 87, 87, 0.1)'
+                  }}
+                >
+                  <Lock size={22} />
+                </div>
+                <div style={{ fontFamily: 'var(--font-monumental)', fontSize: '0.78rem', letterSpacing: '0.15em', color: '#ff7b7b' }}>
+                  SECRET HEADLINER
+                </div>
+                <div style={{ fontSize: '0.7rem', color: 'rgba(245, 242, 235, 0.65)' }}>
+                  PENGUMUMAN SEGERA
+                </div>
+              </div>
+              <div
+                className="streaming-spotlight-badge"
+                style={{
+                  borderColor: 'rgba(235, 87, 87, 0.4)',
+                  color: '#ff8888'
+                }}
+              >
+                <Sparkles size={11} />
+                <span>NIGHT II EXCLUSIVE</span>
               </div>
             </div>
 
-            <div className="night-spotlight-info">
-              <div className="night-tag-strip">
-                <span className="night-tag">DAY 2</span>
-                <span className="night-tag">NOCTURNAL STAGE</span>
-                <span className="night-tag">MODULAR TECHNO</span>
-              </div>
-
-              <h2 className="night-performer-title">{elena?.name || 'Elena Vex'}</h2>
-              <p className="night-performer-sub">Subterranean Modular Techno Odyssey</p>
-
-              <p className="night-performer-bio">
-                Set modular synthesizer analog real-time 140 BPM di bunker bawah tanah kedap suara berlantai beton dan dinding granit.
+            {/* Teaser Information */}
+            <div className="streaming-spotlight-info">
+              <span className="streaming-spotlight-sub" style={{ color: '#eb5757' }}>
+                THE UNDER-VAULT ANALOG MODULAR EXPERIENCE
+              </span>
+              <h3 className="streaming-spotlight-title">SECRET HEADLINER (TBA)</h3>
+              <p className="streaming-spotlight-desc">
+                Produser internasional dan penjelajah modular analog terpilih yang akan mengambil alih ruang The Under-Vault selama 150 menit tanpa henti. Dentuman 140 BPM bertekanan akustik tinggi dalam bunker berperedam granit. Seluruh tiket resmi menjamin akses penuh saat pengumuman fase berikutnya dirilis.
               </p>
 
-              <div className="night-performer-meta-grid">
-                <div className="night-meta-item">
-                  <Clock size={16} style={{ color: 'var(--color-gold-antique)' }} />
+              <div className="streaming-spotlight-meta-grid">
+                <div className="streaming-meta-block">
+                  <Clock size={16} style={{ color: '#eb5757', flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <strong>WAKTU SHOW</strong>
-                    <p>00:00 — 02:30 WIB (150 Menit)</p>
+                    <p>23:00 — 01:30 WIB (150 Menit)</p>
                   </div>
                 </div>
-                <div className="night-meta-item">
-                  <MapPin size={16} style={{ color: 'var(--color-crimson)' }} />
+                <div className="streaming-meta-block">
+                  <MapPin size={16} style={{ color: 'var(--color-crimson)', flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong>LOKASI</strong>
-                    <p>The Under-Vault (Bunker)</p>
+                    <strong>LOKASI PANGGUNG</strong>
+                    <p>The Under-Vault Bunker (Basement Lt. -1)</p>
                   </div>
                 </div>
-                <div className="night-meta-item">
-                  <Volume2 size={16} style={{ color: 'var(--color-gold-antique)' }} />
+                <div className="streaming-meta-block">
+                  <Volume2 size={16} style={{ color: '#eb5757', flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong>SUB-BASS ARRAY</strong>
-                    <p>Quad 21-inch Subwoofer</p>
+                    <strong>TATA SUARA</strong>
+                    <p>28Hz Sub-Bass High Pressure Array</p>
                   </div>
                 </div>
-                <div className="night-meta-item">
-                  <EyeOff size={16} style={{ color: 'var(--color-gold-antique)' }} />
+                <div className="streaming-meta-block">
+                  <ShieldCheck size={16} style={{ color: '#eb5757', flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong>ATURAN VISUAL</strong>
-                    <p>Dilarang Flash Kamera</p>
+                    <strong>BATAS USIA</strong>
+                    <p>18+ (Wajib KTP Fisik Asli)</p>
                   </div>
                 </div>
               </div>
@@ -167,165 +375,153 @@ export const NightTwoEventPage: React.FC<Props> = ({
           </div>
         </section>
 
-        {/* Section: Rundown Jam Demi Jam Malam 2 (Crisp & Scannable) */}
-        <section className="night-rundown-section" style={{ marginBottom: '3rem' }}>
-          <div className="dossier-sub-header">
-            <div className="section-eyebrow">
-              <span>SUSUNAN ACARA</span>
+        {/* Section: Rundown Acara (Streaming Running Order Format) */}
+        <section id="rundown" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
+          <div className="streaming-section-header">
+            <div>
+              <span className="streaming-section-subtitle" style={{ color: '#eb5757' }}>SUSUNAN ACARA HARIAN</span>
+              <h2 className="streaming-section-title">RUNDOWN // MALAM II (31 OKT 2026)</h2>
             </div>
-            <h2 className="dossier-sub-title text-gold-metallic">
-              RUNDOWN // MALAM II (31 OKT 2026)
-            </h2>
+            <span style={{ fontSize: '0.8rem', color: 'rgba(245, 242, 235, 0.6)' }}>
+              Total Durasi: 7 Jam
+            </span>
           </div>
 
-          <div className="timetable-timeline-list">
-            <div className="timeline-entry-row">
-              <div className="timeline-time-col">
-                <span className="timeline-hour">20:00</span>
-                <span className="timeline-meridiem">WIB</span>
+          <div className="streaming-episodes-grid">
+            {/* Act 01 */}
+            <article className="streaming-episode-card">
+              <div className="streaming-episode-thumb">
+                <img src="/assets/day2_billboard_vault.jpg" alt="Under-Vault Door Open" />
+                <span className="streaming-episode-num-badge">01</span>
+                <span className="streaming-episode-duration">90 MIN</span>
               </div>
-              <div className="timeline-content-col">
-                <div className="timeline-content-top">
-                  <h3 className="timeline-act-title">OPEN GATES & RFID REGISTRATION</h3>
-                  <span className="timeline-stage-tag">GATEWAY UTAMA</span>
+              <div className="streaming-episode-details">
+                <div className="streaming-episode-top-row">
+                  <h3 className="streaming-episode-title">Under-Vault Gate Open &amp; Drone Soundscape</h3>
+                  <span className="streaming-episode-stage-pill" style={{ borderColor: 'rgba(235, 87, 87, 0.3)', color: '#ff8888' }}>
+                    20:00 — 21:30 WIB
+                  </span>
                 </div>
-                <p className="timeline-act-desc">
-                  Penukaran tiket digital ke gelang RFID dan verifikasi kartu identitas fisik di loket.
+                <p className="streaming-episode-desc">
+                  Penukaran gelang RFID di gerbang bunker, penyesuaian akustik ruang bawah tanah, dan paparan drone frekuensi rendah pengantar.
                 </p>
               </div>
-            </div>
+            </article>
 
-            <div className="timeline-entry-row">
-              <div className="timeline-time-col">
-                <span className="timeline-hour">22:00</span>
-                <span className="timeline-meridiem">WIB</span>
+            {/* Act 02 */}
+            <article className="streaming-episode-card">
+              <div className="streaming-episode-thumb">
+                <img src="/assets/day2_billboard_vault.jpg" alt="Modular Warm-up" />
+                <span className="streaming-episode-num-badge">02</span>
+                <span className="streaming-episode-duration">90 MIN</span>
               </div>
-              <div className="timeline-content-col">
-                <div className="timeline-content-top">
-                  <h3 className="timeline-act-title">SUB-BASS CALIBRATION & AMBIENT</h3>
-                  <span className="timeline-stage-tag">THE UNDER-VAULT</span>
+              <div className="streaming-episode-details">
+                <div className="streaming-episode-top-row">
+                  <h3 className="streaming-episode-title">Resident Modular Architect Warm-Up</h3>
+                  <span className="streaming-episode-stage-pill" style={{ borderColor: 'rgba(235, 87, 87, 0.3)', color: '#ff8888' }}>
+                    21:30 — 23:00 WIB
+                  </span>
                 </div>
-                <p className="timeline-act-desc">
-                  Pembukaan bunker bawah tanah The Under-Vault dan kalibrasi resonansi sub-bass 25Hz.
+                <p className="streaming-episode-desc">
+                  Membangun ketegangan ritmik analog 132 BPM menuju atmosfer hipnotis ruang bawah tanah dengan modulasi synthesizer langsung.
                 </p>
               </div>
-            </div>
+            </article>
 
-            <div className="timeline-entry-row is-headline-entry">
-              <div className="timeline-time-col">
-                <span className="timeline-hour">00:00</span>
-                <span className="timeline-meridiem">WIB</span>
+            {/* Act 03: Headliner Main Event */}
+            <article className="streaming-episode-card is-headliner-red">
+              <div className="streaming-episode-thumb">
+                <img src="/assets/day2_billboard_vault.jpg" alt="Headliner Vault Takeover" />
+                <span className="streaming-episode-num-badge" style={{ background: '#eb5757', color: '#fff' }}>
+                  ★ 03
+                </span>
+                <span className="streaming-episode-duration">150 MIN</span>
               </div>
-              <div className="timeline-content-col">
-                <div className="timeline-content-top">
-                  <h3 className="timeline-act-title text-gold-metallic">
-                    ELENA VEX — LIVE MODULAR TECHNO
+              <div className="streaming-episode-details">
+                <div className="streaming-episode-top-row">
+                  <h3 className="streaming-episode-title" style={{ color: '#ff8888' }}>
+                    ★ SECRET HEADLINER (TBA) — Vault Takeover
                   </h3>
-                  <span className="timeline-stage-tag is-headliner-badge">HEADLINE SET</span>
+                  <span className="streaming-episode-stage-pill" style={{ borderColor: '#eb5757', color: '#ff8888' }}>
+                    23:00 — 01:30 WIB
+                  </span>
                 </div>
-                <p className="timeline-act-desc">
-                  Headline live set 150 menit tanpa henti dari instrumen modular synthesizer analog fisik.
+                <p className="streaming-episode-desc">
+                  Sesi live modular 140 BPM bertekanan akustik tinggi di panggung monolitik. Gelombang sub-bass 28Hz yang mengguncang dinding granit bunker.
                 </p>
               </div>
-            </div>
+            </article>
 
-            <div className="timeline-entry-row">
-              <div className="timeline-time-col">
-                <span className="timeline-hour">02:30</span>
-                <span className="timeline-meridiem">WIB</span>
+            {/* Act 04 */}
+            <article className="streaming-episode-card">
+              <div className="streaming-episode-thumb">
+                <img src="/assets/day2_billboard_vault.jpg" alt="Subterranean Overdrive Closing" />
+                <span className="streaming-episode-num-badge">04</span>
+                <span className="streaming-episode-duration">90 MIN</span>
               </div>
-              <div className="timeline-content-col">
-                <div className="timeline-content-top">
-                  <h3 className="timeline-act-title">SUB-BASS DESCENT & WIND-DOWN</h3>
-                  <span className="timeline-stage-tag">THE UNDER-VAULT</span>
+              <div className="streaming-episode-details">
+                <div className="streaming-episode-top-row">
+                  <h3 className="streaming-episode-title">Subterranean Overdrive &amp; B2B Aftermath</h3>
+                  <span className="streaming-episode-stage-pill" style={{ borderColor: 'rgba(235, 87, 87, 0.3)', color: '#ff8888' }}>
+                    01:30 — 03:00 WIB
+                  </span>
                 </div>
-                <p className="timeline-act-desc">
-                  Soundscape penutup frekuensi rendah dan transisi hadirin ke koridor keluar.
+                <p className="streaming-episode-desc">
+                  Penutupan ritual bunker dengan gelombang analog mendalam hingga pintu kedap suara The Under-Vault disegel kembali.
                 </p>
               </div>
-            </div>
-
-            <div className="timeline-entry-row">
-              <div className="timeline-time-col">
-                <span className="timeline-hour">03:00</span>
-                <span className="timeline-meridiem">WIB</span>
-              </div>
-              <div className="timeline-content-col">
-                <div className="timeline-content-top">
-                  <h3 className="timeline-act-title">CURFEW & PINTU RESMI DIKUNCI</h3>
-                  <span className="timeline-stage-tag">GERBANG UTAMA</span>
-                </div>
-                <p className="timeline-act-desc">
-                  Seluruh rangkaian The State of Clamour 2026 selesai. Pintu gerbang dikunci penuh.
-                </p>
-              </div>
-            </div>
+            </article>
           </div>
         </section>
 
-        {/* Section: Spesifikasi Bunker The Under-Vault (Simple & Clean) */}
-        <section className="night-venue-specs-section" style={{ marginBottom: '3rem' }}>
-          <div className="dossier-sub-header">
-            <div className="section-eyebrow">
-              <span>DENAH PANGGUNG</span>
+        {/* Section: Denah & Tata Ruang Venue */}
+        <section id="denah" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
+          <div className="streaming-section-header">
+            <div>
+              <span className="streaming-section-subtitle">TATA RUANG &amp; PANGGUNG</span>
+              <h2 className="streaming-section-title">DENAH VENUE // THE UNDER-VAULT BUNKER</h2>
             </div>
-            <h2 className="dossier-sub-title text-gold-metallic">
-              THE UNDER-VAULT // SPESIFIKASI BUNKER
-            </h2>
+            <span style={{ fontSize: '0.8rem', color: '#c5a059' }}>
+              Pilih sofa / meja VIP untuk reservasi
+            </span>
           </div>
 
-          <div className="sanctuary-detail-grid">
-            <div className="sanctuary-card">
-              <h3 className="sanctuary-title">LANTAI DANSA SUBTERRANEAN</h3>
-              <p className="sanctuary-desc">
-                Ruang bunker beton kedap suara seluas 600m² di kedalaman 6 meter bawah tanah.
-              </p>
-              <div className="sanctuary-specs-list">
-                <div className="sanctuary-spec-row">
-                  <span>Kapasitas:</span>
-                  <strong>1.000 Hadirin</strong>
-                </div>
-                <div className="sanctuary-spec-row">
-                  <span>Pencahayaan:</span>
-                  <strong>Monokromatik & Strobo Halus</strong>
-                </div>
-              </div>
-            </div>
-
-            <div className="sanctuary-card">
-              <h3 className="sanctuary-title">STASIUN HIDRASI & MEDIS</h3>
-              <p className="sanctuary-desc">
-                Fasilitas pendukung keselamatan penikmat musik techno berkecepatan tinggi.
-              </p>
-              <div className="sanctuary-specs-list">
-                <div className="sanctuary-spec-row">
-                  <span>Air Mineral:</span>
-                  <strong>Gratis Sepanjang Malam</strong>
-                </div>
-                <div className="sanctuary-spec-row">
-                  <span>Pos Medis:</span>
-                  <strong>Siaga 24 Jam di Pintu Bunker</strong>
-                </div>
-              </div>
-            </div>
-          </div>
+          <EventVenueMapSection
+            onSelectZoneForReservation={handleSelectZoneForReservation}
+            dayBadge="NIGHT II // THE UNDER-VAULT"
+          />
         </section>
 
-        {/* Section: Tiket Tersedia untuk Malam 2 */}
-        <section className="night-tickets-section" style={{ marginBottom: '3rem' }}>
-          <div className="dossier-sub-header">
-            <div className="section-eyebrow">
-              <span>AKSES MASUK RESMI</span>
+        {/* Section: Reservasi Meja VIP Malam 2 */}
+        <section id="reservasi" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
+          <div className="streaming-section-header">
+            <div>
+              <span className="streaming-section-subtitle">LAYANAN SOFA &amp; MEJA VIP</span>
+              <h2 className="streaming-section-title">RESERVASI VIP // MALAM II (31 OKT)</h2>
             </div>
-            <h2 className="dossier-sub-title text-gold-metallic">
-              TIKET MASUK // NIGHT II & 2-NIGHT PASS
-            </h2>
-            <p className="dossier-sub-desc">
-              Pilih tiket akses untuk pertunjukan Elena Vex di Malam 2. Transaksi resmi via Artatix.
-            </p>
+            <span className="streaming-badge-box">TERMASUK AKSES TIKET VIP</span>
           </div>
 
-          <div className="passage-matrix-grid">
+          <EventReservationSection
+            day="day-2"
+            initialPackageId={selectedPackageId}
+            onToast={onToast || (() => {})}
+          />
+        </section>
+
+        {/* Section: Pilihan Tiket Masuk */}
+        <section id="tickets" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
+          <div className="streaming-section-header">
+            <div>
+              <span className="streaming-section-subtitle">AKSES TIKET RESMI</span>
+              <h2 className="streaming-section-title">TIKET MASUK // NIGHT II &amp; FULL PASS</h2>
+            </div>
+            <span style={{ fontSize: '0.8rem', color: '#46d369' }}>
+              Transaksi Terverifikasi Artatix
+            </span>
+          </div>
+
+          <div className="passage-matrix-grid is-revealed">
             {tickets.map(ticket => {
               const isSoldOut = ticket.status === 'sold_out';
               const isActive = ticket.status === 'active';
@@ -411,64 +607,83 @@ export const NightTwoEventPage: React.FC<Props> = ({
           </div>
         </section>
 
-        {/* Section: Arahan & Tata Tertib Malam 2 (Crisp & Simple) */}
-        <section className="night-rules-section">
-          <div className="dossier-sub-header">
-            <div className="section-eyebrow">
-              <span>PANDUAN MASUK</span>
+        {/* Section: Panduan Pengunjung */}
+        <section id="panduan" style={{ marginBottom: '4rem', scrollMarginTop: '80px' }}>
+          <div className="streaming-section-header">
+            <div>
+              <span className="streaming-section-subtitle">PEDOMAN RESMI</span>
+              <h2 className="streaming-section-title">3 ARAHAN UTAMA PENGUNJUNG</h2>
             </div>
-            <h2 className="dossier-sub-title text-gold-metallic">
-              3 ARAHAN UTAMA PENGUNJUNG
-            </h2>
+            <span className="streaming-badge-box">WAJIB DIPATUHI</span>
           </div>
 
-          <div className="dossier-pillars-grid">
-            <article className="dossier-pillar-card">
-              <div className="pillar-index-tag">ARAHAN // 01</div>
-              <div className="pillar-icon-wrap">
-                <EyeOff size={20} style={{ color: 'var(--color-gold-antique)' }} />
-              </div>
-              <h3 className="pillar-title">DILARANG FLASH KAMERA</h3>
-              <p className="pillar-desc">
-                Dilarang menggunakan lampu flash handphone di area dance floor The Under-Vault.
+          <div className="streaming-rules-grid">
+            <article className="streaming-rule-card">
+              <span className="streaming-rule-index">ARAHAN // 01</span>
+              <h3 className="streaming-rule-title">18+ WAJIB IDENTITAS FISIK</h3>
+              <p className="streaming-rule-desc">
+                Wajib membawa KTP / Paspor / SIM fisik asli untuk penukaran tiket ke gelang RFID di pintu utama. Foto di ponsel tidak dapat diproses.
               </p>
-              <div className="pillar-footer-spec">
-                <CheckCircle2 size={13} style={{ color: 'var(--color-gold-antique)' }} />
-                <span>Pencahayaan Redup</span>
-              </div>
             </article>
 
-            <article className="dossier-pillar-card">
-              <div className="pillar-index-tag">ARAHAN // 02</div>
-              <div className="pillar-icon-wrap">
-                <Shield size={20} style={{ color: 'var(--color-gold-antique)' }} />
-              </div>
-              <h3 className="pillar-title">ALAS KAKI TERTUTUP</h3>
-              <p className="pillar-desc">
-                Wajib mengenakan sepatu tertutup (sneakers/boots). Dilarang sandal jepit dan selop.
+            <article className="streaming-rule-card">
+              <span className="streaming-rule-index">ARAHAN // 02</span>
+              <h3 className="streaming-rule-title">TATA BUSANA SERBA GELAP</h3>
+              <p className="streaming-rule-desc">
+                Disarankan mengenakan busana bernuansa gelap atau serba hitam. Dilarang mengenakan sandal jepit dan jersey tim olahraga demi estetika ruangan.
               </p>
-              <div className="pillar-footer-spec">
-                <CheckCircle2 size={13} style={{ color: 'var(--color-gold-antique)' }} />
-                <span>Keamanan Lantai Dansa</span>
-              </div>
             </article>
 
-            <article className="dossier-pillar-card">
-              <div className="pillar-index-tag">ARAHAN // 03</div>
-              <div className="pillar-icon-wrap">
-                <Sparkles size={20} style={{ color: 'var(--color-gold-antique)' }} />
-              </div>
-              <h3 className="pillar-title">RUANG AMAN (SAFE SPACE)</h3>
-              <p className="pillar-desc">
-                Toleransi nol terhadap pelecehan atau agresi. Petugas keamanan siap membantu 24 jam.
+            <article className="streaming-rule-card">
+              <span className="streaming-rule-index">ARAHAN // 03</span>
+              <h3 className="streaming-rule-title">100% NONTUNAI (RFID &amp; QRIS)</h3>
+              <p className="streaming-rule-desc">
+                Seluruh transaksi makanan, minuman, dan merchandise di dalam venue menggunakan saldo gelang RFID atau QRIS resmi.
               </p>
-              <div className="pillar-footer-spec">
-                <CheckCircle2 size={13} style={{ color: 'var(--color-gold-antique)' }} />
-                <span>Petugas Siaga</span>
-              </div>
             </article>
           </div>
         </section>
+
+        {/* More Like This Recommendation: Switch to Night I */}
+        {onViewNight1 && (
+          <section style={{ marginTop: '2rem' }}>
+            <div className="streaming-more-like-this-card">
+              <div className="streaming-recommend-poster">
+                <img
+                  src="/assets/day1_billboard_assembly.jpg"
+                  alt="Night 1 Swear In Continental"
+                />
+                <span className="streaming-recommend-badge" style={{ color: '#d4af37' }}>
+                  PARALLEL TRANSMISSION
+                </span>
+              </div>
+              <div className="streaming-recommend-body">
+                <span className="streaming-recommend-kicker">EKSPLORASI MALAM PERTAMA</span>
+                <h3 className="streaming-recommend-title">NIGHT I — [SWEAR IN CONTINENTAL]</h3>
+                <p className="streaming-recommend-desc">
+                  Rasakan kemegahan malam pembuka pada Jumat, 30 Oktober 2026. Alami live brass ensemble berkekuatan tinggi, hip-hop kontinental, dan atmosfer katedral 14 meter bersama Headliner Rahasia Malam Pertama.
+                </p>
+                <div className="streaming-recommend-action-row">
+                  <button
+                    type="button"
+                    onClick={onViewNight1}
+                    className="streaming-pill-primary btn-press"
+                  >
+                    <ArrowLeft size={14} />
+                    <span>LIHAT DETAIL NIGHT I</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onBack}
+                    className="streaming-pill-btn btn-press"
+                  >
+                    <span>KEMBALI KE BERANDA</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
       </div>
     </main>

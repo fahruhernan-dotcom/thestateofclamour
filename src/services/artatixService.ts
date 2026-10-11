@@ -126,20 +126,27 @@ export function isArtatixItemSoldOut(item: ArtatixTicketItem): boolean {
 export async function fetchLiveArtatixTickets(
   localTickets: TicketTier[]
 ): Promise<ArtatixSyncResult> {
-  // Candidate proxy URLs
+  const isDevLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  
+  // Candidate proxy URLs (in local dev, omit .php fallback which is for Apache cPanel)
   const candidateEndpoints = [
     '/api-artatix/customer/ticket/swear_in_continental?isTicketExclusive=0&isMerch=0',
-    '/api-artatix.php'
+    ...(isDevLocal ? [] : ['/api-artatix.php'])
   ];
 
   for (const endpoint of candidateEndpoints) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+
       const response = await fetch(endpoint, {
         method: 'GET',
         headers: {
           'Accept': 'application/json'
-        }
+        },
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         continue;

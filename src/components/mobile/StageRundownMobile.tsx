@@ -32,12 +32,12 @@ export const StageRundownMobile: React.FC<Props> = ({
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenNight1(); } }}
           role="button"
           tabIndex={0}
-          aria-label="Buka detail acara Malam I — Basboi"
+          aria-label="Buka detail acara Malam I — Swear In Continental"
         >
           <div className="rundown-mobile-banner">
             <img
-              src="/assets/guest_basboi.jpg"
-              alt="Night I — Basboi Swear In Continental Concert"
+              src="/assets/day1_billboard_assembly.jpg"
+              alt="Night I — Swear In Continental Concert"
               className="rundown-mobile-banner-img"
               loading="lazy"
               decoding="async"
@@ -50,8 +50,8 @@ export const StageRundownMobile: React.FC<Props> = ({
           </div>
 
           <div className="rundown-mobile-body">
-            <h3 className="rundown-mobile-title">MALAM I — BASBOI</h3>
-            <p className="rundown-mobile-tagline">SWEAR IN CONTINENTAL CONCERT</p>
+            <h3 className="rundown-mobile-title">MALAM I — SWEAR IN CONTINENTAL</h3>
+            <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
               Konser panggung utama hip-hop sinematik dan brass akustik megah di Main Assembly Hall berketinggian 14 meter.
             </p>
@@ -78,12 +78,12 @@ export const StageRundownMobile: React.FC<Props> = ({
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenNight2(); } }}
           role="button"
           tabIndex={0}
-          aria-label="Buka detail acara Malam II — Elena Vex"
+          aria-label="Buka detail acara Malam II — The Under-Vault"
         >
           <div className="rundown-mobile-banner">
             <img
-              src="/assets/guest_elena.jpg"
-              alt="Night II — Elena Vex Industrial Techno Assembly"
+              src="/assets/day2_billboard_vault.jpg"
+              alt="Night II — The Under-Vault Modular Techno"
               className="rundown-mobile-banner-img"
               loading="lazy"
               decoding="async"
@@ -91,13 +91,13 @@ export const StageRundownMobile: React.FC<Props> = ({
             <div className="rundown-mobile-banner-scrim" />
             <div className="rundown-mobile-badge-row">
               <span className="rundown-mobile-night-tag">MALAM II · 31 OKT</span>
-              <span className="rundown-mobile-venue-tag">CATHEDRAL HALL</span>
+              <span className="rundown-mobile-venue-tag">THE UNDER-VAULT</span>
             </div>
           </div>
 
           <div className="rundown-mobile-body">
-            <h3 className="rundown-mobile-title">MALAM II — ELENA VEX</h3>
-            <p className="rundown-mobile-tagline">INDUSTRIAL TECHNO RAVE</p>
+            <h3 className="rundown-mobile-title">MALAM II — THE UNDER-VAULT</h3>
+            <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
               Pengalaman rave berkecepatan 142 BPM dengan visual laser strobo monokromatik dan tata suara Funktion-One.
             </p>

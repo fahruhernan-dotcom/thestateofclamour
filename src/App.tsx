@@ -3,14 +3,17 @@ import { HomePage } from './pages/HomePage';
 import { NightOneEventPage } from './pages/NightOneEventPage';
 import { NightTwoEventPage } from './pages/NightTwoEventPage';
 import { EventDetailsPage } from './pages/EventDetailsPage';
+import { DenahPage } from './pages/DenahPage';
+import { ReservasiPage } from './pages/ReservasiPage';
+import { FloatingNavbar } from './components/FloatingNavbar';
 import { Footer } from './components/Footer';
-import { initialEvent, getActiveTickets, initialArtists, archivedIndividualArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
+import { initialEvent, getActiveTickets, initialArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
 import { Artist, EventData, TicketTier } from './types';
 import { Check } from 'lucide-react';
 import { CrypticPreloader } from './components/CrypticPreloader';
 import { fetchLiveArtatixTickets } from './services/artatixService';
 
-type ViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier';
+type ViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier' | 'denah' | 'reservasi';
 
 export const App: React.FC = () => {
   const [event] = useState<EventData>(initialEvent);
@@ -21,6 +24,7 @@ export const App: React.FC = () => {
   const [dossierInitialTab, setDossierInitialTab] = useState<'protocols' | 'architecture' | 'timetable' | 'guide'>('protocols');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [highlightedTicketId, setHighlightedTicketId] = useState<string | null>(null);
+  const [selectedReservationPackageId, setSelectedReservationPackageId] = useState<string | undefined>(undefined);
 
   // Preserve home scroll position across page transitions
   const homeScrollYRef = useRef<number>(0);
@@ -53,15 +57,20 @@ export const App: React.FC = () => {
   }, []);
 
   // Parse view from hash
-  const parseViewFromHash = (hash: string): { view: ViewMode; tab?: 'protocols' | 'architecture' | 'timetable' | 'guide' } => {
-    if (IS_LINEUP_TEASER_MODE) {
-      return { view: 'home' };
+  const parseViewFromHash = (hash: string): { view: ViewMode; tab?: 'protocols' | 'architecture' | 'timetable' | 'guide'; scrollTarget?: string } => {
+    if (hash === '#/denah' || hash === '#denah') {
+      return { view: 'event-night-1', scrollTarget: 'denah' };
     }
-    if (hash === '#/event/night-1' || hash === '#event-night-1' || hash === '#night-1') {
-      return { view: 'event-night-1' };
+    if (hash === '#/reservasi' || hash === '#reservasi') {
+      return { view: 'event-night-1', scrollTarget: 'reservasi' };
     }
-    if (hash === '#/event/night-2' || hash === '#event-night-2' || hash === '#night-2') {
-      return { view: 'event-night-2' };
+    if (hash.startsWith('#/event/night-1') || hash === '#event-night-1' || hash === '#night-1' || hash === '#/day-1' || hash === '#day-1') {
+      const scrollTarget = hash.includes('#denah') ? 'denah' : hash.includes('#reservasi') ? 'reservasi' : undefined;
+      return { view: 'event-night-1', scrollTarget };
+    }
+    if (hash.startsWith('#/event/night-2') || hash === '#event-night-2' || hash === '#night-2' || hash === '#/day-2' || hash === '#day-2') {
+      const scrollTarget = hash.includes('#denah') ? 'denah' : hash.includes('#reservasi') ? 'reservasi' : undefined;
+      return { view: 'event-night-2', scrollTarget };
     }
     if (hash.startsWith('#dossier') || hash.startsWith('#/event/full-dossier') || hash === '#details') {
       let tab: 'protocols' | 'architecture' | 'timetable' | 'guide' = 'protocols';
@@ -70,13 +79,16 @@ export const App: React.FC = () => {
       else if (hash.includes('guide')) tab = 'guide';
       return { view: 'full-dossier', tab };
     }
+    if (IS_LINEUP_TEASER_MODE) {
+      return { view: 'home' };
+    }
     return { view: 'home' };
   };
 
   // Sync hash routing on mount and hashchange with motion
   useEffect(() => {
     const handleHash = () => {
-      const { view, tab } = parseViewFromHash(window.location.hash);
+      const { view, tab, scrollTarget } = parseViewFromHash(window.location.hash);
       if (tab) setDossierInitialTab(tab);
 
       if (view !== currentView) {
@@ -88,14 +100,45 @@ export const App: React.FC = () => {
         setTimeout(() => {
           setCurrentView(view);
           if (view === 'home') {
-            restoreHomeScroll();
+            const hash = window.location.hash;
+            if (hash === '#lineup' || hash === '#the-passage') {
+              const targetId = hash.replace('#', '');
+              setTimeout(() => {
+                const el = document.getElementById(targetId);
+                if (el) {
+                  const navbarOffset = window.innerWidth <= 768 ? 76 : 92;
+                  const targetY = el.getBoundingClientRect().top + window.scrollY - navbarOffset;
+                  window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+                }
+              }, 100);
+            } else {
+              restoreHomeScroll();
+            }
           } else {
-            window.scrollTo({ top: 0, behavior: 'instant' });
+            if (scrollTarget) {
+              setTimeout(() => {
+                const el = document.getElementById(scrollTarget);
+                if (el) {
+                  const offset = 80;
+                  const targetY = el.getBoundingClientRect().top + window.scrollY - offset;
+                  window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+                }
+              }, 120);
+            } else {
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            }
           }
           setTimeout(() => {
             setIsTransitioning(false);
           }, 80);
         }, 180);
+      } else if (scrollTarget) {
+        const el = document.getElementById(scrollTarget);
+        if (el) {
+          const offset = 80;
+          const targetY = el.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        }
       }
     };
 
@@ -186,8 +229,28 @@ export const App: React.FC = () => {
     }
   };
 
-  // Smooth cinematic page navigation with intelligent scroll retention
-  const navigateTo = (view: ViewMode, hash = '') => {
+  // Smooth cinematic page navigation with intelligent scroll retention & in-page section scrolling
+  const navigateTo = (view: ViewMode, hash = '', scrollTargetId = '') => {
+    // If staying on home, handle direct smooth scroll without screen flash/transition
+    if (currentView === 'home' && view === 'home') {
+      if (hash && window.location.hash !== hash) {
+        window.history.pushState(null, '', hash);
+      }
+      if (scrollTargetId) {
+        const el = document.getElementById(scrollTargetId);
+        if (el) {
+          if (scrollTargetId === 'hero') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            const navbarOffset = window.innerWidth <= 768 ? 76 : 92;
+            const targetY = el.getBoundingClientRect().top + window.scrollY - navbarOffset;
+            window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+          }
+        }
+      }
+      return;
+    }
+
     if (currentView === view && window.location.hash === hash) return;
 
     // Capture home scroll position before navigating away
@@ -205,9 +268,34 @@ export const App: React.FC = () => {
       }
 
       if (view === 'home') {
-        restoreHomeScroll();
+        const targetId = scrollTargetId || (hash.startsWith('#') ? hash.slice(1) : '');
+        if (targetId && targetId !== 'hero' && document.getElementById(targetId)) {
+          setTimeout(() => {
+            const el = document.getElementById(targetId);
+            if (el) {
+              const navbarOffset = window.innerWidth <= 768 ? 76 : 92;
+              const targetY = el.getBoundingClientRect().top + window.scrollY - navbarOffset;
+              window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+            }
+          }, 80);
+        } else if (targetId === 'hero') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          restoreHomeScroll();
+        }
       } else {
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        if (scrollTargetId) {
+          setTimeout(() => {
+            const el = document.getElementById(scrollTargetId);
+            if (el) {
+              const offset = 80;
+              const targetY = el.getBoundingClientRect().top + window.scrollY - offset;
+              window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+            }
+          }, 100);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }
       }
 
       setTimeout(() => {
@@ -218,17 +306,26 @@ export const App: React.FC = () => {
 
 
   const handleOpenNight1 = () => {
-    if (IS_LINEUP_TEASER_MODE) return;
     navigateTo('event-night-1', '#/event/night-1');
   };
 
   const handleOpenNight2 = () => {
-    if (IS_LINEUP_TEASER_MODE) return;
     navigateTo('event-night-2', '#/event/night-2');
   };
 
+  const handleOpenDenah = () => {
+    navigateTo('event-night-1', '#/event/night-1#denah', 'denah');
+  };
 
+  const handleOpenReservasi = (packageId?: string) => {
+    if (packageId) setSelectedReservationPackageId(packageId);
+    navigateTo('event-night-1', '#/event/night-1#reservasi', 'reservasi');
+  };
 
+  const handleOpenDossier = (tab: 'protocols' | 'architecture' | 'timetable' | 'guide' = 'timetable') => {
+    setDossierInitialTab(tab);
+    navigateTo('full-dossier', `#dossier-${tab}`);
+  };
 
   const handleBackToHome = () => {
     navigateTo('home', '');
@@ -249,6 +346,13 @@ export const App: React.FC = () => {
     >
       {/* Zero-Asset Ceremonial Entrance Preloader */}
       <CrypticPreloader />
+
+      {/* Persistent Cinematic Navbar (Smooth Entrance from Section 2 & on Subpages) */}
+      <FloatingNavbar
+        currentView={currentView}
+        onNavigate={(view, hash, scrollTargetId) => navigateTo(view, hash, scrollTargetId)}
+        onOpenDossier={() => handleOpenDossier('timetable')}
+      />
 
       {/* Top Precision Laser Transit Beam */}
       <div
@@ -278,29 +382,48 @@ export const App: React.FC = () => {
             highlightedTicketId={highlightedTicketId}
             onOpenNight1={handleOpenNight1}
             onOpenNight2={handleOpenNight2}
+            onOpenReservasi={handleOpenReservasi}
             onCheckout={handleCheckout}
             onScrollToTickets={handleScrollToTickets}
             onToast={showToast}
           />
         )}
 
+        {currentView === 'denah' && (
+          <DenahPage
+            onBack={handleBackToHome}
+            onNavigateToReservasi={(pkgId) => handleOpenReservasi(pkgId)}
+          />
+        )}
+
+        {currentView === 'reservasi' && (
+          <ReservasiPage
+            initialPackageId={selectedReservationPackageId}
+            onBack={handleBackToHome}
+            onNavigateToDenah={handleOpenDenah}
+            onToast={showToast}
+          />
+        )}
+
         {currentView === 'event-night-1' && (
           <NightOneEventPage
-            artists={archivedIndividualArtists}
             tickets={tickets}
+            initialPackageId={selectedReservationPackageId}
             onBack={handleBackToHome}
             onCheckout={handleCheckout}
             onViewNight2={handleOpenNight2}
+            onToast={showToast}
           />
         )}
 
         {currentView === 'event-night-2' && (
           <NightTwoEventPage
-            artists={archivedIndividualArtists}
             tickets={tickets}
+            initialPackageId={selectedReservationPackageId}
             onBack={handleBackToHome}
             onCheckout={handleCheckout}
             onViewNight1={handleOpenNight1}
+            onToast={showToast}
           />
         )}
 
