@@ -33,31 +33,26 @@ export function createDeployZip() {
     }
   }
 
-  try {
-    if (process.platform === 'win32') {
-      execSync(
-        `powershell -Command "Get-ChildItem -Path dist -Force | Compress-Archive -DestinationPath dist-deploy-ready.zip -Force"`,
-        { cwd: rootDir, stdio: 'inherit' }
-      );
-      // Attempt copy to dist-deploy.zip if possible
-      try {
-        fs.copyFileSync(path.resolve(rootDir, 'dist-deploy-ready.zip'), zipOutputPath);
-      } catch {
-        console.log('ℹ️ dist-deploy.zip is currently locked, packaged as dist-deploy-ready.zip.');
-      }
-    } else {
-      execSync(
-        `cd dist && zip -r ../dist-deploy.zip .`,
-        { cwd: rootDir, stdio: 'inherit' }
-      );
-    }
+  if (process.platform === 'win32') {
+    // Windows PowerShell Compress-Archive (force include hidden files like .htaccess)
+    execSync(
+      `powershell -Command "Get-ChildItem -Path dist -Force | Compress-Archive -DestinationPath dist-deploy.zip -Force"`,
+      { cwd: rootDir, stdio: 'inherit' }
+    );
+  } else {
+    // Linux / macOS zip
+    execSync(
+      `cd dist && zip -r ../dist-deploy.zip .`,
+      { cwd: rootDir, stdio: 'inherit' }
+    );
+  }
 
-    const finalPath = fs.existsSync(zipOutputPath) ? zipOutputPath : path.resolve(rootDir, 'dist-deploy-ready.zip');
-    const stats = fs.statSync(finalPath);
+  if (fs.existsSync(zipOutputPath)) {
+    const stats = fs.statSync(zipOutputPath);
     const sizeMb = (stats.size / (1024 * 1024)).toFixed(2);
-    console.log(`\n✅ [Deploy ZIP Created] ${path.basename(finalPath)} (${sizeMb} MB) ready for upload to cPanel / Cloud Hosting public_html!\n`);
-  } catch (err) {
-    throw new Error('Failed to create deploy zip: ' + err.message);
+    console.log(`\n✅ [Deploy ZIP Created] dist-deploy.zip (${sizeMb} MB) ready for upload to cPanel / Cloud Hosting public_html!\n`);
+  } else {
+    throw new Error('Failed to create dist-deploy.zip');
   }
 }
 
