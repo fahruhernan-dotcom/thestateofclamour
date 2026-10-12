@@ -41,6 +41,46 @@
   gap: 4px;
 }
 
+.view-mode-toggle {
+  display: flex;
+  background: rgba(8, 10, 15, 0.85);
+  border: 1px solid rgba(197, 168, 105, 0.3);
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.view-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-gray-subtle, #A6A4A0);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.view-mode-btn:hover {
+  color: var(--color-ivory, #E9E4DA);
+  background: rgba(197, 168, 105, 0.1);
+}
+
+.view-mode-btn.is-active {
+  background: linear-gradient(135deg, rgba(197, 168, 105, 0.3) 0%, rgba(143, 29, 36, 0.3) 100%);
+  border-color: rgba(197, 168, 105, 0.6);
+  color: var(--color-gold-antique, #C5A869);
+  box-shadow: 0 0 12px rgba(197, 168, 105, 0.2);
+}
+
 .floor-tab-btn {
   display: flex;
   align-items: center;
@@ -695,15 +735,101 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
+@media (max-width: 768px) {
+  /* Expand invisible tap target for finger touches without increasing visual badge footprint */
+  .table-hotspot-pin::before {
+    content: '';
+    position: absolute;
+    inset: -9px;
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  /* Micro-badge pins on tablet & mobile */
+  .hotspot-badge {
+    padding: 1.5px 3.5px;
+    font-size: 0.52rem;
+    gap: 1.5px;
+    border-radius: 3px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  }
+
+  .lock-icon-badge {
+    width: 7px;
+    height: 7px;
+    margin-right: 0;
+  }
+
+  .floorplan-controls-cluster {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .floorplan-switch-row {
+    gap: 0.5rem;
+  }
+
+  .floor-tab-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .floor-tab-badge {
+    display: none;
+  }
+
+  .view-mode-btn {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.72rem;
+  }
+
+  .floorplan-guide-banner {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.7rem;
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ultra-compact micro-pins on small phone screens (iPhone / small Android) */
+  .hotspot-badge {
+    padding: 1px 2.5px;
+    font-size: 0.44rem;
+    border-radius: 2px;
+    letter-spacing: 0;
+    gap: 1px;
+  }
+
+  .lock-icon-badge {
+    width: 6px;
+    height: 6px;
+  }
+
+  .floorplan-canvas-frame {
+    min-height: 350px;
+  }
+
+  .floor-stats-pill {
+    font-size: 0.72rem;
+    gap: 0.65rem;
+  }
+
+  .filter-chip-btn {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.7rem;
+  }
+}
+
 @media (max-width: 640px) {
   .floorplan-gesture-hint {
     display: none;
   }
 
   .floorplan-hud-controls {
-    right: 0.6rem;
-    bottom: 0.6rem;
-    padding: 0.25rem 0.4rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    padding: 0.25rem 0.35rem;
     gap: 0.2rem;
   }
 
@@ -713,7 +839,172 @@
   }
 
   .hud-zoom-badge {
-    font-size: 0.7rem;
-    min-width: 38px;
+    font-size: 0.68rem;
+    min-width: 36px;
   }
+}
+
+/* ==========================================================================
+ * QUICK TABLE LIST VIEW (MODE 2: DAFTAR MEJA UNTUK MOBILE & DESKTOP)
+ * ========================================================================== */
+.floorplan-list-view {
+  width: 100%;
+  animation: fadeIn 0.25s ease;
+}
+
+.floorplan-list-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+@media (min-width: 480px) {
+  .floorplan-list-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .floorplan-list-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+.floorplan-table-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  border-radius: 10px;
+  background: rgba(13, 16, 24, 0.88);
+  border: 1px solid rgba(197, 168, 105, 0.22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.floorplan-table-card:hover {
+  border-color: rgba(197, 168, 105, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(197, 168, 105, 0.15);
+}
+
+.floorplan-table-card:active {
+  transform: scale(0.98);
+}
+
+.floorplan-table-card.is-selected {
+  border-color: var(--color-gold-antique, #C5A869);
+  background: rgba(197, 168, 105, 0.1);
+  box-shadow: 0 0 20px rgba(197, 168, 105, 0.25);
+}
+
+.floorplan-table-card.is-occupied {
+  border-color: rgba(224, 49, 62, 0.35);
+  background: rgba(22, 10, 13, 0.82);
+}
+
+.table-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.table-card-code {
+  font-family: 'Cinzel', serif, Georgia;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-gold-antique, #C5A869);
+  letter-spacing: 0.05em;
+}
+
+.table-card-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+
+.table-card-status.available {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.table-card-status.occupied {
+  background: rgba(224, 49, 62, 0.15);
+  border: 1px solid rgba(224, 49, 62, 0.4);
+  color: #f87171;
+}
+
+.card-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.card-status-dot.available {
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+}
+
+.table-card-name {
+  font-size: 0.78rem;
+  color: var(--color-ivory, #E9E4DA);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.table-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--color-gray-subtle, #A6A4A0);
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.table-card-price {
+  font-weight: 700;
+  color: var(--color-gold-antique, #C5A869);
+}
+
+.table-card-action-btn {
+  width: 100%;
+  padding: 0.45rem;
+  border-radius: 6px;
+  background: rgba(197, 168, 105, 0.1);
+  border: 1px solid rgba(197, 168, 105, 0.25);
+  color: var(--color-gold-antique, #C5A869);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  margin-top: 0.2rem;
+  user-select: none;
+}
+
+.table-card-action-btn:hover {
+  background: var(--color-gold-antique, #C5A869);
+  color: #050608;
+}
+
+.floorplan-table-card.is-occupied .table-card-action-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-gray-subtle, #A6A4A0);
 }
