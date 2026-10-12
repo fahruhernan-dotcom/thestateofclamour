@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Sparkles, MessageCircle, X } from 'lucide-react';
+import { MessageCircle, X } from 'lucide-react';
 import { buildAdminGeneralInquiryUrl } from '../data/reservationData';
 
 interface Props {
@@ -40,18 +40,9 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
       <div className="final-volumetric-beam-core" aria-hidden="true" />
 
       <div className="final-gateway-panel">
-        <p className="section-eyebrow">
-          <Sparkles size={13} style={{ color: 'var(--color-gold-antique)' }} />
-          <span>30 - 31 OCTOBER 2026 // MIZU COMMONROOM</span>
-        </p>
-
-        <h2 className="section-headline" style={{ marginBottom: '1.25rem' }}>
-          THE DOORS ARE OPENING
+        <h2 className="section-headline" style={{ marginBottom: '2.25rem' }}>
+          WELCOME TO THE CONTINENTAL
         </h2>
-
-        <p className="section-subheadline" style={{ marginBottom: '2.5rem' }}>
-          Two nights of sound, movement, and monumental assembly.
-        </p>
 
         {/* Primary Enter / Inquire Trigger */}
         <div style={{ position: 'relative', display: 'inline-block' }}>
