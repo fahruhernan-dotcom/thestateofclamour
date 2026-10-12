@@ -34,19 +34,19 @@ export interface VenueZone {
 // Ganti nomor di bawah ini dengan nomor WhatsApp resmi masing-masing admin (format 628...)
 // ---------------------------------------------------------------------------
 export const ADMIN_DAY1 = {
-  phone: '62881080020231', // Admin Day 1 (Jumat, 30 Okt 2026 - Swear In Continental)
-  name: 'Admin Day 1 (Swear in Continental)',
+  phone: '62881080020231', // Admin Day 1 (Jumat, 30 Okt 2026)
+  name: 'ADMIN RSVP DAY 1',
   displayPhone: '+62 881-0800-20231',
   dateLabel: 'Jumat, 30 Oktober 2026',
-  headliner: 'Secret Headliner (TBA) + TSOC Assembly'
+  headliner: 'Secret Headliner (TBA)'
 };
 
 export const ADMIN_DAY2 = {
-  phone: '62881080020332', // Admin Day 2 (Sabtu, 31 Okt 2026 - The Under-Vault)
-  name: 'Admin Day 2 (The Under-Vault)',
+  phone: '62881080020332', // Admin Day 2 (Sabtu, 31 Okt 2026)
+  name: 'ADMIN RSVP DAY 2',
   displayPhone: '+62 881-0800-20332',
   dateLabel: 'Sabtu, 31 Oktober 2026',
-  headliner: 'Secret Headliner (TBA) + Industrial Sub-Bass'
+  headliner: 'Secret Headliner (TBA)'
 };
 
 // ---------------------------------------------------------------------------

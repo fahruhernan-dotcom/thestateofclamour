@@ -74,22 +74,22 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
             type="button"
             className="btn-admin-wa-pill"
             onClick={() => handleOpenWhatsApp('day-1')}
-            title="Chat via WhatsApp for Night 1"
+            title="Chat via WhatsApp for Admin RSVP Day 1"
           >
             <span className="wa-pill-dot" />
             <MessageCircle size={14} className="text-[#25d366]" />
-            <span>NIGHT 01: SWEAR IN CONTINENTAL</span>
+            <span>ADMIN RSVP DAY 1</span>
           </button>
 
           <button
             type="button"
             className="btn-admin-wa-pill is-day2"
             onClick={() => handleOpenWhatsApp('day-2')}
-            title="Chat via WhatsApp for Night 2"
+            title="Chat via WhatsApp for Admin RSVP Day 2"
           >
             <span className="wa-pill-dot" />
             <MessageCircle size={14} className="text-[#25d366]" />
-            <span>NIGHT 02: THE UNDER-VAULT</span>
+            <span>ADMIN RSVP DAY 2</span>
           </button>
         </div>
       </div>
@@ -130,10 +130,7 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
               >
                 <div className="admin-card-info">
                   <span className="admin-card-day-badge">NIGHT 01 · 30 OCT</span>
-                  <div className="admin-card-name">SWEAR IN CONTINENTAL</div>
-                  <span className="admin-card-desc">
-                    Hip-Hop &amp; Alternative Energy
-                  </span>
+                  <div className="admin-card-name">ADMIN RSVP DAY 1</div>
                 </div>
 
                 <div className="admin-card-cta-btn">
@@ -151,10 +148,7 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
               >
                 <div className="admin-card-info">
                   <span className="admin-card-day-badge">NIGHT 02 · 31 OCT</span>
-                  <div className="admin-card-name">THE UNDER-VAULT</div>
-                  <span className="admin-card-desc">
-                    Techno &amp; Modular Sub-Bass
-                  </span>
+                  <div className="admin-card-name">ADMIN RSVP DAY 2</div>
                 </div>
 
                 <div className="admin-card-cta-btn">

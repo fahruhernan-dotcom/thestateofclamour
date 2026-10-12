@@ -94,12 +94,12 @@ export const ReservasiPage: React.FC<Props> = ({
           role="button"
           tabIndex={0}
         >
-          <span className="day-tab-badge">NIGHT 01 // SWEAR IN CONTINENTAL</span>
-          <h2 className="day-tab-title">JUMAT, 30 OKTOBER 2026</h2>
-          <span className="day-tab-meta">Gates Unsealed 20:00 WIB · Live Hip-Hop &amp; Alternative Energy</span>
+          <span className="day-tab-badge">NIGHT 01 // 30 OKTOBER 2026</span>
+          <h2 className="day-tab-title">ADMIN RSVP DAY 1</h2>
+          <span className="day-tab-meta">Gates Unsealed 20:00 WIB</span>
           <div className="day-tab-admin-duty">
             <MessageCircle size={13} />
-            <span>Admin Day 1 Siaga: {ADMIN_DAY1.displayPhone}</span>
+            <span>ADMIN RSVP DAY 1: {ADMIN_DAY1.displayPhone}</span>
           </div>
         </div>
 
@@ -109,12 +109,12 @@ export const ReservasiPage: React.FC<Props> = ({
           role="button"
           tabIndex={0}
         >
-          <span className="day-tab-badge">NIGHT 02 // TECHNO UNDER-VAULT</span>
-          <h2 className="day-tab-title">SABTU, 31 OKTOBER 2026</h2>
-          <span className="day-tab-meta">Gates Unsealed 20:00 WIB · Modular &amp; Industrial Sub-Bass</span>
+          <span className="day-tab-badge">NIGHT 02 // 31 OKTOBER 2026</span>
+          <h2 className="day-tab-title">ADMIN RSVP DAY 2</h2>
+          <span className="day-tab-meta">Gates Unsealed 20:00 WIB</span>
           <div className="day-tab-admin-duty">
             <MessageCircle size={13} />
-            <span>Admin Day 2 Siaga: {ADMIN_DAY2.displayPhone}</span>
+            <span>ADMIN RSVP DAY 2: {ADMIN_DAY2.displayPhone}</span>
           </div>
         </div>
       </section>
