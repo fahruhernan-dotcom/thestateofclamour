@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { MessageCircle, X } from 'lucide-react';
 import { buildAdminGeneralInquiryUrl } from '../data/reservationData';
 
@@ -10,6 +11,25 @@ interface Props {
 export const FinalCTA: React.FC<Props> = ({ onToast }) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isModalOpen]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!btnRef.current) return;
@@ -89,7 +109,7 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
       </div>
 
       {/* Admin Contact Selection Modal */}
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div
           className="admin-modal-overlay"
           onClick={() => setIsModalOpen(false)}
@@ -152,7 +172,8 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   );

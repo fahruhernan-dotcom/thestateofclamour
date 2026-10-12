@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { TableSpot, TableStatus } from '../../types/tableTypes';
 import { ADMIN_DAY1, ADMIN_DAY2 } from '../../data/reservationData';
 import { X, Lock, CheckCircle2, Users, Crown, MessageCircle } from 'lucide-react';
@@ -18,6 +19,27 @@ export const TableDetailDrawer: React.FC<Props> = ({
   onClose,
   onSelectForBooking
 }) => {
+  useEffect(() => {
+    if (!spot) return;
+
+    // Lock body scroll while modal is active
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    // Handle Escape key to close modal
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [spot, onClose]);
+
   if (!spot) return null;
 
   const isAvailable = status === 'available';
@@ -40,7 +62,7 @@ export const TableDetailDrawer: React.FC<Props> = ({
 
   const venueLabel = spot.venue === 'tetra' ? 'TETRA SOLO' : 'MIZU COMMONROOM';
 
-  return (
+  return createPortal(
     <div className="table-drawer-overlay" onClick={onClose} role="dialog" aria-modal="true">
       <div className="table-drawer-panel" onClick={e => e.stopPropagation()}>
         {/* Header */}
@@ -139,6 +161,7 @@ export const TableDetailDrawer: React.FC<Props> = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

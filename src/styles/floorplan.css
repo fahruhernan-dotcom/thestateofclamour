@@ -422,40 +422,64 @@
 .table-drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(5, 7, 10, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 999;
+  background: rgba(3, 5, 8, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 9999;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  animation: fadeIn 0.2s ease;
+  padding: 0;
+  animation: fadeIn 0.22s ease;
 }
 
 @media (min-width: 768px) {
   .table-drawer-overlay {
     align-items: center;
+    padding: 2rem 1.5rem;
   }
 }
 
 .table-drawer-panel {
   width: 100%;
   max-width: 520px;
+  max-height: calc(100dvh - 3.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: #0d1017;
   border: 1px solid rgba(197, 168, 105, 0.35);
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.9);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 0, 0, 0.8);
   padding: 1.5rem;
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  position: relative;
+  z-index: 10000;
+}
+
+.table-drawer-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.table-drawer-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-drawer-panel::-webkit-scrollbar-thumb {
+  background: rgba(197, 168, 105, 0.25);
+  border-radius: 9999px;
+}
+
+.table-drawer-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(197, 168, 105, 0.55);
 }
 
 @media (min-width: 768px) {
   .table-drawer-panel {
-    border-radius: 16px;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95);
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 50px rgba(197, 168, 105, 0.08);
   }
 }
 
