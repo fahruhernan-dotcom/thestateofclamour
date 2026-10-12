@@ -1772,11 +1772,12 @@ export const INITIAL_OCCUPIED_SPOTS: Record<string, boolean> = {
   'f1-sofa-1': true,
   'f1-t-3': true,
   'f1-st-9': true,
-  'f2-vvip-2': true,
-  'f2-vip-4': true,
-  'f2-vip-8': true,
-  'f2-m-3': true,
-  'f2-ts-5': true
+  'f2-t-10': true,   // T.10 Veronica Lidia
+  'f2-ts-4': true,   // TS.4 reyhan
+  'f2-vip-2': true,  // VIP.2 Rachel Aulia
+  'f2-vip-4': true,  // VIP.4 Macil Cekut
+  'f2-vip-10': true, // VIP.10 Haykal
+  'f2-vip-11': true, // VIP.11 Babarafi
 };
 
 export function getFloorSpots(floor: FloorLevel): TableSpot[] {
