@@ -31,7 +31,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $curlErr = curl_error($ch);
-curl_close($ch);
+unset($ch);
 
 if ($response !== false && $httpCode === 200) {
     echo $response;

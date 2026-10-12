@@ -34,17 +34,17 @@ export interface VenueZone {
 // Ganti nomor di bawah ini dengan nomor WhatsApp resmi masing-masing admin (format 628...)
 // ---------------------------------------------------------------------------
 export const ADMIN_DAY1 = {
-  phone: '6281234567891', // Admin Day 1 (Jumat, 30 Okt 2026 - Swear In Continental)
-  name: 'Admin Day 1 (Swear In Continental)',
-  displayPhone: '+62 812-3456-7891',
+  phone: '62881080020231', // Admin Day 1 (Jumat, 30 Okt 2026 - Swear In Continental)
+  name: 'Admin Day 1 (Swear in Continental)',
+  displayPhone: '+62 881-0800-20231',
   dateLabel: 'Jumat, 30 Oktober 2026',
   headliner: 'Secret Headliner (TBA) + TSOC Assembly'
 };
 
 export const ADMIN_DAY2 = {
-  phone: '6281234567892', // Admin Day 2 (Sabtu, 31 Okt 2026 - The Under-Vault)
+  phone: '62881080020332', // Admin Day 2 (Sabtu, 31 Okt 2026 - The Under-Vault)
   name: 'Admin Day 2 (The Under-Vault)',
-  displayPhone: '+62 812-3456-7892',
+  displayPhone: '+62 881-0800-20332',
   dateLabel: 'Sabtu, 31 Oktober 2026',
   headliner: 'Secret Headliner (TBA) + Industrial Sub-Bass'
 };
@@ -335,30 +335,31 @@ export function buildWhatsAppReservationUrl({
     : '-';
 
   const dayLabel = day === 'day-1' ? 'DAY 1 (Jumat, 30 Okt 2026 - Swear In Continental)' : 'DAY 2 (Sabtu, 31 Okt 2026 - The Under-Vault)';
+  const eventTheme = day === 'day-1' ? 'SWEAR IN CONTINENTAL' : 'THE UNDER-VAULT';
 
   let message = `Halo ${admin.name},\n`;
-  message += `Saya tertarik untuk melakukan reservasi meja/sofa di acara *THE STATE OF CLAMOUR: SWEAR IN CONTINENTAL*.\n\n`;
-  message += `📋 *DETAIL PERMINTAAN RESERVASI:*\n`;
-  message += `• *Jadwal Acara:* ${dayLabel}\n`;
+  message += `Saya tertarik untuk melakukan reservasi meja/sofa di acara *THE STATE OF CLAMOUR: ${eventTheme}*.\n\n`;
+  message += `*DETAIL PERMINTAAN RESERVASI:*\n`;
+  message += `- *Jadwal Acara:* ${dayLabel}\n`;
   
   if (pkg) {
-    message += `• *Pilihan Paket:* ${pkg.name} (${pkg.zoneCode})\n`;
-    message += `• *Minimum Spend:* ${minSpend}\n`;
-    message += `• *Kapasitas Paket:* ${pkg.capacityText}\n`;
+    message += `- *Pilihan Paket:* ${pkg.name} (${pkg.zoneCode})\n`;
+    message += `- *Minimum Spend:* ${minSpend}\n`;
+    message += `- *Kapasitas Paket:* ${pkg.capacityText}\n`;
   } else {
-    message += `• *Pilihan Paket:* Informasi Umum Meja/Sofa\n`;
+    message += `- *Pilihan Paket:* Informasi Umum Meja/Sofa\n`;
   }
 
   if (guestName && guestName.trim().length > 0) {
-    message += `• *Nama Pemesan:* ${guestName.trim()}\n`;
+    message += `- *Nama Pemesan:* ${guestName.trim()}\n`;
   }
 
   if (guestCount && guestCount > 0) {
-    message += `• *Perkiraan Hadirin:* ${guestCount} Orang\n`;
+    message += `- *Perkiraan Hadirin:* ${guestCount} Orang\n`;
   }
 
   if (customMessage && customMessage.trim().length > 0) {
-    message += `• *Catatan Khusus:* ${customMessage.trim()}\n`;
+    message += `- *Catatan Khusus:* ${customMessage.trim()}\n`;
   }
 
   message += `\nMohon info ketersediaan nomor meja dan tata cara reservasinya. Terima kasih!`;
@@ -373,3 +374,16 @@ export function buildWhatsAppReservationUrl({
     message
   };
 }
+
+export function buildAdminGeneralInquiryUrl(day: 'day-1' | 'day-2') {
+  const admin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
+  const eventTheme = day === 'day-1' ? 'Swear in Continental' : 'The Under-Vault';
+  const message = `Halo ${admin.name}, saya ingin konsultasi mengenai tiket & reservasi meja untuk acara The State of Clamour: ${eventTheme} (${admin.dateLabel}). Mohon informasinya. Terima kasih!`;
+  const url = `https://wa.me/${admin.phone}?text=${encodeURIComponent(message)}`;
+  return {
+    url,
+    admin,
+    message
+  };
+}
+

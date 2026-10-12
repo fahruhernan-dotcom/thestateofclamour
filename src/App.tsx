@@ -59,10 +59,10 @@ export const App: React.FC = () => {
   // Parse view from hash
   const parseViewFromHash = (hash: string): { view: ViewMode; tab?: 'protocols' | 'architecture' | 'timetable' | 'guide'; scrollTarget?: string } => {
     if (hash === '#/denah' || hash === '#denah') {
-      return { view: 'event-night-1', scrollTarget: 'denah' };
+      return { view: 'denah' };
     }
     if (hash === '#/reservasi' || hash === '#reservasi') {
-      return { view: 'event-night-1', scrollTarget: 'reservasi' };
+      return { view: 'reservasi' };
     }
     if (hash.startsWith('#/event/night-1') || hash === '#event-night-1' || hash === '#night-1' || hash === '#/day-1' || hash === '#day-1') {
       const scrollTarget = hash.includes('#denah') ? 'denah' : hash.includes('#reservasi') ? 'reservasi' : undefined;
@@ -314,12 +314,12 @@ export const App: React.FC = () => {
   };
 
   const handleOpenDenah = () => {
-    navigateTo('event-night-1', '#/event/night-1#denah', 'denah');
+    navigateTo('denah', '#/denah');
   };
 
   const handleOpenReservasi = (packageId?: string) => {
     if (packageId) setSelectedReservationPackageId(packageId);
-    navigateTo('event-night-1', '#/event/night-1#reservasi', 'reservasi');
+    navigateTo('reservasi', '#/reservasi');
   };
 
   const handleOpenDossier = (tab: 'protocols' | 'architecture' | 'timetable' | 'guide' = 'timetable') => {

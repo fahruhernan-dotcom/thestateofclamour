@@ -9,6 +9,7 @@ dist/
 /*.mp4
 /*.png
 /*.jpg
+/*.jpeg
 /*.webm
 public/assets/*_orig.mp4
 public/assets/test_*.jpg

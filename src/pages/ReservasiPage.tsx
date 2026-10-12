@@ -82,7 +82,7 @@ export const ReservasiPage: React.FC<Props> = ({
           RESERVASI MEJA &amp; SOFA PARTY
         </h1>
         <p className="reservasi-subtitle-desc">
-          Nikmati malam megah <strong>The State of Clamour: Swear in Continental</strong> dengan kenyamanan sofa privat, dedicated personal butler, serta paket botol minuman premium terkurasi.
+          Nikmati malam megah <strong>The State of Clamour</strong> (30 &amp; 31 Okt 2026) dengan kenyamanan sofa privat, dedicated personal butler, serta paket botol minuman premium terkurasi.
         </p>
       </header>
 

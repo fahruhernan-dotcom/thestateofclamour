@@ -207,6 +207,7 @@ export const FloatingNavbar: React.FC<Props> = ({
   };
 
   const handleReservasiClick = () => {
+    closeMobileMenu();
     if (currentView === 'event-night-1' || currentView === 'event-night-2') {
       const el = document.getElementById('reservasi');
       if (el) {
@@ -215,7 +216,7 @@ export const FloatingNavbar: React.FC<Props> = ({
         return;
       }
     }
-    handleNavClick('event-night-1', '#/event/night-1#reservasi', 'reservasi');
+    handleNavClick('reservasi', '#/reservasi', 'reservasi');
   };
 
   return (
@@ -293,12 +294,13 @@ export const FloatingNavbar: React.FC<Props> = ({
               <button
                 type="button"
                 className="nav-action-btn btn-press"
-                onClick={handleTicketClick}
+                onClick={handleReservasiClick}
                 style={{ cursor: 'pointer' }}
+                title="Reservasi VIP Meja & Sofa"
               >
                 <span className="nav-roll-inner">
-                  <span className="nav-roll-default">TICKETS →</span>
-                  <span className="nav-roll-hover" aria-hidden="true">TICKETS →</span>
+                  <span className="nav-roll-default">RESERVE →</span>
+                  <span className="nav-roll-hover" aria-hidden="true">RESERVE →</span>
                 </span>
               </button>
             </div>
@@ -432,9 +434,9 @@ export const FloatingNavbar: React.FC<Props> = ({
             <button
               type="button"
               className="mobile-drawer-cta"
-              onClick={() => handleNavClick('home', '#the-passage', 'the-passage')}
+              onClick={handleReservasiClick}
             >
-              AMBIL TIKET →
+              RESERVE VIP SOFA &amp; MEJA →
             </button>
 
             {/* Official Social Dispatch Links */}

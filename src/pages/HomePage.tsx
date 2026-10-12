@@ -65,7 +65,7 @@ export const HomePage: React.FC<Props> = ({
 
 
       {/* Scene 05: Enter The State (Final Call to Action with Volumetric Beam) */}
-      <FinalCTA onTicketClick={onScrollToTickets} />
+      <FinalCTA onTicketClick={onScrollToTickets} onToast={onToast} />
     </>
   );
 };

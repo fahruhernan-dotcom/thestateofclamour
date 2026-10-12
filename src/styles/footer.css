@@ -79,6 +79,202 @@
   transform: translateY(-2px);
 }
 
+/* Dual Admin WhatsApp Action Cluster */
+.final-admin-dual-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.btn-admin-wa-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1.65rem;
+  border-radius: 9999px;
+  background: rgba(15, 20, 28, 0.85);
+  border: 1px solid rgba(197, 168, 105, 0.4);
+  color: var(--color-ivory, #E9E4DA);
+  font-family: 'Cinzel', serif, Georgia;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 250ms ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.btn-admin-wa-pill:hover {
+  background: rgba(37, 211, 102, 0.15);
+  border-color: #25d366;
+  color: #ffffff;
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-admin-wa-pill.is-day2:hover {
+  background: rgba(197, 168, 105, 0.2);
+  border-color: #c5a869;
+  box-shadow: 0 8px 25px rgba(197, 168, 105, 0.4);
+}
+
+.wa-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #25d366;
+  box-shadow: 0 0 8px #25d366;
+}
+
+/* Admin Contact Selection Modal */
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 6, 10, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.admin-modal-panel {
+  width: 100%;
+  max-width: 560px;
+  background: #0d111a;
+  border: 1px solid rgba(197, 168, 105, 0.45);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(143, 29, 36, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+@keyframes modalScaleUp {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.admin-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.admin-modal-title {
+  font-family: 'Cinzel', serif, Georgia;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f5eedc;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.admin-modal-subtitle {
+  font-size: 0.8rem;
+  color: #a6a4a0;
+  margin-top: 0.35rem;
+  line-height: 1.5;
+}
+
+.admin-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-select-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: 12px;
+  background: rgba(18, 24, 36, 0.85);
+  border: 1px solid rgba(197, 168, 105, 0.25);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.admin-select-card:hover {
+  background: rgba(28, 38, 56, 0.95);
+  border-color: #25d366;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25);
+  transform: translateY(-2px);
+}
+
+.admin-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-card-day-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-gold-antique, #C5A869);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.admin-card-name {
+  font-family: 'Cinzel', serif, Georgia;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f5eedc;
+}
+
+.admin-card-phone {
+  font-size: 0.8rem;
+  color: #25d366;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.admin-card-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  background: #25d366;
+  color: #000000;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
+
+
 /* ========================================================================== */
 /* 8. CINEMATIC FOOTER & TOAST ALERTS                                         */
 /* ========================================================================== */

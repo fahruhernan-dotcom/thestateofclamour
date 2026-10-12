@@ -13,6 +13,7 @@
     "sync:artatix": "node scripts/sync-artatix.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
     "lucide-react": "^0.475.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
