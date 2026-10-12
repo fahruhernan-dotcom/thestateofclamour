@@ -308,13 +308,15 @@
   transition: color 200ms ease, background 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
 }
 
-/* IDLIX / Streaming Active Nav Pill Badge (e.g. Movies tab in IDLIX) */
+/* Streaming Active Nav Item (Underline indicator matching user mockup) */
 .nav-link-item.active-pill {
-  background: var(--color-oxblood);
+  background: transparent !important;
   color: #ffffff !important;
-  padding: 0.28rem 0.8rem !important;
-  border: 1px solid rgba(220, 38, 38, 0.55);
-  box-shadow: 0 0 14px rgba(185, 28, 28, 0.35);
+  padding: 0.32rem 0.55rem !important;
+  border: none !important;
+  border-bottom: 2px solid var(--color-gold-antique, #C5A869) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .nav-link-item.active-pill .nav-roll-default,
@@ -370,12 +372,12 @@
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   font-weight: 700;
-  height: 38px;
-  padding: 0 1.15rem;
+  height: 36px;
+  padding: 0 1.25rem;
   border-radius: 9999px;
-  background: var(--color-oxblood);
+  background: rgba(143, 29, 36, 0.25);
   color: var(--color-ivory);
-  border: 1px solid rgba(143, 29, 36, 0.65);
+  border: 1px solid rgba(220, 38, 38, 0.65);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -389,8 +391,8 @@
 
 .nav-action-btn:hover,
 .nav-action-btn.is-active {
-  background: var(--color-crimson);
-  border-color: rgba(224, 49, 62, 0.85);
+  background: rgba(185, 28, 28, 0.55);
+  border-color: rgba(239, 68, 68, 0.9);
   box-shadow: 0 0 20px var(--color-crimson-glow);
 }
 

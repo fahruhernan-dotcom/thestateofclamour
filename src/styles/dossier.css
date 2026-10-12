@@ -190,13 +190,13 @@
 }
 
 /* Dedicated Single Night Luxury Page Clearance (Anti-Overlap) */
-.event-single-night-page {
+.event-single-night-page:not(.streaming-event-page) {
   padding-top: calc(88px + 2.5rem) !important;
   position: relative;
 }
 
 @media (max-width: 768px) {
-  .event-single-night-page {
+  .event-single-night-page:not(.streaming-event-page) {
     padding-top: calc(72px + 1.75rem) !important;
     padding-inline: 1rem !important;
   }

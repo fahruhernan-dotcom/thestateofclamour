@@ -47,7 +47,7 @@
   display: -webkit-flex;
   display: flex;
   gap: 1.25rem;
-  padding: 0.5rem calc(8vw) 1.5rem;
+  padding: 3.5rem calc(8vw) 4.5rem;
   -webkit-scroll-snap-type: x mandatory;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS Safari */
@@ -76,7 +76,7 @@
   flex-direction: column;
   background: var(--color-surface-card, rgba(17, 21, 31, 0.75));
   border: 1px solid var(--color-gold-hairline, rgba(197, 168, 105, 0.22));
-  border-radius: 4px;
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
   cursor: pointer;
@@ -85,11 +85,18 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: pan-y pan-x;
   touch-action: manipulation;
-  transition: border-color 250ms ease, box-shadow 250ms ease, transform 150ms ease;
+  /* MOTION OFFSET PROPERTIES: GPU-accelerated translateY, rotateZ, scale, blur, and opacity */
+  transform: translate3d(0, calc(var(--card-translate-y, 0) * 1px), 0)
+    rotateZ(calc(var(--card-rotate-z, 0) * 1deg))
+    scale(var(--card-scale, 1));
+  filter: var(--card-filter, none);
+  opacity: var(--card-opacity, 1);
+  will-change: transform, filter, opacity;
+  transition: border-color 250ms ease, box-shadow 250ms ease;
 }
 
 .lineup-mobile-card:active {
-  transform: scale(0.985);
+  transform: scale(calc(var(--card-scale, 1) * 0.985));
 }
 
 .lineup-mobile-card.is-playing-audio {
@@ -116,6 +123,9 @@
   object-position: center center;
   display: block;
   pointer-events: none;
+  /* MOTION OFFSET PARALLAX DRIFT */
+  transform: translateX(calc(var(--media-parallax-x, 0) * 1%)) scale(1.08);
+  will-change: transform;
 }
 
 /* Strobe Camera Flash Flare */

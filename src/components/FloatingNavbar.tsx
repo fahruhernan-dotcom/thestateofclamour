@@ -358,8 +358,8 @@ export const FloatingNavbar: React.FC<Props> = ({
                 style={{ cursor: 'pointer' }}
               >
                 <span className="nav-roll-inner">
-                  <span className="nav-roll-default">TIKET →</span>
-                  <span className="nav-roll-hover" aria-hidden="true">TIKET →</span>
+                  <span className="nav-roll-default">TICKETS →</span>
+                  <span className="nav-roll-hover" aria-hidden="true">TICKETS →</span>
                 </span>
               </button>
             </div>

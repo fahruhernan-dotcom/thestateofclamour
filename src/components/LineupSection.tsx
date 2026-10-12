@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Artist } from '../types';
 import { IS_LINEUP_TEASER_MODE } from '../data/eventData';
-import { silenceSec1, setAudioOwner, getAudioOwner, canSec2PlayAudio, isSec1AudioActive } from '../utils/audioCoordinator';
+import { silenceSec1, setAudioOwner, getAudioOwner, isSec1AudioActive } from '../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../utils/mediaPreloader';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { useCarouselOffset } from '../hooks/useCarouselOffset';
 import { LineupSectionMobile } from './mobile/LineupSectionMobile';
 
 interface Props {
@@ -21,7 +22,6 @@ interface GuestCardProps {
   isFlashing: boolean;
   isClone?: boolean;
   isCardActive: boolean;
-  isMobile: boolean;
   isAudioPlaying: boolean;
   onCardTap: (artist: Artist, cardIdx: number, artistIdx: number) => void;
   onCardMouseEnter: (artist: Artist, cardIdx: number, artistIdx: number) => void;
@@ -36,7 +36,6 @@ const GuestCard: React.FC<GuestCardProps> = ({
   isFlashing,
   isClone,
   isCardActive,
-  isMobile,
   isAudioPlaying,
   onCardTap,
   onCardMouseEnter,
@@ -55,7 +54,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
     return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   };
 
-  // Desktop Mouse Tilt: only applied on true cursor devices
+  // Desktop Mouse Tilt: only applied on true cursor devices via CSS variables
   const handleCardMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!hasFinePointer()) return;
     const card = cardRef.current;
@@ -68,7 +67,8 @@ const GuestCard: React.FC<GuestCardProps> = ({
     const rotateX = ((y - h / 2) / (h / 2)) * -4.5;
     const rotateY = ((x - w / 2) / (w / 2)) * 4.5;
 
-    card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px)`;
+    card.style.setProperty('--card-tilt-x', `${rotateX.toFixed(2)}deg`);
+    card.style.setProperty('--card-tilt-y', `${rotateY.toFixed(2)}deg`);
   };
 
   const handleMouseEnter = () => {
@@ -81,7 +81,8 @@ const GuestCard: React.FC<GuestCardProps> = ({
   const handleMouseLeave = () => {
     if (hasFinePointer()) {
       if (cardRef.current) {
-        cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        cardRef.current.style.setProperty('--card-tilt-x', '0deg');
+        cardRef.current.style.setProperty('--card-tilt-y', '0deg');
       }
       onCardMouseLeave();
     }
@@ -94,30 +95,26 @@ const GuestCard: React.FC<GuestCardProps> = ({
     if (video && !isAudioPlaying) {
       video.muted = false;
       video.volume = 0.95;
-      video.play().catch(() => {});
+      video.play().catch(() => { });
     }
     onCardTap(artist, cardIndex, artistIndex);
   };
 
-  // Video visuals loop smoothly in background (muted unless actively playing audio)
+  // Video visuals only play when this card is actively centered and visible
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (!isMobile) {
-      // Desktop: Keep visuals looping smoothly in background
-      if (video.paused) {
-        video.play().catch(() => {});
+    if (!isCardActive) {
+      if (!video.paused) {
+        video.pause();
       }
     } else {
-      // Mobile: Pause non-active clones to save memory/battery
-      if (!isCardActive && !video.paused) {
-        video.pause();
-      } else if (isCardActive && video.paused) {
-        video.play().catch(() => {});
+      if (video.paused) {
+        video.play().catch(() => { });
       }
     }
-  }, [isMobile, isCardActive]);
+  }, [isCardActive]);
 
   // Synchronize audio state declaratively
   useEffect(() => {
@@ -132,7 +129,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
         playPromise.catch(() => {
           // If browser autoplay policy blocked unmuted, fallback to muted play
           video.muted = true;
-          video.play().catch(() => {});
+          video.play().catch(() => { });
         });
       }
     } else {
@@ -158,6 +155,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
             alt={`${artist.name} — official flyer`}
             className="guest-portrait-img"
             loading="lazy"
+            draggable={false}
           />
         )}
         {mediaSrc ? (
@@ -172,10 +170,11 @@ const GuestCard: React.FC<GuestCardProps> = ({
             loop
             playsInline
             preload="auto"
+            draggable={false}
             onEnded={(e) => {
               const v = e.currentTarget;
               v.currentTime = 0;
-              v.play().catch(() => {});
+              v.play().catch(() => { });
             }}
           />
         ) : (
@@ -184,6 +183,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
             alt={artist.name}
             className="guest-portrait-img"
             loading="lazy"
+            draggable={false}
           />
         )}
 
@@ -263,11 +263,10 @@ const LineupSectionDesktop: React.FC<Props> = ({
   const [activeFlashes, setActiveFlashes] = useState<{ [key: string]: boolean }>({});
   const [activeArtistIndex, setActiveArtistIndex] = useState(0);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
   const [isSectionVisible, setIsSectionVisible] = useState(false);
   const [activeAudioArtistId, setActiveAudioArtistId] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
-  const recenterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isProgrammaticScrollRef = useRef(false);
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
   const startYRef = useRef(0);
@@ -275,6 +274,8 @@ const LineupSectionDesktop: React.FC<Props> = ({
   const hasMovedRef = useRef(false);
   const startTimeRef = useRef(0);
   const lastDeltaXRef = useRef(0);
+  const startCardIdxRef = useRef(0);
+  const hasCenteredRef = useRef(false);
 
   const triggerFlash = useCallback((artistId: string) => {
     setActiveFlashes((prev) => ({ ...prev, [artistId]: true }));
@@ -322,33 +323,41 @@ const LineupSectionDesktop: React.FC<Props> = ({
     }
   }, [activeAudioArtistId, playArtistAudio, stopArtistAudio, triggerFlash]);
 
-  // 7 repetitions: Set 0, 1, 2, 3 (CENTER), 4, 5, 6
-  // Set 0 has isClone = false, so on desktop only Set 0 is displayed in the 2-column grid.
-  // Sets 1..6 have isClone = true, which are hidden on desktop (display: none !important),
-  // providing seamless infinite looping on mobile devices!
-  const REPETITIONS = 7;
-  const CENTER_SET = 3;
+  // 5 repetitions: Set 0, 1, 2 (CENTER), 3, 4
+  // Enables smooth infinite looping carousel across desktop and mobile
+  const REPETITIONS = 5;
+  const CENTER_SET = 2;
 
-  // Responsive mobile detector
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const handleActiveIndexChange = useCallback((closestIdx: number) => {
+    setActiveCardIndex(closestIdx);
+    if (artists.length > 0) {
+      const artistIdx = closestIdx % artists.length;
+      setActiveArtistIndex(artistIdx);
+    }
+  }, [artists.length]);
 
-  // Check section visibility: if Section 2 scrolls out of view, stop audio
+  // High performance offset-linked animation hook (gated to isSectionVisible)
+  const { scheduleUpdate } = useCarouselOffset(carouselRef, {
+    enabled: isSectionVisible,
+    onActiveIndexChange: handleActiveIndexChange,
+    maxOffsetDistance: 450,
+    minScale: 0.65,
+    maxBlur: 5.5,
+    minOpacity: 0.45,
+    maxParallaxX: 30,
+    maxTranslateY: 130,
+    maxRotateZ: 8.5,
+  });
+
+
+  // Check section visibility: if Section 2 is not scrolled into view, stay idle and stop audio
   const checkAudioEligibility = useCallback(() => {
     const sec = sectionRef.current;
     if (!sec) return;
     const r = sec.getBoundingClientRect();
-    const inView = r.top < window.innerHeight && r.bottom > 0;
+    const inView = r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
     setIsSectionVisible(inView);
 
-    // On desktop, audio is strictly controlled by mouse hover (onMouseEnter / onMouseLeave).
-    // If the entire section is scrolled out of view, ensure any playing audio is stopped.
     if (!inView) {
       if (activeAudioArtistId !== null) {
         stopArtistAudio();
@@ -409,16 +418,8 @@ const LineupSectionDesktop: React.FC<Props> = ({
     };
   }, [checkAudioEligibility, stopArtistAudio]);
 
-  // Desktop needs only 1 set (2 cards). Mobile gets 7 repetitions for endless infinite scroll.
+  // Endless looping sets for smooth continuous carousel navigation
   const carouselItems = useMemo(() => {
-    if (!isMobile) {
-      return artists.map((artist, idx) => ({
-        artist,
-        uniqueKey: artist.id,
-        isClone: false,
-        originalIndex: idx,
-      }));
-    }
     const list: {
       artist: Artist;
       uniqueKey: string;
@@ -431,13 +432,13 @@ const LineupSectionDesktop: React.FC<Props> = ({
         list.push({
           artist,
           uniqueKey: `${artist.id}-rep-${r}`,
-          isClone: r !== 0,
+          isClone: r !== CENTER_SET,
           originalIndex: idx,
         });
       });
     }
     return list;
-  }, [artists, isMobile]);
+  }, [artists]);
 
   const handleOpenModal = (artist: Artist) => {
     if (IS_LINEUP_TEASER_MODE) return;
@@ -456,20 +457,27 @@ const LineupSectionDesktop: React.FC<Props> = ({
     }
   };
 
-  // Center the mobile carousel on the middle set on initial mount
+  // Center the carousel on the middle set once on initial mount
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (hasCenteredRef.current || artists.length === 0) return;
     const el = carouselRef.current;
-    if (!el || window.innerWidth > 768 || artists.length === 0) return;
+    if (!el) return;
 
+    hasCenteredRef.current = true;
+    isProgrammaticScrollRef.current = true;
     const initialIndex = CENTER_SET * artists.length;
     setActiveCardIndex(initialIndex);
+    setActiveArtistIndex(0);
+
     const initialCard = el.children[initialIndex] as HTMLElement | undefined;
     if (initialCard) {
-      const scrollPos = initialCard.offsetLeft - (el.clientWidth - initialCard.offsetWidth) / 2;
-      el.scrollLeft = scrollPos;
+      initialCard.scrollIntoView({ behavior: 'instant' as ScrollBehavior, block: 'nearest', inline: 'center' });
     }
-  }, [artists.length]);
+    scheduleUpdate();
+    requestAnimationFrame(() => {
+      isProgrammaticScrollRef.current = false;
+    });
+  }, [artists.length, scheduleUpdate]);
 
   // Find currently centered card index in carousel
   const getClosestCardIndex = useCallback(() => {
@@ -493,57 +501,10 @@ const LineupSectionDesktop: React.FC<Props> = ({
     return closestIdx;
   }, []);
 
-  // Handle seamless infinite teleport/recentering to center set
-  const recenterToCenterSet = useCallback((currentChildIndex: number) => {
-    const el = carouselRef.current;
-    if (!el || window.innerWidth > 768 || artists.length === 0) return;
-
-    const targetIndex = CENTER_SET * artists.length + (currentChildIndex % artists.length);
-    if (currentChildIndex === targetIndex) return; // Already in center set
-
-    const currentCard = el.children[currentChildIndex] as HTMLElement | undefined;
-    const targetCard = el.children[targetIndex] as HTMLElement | undefined;
-
-    if (currentCard && targetCard) {
-      const offsetDiff = targetCard.offsetLeft - currentCard.offsetLeft;
-      el.style.scrollSnapType = 'none';
-      el.scrollLeft += offsetDiff;
-      setActiveCardIndex(targetIndex);
-
-      requestAnimationFrame(() => {
-        if (el) {
-          el.style.scrollSnapType = 'x mandatory';
-        }
-      });
-    }
-  }, [artists.length]);
-
   const handleScroll = () => {
-    const closestIdx = getClosestCardIndex();
-    setActiveCardIndex(closestIdx);
-    const newArtistIdx = closestIdx % artists.length;
-    if (artists.length > 0) {
-      setActiveArtistIndex(newArtistIdx);
-    }
-
-    // If on mobile, auto-switch to newly centered artist seamlessly without clicking
-    if (isMobile && artists.length > 0) {
-      const currentArtist = artists[newArtistIdx];
-      if (currentArtist && currentArtist.id !== activeAudioArtistId && canSec2PlayAudio()) {
-        playArtistAudio(currentArtist.id);
-        triggerFlash(currentArtist.id);
-      }
-    }
-
-    if (recenterTimerRef.current) {
-      clearTimeout(recenterTimerRef.current);
-    }
-
-    // When scrolling pauses, silently recenter to the center set for endless infinite swipe
-    recenterTimerRef.current = setTimeout(() => {
-      const settledIdx = getClosestCardIndex();
-      recenterToCenterSet(settledIdx);
-    }, 180);
+    if (isProgrammaticScrollRef.current) return;
+    if (!isSectionVisible) return;
+    scheduleUpdate();
   };
 
   // Navigate to specific artist dot
@@ -555,8 +516,10 @@ const LineupSectionDesktop: React.FC<Props> = ({
     const currentArtistIdx = currentIdx % artists.length;
 
     let step = targetArtistIdx - currentArtistIdx;
-    if (step > artists.length / 2) step -= artists.length;
-    if (step < -artists.length / 2) step += artists.length;
+    if (artists.length > 4) {
+      if (step > artists.length / 2) step -= artists.length;
+      if (step < -artists.length / 2) step += artists.length;
+    }
 
     const targetChildIdx = currentIdx + step;
     const targetCard = el.children[targetChildIdx] as HTMLElement | undefined;
@@ -565,7 +528,8 @@ const LineupSectionDesktop: React.FC<Props> = ({
       targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       setActiveCardIndex(targetChildIdx);
       setActiveArtistIndex(targetArtistIdx);
-      if (isMobile && activeAudioArtistId !== null) {
+      scheduleUpdate();
+      if (activeAudioArtistId !== null) {
         playArtistAudio(artists[targetArtistIdx].id);
       }
     }
@@ -582,7 +546,8 @@ const LineupSectionDesktop: React.FC<Props> = ({
       setActiveCardIndex(nextIdx);
       const nextArtistIdx = nextIdx % artists.length;
       setActiveArtistIndex(nextArtistIdx);
-      if (isMobile && activeAudioArtistId !== null) {
+      scheduleUpdate();
+      if (activeAudioArtistId !== null) {
         playArtistAudio(artists[nextArtistIdx].id);
       }
     }
@@ -599,9 +564,31 @@ const LineupSectionDesktop: React.FC<Props> = ({
       setActiveCardIndex(prevIdx);
       const prevArtistIdx = (prevIdx + artists.length) % artists.length;
       setActiveArtistIndex(prevArtistIdx);
-      if (isMobile && activeAudioArtistId !== null) {
+      scheduleUpdate();
+      if (activeAudioArtistId !== null) {
         playArtistAudio(artists[prevArtistIdx].id);
       }
+    }
+  };
+
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    const el = carouselRef.current;
+    if (!el) return;
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      scheduleUpdate();
+    } else if (Math.abs(e.deltaY) > 20 && e.shiftKey) {
+      el.scrollLeft += e.deltaY;
+      scheduleUpdate();
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      handleStepPrev();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      handleStepNext();
     }
   };
 
@@ -617,9 +604,9 @@ const LineupSectionDesktop: React.FC<Props> = ({
     startScrollLeftRef.current = el.scrollLeft;
     startTimeRef.current = performance.now();
     lastDeltaXRef.current = 0;
+    startCardIdxRef.current = getClosestCardIndex();
 
     el.style.scrollSnapType = 'none';
-    el.style.scrollBehavior = 'auto';
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -635,10 +622,10 @@ const LineupSectionDesktop: React.FC<Props> = ({
         hasMovedRef.current = true;
         try {
           e.currentTarget.setPointerCapture(e.pointerId);
-        } catch {}
+        } catch { }
       } else if (Math.abs(deltaY) > 10 && Math.abs(deltaY) > Math.abs(deltaX)) {
         isDraggingRef.current = false;
-        el.style.scrollSnapType = isMobile ? 'x mandatory' : '';
+        el.style.scrollSnapType = 'x mandatory';
         return;
       }
     }
@@ -646,6 +633,7 @@ const LineupSectionDesktop: React.FC<Props> = ({
     if (hasMovedRef.current) {
       lastDeltaXRef.current = deltaX;
       el.scrollLeft = startScrollLeftRef.current - deltaX;
+      scheduleUpdate();
     }
   };
 
@@ -662,29 +650,42 @@ const LineupSectionDesktop: React.FC<Props> = ({
 
     if (!el) return;
 
-    const duration = performance.now() - startTimeRef.current;
-    const deltaX = lastDeltaXRef.current;
-    const velocity = deltaX / Math.max(1, duration);
-
-    el.style.scrollSnapType = isMobile ? 'x mandatory' : '';
-    el.style.scrollBehavior = '';
+    el.style.scrollSnapType = 'x mandatory';
 
     if (hasMovedRef.current) {
-      if (velocity < -0.35 || deltaX < -45) {
-        handleStepNext();
-      } else if (velocity > 0.35 || deltaX > 45) {
-        handleStepPrev();
+      const deltaX = lastDeltaXRef.current;
+      const startIdx = startCardIdxRef.current;
+      const totalCards = el.children.length;
+
+      // Natural drag / flick threshold: 40px
+      let targetIdx = startIdx;
+      if (deltaX < -40) {
+        // Dragged left -> advance to next card
+        targetIdx = Math.min(totalCards - 1, startIdx + 1);
+      } else if (deltaX > 40) {
+        // Dragged right -> go to previous card
+        targetIdx = Math.max(0, startIdx - 1);
       } else {
-        const closestIdx = getClosestCardIndex();
-        const card = el.children[closestIdx] as HTMLElement | undefined;
-        if (card) {
-          card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // Subtle move -> snap to closest card
+        targetIdx = getClosestCardIndex();
+      }
+
+      const targetCard = el.children[targetIdx] as HTMLElement | undefined;
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        setActiveCardIndex(targetIdx);
+        if (artists.length > 0) {
+          const nextArtistIdx = targetIdx % artists.length;
+          setActiveArtistIndex(nextArtistIdx);
+          if (activeAudioArtistId !== null) {
+            playArtistAudio(artists[nextArtistIdx].id);
+          }
         }
       }
 
       setTimeout(() => {
         hasMovedRef.current = false;
-      }, 80);
+      }, 100);
     }
   };
 
@@ -705,22 +706,24 @@ const LineupSectionDesktop: React.FC<Props> = ({
         When the gates unlock, the silence breaks.
       </p>
 
-      {/* Editorial Spread with 3D Tilt & Video Interaction (Infinite Swipe Carousel on Mobile) */}
+      {/* Kinetic Offset-Linked Carousel with 3D Tilt & Video Interaction */}
       <div
         ref={carouselRef}
         onScroll={handleScroll}
+        onWheel={handleWheel}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="region"
+        aria-label="Lineup Artists Carousel"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={finishDrag}
         onPointerCancel={finishDrag}
         onClickCapture={handleClickCapture}
         className={`guests-editorial-grid ${artists.length === 1 ? 'is-single-guest' : ''}`}
-        style={{ marginTop: '2.5rem' }}
       >
         {carouselItems.map((item, index) => {
-          const isCardActive = isMobile
-            ? (isSectionVisible && index === activeCardIndex)
-            : (!item.isClone && item.originalIndex === activeArtistIndex);
+          const isCardActive = isSectionVisible && index === activeCardIndex;
 
           return (
             <GuestCard
@@ -730,7 +733,6 @@ const LineupSectionDesktop: React.FC<Props> = ({
               cardIndex={index}
               isClone={item.isClone}
               isCardActive={isCardActive}
-              isMobile={isMobile}
               isAudioPlaying={isSectionVisible && activeAudioArtistId === item.artist.id}
               isFlashing={!!activeFlashes[item.artist.id]}
               onCardTap={handleCardTap}

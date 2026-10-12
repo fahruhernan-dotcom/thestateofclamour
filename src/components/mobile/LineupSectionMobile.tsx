@@ -12,6 +12,7 @@ import {
   fadeVideoVolume,
 } from '../../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../../utils/mediaPreloader';
+import { useCarouselOffset } from '../../hooks/useCarouselOffset';
 
 interface Props {
   artists: Artist[];
@@ -28,12 +29,28 @@ export const LineupSectionMobile: React.FC<Props> = ({
   const [activeFlashes, setActiveFlashes] = useState<{ [key: string]: boolean }>({});
   const [activeAudioArtistId, setActiveAudioArtistId] = useState<string | null>(null);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const currentPlayingIdRef = useRef<string | null>(null);
   const scrollSettlingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // High performance offset-linked animation (gated to isSectionVisible)
+  const { scheduleUpdate } = useCarouselOffset(carouselRef, {
+    enabled: isSectionVisible,
+    onActiveIndexChange: (closestIdx) => {
+      setActiveCardIndex(closestIdx);
+    },
+    maxOffsetDistance: 320,
+    minScale: 0.72,
+    maxBlur: 4,
+    minOpacity: 0.35,
+    maxParallaxX: 25,
+    maxTranslateY: 48,
+    maxRotateZ: 5.5,
+  });
 
   // Touch drag state to differentiate between horizontal swipe and a clean tap
   const isDraggingRef = useRef(false);
@@ -119,6 +136,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
 
     if (deltaX > 8 || deltaY > 8) {
       hasMovedRef.current = true;
+      scheduleUpdate();
     }
   };
 
@@ -188,6 +206,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
     if (!sec) return;
     const r = sec.getBoundingClientRect();
     const inView = r.top < window.innerHeight * 0.45 && r.bottom > window.innerHeight * 0.15;
+    setIsSectionVisible(inView);
 
     if (inView) {
       if (isSec1AudioActive()) {

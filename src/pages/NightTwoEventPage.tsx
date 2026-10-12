@@ -4,15 +4,11 @@ import {
   Clock,
   MapPin,
   ShieldCheck,
-  Sparkles,
   Volume2,
   Check,
-  Flame,
-  Share2,
   Lock,
-  Ticket,
-  Star,
-  ChevronDown
+  Sparkles,
+  Flame
 } from 'lucide-react';
 import { TicketTier } from '../types';
 import { EventVenueMapSection } from '../components/event/EventVenueMapSection';
@@ -64,17 +60,8 @@ export const NightTwoEventPage: React.FC<Props> = ({
     scrollToSection('reservasi');
   };
 
-  const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      onToast?.('Tautan Malam II berhasil disalin ke papan klip!');
-    } else {
-      onToast?.('Tautan: ' + window.location.href);
-    }
-  };
-
   return (
-    <main className="streaming-event-page event-single-night-page">
+    <main className="streaming-event-page">
       {/* ---------------------------------------------------------------------- */}
       {/* 1. CINEMATIC BILLBOARD HERO (STREAMING / NETFLIX STYLE)                 */}
       {/* ---------------------------------------------------------------------- */}
@@ -95,115 +82,49 @@ export const NightTwoEventPage: React.FC<Props> = ({
 
         {/* Billboard Hero Content Overlay */}
         <div className="streaming-hero-content">
-          {/* Breadcrumb Navigation Bar */}
-          <div className="streaming-breadcrumb-row">
-            <button
-              type="button"
-              onClick={onBack}
-              className="streaming-back-link btn-press"
-              aria-label="Kembali ke Beranda"
-            >
-              <ArrowLeft size={13} />
-              <span>Kembali ke Beranda</span>
-            </button>
-            <span className="streaming-breadcrumb-sep">/</span>
-            <span className="streaming-kicker-tag">THE STATE OF CLAMOUR · CHAPTER 01</span>
+          {/* Eyebrow / Kicker */}
+          <div className="streaming-hero-eyebrow">
+            <span className="streaming-eyebrow-dash">—</span>
+            <span>THE STATE OF CLAMOUR</span>
+            <span className="streaming-eyebrow-sep">/</span>
+            <span>CHAPTER 01</span>
           </div>
 
-          {/* Title Treatment with Crisp Box Styling (The Mentalist style) */}
-          <div className="streaming-title-treatment">
-            <span className="streaming-title-prefix">NIGHT II</span>
-            <span className="streaming-title-bracket">THE UNDER-VAULT</span>
+          {/* Monumental Clean Typography Title */}
+          <h1 className="streaming-hero-title">
+            <span className="streaming-title-line-1">NIGHT II</span>
+            <span className="streaming-title-line-2">THE UNDER-VAULT</span>
+          </h1>
+
+          {/* Clean Metadata Line */}
+          <div className="streaming-hero-meta">
+            <span>31 OKTOBER 2026</span>
+            <span className="streaming-meta-dot">·</span>
+            <span>THE UNDER-VAULT</span>
+            <span className="streaming-meta-pipe">|</span>
+            <span>18+</span>
           </div>
 
-          {/* Genre / Sonic Attributes Strip */}
-          <div className="streaming-genre-strip">
-            <span>Modular Synthesizer</span>
-            <span className="streaming-genre-dot">·</span>
-            <span>Sub-Bass 28Hz Industrial</span>
-            <span className="streaming-genre-dot">·</span>
-            <span>Granite Vault Acoustics</span>
-            <span className="streaming-genre-dot">·</span>
-            <span>Analog Live Set 140 BPM</span>
-          </div>
 
-          {/* Action Buttons Cluster (Watchlist · Favourite · Add to collection · Share) */}
-          <div className="streaming-actions-cluster">
+          {/* Minimalist Action Row */}
+          <div className="streaming-hero-actions">
             <button
               type="button"
               onClick={() => scrollToSection('tickets')}
-              className="streaming-pill-btn is-ticket btn-press"
+              className="streaming-btn-primary is-night-2 btn-press"
             >
-              <Ticket size={14} />
-              <span>Ambil Tiket</span>
-              <span className="streaming-pill-count">31 Okt</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollToSection('reservasi')}
-              className="streaming-pill-btn btn-press"
-            >
-              <Sparkles size={14} />
-              <span>Reservasi VIP</span>
-              <span className="streaming-pill-count">Sofa</span>
+              <span>AMBIL TIKET</span>
+              <span className="streaming-btn-arrow">→</span>
             </button>
 
             <button
               type="button"
               onClick={() => scrollToSection('denah')}
-              className="streaming-pill-btn btn-press"
+              className="streaming-link-secondary"
             >
-              <MapPin size={14} />
-              <span>Denah Venue</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleShare}
-              className="streaming-pill-btn btn-press"
-              title="Bagikan Acara Ini"
-            >
-              <Share2 size={14} />
-              <span>Bagikan</span>
+              JELAJAHI VENUE
             </button>
           </div>
-
-          {/* Metadata Row */}
-          <div className="streaming-metadata-line">
-            <span>31 OKT 2026</span>
-            <span className="streaming-meta-dot">·</span>
-            <span>THE UNDER-VAULT</span>
-            <span className="streaming-meta-dot">·</span>
-            <span className="streaming-badge-box">18+ ONLY</span>
-            <span className="streaming-meta-dot">·</span>
-            <span className="streaming-meta-star">
-              <Star size={13} fill="#eab308" color="#eab308" />
-              <span>9.9 SOUND CURATION</span>
-            </span>
-            <span className="streaming-meta-dot">·</span>
-            <span className="streaming-badge-box is-tba">HEADLINER TBA</span>
-          </div>
-
-          {/* Narrative Synopsis (Clean 2-sentence logline) */}
-          <p className="streaming-synopsis-text">
-            Malam kedua babak perdana The State of Clamour membawa audiens menyelami kedalaman The Under-Vault. Identitas headliner tamu malam kedua masih tersimpan dalam status rahasia dan akan diumumkan pada transmisi berikutnya.
-          </p>
-
-          {/* Host / Collective Branding Emblem (Warner Bros style) */}
-          <div className="streaming-studio-emblem">
-            <img src="/assets/tsoc_logo_transparent.png" alt="TSOC Logo" />
-            <div className="streaming-studio-text-wrap">
-              <span className="streaming-studio-label">HOUSE OF WHISPERS</span>
-              <span className="streaming-studio-sub">NOCTURNAL PRODUCTION</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Floating Scroll Cue to guide users down into dossier */}
-        <div className="streaming-scroll-cue" onClick={() => scrollToSection('spotlight')}>
-          <span className="streaming-scroll-label">EKSPLORASI DOSSIER</span>
-          <ChevronDown size={14} className="streaming-scroll-arrow" />
         </div>
       </section>
 

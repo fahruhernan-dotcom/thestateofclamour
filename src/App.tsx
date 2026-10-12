@@ -18,7 +18,7 @@ type ViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier' | 'd
 export const App: React.FC = () => {
   const [event] = useState<EventData>(initialEvent);
   const [tickets, setTickets] = useState<TicketTier[]>(getActiveTickets);
-  const [artists] = useState<Artist[]>(initialArtists);
+  const artists: Artist[] = initialArtists;
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [dossierInitialTab, setDossierInitialTab] = useState<'protocols' | 'architecture' | 'timetable' | 'guide'>('protocols');

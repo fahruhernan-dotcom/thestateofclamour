@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/zip-dist.mjs",
+    "lint": "tsc --noEmit",
     "zip": "node scripts/zip-dist.mjs",
     "preview": "vite preview",
     "watch:artatix": "node scripts/watch-artatix.mjs",

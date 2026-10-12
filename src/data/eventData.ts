@@ -144,21 +144,51 @@ export const archivedIndividualArtists: Artist[] = [
   }
 ];
 
-// Flyer card: static poster visual (videoUrl null, audioPreviewUrl null)
-export const teaserFlyerArtist: Artist = {
-  id: 'art-teaser-flyer',
-  eventId: 'evt-clamour-2026',
-  name: 'Swear In Continental',
-  dayLabel: '30 — 31 Oktober',
-  stageName: 'Mizu Commonroom',
-  performanceTime: '20:00 WIB',
-  imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
-  videoUrl: null,
-  posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
-  audioPreviewUrl: null,
-  sortOrder: 1
-};
+// Flyer cards: 3 preview cards for the teaser carousel test
+export const teaserFlyerArtists: Artist[] = [
+  {
+    id: 'art-teaser-flyer-1',
+    eventId: 'evt-clamour-2026',
+    name: 'Swear In Continental · I',
+    dayLabel: '30 — 31 Oktober',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '20:00 WIB',
+    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    videoUrl: null,
+    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    audioPreviewUrl: null,
+    sortOrder: 1
+  },
+  {
+    id: 'art-teaser-flyer-2',
+    eventId: 'evt-clamour-2026',
+    name: 'Swear In Continental · II',
+    dayLabel: '30 — 31 Oktober',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '22:00 WIB',
+    imageUrl: '/assets/guest_malvin_poster.png',
+    videoUrl: null,
+    posterUrl: '/assets/guest_malvin_poster.png',
+    audioPreviewUrl: null,
+    sortOrder: 2
+  },
+  {
+    id: 'art-teaser-flyer-3',
+    eventId: 'evt-clamour-2026',
+    name: 'Swear In Continental · III',
+    dayLabel: '30 — 31 Oktober',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '00:00 WIB',
+    imageUrl: '/assets/guest_far_poster.png',
+    videoUrl: null,
+    posterUrl: '/assets/guest_far_poster.png',
+    audioPreviewUrl: null,
+    sortOrder: 3
+  }
+];
+
+export const teaserFlyerArtist: Artist = teaserFlyerArtists[0];
 
 export const initialArtists: Artist[] = IS_LINEUP_TEASER_MODE
-  ? [teaserFlyerArtist]
+  ? teaserFlyerArtists
   : archivedIndividualArtists;

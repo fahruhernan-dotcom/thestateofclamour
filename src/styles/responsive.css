@@ -340,7 +340,7 @@
     padding: 1.5rem 1rem 5rem;
   }
 
-  .event-single-night-page {
+  .event-single-night-page:not(.streaming-event-page) {
     padding-top: calc(72px + 2rem) !important;
     padding-inline: 1rem;
   }
