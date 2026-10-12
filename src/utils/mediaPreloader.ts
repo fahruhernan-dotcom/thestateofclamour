@@ -13,7 +13,7 @@ export const TOTAL_MOBILE_FRAMES = 84;
 export const TOTAL_DESKTOP_FRAMES = 192;
 
 export const TARGET_VIDEOS = [
-  '/assets/how2026_recap.mp4',
+  '/assets/continental.mp4',
   '/assets/guest_malvin.mp4',
   '/assets/guest_far.mp4'
 ];
@@ -208,7 +208,7 @@ export const startPreload = (): Promise<void> => {
         computeAndNotify();
       });
 
-      videoPreloadEl.src = '/assets/how2026_recap.mp4';
+      videoPreloadEl.src = '/assets/continental.mp4';
       videoPreloadEl.load();
     } catch {
       // In non-DOM environment or if video constructor fails

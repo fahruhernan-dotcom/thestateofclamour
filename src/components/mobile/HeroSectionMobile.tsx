@@ -73,8 +73,8 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       recapVideo.playsInline = true;
       recapVideo.setAttribute('playsinline', '');
       recapVideo.setAttribute('webkit-playsinline', '');
-      if (!recapVideo.src || !recapVideo.src.includes('/assets/how2026_recap.mp4')) {
-        recapVideo.src = '/assets/how2026_recap.mp4';
+      if (!recapVideo.src || !recapVideo.src.includes('/assets/continental.mp4')) {
+        recapVideo.src = '/assets/continental.mp4';
       }
       recapVideo.play().catch(() => {});
     }
@@ -739,7 +739,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
           <div className="hero-mobile-portal-frame">
             <video
               ref={recapVideoRef}
-              src="/assets/how2026_recap.mp4"
+              src="/assets/continental.mp4"
               poster="/assets/how2026_recap_poster.jpg"
               className="hero-mobile-portal-video"
               autoPlay

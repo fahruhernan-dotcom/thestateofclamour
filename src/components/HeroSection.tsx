@@ -586,8 +586,8 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       videoEl.playsInline = true;
       videoEl.setAttribute('playsinline', '');
       videoEl.setAttribute('webkit-playsinline', '');
-      if (!videoEl.src || !videoEl.src.includes('/assets/how2026_recap.mp4')) {
-        videoEl.src = '/assets/how2026_recap.mp4';
+      if (!videoEl.src || !videoEl.src.includes('/assets/continental.mp4')) {
+        videoEl.src = '/assets/continental.mp4';
       }
       videoEl.play().catch(() => {});
     }
@@ -825,7 +825,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
           <div className="storytelling-photo-frame">
             <video
               ref={photoImgRef}
-              src="/assets/how2026_recap.mp4"
+              src="/assets/continental.mp4"
               poster="/assets/how2026_recap_poster.jpg"
               className="storytelling-photo-img"
               autoPlay

@@ -14,6 +14,7 @@ dist/
 public/assets/*_orig.mp4
 public/assets/test_*.jpg
 public/assets/thumb_*.jpg
+public/assets/continental.mp4
 
 # Raw source archives & build caches
 Source/

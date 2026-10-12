@@ -540,7 +540,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
           <div className="storytelling-photo-frame">
             <video
               ref={photoImgRef}
-              src="/assets/how2026_recap.mp4"
+              src="/assets/continental.mp4"
               poster="/assets/how2026_recap_poster.jpg"
               className="storytelling-photo-img"
               autoPlay
