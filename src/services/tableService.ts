@@ -44,8 +44,7 @@ export async function fetchTableStates(
   try {
     const { data, error } = await supabase
       .from(TABLE_NAME)
-      .select('*')
-      .or(`day.eq.${day},day.eq.both`);
+      .select('*');
 
     if (error) {
       console.warn('[TableService] Supabase fetch error, using fallback:', error.message);
@@ -58,16 +57,20 @@ export async function fetchTableStates(
 
       data.forEach(row => {
         const spotId = row.spot_id || row.spotId || row.id;
-        if (spotId) {
-          const isReserved = row.is_reserved === true || row.status === 'reserved' || row.status === 'occupied';
-          map[spotId] = {
-            spotId,
-            status: isReserved ? 'reserved' : 'available',
-            day: row.day || day,
-            reservedBy: row.reserved_by || row.reservedBy,
-            updatedAt: row.updated_at || row.updatedAt
-          };
-        }
+        if (!spotId) return;
+
+        const isRowReserved = row.is_reserved === true || row.status === 'reserved' || row.status === 'occupied';
+        const existing = map[spotId];
+        const isReserved = isRowReserved || (existing && existing.status === 'reserved');
+        const shouldUseMeta = row.day === day || (!existing?.reservedBy && row.reserved_by) || isRowReserved;
+
+        map[spotId] = {
+          spotId,
+          status: isReserved ? 'reserved' : 'available',
+          day: shouldUseMeta ? (row.day || day) : (existing?.day || day),
+          reservedBy: shouldUseMeta ? (row.reserved_by || row.reservedBy || existing?.reservedBy) : existing?.reservedBy,
+          updatedAt: row.updated_at || row.updatedAt || existing?.updatedAt
+        };
       });
 
       cachedStates = map;

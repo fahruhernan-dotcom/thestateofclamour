@@ -14,6 +14,15 @@ export function useTableAvailability(
   const [states, setStates] = useState<Record<string, TableLiveState>>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Synchronize state when incoming props change (e.g. Day or Floor tab switch)
+  useEffect(() => {
+    setSelectedDay(initialDay);
+  }, [initialDay]);
+
+  useEffect(() => {
+    setCurrentFloor(initialFloor);
+  }, [initialFloor]);
+
   // Load states on day change
   const reload = useCallback(async () => {
     setIsLoading(true);

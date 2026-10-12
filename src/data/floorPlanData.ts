@@ -1767,11 +1767,8 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
   }
 ];
 
-// Seed sample occupied spots to showcase visual differentiation immediately
+// Seed official occupied spots (Mizu Floor 2) for offline parity
 export const INITIAL_OCCUPIED_SPOTS: Record<string, boolean> = {
-  'f1-sofa-1': true,
-  'f1-t-3': true,
-  'f1-st-9': true,
   'f2-t-10': true,   // T.10 Veronica Lidia
   'f2-ts-4': true,   // TS.4 reyhan
   'f2-vip-2': true,  // VIP.2 Rachel Aulia
