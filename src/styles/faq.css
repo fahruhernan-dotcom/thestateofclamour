@@ -1,110 +1,86 @@
 /* ========================================================================== */
-/* THE STATE OF CLAMOUR // LUXURY FAQ & CONCIERGE RSVP SPECIFICATION         */
-/* Styleguide: Continental Dark-Noir · Cinzel Monumental · Gold-Antique Wire  */
+/* APPLE DESIGN SYSTEM // FAQ & RESERVATION GUIDE SPECIFICATION               */
+/* Principles: Human Interface Guidelines · Translucent Materials · Restraint */
+/* Typography: SF Pro Display / System UI · Optical Tracking · Precision      */
 /* ========================================================================== */
 
 .official-faq-section {
   width: 100%;
-  max-width: 960px;
-  margin: 5rem auto 4rem;
-  padding: 0 1.25rem;
+  max-width: 860px;
+  margin: 4.5rem auto 3.5rem;
+  padding: 0 1.5rem;
   box-sizing: border-box;
-  position: relative;
 }
 
-/* Ambient backlight behind section */
-.official-faq-section::before {
-  content: '';
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70%;
-  height: 380px;
-  background: radial-gradient(ellipse at center, rgba(197, 168, 105, 0.04) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Section Header */
+/* Header */
 .faq-header {
-  position: relative;
-  z-index: 1;
   text-align: center;
-  margin-bottom: 2.75rem;
+  margin-bottom: 2.5rem;
 }
 
 .faq-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 1rem;
-  border-radius: 9999px;
-  background: rgba(197, 168, 105, 0.08);
-  border: 1px solid rgba(197, 168, 105, 0.28);
-  font-family: var(--font-mono, monospace);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--color-gold-antique, #c5a869);
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: #86868b;
   text-transform: uppercase;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .faq-title {
-  font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: clamp(1.5rem, 3.8vw, 2.35rem);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--color-ivory, #f5eedc);
-  margin: 0 0 0.75rem;
-  text-transform: uppercase;
-  line-height: 1.22;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #f5f5f7;
+  margin: 0 0 0.6rem;
+  line-height: 1.15;
 }
 
 .faq-desc {
-  max-width: 640px;
+  max-width: 560px;
   margin: 0 auto;
-  font-family: var(--font-body, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: 0.9rem;
-  color: #a6a4a0;
-  line-height: 1.65;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #86868b;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
 }
 
-/* Accordion Container */
+/* Accordion Container: Apple-style Grouped Inset List */
 .faq-accordion-list {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.95rem;
+  gap: 0.65rem;
   width: 100%;
 }
 
-/* Individual Accordion Item */
+/* Individual Accordion Card */
 .faq-accordion-item {
   width: 100%;
-  border-radius: 14px;
-  background: rgba(14, 18, 26, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(197, 168, 105, 0.16);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  border-radius: 16px;
+  background: rgba(26, 26, 30, 0.45);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  transition: border-color 260ms ease, background 260ms ease, box-shadow 260ms ease;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
 }
 
 .faq-accordion-item:hover {
-  border-color: rgba(197, 168, 105, 0.38);
-  background: rgba(18, 23, 33, 0.85);
+  background: rgba(32, 32, 38, 0.6);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .faq-accordion-item.is-open {
-  background: rgba(18, 23, 34, 0.94);
-  border-color: rgba(197, 168, 105, 0.48);
-  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(197, 168, 105, 0.08);
+  background: rgba(28, 28, 34, 0.85);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 /* Accordion Trigger Button */
@@ -113,118 +89,47 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 1.4rem;
+  padding: 1.25rem 1.4rem;
   background: transparent !important;
   border: none !important;
   cursor: pointer;
   text-align: left;
-  color: var(--color-ivory, #f5eedc) !important;
-  font-family: inherit;
-  font-size: inherit;
-  -webkit-appearance: none;
-  appearance: none;
   box-sizing: border-box;
-  transition: background 200ms ease;
   outline: none;
   gap: 1rem;
+  transition: transform 120ms ease-out;
+  user-select: none;
 }
 
-.faq-trigger-btn:hover {
-  background: rgba(197, 168, 105, 0.035) !important;
-}
-
-.faq-trigger-left {
-  display: flex;
-  align-items: center;
-  gap: 1.05rem;
-  min-width: 0;
-  flex: 1;
-}
-
-/* Monospace Index Badge (e.g., 01, 02) */
-.faq-index-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--color-gold-antique, #c5a869);
-  padding: 0.28rem 0.6rem;
-  border-radius: 6px;
-  background: rgba(197, 168, 105, 0.08);
-  border: 1px solid rgba(197, 168, 105, 0.22);
-  flex-shrink: 0;
-}
-
-/* Icon Box */
-.faq-icon-box {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--color-gold-antique, #c5a869);
-  flex-shrink: 0;
-  transition: all 250ms ease;
-}
-
-.faq-accordion-item.is-open .faq-icon-box {
-  background: rgba(197, 168, 105, 0.14);
-  border-color: rgba(197, 168, 105, 0.35);
-  box-shadow: 0 0 14px rgba(197, 168, 105, 0.2);
-}
-
-/* Question Header Lockup */
-.faq-question-lockup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
+.faq-trigger-btn:active {
+  transform: scale(0.995);
 }
 
 .faq-question-text {
-  font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: clamp(0.92rem, 2vw, 1.08rem);
-  font-weight: 600;
-  color: var(--color-ivory, #f5eedc);
-  letter-spacing: 0.04em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: #f5f5f7;
+  letter-spacing: -0.015em;
   line-height: 1.35;
 }
 
-.faq-question-tag {
-  display: inline-block;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: rgba(197, 168, 105, 0.7);
-  text-transform: uppercase;
-}
-
-/* Chevron */
 .faq-chevron {
-  color: var(--color-gold-antique, #c5a869);
-  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms ease;
+  color: #86868b;
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms ease;
   flex-shrink: 0;
 }
 
-.faq-chevron.is-open {
+.faq-accordion-item.is-open .faq-chevron {
   transform: rotate(180deg);
-  color: #fff;
+  color: #f5f5f7;
 }
 
-/* ========================================================================== */
-/* Native CSS Grid Accordion Transition (60 FPS Butter-Smooth, Zero-Jank)     */
-/* ========================================================================== */
+/* Native CSS Grid Accordion Transition (Interruptible & Fluid) */
 .faq-content-grid {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: grid-template-rows 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .faq-content-grid.is-open {
@@ -236,297 +141,234 @@
 }
 
 .faq-content-body {
-  padding: 0.25rem 1.4rem 1.45rem 1.4rem;
-  font-family: var(--font-body, sans-serif);
-  font-size: 0.88rem;
-  color: #c8c4bc;
-  line-height: 1.65;
-  border-top: 1px solid rgba(197, 168, 105, 0.1);
-  margin-top: 0.25rem;
+  padding: 0 1.4rem 1.35rem 1.4rem;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  font-size: 0.92rem;
+  color: #a1a1a6;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
   box-sizing: border-box;
 }
 
-/* ========================================================================== */
-/* Content Sub-Components: VIP Quota Cards, Bank Accounts, Tags               */
-/* ========================================================================== */
+.faq-content-body strong {
+  color: #f5f5f7;
+  font-weight: 600;
+}
 
-/* FAQ 01: VIP Complimentary Ticket Grid */
-.faq-quota-grid {
+/* Sub-Components: Apple Minimalist Style */
+
+/* FAQ 01: Minimal Ticket Matrix */
+.faq-apple-matrix {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.85rem;
-  margin: 1rem 0 0.5rem;
+  gap: 0.75rem;
+  margin: 0.9rem 0 0.4rem;
 }
 
-.faq-quota-card {
-  padding: 1rem 1.15rem;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(197, 168, 105, 0.18);
-  box-sizing: border-box;
+.faq-matrix-card {
+  padding: 0.95rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  transition: border-color 200ms ease;
+  gap: 0.3rem;
 }
 
-.faq-quota-card:hover {
-  border-color: rgba(197, 168, 105, 0.4);
+.faq-matrix-tier {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #f5f5f7;
+  letter-spacing: -0.01em;
 }
 
-.faq-quota-tier {
-  font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: 0.86rem;
-  font-weight: 700;
-  color: var(--color-ivory, #f5eedc);
+.faq-matrix-capacity {
+  font-size: 0.75rem;
+  color: #86868b;
+  text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
-.faq-quota-pax {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--color-gold-antique, #c5a869);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.faq-quota-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.35rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: 6px;
-  background: rgba(197, 168, 105, 0.12);
-  border: 1px solid rgba(197, 168, 105, 0.3);
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--color-ivory, #f5eedc);
-}
-
-/* FAQ 02: Strict Security Callout Pill */
-.faq-callout-box {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.85rem;
-  padding: 1rem 1.25rem;
-  border-radius: 10px;
-  background: rgba(197, 75, 75, 0.06);
-  border: 1px solid rgba(197, 75, 75, 0.28);
-  margin-top: 0.85rem;
-  box-sizing: border-box;
-}
-
-.faq-callout-icon {
-  color: #e06c75;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.faq-callout-title {
+.faq-matrix-ticket {
   font-size: 0.82rem;
-  font-weight: 700;
-  color: #ff9e9e;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 0.25rem;
+  color: #d1d1d6;
+  font-weight: 500;
+  margin-top: 0.2rem;
 }
 
-/* FAQ 03: Dual Venue Chips */
-.faq-venues-grid {
+/* FAQ 02: Subtle Disclaimer Note */
+.faq-apple-note {
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 0.86rem;
+  color: #a1a1a6;
+  line-height: 1.55;
+  margin-top: 0.75rem;
+}
+
+/* FAQ 03: Minimal Venue Grid */
+.faq-apple-venues {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.75rem;
-  margin: 0.85rem 0 0.5rem;
+  margin: 0.85rem 0 0.3rem;
 }
 
 @media (min-width: 600px) {
-  .faq-venues-grid {
+  .faq-apple-venues {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-.faq-venue-card {
-  padding: 0.95rem 1.15rem;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(197, 168, 105, 0.2);
-  box-sizing: border-box;
+.faq-venue-box {
+  padding: 0.95rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.faq-venue-name {
-  font-family: var(--font-monumental, 'Cinzel', serif);
+.faq-venue-title {
   font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--color-gold-antique, #c5a869);
-  letter-spacing: 0.06em;
-  display: block;
+  font-weight: 600;
+  color: #f5f5f7;
   margin-bottom: 0.25rem;
 }
 
 .faq-venue-desc {
-  font-size: 0.78rem;
-  color: #a6a4a0;
-  line-height: 1.5;
+  font-size: 0.8rem;
+  color: #86868b;
+  line-height: 1.45;
 }
 
-/* FAQ 07: Luxury BCA Cards */
-.faq-bank-grid {
+/* FAQ 07: Apple Wallet-Style Dark Cards */
+.faq-apple-wallet-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.95rem;
-  margin: 1rem 0 1.25rem;
+  gap: 0.75rem;
+  margin: 0.9rem 0 1rem;
 }
 
 @media (min-width: 600px) {
-  .faq-bank-grid {
+  .faq-apple-wallet-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-.faq-bank-card-premium {
-  padding: 1.15rem 1.35rem;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(197, 168, 105, 0.04) 100%);
-  border: 1px solid rgba(197, 168, 105, 0.26);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
-  box-sizing: border-box;
+.faq-wallet-card {
+  padding: 1.15rem 1.25rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  position: relative;
-  overflow: hidden;
+  gap: 0.5rem;
+  transition: border-color 200ms ease;
 }
 
-.faq-bank-card-premium::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 90px;
-  height: 90px;
-  background: radial-gradient(circle at top right, rgba(197, 168, 105, 0.12), transparent 70%);
-  pointer-events: none;
+.faq-wallet-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
-.faq-bank-header {
+.faq-wallet-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.faq-bank-type-pill {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--color-gold-antique, #c5a869);
+.faq-wallet-type {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #86868b;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.faq-bank-verified {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.62rem;
-  color: #7ee787;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.faq-bank-number-row {
+.faq-wallet-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  padding: 0.4rem 0;
+  padding: 0.2rem 0;
 }
 
-.faq-bank-number {
-  font-family: var(--font-mono, monospace);
-  font-size: clamp(1.05rem, 2.5vw, 1.25rem);
-  font-weight: 700;
+.faq-wallet-number {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 1.18rem;
+  font-weight: 600;
   color: #ffffff;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.03em;
 }
 
-.faq-bank-copy-btn {
+.faq-wallet-copy-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  background: rgba(197, 168, 105, 0.12);
-  border: 1px solid rgba(197, 168, 105, 0.32);
-  color: var(--color-gold-antique, #c5a869);
-  font-family: var(--font-mono, monospace);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f5f5f7;
+  font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 180ms ease;
   outline: none;
 }
 
-.faq-bank-copy-btn:hover {
-  background: rgba(197, 168, 105, 0.25);
-  color: #ffffff;
-  border-color: rgba(197, 168, 105, 0.6);
+.faq-wallet-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
-.faq-bank-copy-btn.is-copied {
-  background: rgba(78, 194, 94, 0.15);
-  border-color: rgba(78, 194, 94, 0.4);
-  color: #7ee787;
+.faq-wallet-copy-btn.is-copied {
+  background: rgba(52, 199, 89, 0.15);
+  border-color: rgba(52, 199, 89, 0.4);
+  color: #34c759;
 }
 
-.faq-bank-owner {
-  font-size: 0.78rem;
-  color: #b0aca2;
-  letter-spacing: 0.02em;
+.faq-wallet-owner {
+  font-size: 0.8rem;
+  color: #86868b;
 }
 
-/* Admin Contact Strip */
-.faq-contact-bar {
+/* Apple-style Action Pill Contacts */
+.faq-wallet-contact {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.85rem;
-  padding: 0.95rem 1.15rem;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(197, 168, 105, 0.15);
-  box-sizing: border-box;
+  gap: 0.75rem;
+  padding: 0.9rem 1.15rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.faq-contact-links {
+.faq-wallet-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
+  gap: 0.5rem;
 }
 
-.faq-contact-btn {
+.faq-wallet-link {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 6px;
-  background: rgba(37, 211, 102, 0.08);
-  border: 1px solid rgba(37, 211, 102, 0.25);
-  color: #4edc7b;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.74rem;
-  font-weight: 700;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f5f5f7;
+  font-size: 0.78rem;
+  font-weight: 500;
   text-decoration: none;
-  transition: all 200ms ease;
+  transition: all 180ms ease;
 }
 
-.faq-contact-btn:hover {
-  background: rgba(37, 211, 102, 0.18);
-  border-color: rgba(37, 211, 102, 0.5);
+.faq-wallet-link:hover {
+  background: rgba(255, 255, 255, 0.14);
   color: #ffffff;
 }
 
@@ -538,28 +380,14 @@
   }
 
   .faq-trigger-btn {
-    padding: 1.05rem 1.15rem;
-    gap: 0.75rem;
-  }
-
-  .faq-trigger-left {
-    gap: 0.75rem;
-  }
-
-  .faq-icon-box {
-    display: none; /* Keep clean on small mobile */
-  }
-
-  .faq-index-badge {
-    padding: 0.22rem 0.48rem;
-    font-size: 0.68rem;
+    padding: 1.1rem 1.15rem;
   }
 
   .faq-content-body {
-    padding: 0.25rem 1.15rem 1.25rem 1.15rem;
+    padding: 0 1.15rem 1.25rem 1.15rem;
   }
 
-  .faq-contact-bar {
+  .faq-wallet-contact {
     flex-direction: column;
     align-items: flex-start;
   }
