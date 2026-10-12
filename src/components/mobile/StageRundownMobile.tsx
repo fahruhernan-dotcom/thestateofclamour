@@ -53,7 +53,7 @@ export const StageRundownMobile: React.FC<Props> = ({
             <h3 className="rundown-mobile-title">MALAM I — SWEAR IN CONTINENTAL</h3>
             <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
-              Konser panggung utama hip-hop sinematik dan brass akustik megah di Main Assembly Hall berketinggian 14 meter.
+              Konser panggung utama sinematik dan brass akustik megah di Main Assembly Hall berketinggian 14 meter.
             </p>
 
             <div className="rundown-mobile-meta-strip">

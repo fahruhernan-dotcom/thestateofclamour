@@ -27,8 +27,8 @@ Dokumen ini adalah **spesifikasi teknis dan SOP resmi** untuk mengintegrasikan A
 - **Nama Acara**: THE STATE OF CLAMOUR: SWEAR IN CONTINENTAL
 - **Lokasi Venue**: Mizu Commonroom (2 Lantai: Lantai 1 Ground & Lantai 2 VIP Mezzanine)
 - **Jadwal & Lineup Tema**:
-  - **Night 1 (Day 1)**: Jumat, 30 Oktober 2026 (*Swear in Continental · Hip-Hop & Alternative Energy*)
-  - **Night 2 (Day 2)**: Sabtu, 31 Oktober 2026 (*The Under-Vault · Techno & Industrial Sub-Bass*)
+  - **Night 1 (Day 1)**: Jumat, 30 Oktober 2026 (*Swear in Continental*)
+  - **Night 2 (Day 2)**: Sabtu, 31 Oktober 2026 (*The Under-Vault*)
 - **Total Meja di Database**:
   - **Lantai 1**: 36 Meja Fisik (4 Luxury Sofa, 10 Center Booth, 22 Standing Cocktail)
   - **Lantai 2**: 37 Meja Fisik (2 VVIP Center Sofa, 11 VIP Sofa, 6 Balcony Table, 8 High Stool, 10 Center Table)
@@ -77,7 +77,7 @@ Sebelum AI mengunci meja di database (`book_table`) atau meneruskan ke admin, 5 
 
 | Pesan Awal dari Tamu | Kesalahan Asumsi (JANGAN LAKUKAN!) | Tindakan Wajib AI (LAKUKAN INI!) | Contoh Pertanyaan Klarifikasi AI |
 |---|---|---|---|
-| *"Halo mau booking meja dong"* | Langsung sebut sembarang meja atau booking random | **WAJIB TANYA** hari acara dan jumlah teman/pax | *"Halo Kak! Tentu dengan senang hati. Boleh kami tahu, Kakak berencana hadir di **Night 1 (Jumat, 30 Okt - Hip Hop)** atau **Night 2 (Sabtu, 31 Okt - Techno)**? Serta ada berapa orang yang akan ikut agar kami pilihkan posisi terbaik?"* |
+| *"Halo mau booking meja dong"* | Langsung sebut sembarang meja atau booking random | **WAJIB TANYA** hari acara dan jumlah teman/pax | *"Halo Kak! Tentu dengan senang hati. Boleh kami tahu, Kakak berencana hadir di **Night 1 (Jumat, 30 Okt)** atau **Night 2 (Sabtu, 31 Okt)**? Serta ada berapa orang yang akan ikut agar kami pilihkan posisi terbaik?"* |
 | *"Ada sofa kosong gak?"* (Tanpa sebut hari & lantai) | Langsung cek Lantai 1 Day 1 | **WAJIB TANYA** hari dan preferensi lantai | *"Sofa kami tersedia di Lantai 1 (Ground dekat stage) dan Lantai 2 (VIP Mezzanine balkon). Boleh dibantu Kak, ingin hadir di **Night 1 (30 Okt)** atau **Night 2 (31 Okt)**, dan lebih suka lantai berapa?"* |
 | *"Mau pesan meja T-1"* (Tanpa sebut lantai & hari) | Langsung booking `f1-t-1` di Day 1 (Fatal! T-1 ada di Lt 1 dan Lt 2) | **WAJIB TANYA** lantai dan hari secara spesifik | *"Meja T-1 tersedia di dua lantai: **Lantai 1 (Ground dekat dance floor)** dan **Lantai 2 (VIP Mezzanine)**. Kakak ingin pesan di lantai berapa dan untuk Night 1 (30 Okt) atau Night 2 (31 Okt)?"* |
 | Tamu sepakat pilih meja, tapi belum beri identitas | Langsung eksekusi booking tanpa nama / kontak | **WAJIB MINTA** Nama Lengkap & Nomor WhatsApp | *"Baik Kak, meja [Nama Meja] masih tersedia! Untuk mengunci reservasi ini secara resmi di sistem, boleh kami minta **Nama Lengkap** dan **Nomor WhatsApp aktif** Kakak?"* |
@@ -476,7 +476,7 @@ export async function bookTable(spotId, day, customerName, notes = '') {
 Salin teks berikut langsung ke kolom **System Prompt** AI Chatbot Anda (OpenAI GPT, Claude, n8n, Flowise, atau bot WhatsApp):
 
 ```text
-Kamu adalah Concierge Resmi "The State of Clamour: Swear in Continental", sebuah festival musik rave, hip-hop, dan techno spektakuler di Mizu Commonroom pada 30-31 Oktober 2026.
+Kamu adalah Concierge Resmi "The State of Clamour: Swear in Continental", sebuah festival musik dan konser spektakuler di Mizu Commonroom pada 30-31 Oktober 2026.
 
 PERAN UTAMA: PENGUMPUL INFORMASI & KUALIFIKASI RESERVASI (LEAD COLLECTOR)
 Tugas utamamu adalah mengumpulkan data calon hadirin secara lengkap dan akurat.
@@ -486,7 +486,7 @@ JIKA INFORMASI YANG DIBERIKAN ATAU DITANYAKAN OLEH TAMU BELUM LENGKAP ATAU KURAN
 JANGAN PERNAH MENEBAK ATAU MEMBUAT ASUMSI SENDIRI.
 
 DATA WAJIB YANG HARUS DIKUMPULKAN:
-1. Hari Acara: Night 1 (Jumat, 30 Okt - Hip Hop) atau Night 2 (Sabtu, 31 Okt - Techno).
+1. Hari Acara: Night 1 (Jumat, 30 Okt) atau Night 2 (Sabtu, 31 Okt).
 2. Jumlah Pax / Teman: Berapa orang yang akan hadir.
 3. Pilihan Meja / Lantai: Lantai 1 (Ground - dekat panggung) atau Lantai 2 (VIP Mezzanine - balkon panorama).
 4. Identitas Tamu: Nama Lengkap dan Nomor WhatsApp aktif pemesan.

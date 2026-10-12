@@ -582,7 +582,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
                 <span className="streaming-recommend-kicker">EKSPLORASI MALAM PERTAMA</span>
                 <h3 className="streaming-recommend-title">NIGHT I — [SWEAR IN CONTINENTAL]</h3>
                 <p className="streaming-recommend-desc">
-                  Rasakan kemegahan malam pembuka pada Jumat, 30 Oktober 2026. Alami live brass ensemble berkekuatan tinggi, hip-hop kontinental, dan atmosfer katedral 14 meter bersama Headliner Rahasia Malam Pertama.
+                  Rasakan kemegahan malam pembuka pada Jumat, 30 Oktober 2026. Alami pertunjukan live berskala monumental dan atmosfer katedral 14 meter bersama Headliner Rahasia Malam Pertama.
                 </p>
                 <div className="streaming-recommend-action-row">
                   <button

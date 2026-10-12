@@ -240,7 +240,7 @@ export const NightOneEventPage: React.FC<Props> = ({
               <span className="streaming-spotlight-sub">SWEAR IN CONTINENTAL LIVE CONCERT</span>
               <h3 className="streaming-spotlight-title">SECRET HEADLINER (TBA)</h3>
               <p className="streaming-spotlight-desc">
-                Penampil tamu istimewa yang akan membawa aransemen hip-hop kontinental dengan live brass section dan formasi panggung 360° berkekuatan tinggi di aula monumental setinggi 14 meter. Tiket Early Bird dan Presale menjamin akses masuk penuh tanpa syarat saat pengumuman resmi dibuka.
+                Penampil tamu istimewa yang akan membawakan aransemen orkestral monumental dengan live brass section dan formasi panggung 360° berkekuatan tinggi di aula monumental setinggi 14 meter. Tiket Early Bird dan Presale menjamin akses masuk penuh tanpa syarat saat pengumuman resmi dibuka.
               </p>
 
               <div className="streaming-spotlight-meta-grid">
@@ -345,7 +345,7 @@ export const NightOneEventPage: React.FC<Props> = ({
                   </span>
                 </div>
                 <p className="streaming-episode-desc">
-                  Puncak pertunjukan panggung utama 360° yang mengguncang aula 14 meter dengan katalog live hip-hop kontinental berdaya suara 118dB.
+                  Puncak pertunjukan panggung utama 360° yang mengguncang aula 14 meter dengan aransemen live berskala masif berdaya suara 118dB.
                 </p>
               </div>
             </article>

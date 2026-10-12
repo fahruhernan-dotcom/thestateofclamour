@@ -81,7 +81,7 @@ export const StageRundown: React.FC<Props> = ({
             </div>
 
             <p className="event-roster-desc">
-              Konser panggung utama hip-hop sinematik dan brass akustik megah di Main Assembly Hall berketinggian 14 meter.
+              Konser panggung utama sinematik dan brass akustik megah di Main Assembly Hall berketinggian 14 meter.
             </p>
 
             {/* Clean Typographic Metadata Strip (Zero Pill Box Clutter) */}
