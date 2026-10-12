@@ -1,91 +1,119 @@
 /* ========================================================================== */
-/* OFFICIAL FAQ & PRIORITY RSVP GUIDE STYLING (PURE VANILLA CSS)              */
-/* The State of Clamour: Swear in Continental                                  */
+/* THE STATE OF CLAMOUR // LUXURY FAQ & CONCIERGE RSVP SPECIFICATION         */
+/* Styleguide: Continental Dark-Noir · Cinzel Monumental · Gold-Antique Wire  */
 /* ========================================================================== */
 
 .official-faq-section {
   width: 100%;
-  max-width: 900px;
-  margin: 4.5rem auto 3.5rem;
+  max-width: 960px;
+  margin: 5rem auto 4rem;
   padding: 0 1.25rem;
   box-sizing: border-box;
+  position: relative;
 }
 
+/* Ambient backlight behind section */
+.official-faq-section::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 380px;
+  background: radial-gradient(ellipse at center, rgba(197, 168, 105, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Section Header */
 .faq-header {
+  position: relative;
+  z-index: 1;
   text-align: center;
-  margin-bottom: 2.25rem;
+  margin-bottom: 2.75rem;
 }
 
 .faq-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.35rem 0.95rem;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
   border-radius: 9999px;
   background: rgba(197, 168, 105, 0.08);
-  border: 1px solid rgba(197, 168, 105, 0.25);
+  border: 1px solid rgba(197, 168, 105, 0.28);
   font-family: var(--font-mono, monospace);
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   color: var(--color-gold-antique, #c5a869);
   text-transform: uppercase;
-  margin-bottom: 0.85rem;
+  margin-bottom: 1rem;
 }
 
 .faq-title {
   font-family: var(--font-monumental, 'Cinzel', serif);
-  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  font-size: clamp(1.5rem, 3.8vw, 2.35rem);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--color-ivory, #f5eedc);
-  margin: 0 0 0.6rem;
+  margin: 0 0 0.75rem;
   text-transform: uppercase;
-  line-height: 1.2;
+  line-height: 1.22;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
 }
 
 .faq-desc {
-  max-width: 620px;
+  max-width: 640px;
   margin: 0 auto;
-  font-family: var(--font-body, sans-serif);
-  font-size: 0.88rem;
-  color: var(--color-muted, #a6a4a0);
-  line-height: 1.6;
+  font-family: var(--font-body, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 0.9rem;
+  color: #a6a4a0;
+  line-height: 1.65;
 }
 
+/* Accordion Container */
 .faq-accordion-list {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.95rem;
   width: 100%;
 }
 
+/* Individual Accordion Item */
 .faq-accordion-item {
   width: 100%;
-  border-radius: 12px;
-  background: rgba(13, 16, 22, 0.85);
-  border: 1px solid rgba(197, 168, 105, 0.18);
+  border-radius: 14px;
+  background: rgba(14, 18, 26, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(197, 168, 105, 0.16);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
   overflow: hidden;
-  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 260ms ease, background 260ms ease, box-shadow 260ms ease;
   box-sizing: border-box;
 }
 
 .faq-accordion-item:hover {
-  border-color: rgba(197, 168, 105, 0.35);
+  border-color: rgba(197, 168, 105, 0.38);
+  background: rgba(18, 23, 33, 0.85);
 }
 
 .faq-accordion-item.is-open {
-  background: rgba(18, 22, 30, 0.95);
-  border-color: rgba(197, 168, 105, 0.45);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(197, 168, 105, 0.08);
+  background: rgba(18, 23, 34, 0.94);
+  border-color: rgba(197, 168, 105, 0.48);
+  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(197, 168, 105, 0.08);
 }
 
+/* Accordion Trigger Button */
 .faq-trigger-btn {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.15rem 1.35rem;
+  padding: 1.2rem 1.4rem;
   background: transparent !important;
   border: none !important;
   cursor: pointer;
@@ -98,87 +126,257 @@
   box-sizing: border-box;
   transition: background 200ms ease;
   outline: none;
+  gap: 1rem;
 }
 
 .faq-trigger-btn:hover {
-  background: rgba(197, 168, 105, 0.04);
+  background: rgba(197, 168, 105, 0.035) !important;
 }
 
 .faq-trigger-left {
   display: flex;
   align-items: center;
-  gap: 0.95rem;
+  gap: 1.05rem;
   min-width: 0;
   flex: 1;
 }
 
-.faq-icon-box {
-  display: flex;
+/* Monospace Index Badge (e.g., 01, 02) */
+.faq-index-badge {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  background: rgba(197, 168, 105, 0.08);
-  border: 1px solid rgba(197, 168, 105, 0.2);
-  flex-shrink: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   color: var(--color-gold-antique, #c5a869);
+  padding: 0.28rem 0.6rem;
+  border-radius: 6px;
+  background: rgba(197, 168, 105, 0.08);
+  border: 1px solid rgba(197, 168, 105, 0.22);
+  flex-shrink: 0;
+}
+
+/* Icon Box */
+.faq-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--color-gold-antique, #c5a869);
+  flex-shrink: 0;
+  transition: all 250ms ease;
+}
+
+.faq-accordion-item.is-open .faq-icon-box {
+  background: rgba(197, 168, 105, 0.14);
+  border-color: rgba(197, 168, 105, 0.35);
+  box-shadow: 0 0 14px rgba(197, 168, 105, 0.2);
+}
+
+/* Question Header Lockup */
+.faq-question-lockup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
 }
 
 .faq-question-text {
-  font-family: var(--font-body, sans-serif);
-  font-size: 0.95rem;
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: clamp(0.92rem, 2vw, 1.08rem);
   font-weight: 600;
   color: var(--color-ivory, #f5eedc);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   line-height: 1.35;
 }
 
+.faq-question-tag {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: rgba(197, 168, 105, 0.7);
+  text-transform: uppercase;
+}
+
+/* Chevron */
 .faq-chevron {
   color: var(--color-gold-antique, #c5a869);
-  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms ease;
   flex-shrink: 0;
-  margin-left: 0.75rem;
 }
 
 .faq-chevron.is-open {
   transform: rotate(180deg);
+  color: #fff;
+}
+
+/* ========================================================================== */
+/* Native CSS Grid Accordion Transition (60 FPS Butter-Smooth, Zero-Jank)     */
+/* ========================================================================== */
+.faq-content-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-content-grid.is-open {
+  grid-template-rows: 1fr;
+}
+
+.faq-content-overflow {
+  overflow: hidden;
 }
 
 .faq-content-body {
-  padding: 1rem 1.35rem 1.35rem;
+  padding: 0.25rem 1.4rem 1.45rem 1.4rem;
   font-family: var(--font-body, sans-serif);
-  font-size: 0.86rem;
-  color: #c4c0b6;
+  font-size: 0.88rem;
+  color: #c8c4bc;
   line-height: 1.65;
   border-top: 1px solid rgba(197, 168, 105, 0.1);
+  margin-top: 0.25rem;
   box-sizing: border-box;
 }
 
-@media (min-width: 640px) {
-  .faq-content-body {
-    padding-left: 4.1rem;
+/* ========================================================================== */
+/* Content Sub-Components: VIP Quota Cards, Bank Accounts, Tags               */
+/* ========================================================================== */
+
+/* FAQ 01: VIP Complimentary Ticket Grid */
+.faq-quota-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.faq-quota-card {
+  padding: 1rem 1.15rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(197, 168, 105, 0.18);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: border-color 200ms ease;
+}
+
+.faq-quota-card:hover {
+  border-color: rgba(197, 168, 105, 0.4);
+}
+
+.faq-quota-tier {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--color-ivory, #f5eedc);
+  letter-spacing: 0.04em;
+}
+
+.faq-quota-pax {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-gold-antique, #c5a869);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.faq-quota-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(197, 168, 105, 0.12);
+  border: 1px solid rgba(197, 168, 105, 0.3);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-ivory, #f5eedc);
+}
+
+/* FAQ 02: Strict Security Callout Pill */
+.faq-callout-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  background: rgba(197, 75, 75, 0.06);
+  border: 1px solid rgba(197, 75, 75, 0.28);
+  margin-top: 0.85rem;
+  box-sizing: border-box;
+}
+
+.faq-callout-icon {
+  color: #e06c75;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.faq-callout-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ff9e9e;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+/* FAQ 03: Dual Venue Chips */
+.faq-venues-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin: 0.85rem 0 0.5rem;
+}
+
+@media (min-width: 600px) {
+  .faq-venues-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-.faq-list {
-  list-style: disc;
-  padding-left: 1.25rem;
-  margin: 0.5rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+.faq-venue-card {
+  padding: 0.95rem 1.15rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  box-sizing: border-box;
 }
 
-.faq-list li {
-  color: #d4cfc7;
+.faq-venue-name {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-gold-antique, #c5a869);
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 0.25rem;
 }
 
+.faq-venue-desc {
+  font-size: 0.78rem;
+  color: #a6a4a0;
+  line-height: 1.5;
+}
+
+/* FAQ 07: Luxury BCA Cards */
 .faq-bank-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.85rem;
-  margin: 0.85rem 0 1rem;
+  gap: 0.95rem;
+  margin: 1rem 0 1.25rem;
 }
 
 @media (min-width: 600px) {
@@ -187,42 +385,182 @@
   }
 }
 
-.faq-bank-card {
-  padding: 0.85rem 1.15rem;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(197, 168, 105, 0.2);
+.faq-bank-card-premium {
+  padding: 1.15rem 1.35rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(197, 168, 105, 0.04) 100%);
+  border: 1px solid rgba(197, 168, 105, 0.26);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.faq-bank-label {
-  font-size: 0.68rem;
-  color: var(--color-dim, #888);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  display: block;
+.faq-bank-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle at top right, rgba(197, 168, 105, 0.12), transparent 70%);
+  pointer-events: none;
 }
 
-.faq-bank-acc {
+.faq-bank-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.faq-bank-type-pill {
   font-family: var(--font-mono, monospace);
-  font-size: 1rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: var(--color-ivory, #f5eedc);
-  display: block;
-  margin: 0.25rem 0;
-}
-
-.faq-bank-name {
-  font-size: 0.76rem;
+  letter-spacing: 0.12em;
   color: var(--color-gold-antique, #c5a869);
-  display: block;
+  text-transform: uppercase;
 }
 
-.faq-contact-strip {
+.faq-bank-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.62rem;
+  color: #7ee787;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.faq-bank-number-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+}
+
+.faq-bank-number {
+  font-family: var(--font-mono, monospace);
+  font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+}
+
+.faq-bank-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(197, 168, 105, 0.12);
+  border: 1px solid rgba(197, 168, 105, 0.32);
+  color: var(--color-gold-antique, #c5a869);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 180ms ease;
+  outline: none;
+}
+
+.faq-bank-copy-btn:hover {
+  background: rgba(197, 168, 105, 0.25);
+  color: #ffffff;
+  border-color: rgba(197, 168, 105, 0.6);
+}
+
+.faq-bank-copy-btn.is-copied {
+  background: rgba(78, 194, 94, 0.15);
+  border-color: rgba(78, 194, 94, 0.4);
+  color: #7ee787;
+}
+
+.faq-bank-owner {
+  font-size: 0.78rem;
+  color: #b0aca2;
+  letter-spacing: 0.02em;
+}
+
+/* Admin Contact Strip */
+.faq-contact-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.76rem;
-  margin-top: 0.5rem;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.95rem 1.15rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(197, 168, 105, 0.15);
+  box-sizing: border-box;
+}
+
+.faq-contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.faq-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  background: rgba(37, 211, 102, 0.08);
+  border: 1px solid rgba(37, 211, 102, 0.25);
+  color: #4edc7b;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.faq-contact-btn:hover {
+  background: rgba(37, 211, 102, 0.18);
+  border-color: rgba(37, 211, 102, 0.5);
+  color: #ffffff;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 640px) {
+  .official-faq-section {
+    margin: 3.5rem auto 2.5rem;
+    padding: 0 1rem;
+  }
+
+  .faq-trigger-btn {
+    padding: 1.05rem 1.15rem;
+    gap: 0.75rem;
+  }
+
+  .faq-trigger-left {
+    gap: 0.75rem;
+  }
+
+  .faq-icon-box {
+    display: none; /* Keep clean on small mobile */
+  }
+
+  .faq-index-badge {
+    padding: 0.22rem 0.48rem;
+    font-size: 0.68rem;
+  }
+
+  .faq-content-body {
+    padding: 0.25rem 1.15rem 1.25rem 1.15rem;
+  }
+
+  .faq-contact-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
