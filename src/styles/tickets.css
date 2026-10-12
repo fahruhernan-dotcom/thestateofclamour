@@ -25,6 +25,24 @@
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 6%,
+    black 18%,
+    black 76%,
+    rgba(0, 0, 0, 0.4) 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 6%,
+    black 18%,
+    black 76%,
+    rgba(0, 0, 0, 0.4) 92%,
+    transparent 100%
+  );
 }
 
 .passage-cathedral-img {
@@ -48,9 +66,9 @@
   inset: 0;
   background:
     /* Top seamless fade from Section 2 (The Guests) */
-    linear-gradient(180deg, #060709 0%, rgba(6, 7, 9, 0.5) 8%, transparent 22%),
-    /* Bottom seamless fade to Section 4 (The Night) */
-    linear-gradient(0deg, #060709 0%, rgba(6, 7, 9, 0.6) 8%, transparent 22%),
+    linear-gradient(180deg, #060709 0%, rgba(6, 7, 9, 0.6) 8%, transparent 22%),
+    /* Bottom seamless fade to void (#060709) */
+    linear-gradient(0deg, #060709 0%, rgba(6, 7, 9, 0.96) 12%, rgba(6, 7, 9, 0.65) 24%, transparent 38%),
     /* Soft atmospheric ambient vignette so cards and cathedral architecture harmonize */
     radial-gradient(ellipse at 50% 38%, rgba(6, 7, 9, 0.12) 0%, rgba(6, 7, 9, 0.42) 60%, rgba(6, 7, 9, 0.82) 100%);
   pointer-events: none;

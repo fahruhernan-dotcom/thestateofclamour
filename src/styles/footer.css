@@ -2,23 +2,69 @@
 /* ========================================================================== */
 .final-gateway-section {
   position: relative;
-  padding: 9.5rem 1.5rem;
+  padding: 10.5rem 1.5rem 9.5rem;
   text-align: center;
   overflow: hidden;
-  border-top: 1px solid rgba(197, 168, 105, 0.12);
+  background-color: var(--color-void, #060709);
+  border-top: none;
+}
+
+/* Atmospheric Background with Smooth Top & Bottom Feathering Mask */
+.final-gateway-backdrop {
+  position: absolute;
+  inset: 0;
   background-image: url('/assets/bg-early-bird.png');
   background-size: cover;
-  background-position: center;
+  background-position: center 25%;
   background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.25) 12%,
+    rgba(0, 0, 0, 0.8) 28%,
+    black 42%,
+    black 62%,
+    rgba(0, 0, 0, 0.75) 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.25) 12%,
+    rgba(0, 0, 0, 0.8) 28%,
+    black 42%,
+    black 62%,
+    rgba(0, 0, 0, 0.75) 82%,
+    transparent 100%
+  );
 }
 
 .final-gateway-section::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8, 9, 12, 0.82) 0%, rgba(8, 9, 12, 0.55) 50%, rgba(8, 9, 12, 0.9) 100%);
+  background:
+    /* Deep seamless top and bottom gradient fades into void (#060709) */
+    linear-gradient(
+      180deg,
+      #060709 0%,
+      rgba(6, 7, 9, 0.92) 12%,
+      rgba(6, 7, 9, 0.45) 30%,
+      rgba(6, 7, 9, 0.45) 70%,
+      rgba(6, 7, 9, 0.92) 88%,
+      #060709 100%
+    ),
+    /* Soft atmospheric ambient vignette */
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(6, 7, 9, 0.15) 0%,
+      rgba(6, 7, 9, 0.5) 60%,
+      rgba(6, 7, 9, 0.92) 100%
+    );
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
 /* Volumetric Atmospheric Red Portal Beam */
@@ -37,7 +83,7 @@
   );
   filter: blur(55px);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   animation: portal-bass-pulse 3s ease-in-out infinite alternate;
 }
 
@@ -56,14 +102,14 @@
   );
   clip-path: polygon(32% 0%, 68% 0%, 100% 100%, 0% 100%);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   opacity: 0.75;
   filter: blur(25px);
 }
 
 .final-gateway-panel {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   max-width: 780px;
   margin-inline: auto;
 }
@@ -309,10 +355,23 @@
 /* 8. CINEMATIC FOOTER & TOAST ALERTS                                         */
 /* ========================================================================== */
 .cinematic-footer {
-  padding: 3.5rem 1.5rem;
+  position: relative;
+  padding: 4rem 1.5rem 3.5rem;
   text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: var(--color-void);
+  border-top: none;
+  background: var(--color-void, #060709);
+}
+
+.cinematic-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(640px, 80%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197, 168, 105, 0.25), transparent);
+  pointer-events: none;
 }
 
 .footer-brand-title {

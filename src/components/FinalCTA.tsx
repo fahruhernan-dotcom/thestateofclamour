@@ -35,6 +35,9 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
 
   return (
     <section className="final-gateway-section">
+      {/* Smoothly masked atmospheric backdrop */}
+      <div className="final-gateway-backdrop" aria-hidden="true" />
+
       {/* Volumetric Red Portal Light Beam */}
       <div className="final-volumetric-beam-glow" aria-hidden="true" />
       <div className="final-volumetric-beam-core" aria-hidden="true" />
