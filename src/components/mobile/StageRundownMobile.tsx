@@ -82,7 +82,7 @@ export const StageRundownMobile: React.FC<Props> = ({
         >
           <div className="rundown-mobile-banner">
             <img
-              src="/assets/day2_billboard_vault.jpg"
+              src="/assets/gothic_cathedral_ritual_concert.png"
               alt="Night II — The Under-Vault Modular Techno"
               className="rundown-mobile-banner-img"
               loading="lazy"

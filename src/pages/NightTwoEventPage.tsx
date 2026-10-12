@@ -69,8 +69,8 @@ export const NightTwoEventPage: React.FC<Props> = ({
         {/* Full-bleed visual backdrop */}
         <div className="streaming-backdrop-wrap">
           <img
-            src="/assets/day2_billboard_vault.jpg"
-            alt="The State of Clamour Night 2 The Under-Vault"
+            src="/assets/gothic_cathedral_ritual_concert.png"
+            alt="The State of Clamour Night 2 Gothic Ritual Concert"
             className="streaming-backdrop-img"
           />
         </div>
@@ -218,7 +218,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
             {/* Visual Teaser with Mystery Aura */}
             <div className="streaming-spotlight-visual">
               <img
-                src="/assets/day2_billboard_vault.jpg"
+                src="/assets/gothic_cathedral_ritual_concert.png"
                 alt="Headliner Rahasia Malam 2"
                 className="streaming-spotlight-img"
               />

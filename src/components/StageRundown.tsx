@@ -120,7 +120,7 @@ export const StageRundown: React.FC<Props> = ({
           {/* Cinematic Atmospheric Banner */}
           <div className="event-roster-banner-wrap">
             <img
-              src="/assets/day2_billboard_vault.jpg"
+              src="/assets/gothic_cathedral_ritual_concert.png"
               alt="Night II — The Under-Vault Modular Techno"
               className="event-roster-banner-img"
               loading="lazy"

@@ -546,8 +546,8 @@ export const NightOneEventPage: React.FC<Props> = ({
             <div className="streaming-more-like-this-card">
               <div className="streaming-recommend-poster">
                 <img
-                  src="/assets/day2_billboard_vault.jpg"
-                  alt="Night 2 The Under-Vault"
+                  src="/assets/gothic_cathedral_ritual_concert.png"
+                  alt="Night 2 Gothic Ritual Concert"
                 />
                 <span className="streaming-recommend-badge">NEXT TRANSMISSION</span>
               </div>
