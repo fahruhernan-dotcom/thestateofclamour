@@ -41,7 +41,7 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
 
       <div className="final-gateway-panel">
         <h2 className="section-headline" style={{ marginBottom: '2.25rem' }}>
-          WELCOME TO THE CONTINENTAL
+          WELCOME TO<br />THE CONTINENTAL
         </h2>
 
         {/* Primary Enter / Inquire Trigger */}
