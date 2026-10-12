@@ -718,3 +718,291 @@
     justify-content: center;
   }
 }
+
+/* ========================================================================== */
+/* OVERHAULED VIP CONCIERGE & UNIFIED LIVE INVENTORY SECTION                  */
+/* ========================================================================== */
+
+.reservasi-top-bar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 2rem;
+}
+
+.reservasi-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reservasi-back-btn:hover {
+  background: rgba(197, 168, 105, 0.08);
+  border-color: var(--color-gold-antique);
+  color: var(--color-ivory);
+  transform: translateX(-2px);
+}
+
+.reservasi-concierge-section {
+  max-width: 960px;
+  margin: 0 auto 4.5rem;
+}
+
+.concierge-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--color-gold-antique);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.reservasi-concierge-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .reservasi-concierge-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.concierge-card {
+  background: rgba(14, 17, 23, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  border-radius: 16px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.concierge-card:hover {
+  border-color: rgba(197, 168, 105, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(197, 168, 105, 0.12);
+}
+
+.concierge-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.concierge-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--color-gold-antique);
+  text-transform: uppercase;
+}
+
+.concierge-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.concierge-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.concierge-title {
+  font-family: var(--font-monumental);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-ivory);
+  margin: 0;
+}
+
+.concierge-theme {
+  font-size: 0.8rem;
+  color: var(--color-dim);
+  font-style: italic;
+  margin: 0;
+}
+
+.concierge-desc {
+  font-size: 0.84rem;
+  color: var(--color-muted);
+  line-height: 1.55;
+  margin: 0.25rem 0;
+}
+
+.concierge-meta-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(197, 168, 105, 0.12);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.76rem;
+}
+
+.meta-label {
+  color: var(--color-dim);
+  letter-spacing: 0.04em;
+}
+
+.meta-value {
+  color: var(--color-ivory);
+  font-weight: 600;
+}
+
+.meta-value.gold {
+  color: var(--color-gold-antique);
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.05em;
+}
+
+.concierge-action-btn {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(23, 40, 32, 0.95) 0%, rgba(14, 25, 20, 0.95) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #34d399;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.concierge-action-btn:hover {
+  background: linear-gradient(135deg, rgba(28, 54, 43, 0.98) 0%, rgba(18, 36, 28, 0.98) 100%);
+  border-color: #34d399;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.25);
+  transform: translateY(-1px);
+}
+
+.concierge-guarantee-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  color: var(--color-dim);
+  text-align: center;
+  line-height: 1.45;
+}
+
+.reservasi-inventory-section {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.inventory-section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.inventory-section-title {
+  font-family: var(--font-monumental);
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  color: var(--color-ivory);
+  letter-spacing: 0.08em;
+  margin: 0.6rem 0 0.8rem;
+  text-transform: uppercase;
+}
+
+.inventory-section-desc {
+  max-width: 640px;
+  margin: 0 auto 1.75rem;
+  font-size: 0.88rem;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.reservasi-day-segmented {
+  display: inline-flex;
+  padding: 4px;
+  background: rgba(15, 18, 24, 0.85);
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  border-radius: 9999px;
+  gap: 4px;
+  margin-bottom: 1rem;
+}
+
+.segmented-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.segmented-pill-btn:hover {
+  color: var(--color-ivory);
+}
+
+.segmented-pill-btn.is-active {
+  background: rgba(197, 168, 105, 0.15);
+  border-color: rgba(197, 168, 105, 0.45);
+  color: var(--color-gold-antique);
+  box-shadow: 0 0 16px rgba(197, 168, 105, 0.15);
+}
+
+.reservasi-floorplan-container {
+  width: 100%;
+}
+
