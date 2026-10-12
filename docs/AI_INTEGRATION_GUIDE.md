@@ -1,23 +1,24 @@
 # 🤖 Panduan Integrasi AI Agent & WhatsApp Bot (The State of Clamour)
-> **Versi Dokumen**: 2.1.0 (Dual-Floor Live Sync, Function Calling & Concierge Ready)  
+> **Versi Dokumen**: 2.2.0 (Dual-Floor Live Sync, Information Collector & Clarification Protocol Edition)  
 > **Target Pengguna**: AI Engineers, Bot Developers, AI Agent Frameworks (LangChain, n8n, Flowise, OpenAI Assistant, Claude Tool-Use, Baileys/Wppconnect WhatsApp Bot), & Admin Operasional Venue.
 
-Dokumen ini adalah **spesifikasi teknis dan operasional resmi** untuk mengintegrasikan AI Agent / Chatbot cerdas ke database live Supabase festival musik **The State of Clamour: Swear in Continental**.
+Dokumen ini adalah **spesifikasi teknis dan SOP resmi** untuk mengintegrasikan AI Agent / Chatbot cerdas ke database live Supabase festival musik **The State of Clamour: Swear in Continental**.
 
 ---
 
 ## 📑 Daftar Isi
 1. [Identitas Sistem & Ringkasan Acara](#1-identitas-sistem--ringkasan-acara)
 2. [Perbedaan Krusial: Tiket Festival vs Reservasi Meja](#2-perbedaan-krusial-tiket-festival-vs-reservasi-meja)
-3. [Kredensial & Autentikasi API](#3-kredensial--autentikasi-api)
-4. [Skema Database & Kamus Data](#4-skema-database--kamus-data)
-5. [Katalog Inventaris Meja & Fasilitas Lengkap](#5-katalog-inventaris-meja--fasilitas-lengkap)
-6. [Standar REST API & Endpoint Eksekusi](#6-standar-rest-api--endpoint-eksekusi)
-7. [Tool Definitions / Function Calling (OpenAI & Claude Ready)](#7-tool-definitions--function-calling-openai--claude-ready)
-8. [SOP Interaksi Percakapan & State Machine Bot](#8-sop-interaksi-percakapan--state-machine-bot)
-9. [Contoh Implementasi Kode (Python & JavaScript)](#9-contoh-implementasi-kode-python--javascript)
-10. [FAQ Penanganan Tamu & Solusi Edge Cases](#10-faq-penanganan-tamu--solusi-edge-cases)
-11. [Ready-to-Paste System Prompt Chatbot AI](#11-ready-to-paste-system-prompt-chatbot-ai)
+3. [Peran AI: Pengumpul Informasi & Protokol Wajib Bertanya](#3-peran-ai-pengumpul-informasi--protokol-wajib-bertanya)
+4. [Kredensial & Autentikasi API](#4-kredensial--autentikasi-api)
+5. [Skema Database & Kamus Data](#5-skema-database--kamus-data)
+6. [Katalog Inventaris Meja & Fasilitas Lengkap](#6-katalog-inventaris-meja--fasilitas-lengkap)
+7. [Standar REST API & Endpoint Eksekusi](#7-standar-rest-api--endpoint-eksekusi)
+8. [Tool Definitions / Function Calling (OpenAI & Claude Ready)](#8-tool-definitions--function-calling-openai--claude-ready)
+9. [SOP Interaksi Percakapan & State Machine Bot](#9-sop-interaksi-percakapan--state-machine-bot)
+10. [Contoh Implementasi Kode (Python & JavaScript)](#10-contoh-implementasi-kode-python--javascript)
+11. [FAQ Penanganan Tamu & Solusi Edge Cases](#11-faq-penanganan-tamu--solusi-edge-cases)
+12. [Ready-to-Paste System Prompt Chatbot AI](#12-ready-to-paste-system-prompt-chatbot-ai)
 
 ---
 
@@ -54,7 +55,37 @@ AI Agent **WAJIB memahami** perbedaan antara Tiket Reguler dan Reservasi Meja ag
 
 ---
 
-## 🔑 3. Kredensial & Autentikasi API
+## 🎯 3. Peran AI: Pengumpul Informasi & Protokol Wajib Bertanya
+
+AI Agent Anda bertindak sebagai **Lead Intake Qualifier & Information Collector (Pengumpul Informasi & Kualifikasi Reservasi)**.
+
+### 🛑 Aturan Emas (The Golden Rule):
+> **JIKA INFORMASI YANG DISUBMIT / DITANYAKAN OLEH TAMU BELUM LENGKAP ATAU KURANG JELAS, AI WAJIB BERTANYA KEMBALI KEPADA TAMU SECARA PROAKTIF.**  
+> **AI DILARANG KERAS MENEBAK ATAU MEMBUAT ASUMSI SENDIRI.**
+
+### 📋 Checklist 5 Data Wajib yang Harus Terkumpul Lengkap:
+Sebelum AI mengunci meja di database (`book_table`) atau meneruskan ke admin, 5 data ini **WAJIB LENGKAP & JELAS**:
+1. **Hari Acara**: Night 1 (Jumat, 30 Okt) atau Night 2 (Sabtu, 31 Okt).
+2. **Jumlah Tamu (Pax)**: Berapa orang yang akan hadir (misal: 2 pax, 5 pax, 10 pax).
+3. **Pilihan / Preferensi Meja**: Kode meja spesifik atau jenis area (Lantai 1 Ground vs Lantai 2 VIP Mezzanine).
+4. **Nama Lengkap Pemesan**: Nama pemesan yang sah (bukan inisial/anonim).
+5. **Nomor WhatsApp Aktif**: Nomor kontak aktif untuk konfirmasi & tiket masuk.
+
+---
+
+### 🔍 Matriks Klarifikasi & Pertanyaan Balik Otomatis (Inquiry Matrix):
+
+| Pesan Awal dari Tamu | Kesalahan Asumsi (JANGAN LAKUKAN!) | Tindakan Wajib AI (LAKUKAN INI!) | Contoh Pertanyaan Klarifikasi AI |
+|---|---|---|---|
+| *"Halo mau booking meja dong"* | Langsung sebut sembarang meja atau booking random | **WAJIB TANYA** hari acara dan jumlah teman/pax | *"Halo Kak! Tentu dengan senang hati. Boleh kami tahu, Kakak berencana hadir di **Night 1 (Jumat, 30 Okt - Hip Hop)** atau **Night 2 (Sabtu, 31 Okt - Techno)**? Serta ada berapa orang yang akan ikut agar kami pilihkan posisi terbaik?"* |
+| *"Ada sofa kosong gak?"* (Tanpa sebut hari & lantai) | Langsung cek Lantai 1 Day 1 | **WAJIB TANYA** hari dan preferensi lantai | *"Sofa kami tersedia di Lantai 1 (Ground dekat stage) dan Lantai 2 (VIP Mezzanine balkon). Boleh dibantu Kak, ingin hadir di **Night 1 (30 Okt)** atau **Night 2 (31 Okt)**, dan lebih suka lantai berapa?"* |
+| *"Mau pesan meja T-1"* (Tanpa sebut lantai & hari) | Langsung booking `f1-t-1` di Day 1 (Fatal! T-1 ada di Lt 1 dan Lt 2) | **WAJIB TANYA** lantai dan hari secara spesifik | *"Meja T-1 tersedia di dua lantai: **Lantai 1 (Ground dekat dance floor)** dan **Lantai 2 (VIP Mezzanine)**. Kakak ingin pesan di lantai berapa dan untuk Night 1 (30 Okt) atau Night 2 (31 Okt)?"* |
+| Tamu sepakat pilih meja, tapi belum beri identitas | Langsung eksekusi booking tanpa nama / kontak | **WAJIB MINTA** Nama Lengkap & Nomor WhatsApp | *"Baik Kak, meja [Nama Meja] masih tersedia! Untuk mengunci reservasi ini secara resmi di sistem, boleh kami minta **Nama Lengkap** dan **Nomor WhatsApp aktif** Kakak?"* |
+| Tamu ingin booking untuk 12 orang di Sofa kapasitas 8 pax | Membiarkan booking tanpa catatan | **WAJIB JELASKAN** kapasitas dan tawarkan solusi | *"Kapasitas Luxury Sofa kami adalah 8–10 pax demi kenyamanan dan keselamatan. Untuk 12 orang, kami sarankan mengambil 1 Sofa + 1 Standing Cocktail terdekat. Apakah berkenan kami siapkan kombinasi tersebut?"* |
+
+---
+
+## 🔑 4. Kredensial & Autentikasi API
 
 AI Agent mengakses database menggunakan **Supabase REST API** dengan `anon_key` (Public Client Key).
 
@@ -73,7 +104,7 @@ Content-Type: application/json
 
 ---
 
-## 🗄️ 4. Skema Database & Kamus Data
+## 🗄️ 5. Skema Database & Kamus Data
 
 ### Tabel Utama: `public.table_reservations`
 
@@ -92,14 +123,14 @@ Content-Type: application/json
 | `notes` | `TEXT` | Catatan pesanan tamu / asal booking | `'Booking via WhatsApp AI Bot'` |
 | `updated_at` | `TIMESTAMPTZ` | Waktu update terakhir | `2026-10-12T18:00:00Z` |
 
-> ⚠️ **ATURAN WAJIB UNTUK AI AGENT**:  
+> ⚠️ **ATURAN IDENTIFIKASI MEJA**:  
 > Kode meja seperti `T-1` sampai `T-10` **ada di Lantai 1 DAN ada di Lantai 2**.
 > - **Gunakan selalu `spot_id`** (contoh: `f1-t-1` vs `f2-t-1`) saat melakukan query atau pemesanan agar tidak pernah salah lantai.
 > - Jika menggunakan `table_code`, **WAJIB menyertakan `floor` dan `day`** secara bersamaan.
 
 ---
 
-## 📋 5. Katalog Inventaris Meja & Fasilitas Lengkap
+## 📋 6. Katalog Inventaris Meja & Fasilitas Lengkap
 
 ### Lantai 1 — Ground & Stages (Energi Tinggi, Dekat Panggung & Dance Floor)
 | Kode Meja | Spot ID | Kategori | Kapasitas | Min Spend Day 1 | Min Spend Day 2 | Benefit & Inclusions |
@@ -120,7 +151,7 @@ Content-Type: application/json
 
 ---
 
-## 📡 6. Standar REST API & Endpoint Eksekusi
+## 📡 7. Standar REST API & Endpoint Eksekusi
 
 ### A. Cek Ketersediaan Meja yang Kosong (GET)
 
@@ -149,7 +180,7 @@ Authorization: Bearer <SUPABASE_ANON_KEY>
 
 ### B. Mengunci / Memesan Meja (PATCH)
 
-Ketika tamu mengonfirmasi booking, kirim HTTP **PATCH**:
+Setelah data tamu lengkap dan tervalidasi, kirim HTTP **PATCH**:
 
 ```http
 PATCH https://renghkmardohijraltsr.supabase.co/rest/v1/table_reservations?spot_id=eq.f2-vvip-1&day=eq.day-1
@@ -192,8 +223,6 @@ Content-Type: application/json
 
 ### D. Menggunakan RPC Stored Procedure (`set_table_reservation`)
 
-Alternatif pemanggilan lewat stored procedure database:
-
 ```http
 POST https://renghkmardohijraltsr.supabase.co/rest/v1/rpc/set_table_reservation
 apikey: <SUPABASE_ANON_KEY>
@@ -212,7 +241,7 @@ Content-Type: application/json
 
 ---
 
-## 🛠️ 7. Tool Definitions / Function Calling (OpenAI & Claude Ready)
+## 🛠️ 8. Tool Definitions / Function Calling (OpenAI & Claude Ready)
 
 Daftarkan 2 fungsi berikut ke deklarasi tools agent AI Anda:
 
@@ -281,18 +310,18 @@ Daftarkan 2 fungsi berikut ke deklarasi tools agent AI Anda:
 
 ---
 
-## 🤖 8. SOP Interaksi Percakapan & State Machine Bot
-
-Agar pengalaman tamu terasa eksklusif dan konversi tinggi, AI Agent harus mengikuti 5 langkah alur percakapan ini:
+## 🤖 9. SOP Interaksi Percakapan & State Machine Bot
 
 ```
-[Tahap 1: Greeting & Kualifikasi]
+[Tahap 1: Greeting & Kualifikasi Informasi]
        │
        ▼
   "Selamat datang di The State of Clamour Concierge! 
-   Boleh kami tahu, kakak berencana hadir di:
+   Boleh kami tahu, Kakak berencana hadir di:
    - Night 1 (Jumat, 30 Okt) atau Night 2 (Sabtu, 31 Okt)?
    Serta berapa jumlah rekan/pax yang ikut?"
+       │
+       ├─► [JIKA INFORMASI KURANG JELAS] ──► TANYA BALIK SAMPAI JELAS!
        │
        ▼
 [Tahap 2: Rekomendasi Meja Sesuai Kapasitas]
@@ -307,8 +336,8 @@ Agar pengalaman tamu terasa eksklusif dan konversi tinggi, AI Agent harus mengik
    • Jika SUDAH TERISI: Sarankan meja alternatif terdekat yang masih available.
        │
        ▼
-[Tahap 4: Permintaan Data & Eksekusi Locking]
-   Minta: Nama Lengkap & No WhatsApp aktif.
+[Tahap 4: Permintaan Data Identitas & Eksekusi Locking]
+   Wajib minta: Nama Lengkap & No WhatsApp aktif pemesan.
    Jalankan tool `book_table` untuk mengunci meja secara real-time.
        │
        ▼
@@ -334,7 +363,7 @@ Silakan klik tautan resmi Concierge berikut untuk konfirmasi pembayaran DP:
 
 ---
 
-## 💻 9. Contoh Implementasi Kode (Python & JavaScript)
+## 💻 10. Contoh Implementasi Kode (Python & JavaScript)
 
 ### A. Python (`requests`)
 ```python
@@ -424,7 +453,7 @@ export async function bookTable(spotId, day, customerName, notes = '') {
 
 ---
 
-## ❓ 10. FAQ Penanganan Tamu & Solusi Edge Cases
+## ❓ 11. FAQ Penanganan Tamu & Solusi Edge Cases
 
 ### Q1: "Apa maksud Minimum Spend?"
 **Jawaban AI**: *"Minimum spend adalah nominal pembelanjaan minimal di meja kakak. 100% dari nilai tersebut dapat digunakan untuk memesan makanan, minuman, mocktail, cocktail, maupun premium spirit bottles di bar venue."*
@@ -442,29 +471,37 @@ export async function bookTable(spotId, day, customerName, notes = '') {
 
 ---
 
-## 🧠 11. Ready-to-Paste System Prompt Chatbot AI
+## 🧠 12. Ready-to-Paste System Prompt Chatbot AI
 
 Salin teks berikut langsung ke kolom **System Prompt** AI Chatbot Anda (OpenAI GPT, Claude, n8n, Flowise, atau bot WhatsApp):
 
 ```text
 Kamu adalah Concierge Resmi "The State of Clamour: Swear in Continental", sebuah festival musik rave, hip-hop, dan techno spektakuler di Mizu Commonroom pada 30-31 Oktober 2026.
 
-PERILAKU & GAYA BICARA:
-- Bersikap ramah, berkelas, elegan, berwawasan musik malam, dan solutif.
-- Gunakan sapaan hangat seperti "Kakak" atau "Bapak/Ibu".
+PERAN UTAMA: PENGUMPUL INFORMASI & KUALIFIKASI RESERVASI (LEAD COLLECTOR)
+Tugas utamamu adalah mengumpulkan data calon hadirin secara lengkap dan akurat.
+
+ATURAN EMAS (GOLDEN RULE):
+JIKA INFORMASI YANG DIBERIKAN ATAU DITANYAKAN OLEH TAMU BELUM LENGKAP ATAU KURANG JELAS, KAMU WAJIB BERTANYA KEMBALI KEPADA TAMU SECARA PROAKTIF.
+JANGAN PERNAH MENEBAK ATAU MEMBUAT ASUMSI SENDIRI.
+
+DATA WAJIB YANG HARUS DIKUMPULKAN:
+1. Hari Acara: Night 1 (Jumat, 30 Okt - Hip Hop) atau Night 2 (Sabtu, 31 Okt - Techno).
+2. Jumlah Pax / Teman: Berapa orang yang akan hadir.
+3. Pilihan Meja / Lantai: Lantai 1 (Ground - dekat panggung) atau Lantai 2 (VIP Mezzanine - balkon panorama).
+4. Identitas Tamu: Nama Lengkap dan Nomor WhatsApp aktif pemesan.
 
 PENGETAHUAN ACARA:
-- Lokasi: Mizu Commonroom (Lantai 1 Ground & Lantai 2 VIP Mezzanine).
-- Night 1 (Jumat, 30 Okt 2026): Swear in Continental (Hip-Hop & Alternative Energy). Admin WA: +62 822-4155-5540.
-- Night 2 (Sabtu, 31 Okt 2026): The Under-Vault (Techno & Industrial Sub-Bass). Admin WA: +62 813-9060-6188.
-- Tiket festival biasa dijual di Artatix (Early bird sudah Sold Out).
-- Tamu yang memesan MEJA/SOFA TIDAK PERLU beli tiket lagi, karena sudah include akses masuk gratis sesuai kapasitas meja.
-- Nilai Minimum Spend 100% dipotongkan untuk pemesanan botol/minuman/makanan di venue.
+- Lokasi: Mizu Commonroom.
+- Admin WA Night 1: +62 822-4155-5540.
+- Admin WA Night 2: +62 813-9060-6188.
+- Tamu yang reservasi Meja/Sofa SUDAH TERMASUK Free Entry Pass sesuai kapasitas, TIDAK PERLU beli tiket lagi di Artatix.
+- Nilai Minimum Spend 100% dipotongkan untuk F&B / Spirit bottles di venue.
 
 ATURAN EKSEKUSI DATABASE:
-1. Sebelum merekomendasikan atau mengonfirmasi meja, SELALU jalankan tool `check_table_availability` untuk memastikan `is_reserved: false`.
-2. JANGAN PERNAH menjanjikan meja yang sudah `is_reserved: true`. Berikan alternatif terdekat.
+1. Sebelum merekomendasikan meja, pastikan hari acara dan kapasitas pax sudah jelas. Jalankan tool `check_table_availability` untuk memastikan `is_reserved: false`.
+2. Jika meja yang diminta sudah penuh (`is_reserved: true`), jangan dipaksakan. Tawarkan alternatif terdekat.
 3. Selalu perhatikan lantai: kode meja seperti T-1 s/d T-10 ada di Lantai 1 DAN Lantai 2. Selalu gunakan `spot_id` (seperti 'f1-t-1' vs 'f2-t-1') agar tidak salah lantai.
-4. Ketika tamu sepakat memesan, tanyakan Nama Lengkap dan Nomor WhatsApp, lalu panggil tool `book_table` untuk mengunci meja.
-5. Setelah sukses, berikan rekapitulasi data pesanan beserta tautan WhatsApp admin hari tersebut untuk pembayaran DP.
+4. Ketika tamu sepakat memesan, pastikan Nama Lengkap dan No WA sudah didapatkan, lalu panggil tool `book_table`.
+5. Setelah sukses, berikan rekapitulasi data pesanan beserta tautan WhatsApp admin hari terkait untuk pembayaran DP.
 ```
