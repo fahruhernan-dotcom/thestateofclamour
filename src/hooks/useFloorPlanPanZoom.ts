@@ -173,13 +173,15 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
     };
   }, [minScale, maxScale, clampPosition]);
 
-  // Handle Touch Events (1 finger pan, 2 fingers pinch)
+  // Handle Touch Events (1 finger pan when zoomed, 2 fingers pinch always)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     let touchStartPos = { x: 0, y: 0 };
     let touchStartPosRef = { x: 0, y: 0 };
+    let lastTapTimestamp = 0;
+    const touchDragThreshold = 14; // Higher threshold for touch screens to prevent swallowing finger taps
 
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 1) {
@@ -200,23 +202,27 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
 
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length === 1 && isDragging) {
-        e.preventDefault();
         const dx = e.touches[0].clientX - touchStartPos.x;
         const dy = e.touches[0].clientY - touchStartPos.y;
         const dist = Math.hypot(dx, dy);
         totalMovementRef.current = dist;
 
-        if (dist > dragThreshold) {
+        if (dist > touchDragThreshold) {
           hasDraggedRef.current = true;
         }
 
-        setPosition(() => {
-          const nextPos = {
-            x: touchStartPosRef.x + dx,
-            y: touchStartPosRef.y + dy
-          };
-          return clampPosition(nextPos, scale);
-        });
+        // Only preventDefault and pan if the map is zoomed in beyond 1.05x.
+        // At 1.0x (overview mode), allow natural vertical webpage scrolling on mobile devices!
+        if (scale > 1.05) {
+          e.preventDefault();
+          setPosition(() => {
+            const nextPos = {
+              x: touchStartPosRef.x + dx,
+              y: touchStartPosRef.y + dy
+            };
+            return clampPosition(nextPos, scale);
+          });
+        }
       } else if (e.touches.length === 2 && initialTouchDistanceRef.current !== null) {
         e.preventDefault();
         const t1 = e.touches[0];
@@ -232,6 +238,20 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
       if (e.touches.length === 0) {
         setIsDragging(false);
         initialTouchDistanceRef.current = null;
+
+        // Mobile double-tap detection (< 300ms between taps without dragging)
+        const now = Date.now();
+        if (now - lastTapTimestamp < 300 && !hasDraggedRef.current) {
+          if (scale > 1.2) {
+            resetView();
+          } else {
+            const targetScale = 2.0;
+            setScale(targetScale);
+          }
+          lastTapTimestamp = 0;
+        } else {
+          lastTapTimestamp = now;
+        }
       } else if (e.touches.length === 1) {
         initialTouchDistanceRef.current = null;
       }
@@ -248,7 +268,7 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
       container.removeEventListener('touchend', handleTouchEnd);
       container.removeEventListener('touchcancel', handleTouchEnd);
     };
-  }, [scale, position, isDragging, minScale, maxScale, clampPosition, dragThreshold]);
+  }, [scale, position, isDragging, minScale, maxScale, clampPosition, resetView]);
 
   // Double Click / Double Tap quick zoom toggle
   const handleDoubleClick = useCallback((e: React.MouseEvent) => {

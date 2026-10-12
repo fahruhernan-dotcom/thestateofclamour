@@ -157,14 +157,14 @@ export const FloorPlanViewer: React.FC<Props> = ({
 
             <button
               type="button"
-              className="filter-chip-btn"
+              className="filter-chip-btn floor-refresh-btn"
               style={{ marginLeft: '0.25rem' }}
               onClick={reload}
               title="Perbarui Data Ketersediaan Meja"
               disabled={isLoading}
             >
               <RefreshCw size={11} className={isLoading ? 'animate-spin' : ''} />
-              <span>Cek Ketersediaan</span>
+              <span className="refresh-btn-label">Cek Ketersediaan</span>
             </button>
           </div>
         </div>
@@ -187,7 +187,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
       {/* Guide Banner */}
       <div className="floorplan-guide-banner">
         <div className="floorplan-guide-item">
-          <Info size={13} style={{ color: 'var(--color-gold-antique, #c5a869)', flexShrink: 0 }} />
+          <Info size={13} style={{ color: '#d1c9bc', flexShrink: 0 }} />
           <span>
             {viewMode === 'map'
               ? 'Ketuk pin meja untuk melihat spesifikasi, harga minimum spend, dan reservasi WhatsApp.'
@@ -196,7 +196,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
         </div>
         <div className="floorplan-guide-legend">
           <span className="floorplan-legend-item available">
-            <span className="floorplan-legend-dot available" /> Emas: Tersedia
+            <span className="floorplan-legend-dot available" /> Hijau: Tersedia
           </span>
           <span className="floorplan-legend-item occupied">
             <span className="floorplan-legend-dot occupied" /> Merah: Terisi
@@ -381,7 +381,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
 
           {/* Gestures Navigation Hint Pill */}
           <div className="floorplan-gesture-hint">
-            <Move size={12} className="text-[#c5a869]" />
+            <Move size={12} className="text-zinc-400" />
             <span>Geser untuk navigasi · Scroll / cubit untuk zoom</span>
           </div>
         </div>
