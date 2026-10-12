@@ -2,114 +2,16 @@
 /* ========================================================================== */
 .final-gateway-section {
   position: relative;
-  padding: 10.5rem 1.5rem 9.5rem;
+  padding: 8.5rem 1.5rem 8rem;
   text-align: center;
   overflow: hidden;
   background-color: var(--color-void, #060709);
   border-top: none;
 }
 
-/* Atmospheric Background with Smooth Top & Bottom Feathering Mask */
-.final-gateway-backdrop {
-  position: absolute;
-  inset: 0;
-  background-image: url('/assets/bg-early-bird.png');
-  background-size: cover;
-  background-position: center 25%;
-  background-repeat: no-repeat;
-  pointer-events: none;
-  z-index: 0;
-  -webkit-mask-image: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(0, 0, 0, 0.25) 12%,
-    rgba(0, 0, 0, 0.8) 28%,
-    black 42%,
-    black 62%,
-    rgba(0, 0, 0, 0.75) 82%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(0, 0, 0, 0.25) 12%,
-    rgba(0, 0, 0, 0.8) 28%,
-    black 42%,
-    black 62%,
-    rgba(0, 0, 0, 0.75) 82%,
-    transparent 100%
-  );
-}
-
-.final-gateway-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    /* Deep seamless top and bottom gradient fades into void (#060709) */
-    linear-gradient(
-      180deg,
-      #060709 0%,
-      rgba(6, 7, 9, 0.92) 12%,
-      rgba(6, 7, 9, 0.45) 30%,
-      rgba(6, 7, 9, 0.45) 70%,
-      rgba(6, 7, 9, 0.92) 88%,
-      #060709 100%
-    ),
-    /* Soft atmospheric ambient vignette */
-    radial-gradient(
-      ellipse at 50% 50%,
-      rgba(6, 7, 9, 0.15) 0%,
-      rgba(6, 7, 9, 0.5) 60%,
-      rgba(6, 7, 9, 0.92) 100%
-    );
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Volumetric Atmospheric Red Portal Beam */
-.final-volumetric-beam-glow {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 750px;
-  height: 520px;
-  background: radial-gradient(
-    ellipse at bottom,
-    rgba(143, 29, 36, 0.48) 0%,
-    rgba(92, 13, 18, 0.22) 45%,
-    transparent 75%
-  );
-  filter: blur(55px);
-  pointer-events: none;
-  z-index: 2;
-  animation: portal-bass-pulse 3s ease-in-out infinite alternate;
-}
-
-.final-volumetric-beam-core {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 320px;
-  height: 480px;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(143, 29, 36, 0.32) 60%,
-    rgba(197, 168, 105, 0.18) 100%
-  );
-  clip-path: polygon(32% 0%, 68% 0%, 100% 100%, 0% 100%);
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.75;
-  filter: blur(25px);
-}
-
 .final-gateway-panel {
   position: relative;
-  z-index: 3;
+  z-index: 2;
   max-width: 780px;
   margin-inline: auto;
 }
