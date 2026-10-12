@@ -18,6 +18,86 @@
   }
 }
 
+/* Denah Back Button */
+.denah-back-bar {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem auto;
+  width: 100%;
+}
+
+.denah-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.75);
+  border: 1px solid rgba(197, 168, 105, 0.25);
+  color: var(--color-muted, #a6a4a0);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.denah-back-btn:hover {
+  background: rgba(197, 168, 105, 0.12);
+  border-color: var(--color-gold-antique, #c5a869);
+  color: var(--color-gold-antique, #c5a869);
+  transform: translateX(-2px);
+  box-shadow: 0 4px 16px rgba(197, 168, 105, 0.15);
+}
+
+/* Day Selector Toggle Bar */
+.denah-day-toggle-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 4px;
+  border-radius: 10px;
+  background: #090c12;
+  border: 1px solid rgba(197, 168, 105, 0.35);
+  margin-top: 1.25rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.denah-day-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-muted, #a6a4a0);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  user-select: none;
+  -webkit-appearance: none;
+}
+
+.denah-day-btn:hover {
+  color: var(--color-ivory, #ffffff);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.denah-day-btn.is-active {
+  background: linear-gradient(135deg, #d4b87a 0%, #c5a869 100%);
+  color: #050608;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(197, 168, 105, 0.35);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 /* Header */
 .denah-header-cluster {
   text-align: center;

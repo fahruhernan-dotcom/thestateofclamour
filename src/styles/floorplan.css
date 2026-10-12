@@ -122,6 +122,10 @@
 }
 
 .filter-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   padding: 0.4rem 0.85rem;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.04);
@@ -147,6 +151,68 @@
   border-color: var(--color-gold-antique, #C5A869);
   color: var(--color-gold-antique, #C5A869);
   font-weight: 600;
+}
+
+/* Guide Banner */
+.floorplan-guide-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-gray-subtle, #A6A4A0);
+}
+
+.floorplan-guide-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.floorplan-guide-legend {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .floorplan-guide-legend {
+    display: flex;
+  }
+}
+
+.floorplan-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+}
+
+.floorplan-legend-item.available {
+  color: #22c55e;
+}
+
+.floorplan-legend-item.occupied {
+  color: #e0313e;
+}
+
+.floorplan-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.floorplan-legend-dot.available {
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+}
+
+.floorplan-legend-dot.occupied {
+  background: #e0313e;
+  box-shadow: 0 0 6px #e0313e;
 }
 
 /* --- INTERACTIVE MAP CANVAS VIEWPORT --- */

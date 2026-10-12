@@ -27,7 +27,7 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
   const handleOpenWhatsApp = (day: 'day-1' | 'day-2') => {
     const inquiry = buildAdminGeneralInquiryUrl(day);
     if (onToast) {
-      onToast(`Menghubungi ${inquiry.admin.name}...`);
+      onToast(`Connecting to ${inquiry.admin.name}...`);
     }
     window.open(inquiry.url, '_blank', 'noopener,noreferrer');
     setIsModalOpen(false);
@@ -64,7 +64,7 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
             className="btn-enter-state btn-press"
           >
             <MessageCircle size={18} strokeWidth={2.2} />
-            <span>KONSULTASI &amp; CHAT ADMIN RESMI</span>
+            <span>OFFICIAL CONCIERGE &amp; INQUIRIES</span>
           </button>
         </div>
 
@@ -74,22 +74,22 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
             type="button"
             className="btn-admin-wa-pill"
             onClick={() => handleOpenWhatsApp('day-1')}
-            title={`Hubungi Admin Day 1: ${ADMIN_DAY1.displayPhone}`}
+            title="Connect with Official Concierge for Day 1"
           >
             <span className="wa-pill-dot" />
             <MessageCircle size={14} className="text-[#25d366]" />
-            <span>DAY 01 ADMIN: {ADMIN_DAY1.displayPhone}</span>
+            <span>DAY 01 CONCIERGE // SWEAR IN CONTINENTAL</span>
           </button>
 
           <button
             type="button"
             className="btn-admin-wa-pill is-day2"
             onClick={() => handleOpenWhatsApp('day-2')}
-            title={`Hubungi Admin Day 2: ${ADMIN_DAY2.displayPhone}`}
+            title="Connect with Official Concierge for Day 2"
           >
             <span className="wa-pill-dot" />
             <MessageCircle size={14} className="text-[#25d366]" />
-            <span>DAY 02 ADMIN: {ADMIN_DAY2.displayPhone}</span>
+            <span>DAY 02 CONCIERGE // THE UNDER-VAULT</span>
           </button>
         </div>
       </div>
@@ -105,16 +105,16 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
           <div className="admin-modal-panel" onClick={e => e.stopPropagation()}>
             <div className="admin-modal-header">
               <div>
-                <h3 className="admin-modal-title">HUBUNGI ADMIN RESMI ACARA</h3>
+                <h3 className="admin-modal-title">OFFICIAL EVENT CONCIERGE</h3>
                 <p className="admin-modal-subtitle">
-                  Pilih hari acara untuk konsultasi tiket, ketersediaan meja/sofa, atau informasi umum The State of Clamour.
+                  Select an event night for ticketing assistance, table &amp; sofa reservations, or general event inquiries.
                 </p>
               </div>
               <button
                 type="button"
                 className="drawer-close-btn"
                 onClick={() => setIsModalOpen(false)}
-                aria-label="Tutup"
+                aria-label="Close"
               >
                 <X size={18} />
               </button>
@@ -129,11 +129,11 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
                 onClick={() => handleOpenWhatsApp('day-1')}
               >
                 <div className="admin-card-info">
-                  <span className="admin-card-day-badge">NIGHT 01 // JUMAT, 30 OKT 2026</span>
+                  <span className="admin-card-day-badge">NIGHT 01 // FRIDAY, 30 OCT 2026</span>
                   <div className="admin-card-name">{ADMIN_DAY1.name}</div>
                   <div className="admin-card-phone">
                     <MessageCircle size={13} />
-                    <span>{ADMIN_DAY1.displayPhone}</span>
+                    <span>Official WhatsApp Concierge</span>
                   </div>
                   <span className="text-[11px] text-[#a6a4a0] mt-1">
                     Swear In Continental · Live Hip-Hop &amp; Alternative Energy
@@ -141,7 +141,7 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
                 </div>
 
                 <div className="admin-card-cta-btn">
-                  <span>Chat Day 1</span>
+                  <span>Connect Day 1</span>
                   <ChevronRight size={14} />
                 </div>
               </div>
@@ -154,11 +154,11 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
                 onClick={() => handleOpenWhatsApp('day-2')}
               >
                 <div className="admin-card-info">
-                  <span className="admin-card-day-badge">NIGHT 02 // SABTU, 31 OKT 2026</span>
+                  <span className="admin-card-day-badge">NIGHT 02 // SATURDAY, 31 OCT 2026</span>
                   <div className="admin-card-name">{ADMIN_DAY2.name}</div>
                   <div className="admin-card-phone">
                     <MessageCircle size={13} />
-                    <span>{ADMIN_DAY2.displayPhone}</span>
+                    <span>Official WhatsApp Concierge</span>
                   </div>
                   <span className="text-[11px] text-[#a6a4a0] mt-1">
                     Techno Under-Vault · Modular &amp; Industrial Sub-Bass
@@ -166,7 +166,7 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
                 </div>
 
                 <div className="admin-card-cta-btn">
-                  <span>Chat Day 2</span>
+                  <span>Connect Day 2</span>
                   <ChevronRight size={14} />
                 </div>
               </div>

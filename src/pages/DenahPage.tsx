@@ -16,11 +16,11 @@ export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) =>
   return (
     <main className="denah-page-container">
       {/* Back Button */}
-      <div className="max-w-6xl mx-auto w-full mb-4">
+      <div className="denah-back-bar">
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex items-center gap-2 text-xs text-[#a6a4a0] hover:text-[#c5a869] transition-colors py-2 px-3 rounded border border-white/10 bg-black/40"
+          className="denah-back-btn"
         >
           <ArrowLeft size={14} />
           <span>Kembali ke Beranda</span>
@@ -42,14 +42,10 @@ export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) =>
         </p>
 
         {/* Day Selector Pill */}
-        <div className="inline-flex items-center p-1 rounded-lg bg-[#0b0e14] border border-[#c5a869]/30 mt-3 gap-2">
+        <div className="denah-day-toggle-bar" role="tablist" aria-label="Pilih Hari Acara">
           <button
             type="button"
-            className={`px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center gap-1.5 ${
-              selectedDay === 'day-1'
-                ? 'bg-[#c5a869] text-black shadow-lg shadow-[#c5a869]/20'
-                : 'text-[#a6a4a0] hover:text-white'
-            }`}
+            className={`denah-day-btn ${selectedDay === 'day-1' ? 'is-active' : ''}`}
             onClick={() => setSelectedDay('day-1')}
           >
             <Calendar size={13} />
@@ -57,11 +53,7 @@ export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) =>
           </button>
           <button
             type="button"
-            className={`px-4 py-2 rounded-md text-xs font-bold transition-all flex items-center gap-1.5 ${
-              selectedDay === 'day-2'
-                ? 'bg-[#c5a869] text-black shadow-lg shadow-[#c5a869]/20'
-                : 'text-[#a6a4a0] hover:text-white'
-            }`}
+            className={`denah-day-btn ${selectedDay === 'day-2' ? 'is-active' : ''}`}
             onClick={() => setSelectedDay('day-2')}
           >
             <Calendar size={13} />

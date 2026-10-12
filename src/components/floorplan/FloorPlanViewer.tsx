@@ -133,7 +133,8 @@ export const FloorPlanViewer: React.FC<Props> = ({
 
             <button
               type="button"
-              className="filter-chip-btn flex items-center gap-1 ml-2"
+              className="filter-chip-btn"
+              style={{ marginLeft: '0.5rem' }}
               onClick={reload}
               title="Perbarui Data Ketersediaan Meja"
               disabled={isLoading}
@@ -160,17 +161,17 @@ export const FloorPlanViewer: React.FC<Props> = ({
       </section>
 
       {/* Guide Banner */}
-      <div className="flex items-center justify-between text-xs text-[#a6a4a0] px-2 mb-2">
-        <div className="flex items-center gap-2">
-          <Info size={13} className="text-[#c5a869]" />
+      <div className="floorplan-guide-banner">
+        <div className="floorplan-guide-item">
+          <Info size={13} style={{ color: 'var(--color-gold-antique, #c5a869)', flexShrink: 0 }} />
           <span>Klik pin meja untuk melihat spesifikasi, harga minimum spend, dan reservasi langsung via WhatsApp.</span>
         </div>
-        <div className="hidden sm:flex items-center gap-3">
-          <span className="flex items-center gap-1 text-[#22c55e]">
-            <span className="w-2 h-2 rounded-full bg-[#22c55e]" /> Emas: Tersedia
+        <div className="floorplan-guide-legend">
+          <span className="floorplan-legend-item available">
+            <span className="floorplan-legend-dot available" /> Emas: Tersedia
           </span>
-          <span className="flex items-center gap-1 text-[#e0313e]">
-            <span className="w-2 h-2 rounded-full bg-[#e0313e]" /> Merah: Terisi
+          <span className="floorplan-legend-item occupied">
+            <span className="floorplan-legend-dot occupied" /> Merah: Terisi
           </span>
         </div>
       </div>
