@@ -151,22 +151,24 @@
 
 .admin-modal-panel {
   width: 100%;
-  max-width: 560px;
-  background: #0d111a;
-  border: 1px solid rgba(197, 168, 105, 0.45);
+  max-width: 520px;
+  background: rgba(10, 13, 19, 0.95);
+  border: 1px solid rgba(197, 168, 105, 0.35);
   border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(143, 29, 36, 0.3);
+  padding: 1.75rem 2rem;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.95), 0 0 35px rgba(197, 168, 105, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 1.25rem;
+  animation: modalScaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 @keyframes modalScaleUp {
   from {
-    transform: scale(0.92);
+    transform: scale(0.95);
     opacity: 0;
   }
   to {
@@ -178,100 +180,115 @@
 .admin-modal-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
+  border-bottom: 1px solid rgba(197, 168, 105, 0.15);
+  padding-bottom: 0.85rem;
 }
 
 .admin-modal-title {
-  font-family: 'Cinzel', serif, Georgia;
-  font-size: 1.25rem;
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #f5eedc;
-  letter-spacing: 0.1em;
+  color: var(--color-ivory, #f5eedc);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   margin: 0;
 }
 
 .admin-modal-subtitle {
-  font-size: 0.8rem;
-  color: #a6a4a0;
-  margin-top: 0.35rem;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-muted, #a6a4a0);
+  margin-top: 0.2rem;
 }
 
 .admin-cards-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 
 .admin-select-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1.15rem 1.25rem;
+  gap: 1.25rem;
+  padding: 1.15rem 1.35rem;
   border-radius: 12px;
-  background: rgba(18, 24, 36, 0.85);
-  border: 1px solid rgba(197, 168, 105, 0.25);
+  background: rgba(16, 21, 30, 0.75);
+  border: 1px solid rgba(197, 168, 105, 0.2);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: left;
   user-select: none;
   -webkit-appearance: none;
   appearance: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .admin-select-card:hover {
-  background: rgba(28, 38, 56, 0.95);
-  border-color: #25d366;
-  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25);
+  background: rgba(24, 32, 46, 0.95);
+  border-color: rgba(197, 168, 105, 0.6);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75), 0 0 20px rgba(197, 168, 105, 0.15);
   transform: translateY(-2px);
 }
 
 .admin-card-info {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.2rem;
 }
 
 .admin-card-day-badge {
-  font-size: 0.65rem;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
   font-weight: 700;
   color: var(--color-gold-antique, #C5A869);
-  letter-spacing: 0.15em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .admin-card-name {
-  font-family: 'Cinzel', serif, Georgia;
-  font-size: 0.95rem;
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: 1.05rem;
   font-weight: 700;
-  color: #f5eedc;
+  color: var(--color-ivory, #f5eedc);
+  letter-spacing: 0.04em;
+  line-height: 1.2;
 }
 
-.admin-card-phone {
-  font-size: 0.8rem;
-  color: #25d366;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
+.admin-card-desc {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: #8e8d8a;
+  letter-spacing: 0.02em;
 }
 
 .admin-card-cta-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1rem;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
   border-radius: 8px;
-  background: #25d366;
-  color: #000000;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.78rem;
+  background: rgba(197, 168, 105, 0.12);
+  border: 1px solid rgba(197, 168, 105, 0.35);
+  color: var(--color-gold-antique, #c5a869);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: 0.05em;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.admin-select-card:hover .admin-card-cta-btn {
+  background: linear-gradient(135deg, #d4b87a 0%, #c5a869 100%);
+  color: #0b0e14;
+  border-color: #d4b87a;
+  box-shadow: 0 4px 14px rgba(197, 168, 105, 0.4);
 }
 
 
