@@ -39,7 +39,7 @@ export const ReservasiPage: React.FC<Props> = ({
 
   return (
     <main className="reservasi-page-container">
-      {/* Top Navigation */}
+      {/* Top Navigation Bar */}
       <div className="reservasi-top-bar">
         <button
           type="button"
@@ -55,7 +55,7 @@ export const ReservasiPage: React.FC<Props> = ({
       {/* Editorial Header */}
       <header className="reservasi-header-cluster">
         <div className="reservasi-eyebrow-pill">
-          <Crown size={13} className="text-[#c5a869]" />
+          <Crown size={12} className="reservasi-eyebrow-icon" />
           <span>VIP HOSPITALITY // MIZU COMMONROOM</span>
         </div>
         <h1 className="reservasi-main-title">
@@ -70,13 +70,43 @@ export const ReservasiPage: React.FC<Props> = ({
       {/* Dual VIP Concierge Hotline Cards */}
       <section className="reservasi-concierge-section" aria-label="VIP Concierge Hotline">
         <div className="concierge-section-header">
-          <Sparkles size={14} className="text-[#c5a869]" />
+          <Sparkles size={13} className="concierge-header-icon" />
           <span>LAYANAN KONSULTASI VIP LANGSUNG</span>
+        </div>
+
+        {/* Tactile Apple-Style Day Switcher */}
+        <div className="reservasi-day-segmented" role="tablist" aria-label="Pilih Hari Acara">
+          <button
+            type="button"
+            className={`segmented-pill-btn ${selectedDay === 'day-1' ? 'is-active' : ''}`}
+            onClick={() => setSelectedDay('day-1')}
+            role="tab"
+            aria-selected={selectedDay === 'day-1'}
+          >
+            <Calendar size={13} />
+            <div className="segmented-pill-text">
+              <span className="pill-title">DAY 1</span>
+              <span className="pill-sub">30 OKT · SWEAR IN CONTINENTAL</span>
+            </div>
+          </button>
+          <button
+            type="button"
+            className={`segmented-pill-btn ${selectedDay === 'day-2' ? 'is-active' : ''}`}
+            onClick={() => setSelectedDay('day-2')}
+            role="tab"
+            aria-selected={selectedDay === 'day-2'}
+          >
+            <Calendar size={13} />
+            <div className="segmented-pill-text">
+              <span className="pill-title">DAY 2</span>
+              <span className="pill-sub">31 OKT · THE UNDER-VAULT</span>
+            </div>
+          </button>
         </div>
 
         <div className="reservasi-concierge-grid">
           {/* Day 1 Admin Card */}
-          <article className="concierge-card">
+          <article className={`concierge-card ${selectedDay === 'day-1' ? 'is-selected-day' : ''}`}>
             <div className="concierge-card-header">
               <span className="concierge-badge">NIGHT 01 // 30 OKTOBER 2026</span>
               <div className="concierge-status-indicator">
@@ -85,20 +115,22 @@ export const ReservasiPage: React.FC<Props> = ({
               </div>
             </div>
 
-            <h2 className="concierge-title">ADMIN RSVP DAY 1</h2>
-            <p className="concierge-theme">Theme: Swear in Continental</p>
-            <p className="concierge-desc">
-              Dedicated hospitality, bottle packages, private butler &amp; reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 1.
-            </p>
+            <div className="concierge-card-body">
+              <h2 className="concierge-title">{ADMIN_DAY1.name}</h2>
+              <p className="concierge-theme">Theme: Swear in Continental</p>
+              <p className="concierge-desc">
+                Dedicated hospitality, bottle packages, private butler &amp; reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 1.
+              </p>
 
-            <div className="concierge-meta-box">
-              <div className="meta-row">
-                <span className="meta-label">PIC Resmi:</span>
-                <span className="meta-value">{ADMIN_DAY1.name}</span>
-              </div>
-              <div className="meta-row">
-                <span className="meta-label">WhatsApp:</span>
-                <span className="meta-value gold">{ADMIN_DAY1.displayPhone}</span>
+              <div className="concierge-meta-box">
+                <div className="meta-row">
+                  <span className="meta-label">PIC Resmi:</span>
+                  <span className="meta-value">{ADMIN_DAY1.name}</span>
+                </div>
+                <div className="meta-row">
+                  <span className="meta-label">WhatsApp:</span>
+                  <span className="meta-value mono">{ADMIN_DAY1.displayPhone}</span>
+                </div>
               </div>
             </div>
 
@@ -107,13 +139,13 @@ export const ReservasiPage: React.FC<Props> = ({
               className="concierge-action-btn btn-press"
               onClick={() => handleConciergeChat('day-1')}
             >
-              <MessageCircle size={16} />
+              <MessageCircle size={15} />
               <span>KONSULTASI ADMIN DAY 1</span>
             </button>
           </article>
 
           {/* Day 2 Admin Card */}
-          <article className="concierge-card">
+          <article className={`concierge-card ${selectedDay === 'day-2' ? 'is-selected-day' : ''}`}>
             <div className="concierge-card-header">
               <span className="concierge-badge">NIGHT 02 // 31 OKTOBER 2026</span>
               <div className="concierge-status-indicator">
@@ -122,20 +154,22 @@ export const ReservasiPage: React.FC<Props> = ({
               </div>
             </div>
 
-            <h2 className="concierge-title">ADMIN RSVP DAY 2</h2>
-            <p className="concierge-theme">Theme: The Under-Vault</p>
-            <p className="concierge-desc">
-              Dedicated hospitality, bottle packages, private butler &amp; reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 2.
-            </p>
+            <div className="concierge-card-body">
+              <h2 className="concierge-title">{ADMIN_DAY2.name}</h2>
+              <p className="concierge-theme">Theme: The Under-Vault</p>
+              <p className="concierge-desc">
+                Dedicated hospitality, bottle packages, private butler &amp; reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 2.
+              </p>
 
-            <div className="concierge-meta-box">
-              <div className="meta-row">
-                <span className="meta-label">PIC Resmi:</span>
-                <span className="meta-value">{ADMIN_DAY2.name}</span>
-              </div>
-              <div className="meta-row">
-                <span className="meta-label">WhatsApp:</span>
-                <span className="meta-value gold">{ADMIN_DAY2.displayPhone}</span>
+              <div className="concierge-meta-box">
+                <div className="meta-row">
+                  <span className="meta-label">PIC Resmi:</span>
+                  <span className="meta-value">{ADMIN_DAY2.name}</span>
+                </div>
+                <div className="meta-row">
+                  <span className="meta-label">WhatsApp:</span>
+                  <span className="meta-value mono">{ADMIN_DAY2.displayPhone}</span>
+                </div>
               </div>
             </div>
 
@@ -144,14 +178,14 @@ export const ReservasiPage: React.FC<Props> = ({
               className="concierge-action-btn btn-press"
               onClick={() => handleConciergeChat('day-2')}
             >
-              <MessageCircle size={16} />
+              <MessageCircle size={15} />
               <span>KONSULTASI ADMIN DAY 2</span>
             </button>
           </article>
         </div>
 
         <div className="concierge-guarantee-note">
-          <ShieldCheck size={14} className="text-[#c5a869] shrink-0" />
+          <ShieldCheck size={14} className="guarantee-icon shrink-0" />
           <span>Nomor WhatsApp resmi di atas adalah satu-satunya kanal terverifikasi reservasi VIP Table The State of Clamour.</span>
         </div>
       </section>
@@ -166,33 +200,10 @@ export const ReservasiPage: React.FC<Props> = ({
             PILIH POSISI MEJA &amp; CEK KETERSEDIAAN
           </h2>
           <p className="inventory-section-desc">
-            Pilih hari acara di bawah untuk menyinkronkan status ketersediaan 73 meja fisik di Mizu Commonroom.
-            Klik pin meja atau beralih ke Mode Daftar untuk melihat detail spesifikasi serta reservasi instan.
+            Status ketersediaan meja otomatis tersinkronisasi dengan{' '}
+            <strong>{selectedDay === 'day-1' ? 'DAY 1: Swear in Continental (30 Okt)' : 'DAY 2: The Under-Vault (31 Okt)'}</strong>.
+            Klik pin meja pada denah atau gunakan Mode Daftar untuk melihat detail spesifikasi serta reservasi instan.
           </p>
-
-          {/* Tactile Apple-Style Day Switcher */}
-          <div className="reservasi-day-segmented" role="tablist" aria-label="Pilih Hari Acara">
-            <button
-              type="button"
-              className={`segmented-pill-btn ${selectedDay === 'day-1' ? 'is-active' : ''}`}
-              onClick={() => setSelectedDay('day-1')}
-              role="tab"
-              aria-selected={selectedDay === 'day-1'}
-            >
-              <Calendar size={13} />
-              <span>DAY 1: SWEAR IN CONTINENTAL (30 OKT)</span>
-            </button>
-            <button
-              type="button"
-              className={`segmented-pill-btn ${selectedDay === 'day-2' ? 'is-active' : ''}`}
-              onClick={() => setSelectedDay('day-2')}
-              role="tab"
-              aria-selected={selectedDay === 'day-2'}
-            >
-              <Calendar size={13} />
-              <span>DAY 2: THE UNDER-VAULT (31 OKT)</span>
-            </button>
-          </div>
         </div>
 
         {/* Embedded FloorPlanViewer Component */}
@@ -210,3 +221,4 @@ export const ReservasiPage: React.FC<Props> = ({
 };
 
 export default ReservasiPage;
+

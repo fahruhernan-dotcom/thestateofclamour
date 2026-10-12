@@ -27,18 +27,25 @@
 .reservasi-eyebrow-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 1rem;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 9999px;
-  background: rgba(197, 168, 105, 0.08);
-  border: 1px solid var(--color-gold-hairline);
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  letter-spacing: 0.22em;
-  font-weight: 700;
-  color: var(--color-gold-antique);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: #d1c9bc;
   text-transform: uppercase;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.15rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.reservasi-eyebrow-icon {
+  color: #e5e2dc;
+  opacity: 0.85;
 }
 
 .reservasi-main-title {
@@ -720,7 +727,7 @@
 }
 
 /* ========================================================================== */
-/* OVERHAULED VIP CONCIERGE & UNIFIED LIVE INVENTORY SECTION                  */
+/* OVERHAULED VIP CONCIERGE & UNIFIED LIVE INVENTORY SECTION (APPLE HIG)      */
 /* ========================================================================== */
 
 .reservasi-top-bar {
@@ -735,46 +742,132 @@
   gap: 0.45rem;
   padding: 0.45rem 1rem;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(197, 168, 105, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--color-muted);
-  font-family: var(--font-body);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
   font-size: 0.74rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 180ms ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .reservasi-back-btn:hover {
-  background: rgba(197, 168, 105, 0.08);
-  border-color: var(--color-gold-antique);
-  color: var(--color-ivory);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   transform: translateX(-2px);
+}
+
+.reservasi-back-btn:active {
+  transform: scale(0.96);
 }
 
 .reservasi-concierge-section {
   max-width: 960px;
-  margin: 0 auto 4.5rem;
+  margin: 0 auto 3.5rem;
 }
 
 .concierge-section-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  color: var(--color-gold-antique);
+  gap: 0.45rem;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: #d1c9bc;
   text-transform: uppercase;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
+.concierge-header-icon {
+  color: #e5e2dc;
+  opacity: 0.75;
+}
+
+/* Unified Apple Segmented Day Switcher */
+.reservasi-day-segmented {
+  display: flex;
+  max-width: 680px;
+  margin: 0 auto 1.5rem;
+  padding: 4px;
+  background: rgba(14, 17, 24, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  gap: 6px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.segmented-pill-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: all 180ms ease;
+  min-height: 48px;
+  box-sizing: border-box;
+}
+
+.segmented-pill-btn:hover {
+  color: #f3f0ea;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.segmented-pill-btn.is-active {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.segmented-pill-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  text-align: left;
+}
+
+.pill-title {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.pill-sub {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  color: rgba(229, 226, 220, 0.5);
+  line-height: 1.15;
+}
+
+.segmented-pill-btn.is-active .pill-sub {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Concierge Grid & Cards */
 .reservasi-concierge-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 @media (min-width: 768px) {
@@ -784,24 +877,29 @@
 }
 
 .concierge-card {
-  background: rgba(14, 17, 23, 0.85);
+  background: rgba(14, 17, 24, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(197, 168, 105, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: 1.75rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
   position: relative;
   overflow: hidden;
-  transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.concierge-card.is-selected-day {
+  border-color: rgba(181, 39, 46, 0.45);
+  background: linear-gradient(135deg, rgba(143, 29, 36, 0.14) 0%, rgba(14, 17, 24, 0.9) 100%);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(143, 29, 36, 0.12);
 }
 
 .concierge-card:hover {
-  border-color: rgba(197, 168, 105, 0.5);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(197, 168, 105, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
 }
 
 .concierge-card-header {
@@ -812,11 +910,15 @@
 }
 
 .concierge-badge {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
   font-weight: 700;
-  color: var(--color-gold-antique);
+  color: #ff9b9b;
+  background: rgba(143, 29, 36, 0.3);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
   text-transform: uppercase;
 }
 
@@ -824,9 +926,9 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-family: var(--font-mono, monospace);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
   font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   font-weight: 700;
   color: #34d399;
 }
@@ -836,64 +938,64 @@
   height: 6px;
   border-radius: 50%;
   background: #34d399;
-  box-shadow: 0 0 8px #34d399;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.7);
 }
 
 .concierge-title {
   font-family: var(--font-monumental);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--color-ivory);
+  letter-spacing: 0.06em;
+  color: #ffffff;
   margin: 0;
 }
 
 .concierge-theme {
-  font-size: 0.8rem;
-  color: var(--color-dim);
+  font-size: 0.78rem;
+  color: #9ca3af;
   font-style: italic;
-  margin: 0;
+  margin: 0.15rem 0 0;
 }
 
 .concierge-desc {
-  font-size: 0.84rem;
-  color: var(--color-muted);
-  line-height: 1.55;
-  margin: 0.25rem 0;
+  font-size: 0.82rem;
+  color: #a6a4a0;
+  line-height: 1.5;
+  margin: 0.25rem 0 0.5rem;
 }
 
 .concierge-meta-box {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(197, 168, 105, 0.12);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 10px;
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 0.9rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  margin: 0.4rem 0 0.8rem;
+  margin-bottom: 0.75rem;
 }
 
 .meta-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.76rem;
+  font-size: 0.75rem;
 }
 
 .meta-label {
-  color: var(--color-dim);
-  letter-spacing: 0.04em;
+  color: #9ca3af;
+  letter-spacing: 0.02em;
 }
 
 .meta-value {
-  color: var(--color-ivory);
+  color: #ffffff;
   font-weight: 600;
 }
 
-.meta-value.gold {
-  color: var(--color-gold-antique);
-  font-family: var(--font-mono, monospace);
-  letter-spacing: 0.05em;
+.meta-value.mono {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  letter-spacing: 0.04em;
+  color: #d1c9bc;
 }
 
 .concierge-action-btn {
@@ -901,19 +1003,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   padding: 0.85rem 1.25rem;
+  min-height: 48px;
   border-radius: 10px;
   background: linear-gradient(135deg, rgba(23, 40, 32, 0.95) 0%, rgba(14, 25, 20, 0.95) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.4);
+  border: 1px solid rgba(52, 211, 153, 0.35);
   color: #34d399;
-  font-family: var(--font-body);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
   font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: all 180ms ease;
 }
 
 .concierge-action-btn:hover {
@@ -924,21 +1029,30 @@
   transform: translateY(-1px);
 }
 
+.concierge-action-btn:active {
+  transform: scale(0.985);
+  background: rgba(52, 211, 153, 0.18);
+}
+
 .concierge-guarantee-note {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   margin-top: 1.25rem;
-  font-size: 0.75rem;
-  color: var(--color-dim);
+  font-size: 0.74rem;
+  color: #9ca3af;
   text-align: center;
   line-height: 1.45;
 }
 
+.guarantee-icon {
+  color: #34d399;
+}
+
 .reservasi-inventory-section {
   width: 100%;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .inventory-section-header {
@@ -946,63 +1060,112 @@
   margin-bottom: 2rem;
 }
 
+.section-eyebrow {
+  display: inline-flex;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #d1c9bc;
+  text-transform: uppercase;
+}
+
 .inventory-section-title {
   font-family: var(--font-monumental);
   font-size: clamp(1.4rem, 3.5vw, 2.2rem);
   font-weight: 700;
-  color: var(--color-ivory);
-  letter-spacing: 0.08em;
-  margin: 0.6rem 0 0.8rem;
+  color: #ffffff;
+  letter-spacing: 0.06em;
+  margin: 0.5rem 0 0.75rem;
   text-transform: uppercase;
 }
 
 .inventory-section-desc {
   max-width: 640px;
-  margin: 0 auto 1.75rem;
-  font-size: 0.88rem;
-  color: var(--color-muted);
+  margin: 0 auto;
+  font-size: 0.86rem;
+  color: #9ca3af;
   line-height: 1.6;
-}
-
-.reservasi-day-segmented {
-  display: inline-flex;
-  padding: 4px;
-  background: rgba(15, 18, 24, 0.85);
-  border: 1px solid rgba(197, 168, 105, 0.2);
-  border-radius: 9999px;
-  gap: 4px;
-  margin-bottom: 1rem;
-}
-
-.segmented-pill-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.6rem 1.25rem;
-  border-radius: 9999px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--color-muted);
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.segmented-pill-btn:hover {
-  color: var(--color-ivory);
-}
-
-.segmented-pill-btn.is-active {
-  background: rgba(197, 168, 105, 0.15);
-  border-color: rgba(197, 168, 105, 0.45);
-  color: var(--color-gold-antique);
-  box-shadow: 0 0 16px rgba(197, 168, 105, 0.15);
 }
 
 .reservasi-floorplan-container {
   width: 100%;
 }
+
+/* Mobile Ergonomics & Apple Viewport Safeguards */
+@media (max-width: 767px) {
+  .reservasi-page-container {
+    padding: 4.5rem 1rem 3.5rem;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  .reservasi-header-cluster {
+    margin-bottom: 1.5rem;
+  }
+
+  .reservasi-main-title {
+    font-size: 1.55rem;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    margin-bottom: 0.65rem;
+  }
+
+  .reservasi-subtitle-desc {
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .reservasi-concierge-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .reservasi-day-segmented {
+    flex-direction: column;
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .segmented-pill-btn {
+    padding: 0.65rem 0.85rem;
+    min-height: 48px;
+    justify-content: flex-start;
+  }
+
+  .concierge-card {
+    padding: 1.15rem 1rem;
+    gap: 0.5rem;
+    border-radius: 14px;
+  }
+
+  .concierge-title {
+    font-size: 1.05rem;
+  }
+
+  .concierge-desc {
+    font-size: 0.78rem;
+    margin: 0.15rem 0 0.4rem;
+  }
+
+  .concierge-meta-box {
+    padding: 0.55rem 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .meta-row {
+    font-size: 0.72rem;
+  }
+
+  .inventory-section-title {
+    font-size: 1.25rem;
+  }
+
+  .inventory-section-desc {
+    font-size: 0.8rem;
+  }
+}
+
 
