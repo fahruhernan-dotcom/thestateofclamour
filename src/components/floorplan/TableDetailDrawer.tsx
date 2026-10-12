@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { TableSpot, TableStatus } from '../../types/tableTypes';
 import { ADMIN_DAY1, ADMIN_DAY2 } from '../../data/reservationData';
-import { X, Lock, CheckCircle2, Users, MessageCircle } from 'lucide-react';
+import { X, Lock, CheckCircle2, Users, MessageCircle, Copy, Check } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface Props {
@@ -20,6 +20,8 @@ export const TableDetailDrawer: React.FC<Props> = ({
   onClose,
   onSelectForBooking
 }) => {
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     if (!spot) return;
 
@@ -61,18 +63,28 @@ export const TableDetailDrawer: React.FC<Props> = ({
     window.open(waUrl, '_blank', 'noopener,noreferrer');
   };
 
+  const handleCopyAccount = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText('0374541630');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const venueLabel = spot.venue === 'tetra' ? 'TETRA SOLO' : 'MIZU COMMONROOM';
 
   return createPortal(
     <TooltipProvider>
       <div className="table-drawer-overlay" onClick={onClose} role="dialog" aria-modal="true">
         <div className="table-drawer-panel" onClick={e => e.stopPropagation()}>
+          {/* iOS Grabber Handle for Mobile Sheets */}
+          <div className="drawer-grabber" />
+
           {/* Header */}
           <div className="drawer-header">
             <div className="drawer-title-cluster">
               <div className="drawer-meta-badges">
                 <span className="badge-floor">{venueLabel}</span>
-                <span className="badge-floor">{spot.zoneTag}</span>
+                <span className="badge-zone">{spot.zoneTag}</span>
                 <span className={`badge-status ${isAvailable ? 'is-available' : 'is-occupied'}`}>
                   {isAvailable ? (
                     <>
@@ -85,7 +97,11 @@ export const TableDetailDrawer: React.FC<Props> = ({
                   )}
                 </span>
               </div>
-              <h2 className="drawer-table-code">{spot.code} // {spot.name}</h2>
+              <div className="drawer-title-row">
+                <h2 className="drawer-table-code">{spot.code}</h2>
+                <span className="drawer-title-sep">·</span>
+                <span className="drawer-table-name">{spot.name}</span>
+              </div>
             </div>
 
             <Tooltip>
@@ -95,7 +111,7 @@ export const TableDetailDrawer: React.FC<Props> = ({
                 onClick={onClose}
                 aria-label="Tutup Detail Meja"
               >
-                <X size={16} strokeWidth={2.4} />
+                <X size={15} strokeWidth={1.8} />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={8}>
                 <span>Tutup</span>
@@ -104,41 +120,64 @@ export const TableDetailDrawer: React.FC<Props> = ({
             </Tooltip>
           </div>
 
-          {/* Details Grid */}
-          <div className="drawer-details-grid">
-            <div className="detail-card">
-              <span className="detail-label">Kapasitas &amp; Tiket</span>
-              <span className="detail-value flex items-center gap-1.5">
-                <Users size={14} className="text-[#a6a4a0]" /> {spot.capacityText} ({spot.complementTickets || 2} Tiket)
-              </span>
+          {/* iOS Inset Grouped Specs Card */}
+          <div className="drawer-specs-grouped">
+            <div className="drawer-spec-row">
+              <div className="spec-label-cluster">
+                <Users size={13} className="spec-icon" />
+                <span className="spec-label">Kapasitas Tamu</span>
+              </div>
+              <span className="spec-value">{spot.capacityText} ({spot.complementTickets || 2} Tiket)</span>
             </div>
 
-            <div className="detail-card">
-              <span className="detail-label">Minimum Charge ({day === 'day-1' ? 'Day 1' : 'Day 2'})</span>
-              <span className="detail-value gold">{minSpend}</span>
+            <div className="drawer-spec-row">
+              <div className="spec-label-cluster">
+                <span className="spec-label">Min. Charge ({day === 'day-1' ? 'Day 1' : 'Day 2'})</span>
+              </div>
+              <span className="spec-value spec-value-strong">{minSpend}</span>
             </div>
 
             {spot.formattedBookingFee && (
-              <div className="detail-card" style={{ gridColumn: 'span 2' }}>
-                <span className="detail-label">Booking Fee (Kuncian Meja)</span>
-                <span className="detail-value" style={{ color: '#ffffff' }}>
-                  <strong>{spot.formattedBookingFee}</strong>
-                  <span style={{ fontSize: '0.72rem', color: '#8e8d8a', marginLeft: '8px' }}>
-                    (Transfer ke BCA: 0374541630 a/n M. Ferdian Wahyu)
-                  </span>
-                </span>
+              <div className="drawer-spec-row">
+                <div className="spec-label-cluster">
+                  <span className="spec-label">Booking Fee (Kuncian)</span>
+                </div>
+                <span className="spec-value-badge">{spot.formattedBookingFee}</span>
+              </div>
+            )}
+
+            {spot.formattedBookingFee && (
+              <div className="drawer-bank-row">
+                <div className="bank-info-cluster">
+                  <span className="bank-tag">Rekening Resmi</span>
+                  <span className="bank-account">BCA <strong>0374541630</strong> a/n M. Ferdian Wahyu</span>
+                </div>
+                <button
+                  type="button"
+                  className="bank-copy-btn"
+                  onClick={handleCopyAccount}
+                  title="Salin Nomor Rekening BCA"
+                >
+                  {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                  <span>{copied ? 'Tersalin' : 'Salin Rek'}</span>
+                </button>
               </div>
             )}
           </div>
 
           {/* Description */}
-          <p className="text-xs text-[#a6a4a0] leading-relaxed">
-            {spot.description}
-          </p>
+          {spot.description && (
+            <p className="drawer-description-text">
+              {spot.description}
+            </p>
+          )}
 
-          {/* Ketentuan Resmi Sesuai Guide Book */}
-          <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '8px', padding: '0.7rem 0.9rem', fontSize: '0.72rem', color: '#9e9ea0', lineHeight: '1.45' }}>
-            💡 <strong style={{ color: '#e5e2dc' }}>Ketentuan:</strong> Booking Fee mengunci meja dan sudah termasuk {spot.complementTickets || 2} tiket complimentary. Minimum charge diselesaikan secara terpisah di lokasi acara.
+          {/* Ketentuan Resmi */}
+          <div className="drawer-terms-card">
+            <span className="terms-icon">💡</span>
+            <p className="terms-text">
+              <strong>Ketentuan:</strong> Booking Fee mengunci meja &amp; termasuk {spot.complementTickets || 2} tiket complimentary. Sisa minimum charge diselesaikan di lokasi acara.
+            </p>
           </div>
 
           {/* Action Button */}
@@ -148,12 +187,12 @@ export const TableDetailDrawer: React.FC<Props> = ({
               className="drawer-cta-action is-available"
               onClick={handleWhatsAppBooking}
             >
-              <MessageCircle size={17} />
+              <MessageCircle size={16} />
               <span>Reservasi {spot.code} via WhatsApp</span>
             </button>
           ) : (
             <div className="drawer-cta-action is-occupied">
-              <Lock size={16} />
+              <Lock size={15} />
               <span>Meja Ini Telah Terisi / Reserved</span>
             </div>
           )}

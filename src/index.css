@@ -24,3 +24,18 @@
 @import './styles/responsive.css';
 @import './styles/preloader.css';
 
+@theme inline {
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+}
+
+:root {
+  --success: oklch(0.432 0.095 166.913);
+  --warning: oklch(0.473 0.137 46.201);
+}
+
+.dark {
+  --success: oklch(0.765 0.177 163.223);
+  --warning: oklch(0.828 0.189 84.429);
+}
+
