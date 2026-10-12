@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import {
-  ArrowLeft,
   Clock,
   MapPin,
   ShieldCheck,
   Volume2,
-  Check,
   Lock,
-  ChevronRight,
-  Sparkles,
-  Flame
+  Sparkles
 } from 'lucide-react';
 import { TicketTier } from '../types';
 import { FloorPlanViewer } from '../components/floorplan/FloorPlanViewer';
@@ -26,21 +22,9 @@ interface Props {
 }
 
 export const NightOneEventPage: React.FC<Props> = ({
-  tickets,
-  onBack,
-  onCheckout,
   onViewNight2
 }) => {
-  const [activeSection, setActiveSection] = useState<'spotlight' | 'rundown' | 'denah' | 'reservasi' | 'tickets' | 'panduan'>('spotlight');
-
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = `${((e.clientX - rect.left) / rect.width) * 100}%`;
-    const y = `${((e.clientY - rect.top) / rect.height) * 100}%`;
-    card.style.setProperty('--foil-x', x);
-    card.style.setProperty('--foil-y', y);
-  };
+  const [activeSection, setActiveSection] = useState<'spotlight' | 'rundown' | 'reservasi' | 'faq'>('spotlight');
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -96,21 +80,20 @@ export const NightOneEventPage: React.FC<Props> = ({
             <span>18+</span>
           </div>
 
-
           {/* Minimalist Action Row */}
           <div className="streaming-hero-actions">
             <button
               type="button"
-              onClick={() => scrollToSection('tickets')}
+              onClick={() => scrollToSection('reservasi')}
               className="streaming-btn-primary btn-press"
             >
-              <span>AMBIL TIKET</span>
+              <span>RESERVASI SEKARANG</span>
               <span className="streaming-btn-arrow">→</span>
             </button>
 
             <button
               type="button"
-              onClick={() => scrollToSection('denah')}
+              onClick={() => scrollToSection('reservasi')}
               className="streaming-link-secondary"
             >
               JELAJAHI VENUE
@@ -156,31 +139,17 @@ export const NightOneEventPage: React.FC<Props> = ({
           </button>
           <button
             type="button"
-            onClick={() => { setActiveSection('denah'); scrollToSection('denah'); }}
-            className={`streaming-nav-link ${activeSection === 'denah' ? 'is-active' : ''}`}
-          >
-            DENAH VENUE
-          </button>
-          <button
-            type="button"
             onClick={() => { setActiveSection('reservasi'); scrollToSection('reservasi'); }}
             className={`streaming-nav-link ${activeSection === 'reservasi' ? 'is-active' : ''}`}
           >
-            RESERVASI VIP
+            DENAH &amp; RESERVASI
           </button>
           <button
             type="button"
-            onClick={() => { setActiveSection('tickets'); scrollToSection('tickets'); }}
-            className={`streaming-nav-link ${activeSection === 'tickets' ? 'is-active' : ''}`}
+            onClick={() => { setActiveSection('faq'); scrollToSection('faq-section'); }}
+            className={`streaming-nav-link ${activeSection === 'faq' ? 'is-active' : ''}`}
           >
-            TIKET RESMI
-          </button>
-          <button
-            type="button"
-            onClick={() => { setActiveSection('panduan'); scrollToSection('panduan'); }}
-            className={`streaming-nav-link ${activeSection === 'panduan' ? 'is-active' : ''}`}
-          >
-            PANDUAN
+            FAQ RESMI
           </button>
         </div>
       </nav>
@@ -377,183 +346,8 @@ export const NightOneEventPage: React.FC<Props> = ({
           />
         </section>
 
-        {/* Section: Panduan & FAQ Resmi */}
+        {/* Section: Panduan & FAQ Resmi (Bagian Paling Bawah) */}
         <OfficialFAQSection />
-
-        {/* Section: Pilihan Tiket Masuk */}
-        <section id="tickets" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
-          <div className="streaming-section-header">
-            <div>
-              <span className="streaming-section-subtitle">AKSES TIKET RESMI</span>
-              <h2 className="streaming-section-title">TIKET MASUK // DAY 1 &amp; FULL PASS</h2>
-            </div>
-            <span style={{ fontSize: '0.8rem', color: '#46d369' }}>
-              Transaksi Terverifikasi Artatix
-            </span>
-          </div>
-
-          <div className="passage-matrix-grid is-revealed">
-            {tickets.map(ticket => {
-              const isSoldOut = ticket.status === 'sold_out';
-              const isActive = ticket.status === 'active';
-
-              return (
-                <article
-                  key={ticket.id}
-                  onMouseMove={handleCardMouseMove}
-                  className={`admission-document-card ${isActive ? 'is-active-tier' : ''} ${isSoldOut ? 'is-sold-out' : ''}`}
-                >
-                  <div className="card-foil-specular-layer" aria-hidden="true" />
-
-                  <div className="admission-seal-watermark" aria-hidden="true">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="50" cy="50" r="46" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                      <circle cx="50" cy="50" r="41" stroke="currentColor" strokeWidth="0.8" />
-                      <path d="M50 15 L53 23 L62 23 L55 28 L57 36 L50 31 L43 36 L45 28 L38 23 L47 23 Z" fill="currentColor" opacity="0.6" />
-                      <text x="50" y="52" textAnchor="middle" fontSize="6.5" fontFamily="Cinzel" fill="currentColor" letterSpacing="0.2em">CLAMOUR</text>
-                      <text x="50" y="60" textAnchor="middle" fontSize="4.2" fontFamily="Inter" fill="currentColor" letterSpacing="0.15em">ADMIT ONE</text>
-                      <text x="50" y="68" textAnchor="middle" fontSize="3.8" fontFamily="Inter" fill="currentColor" letterSpacing="0.1em">OCT 2026</text>
-                    </svg>
-                  </div>
-
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
-                      <p className="admission-category-tag">
-                        {ticket.category}
-                      </p>
-                      {isActive && (
-                        <span className="live-allocation-pulse-badge">
-                          <span className="pulse-dot" />
-                          <Flame size={12} style={{ color: 'var(--color-gold-antique)' }} />
-                          <span>{ticket.badgeLabel || 'AKTIF'}</span>
-                        </span>
-                      )}
-                    </div>
-
-                    <h3 className="admission-tier-title">
-                      {ticket.name}
-                    </h3>
-
-                    <div className="admission-hairline-sep" />
-
-                    <p className="admission-price-display">
-                      Rp {ticket.price.toLocaleString('id-ID')}
-                    </p>
-
-                    <div className="admission-perks-list">
-                      {ticket.perks.map((perk, i) => (
-                        <div key={i} className="admission-perk-item">
-                          <Check
-                            size={14}
-                            style={{
-                              flexShrink: 0,
-                              marginTop: '2px',
-                              color: isSoldOut ? 'var(--color-dim)' : 'var(--color-gold-antique)'
-                            }}
-                          />
-                          <span>{perk}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <button
-                      type="button"
-                      disabled={isSoldOut}
-                      onClick={() => onCheckout(ticket)}
-                      className={`admission-action-btn btn-press ${isSoldOut ? 'is-disabled' : ''}`}
-                    >
-                      {isSoldOut ? 'HABIS TERJUAL' : 'AMBIL TIKET INI'}
-                    </button>
-
-                    <p className="admission-auth-guarantee">
-                      <ShieldCheck size={11} style={{ color: 'var(--color-gold-antique)' }} />
-                      <span>GELANG RFID RESMI</span>
-                    </p>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Section: Panduan Pengunjung */}
-        <section id="panduan" style={{ marginBottom: '4rem', scrollMarginTop: '80px' }}>
-          <div className="streaming-section-header">
-            <div>
-              <span className="streaming-section-subtitle">PEDOMAN RESMI</span>
-              <h2 className="streaming-section-title">3 ARAHAN UTAMA PENGUNJUNG</h2>
-            </div>
-            <span className="streaming-badge-box">WAJIB DIPATUHI</span>
-          </div>
-
-          <div className="streaming-rules-grid">
-            <article className="streaming-rule-card">
-              <span className="streaming-rule-index">ARAHAN // 01</span>
-              <h3 className="streaming-rule-title">18+ WAJIB IDENTITAS FISIK</h3>
-              <p className="streaming-rule-desc">
-                Wajib membawa KTP / Paspor / SIM fisik asli untuk penukaran tiket ke gelang RFID di pintu utama. Foto di ponsel tidak dapat diproses.
-              </p>
-            </article>
-
-            <article className="streaming-rule-card">
-              <span className="streaming-rule-index">ARAHAN // 02</span>
-              <h3 className="streaming-rule-title">TATA BUSANA SERBA GELAP</h3>
-              <p className="streaming-rule-desc">
-                Disarankan mengenakan busana bernuansa gelap atau serba hitam. Dilarang mengenakan sandal jepit dan jersey tim olahraga demi estetika ruangan.
-              </p>
-            </article>
-
-            <article className="streaming-rule-card">
-              <span className="streaming-rule-index">ARAHAN // 03</span>
-              <h3 className="streaming-rule-title">100% NONTUNAI (RFID &amp; QRIS)</h3>
-              <p className="streaming-rule-desc">
-                Seluruh transaksi makanan, minuman, dan merchandise di dalam venue menggunakan saldo gelang RFID atau QRIS resmi.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        {/* More Like This Recommendation: Switch to Night II */}
-        {onViewNight2 && (
-          <section style={{ marginTop: '2rem' }}>
-            <div className="streaming-more-like-this-card">
-              <div className="streaming-recommend-poster">
-                <img
-                  src="/assets/gothic_cathedral_ritual_concert.png"
-                  alt="Night 2 Gothic Ritual Concert"
-                />
-                <span className="streaming-recommend-badge">NEXT TRANSMISSION</span>
-              </div>
-              <div className="streaming-recommend-body">
-                <span className="streaming-recommend-kicker">EKSPLORASI MALAM BERIKUTNYA</span>
-                <h3 className="streaming-recommend-title">NIGHT II — [THE UNDER-VAULT]</h3>
-                <p className="streaming-recommend-desc">
-                  Lanjutkan petualangan sonik pada Sabtu, 31 Oktober 2026. Alami modular synthesizer analog 140 BPM, getaran frekuensi sub-bass 28Hz, dan bunker granit kedap suara bersama Headliner Rahasia Malam Kedua.
-                </p>
-                <div className="streaming-recommend-action-row">
-                  <button
-                    type="button"
-                    onClick={onViewNight2}
-                    className="streaming-pill-primary btn-press"
-                  >
-                    <span>LIHAT DETAIL NIGHT II</span>
-                    <ChevronRight size={15} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onBack}
-                    className="streaming-pill-btn btn-press"
-                  >
-                    <ArrowLeft size={13} />
-                    <span>KEMBALI KE BERANDA</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
 
       </div>
     </main>
