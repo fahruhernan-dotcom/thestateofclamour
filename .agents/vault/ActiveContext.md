@@ -4,7 +4,7 @@ tags:
   - type/working-memory
   - workspace/HOW Parkun
 workspace: "HOW Parkun"
-last_updated: "2026-10-12 11:25"
+last_updated: "2026-10-12 11:40"
 status: active
 up: "[[Index - HOW Parkun]]"
 ---
@@ -16,49 +16,40 @@ up: "[[Index - HOW Parkun]]"
 > Dibaca langsung oleh pengembang atau AI Agent menggunakan `/gro resume`.
 
 ## 🎯 Milestone Terkini & Status
-- **Sesi Terakhir:** [[session-2026-10-12-lineup-navbar]] (`2026-10-12 11:25`)
+- **Sesi Terakhir:** [[2026-10-12 - 11.40 - Integrasi Aset Hero Gotik Day 2 & Penyelarasan Roster Visual]] (`2026-10-12 11:40`)
 - **Ringkasan:** 
-  1. **Dual-Tier Lineup Section (Day 1 & Day 2):** Menata ulang `#lineup` menjadi dua tingkat terpisah: Day 1 · 30 Okt (atas) dan Day 2 · 31 Okt (bawah), dengan seluruh kartu menggunakan Gothic Teaser Poster dan nama `Swear In Continental · ?`.
-  2. **Eliminasi Lag & Kelap-Kelip (Strobe Flash Removal):** Menghapus efek strobe flash flare dan animasi berat yang menyebabkan lag saat interaksi/hover.
-  3. **Penyempurnaan Centering & Peripheral Blur:** Memperbaiki coordinate offside dengan `getBoundingClientRect()` dan `position: relative`, menjaga kartu aktif di tengah 100% razor-sharp dalam deadzone 100px.
-  4. **Pembedaan Arah Diagonal Ribbon:** Day 1 dari kanan bawah ke atas kiri (`slopeDirection = 1`) vs Day 2 dari kiri bawah ke kanan atas (`slopeDirection = -1`), menciptakan ritme chevron dinamis.
-  5. **Penonaktifan Audio Teaser:** Mematikan pemutaran audio, streaming video tersembunyi, dan badge LIVE equalizer saat fase teaser.
-  6. **Penyempurnaan & Reposisi Navbar:** Memperpendek max-width sticky pill (1040px/1120px), menghapus label "LINEUP", menyederhanakan menjadi "NIGHT 1" & "NIGHT 2", dan memindahkannya ke sisi kanan berdampingan horizontal (`.nav-right-cluster`) dengan tombol "TICKETS →".
-- **Status Proyek:** 🟢 **PRODUCTION-READY**.
+  1. **Integrasi Aset Gotik Day 2:** Berkas `Gothic Cathedral Ritual Concert.png` disalin ke `/public/assets/gothic_cathedral_ritual_concert.png` dan dijadikan visual utama hero section billboard di `NightTwoEventPage.tsx`.
+  2. **Penyelarasan Kartu Visual Day 2:** Menyelaraskan kartu spotlight Night 2, thumbnail rekomendasi malam berikutnya di `NightOneEventPage.tsx`, serta banner rundown `StageRundown.tsx` (desktop) dan `StageRundownMobile.tsx` (mobile).
+  3. **Verifikasi & Git Push:** Type check `tsc --noEmit` lolos 100% tanpa error, perubahan di-commit sebagai `16dd860` dan sukses di-push ke remote `main`.
+- **Status Proyek:** 🟢 **PRODUCTION-READY & PUSHED TO MAIN (Commit: 16dd860)**.
 
-## 📌 Checklist & Next Actions
-- [x] Dual-tier stacked lineup (Day 1 & Day 2)
-- [x] Gothic teaser poster untuk seluruh 6 card dengan nama `Swear In Continental · ?`
-- [x] Eliminasi efek kelap-kelip / camera flash strobe untuk menghapus lag
-- [x] Dead-center alignment presisi & peripheral depth-of-field blur
+## 📌 Checklist & Next Actions (Untuk Dilanjutkan Besok)
+- [x] Dual-tier stacked lineup (Day 1: 30 Okt & Day 2: 31 Okt) di Desktop & Mobile
+- [x] Gothic teaser poster diterapkan ke seluruh 6 kartu dengan nama `Swear In Continental · ?`
 - [x] Pembedaan arah diagonal ribbon (Day 1 slope +1 vs Day 2 slope -1)
-- [x] Penonaktifan preview musik teaser
-- [x] Perpendek lebar sticky pill navbar (1040px / 1120px)
-- [x] Hapus "LINEUP" dari navbar, ganti "NIGHT 1" & "NIGHT 2"
-- [x] Reposisi menu ke sisi kanan berdampingan horizontal dengan tombol tiket
-- [x] Update Obsidian/Agent Vault documentation
+- [x] Penonaktifan audio teaser
+- [x] Reposisi navbar menu horizontal berdampingan dengan tiket
+- [x] Integrasi `Gothic Cathedral Ritual Concert.png` untuk Hero Section Day 2 & penyelarasan kartu roster
+- [x] Commit `16dd860` & Git Push ke branch `main`
+- [ ] Review komprehensif tampilan Day 2 bersama pengguna esok hari
+- [ ] Implementasi fitur / konten lanjutan berikutnya sesuai instruksi besok
 
 ## ⚙️ Keputusan Arsitektur Kunci
-- 💡 **Opposing Diagonal Chevron Trajectory:** Memanfaatkan parameter `slopeDirection` pada hook GPU `useCarouselOffset` untuk membalikkan kalkulasi `translateY` dan `rotateZ` pada Day 2 tanpa merusak deadzone spotlight di tengah.
-- 💡 **Zero-Audio Teaser Mode:** Mengosongkan `audioPreviewUrl` pada dataset teaser untuk menghindari inisialisasi media player tersembunyi dan overhead network/GPU.
-- 💡 **Explicit Horizontal Nav Right Cluster:** Menggunakan `.nav-right-cluster` dengan `display: flex; white-space: nowrap; align-items: center;` untuk menjamin tautan `NIGHT 1 · NIGHT 2` dan tombol `TICKETS →` selalu berada dalam satu baris horizontal tanpa risiko wrapping vertikal.
+- 💡 **Unified Visual Identity for Day 2:** Menggunakan `gothic_cathedral_ritual_concert.png` sebagai hero billboard di `NightTwoEventPage` yang berpasangan secara estetika dengan `crimson_gothic_cathedral_hall.png` pada Day 1 (`NightOneEventPage`), menciptakan kontras tematik merah katedral (Day 1) vs ritual katedral gotik megah (Day 2).
+- 💡 **Consistent Cross-References:** Memastikan tautan thumbnail "NEXT TRANSMISSION" pada Night 1 dan roster jadwal di halaman utama memakai gambar visual yang sama dengan hero Day 2 agar transisi antar halaman terasa konsisten tanpa visual disconnect.
 
-## 📁 File Terakhir Diubah
+## 📁 File Terakhir / Target Diubah
+- `public/assets/gothic_cathedral_ritual_concert.png`
+- `src/pages/NightTwoEventPage.tsx`
+- `src/pages/NightOneEventPage.tsx`
+- `src/components/StageRundown.tsx`
+- `src/components/mobile/StageRundownMobile.tsx`
 - `src/components/FloatingNavbar.tsx`
-- `src/styles/navbar.css`
-- `src/data/eventData.ts`
 - `src/components/LineupSection.tsx`
-- `src/components/mobile/LineupSectionMobile.tsx`
-- `src/hooks/useCarouselOffset.ts`
-- `src/styles/lineup.css`
-- `src/styles/mobile/lineup.mobile.css`
-- `.agents/vault/session-2026-10-12-lineup-navbar.md`
-- `.agents/vault/ActiveContext.md`
 
 ## 📜 Riwayat Sesi Terbaru
 | Tanggal | Sesi | Ringkasan |
 |---|---|---|
-| `2026-10-12 11:25` | [[session-2026-10-12-lineup-navbar]] | Dual-tier lineup teaser, eliminasi lag kelap-kelip, pembedaan arah diagonal Day 1 vs Day 2, penonaktifan audio teaser, dan reposisi link navbar berdampingan horizontal dengan tiket |
-| `2026-10-12 05:28` | [[2026-10-12 - 05.28 - Penyempurnaan Arsitektur Smooth Morphing Navbar IDLIX & Pelebaran Sticky Pill Desktop]] | Arsitektur smooth morphing navbar IDLIX, pelebaran sticky pill desktop ke 1140px/1240px, height 50px locked, git commit & push main |
-| `2026-10-11 23:25` | [[2026-10-11 - 23.25 - Implementasi Smooth Navbar, Halaman Denah, Reservasi & Dual-Admin WA]] | Restorasi CSS navbar, integrasi smooth FloatingNavbar, halaman Denah & Reservasi, dual-admin WA, link IG & TikTok |
-| `2026-10-11 19:20` | [[2026-10-11 - 19.20 - Eliminasi Countdown Timer & Penetapan Statis Early Bird]] | Penghapusan timer rilis, penetapan statis tier Early Bird di eventData.ts, build dist-deploy.zip, push commit 5833f4f |
+| `2026-10-12 11:40` | [[2026-10-12 - 11.40 - Integrasi Aset Hero Gotik Day 2 & Penyelarasan Roster Visual]] | Integrasi poster Gothic Cathedral Ritual Concert sebagai hero background Day 2, penyelarasan thumbnail rekomendasi & roster banner, git push `16dd860` |
+| `2026-10-12 11:27` | [[2026-10-12 - 11.27 - Dual-Tier Lineup Gotik, Pembedaan Arah Diagonal & Penyelarasan Navbar]] | Dual-tier lineup gotik, eliminasi lag kelap-kelip, pembedaan arah diagonal Day 1 vs Day 2, penonaktifan audio teaser, dan reposisi link navbar berdampingan horizontal dengan tiket, git push `c9b437e` |
+| `2026-10-12 10:37` | [[2026-10-12 - 10.37 - Resolusi Tuntas Glitch Drag Carousel Lineup & Restorasi Razor-Sharp Spotlight]] | Eliminasi snap-back loop `centerMiddleCard`, swipe threshold 40px, restorasi ketajaman visual tengah (90px deadzone & `filter: none`), git push main `a2a7a4a` |
