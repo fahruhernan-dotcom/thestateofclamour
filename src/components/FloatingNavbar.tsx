@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Menu, X, Instagram } from 'lucide-react';
+import { Menu, X, Instagram, ChevronRight, ArrowUpRight } from 'lucide-react';
 import '../styles/navbar.css';
 
 export type NavViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier' | 'denah' | 'reservasi';
@@ -323,23 +323,26 @@ export const FloatingNavbar: React.FC<Props> = ({
         </div>
       </header>
 
-      {/* Mobile Frosted Glass Navigation Drawer */}
+      {/* Mobile Frosted Glass Navigation Drawer (Apple iOS Inset Grouped) */}
       <div
         className={`mobile-nav-drawer ${isMobileMenuOpen ? 'is-open' : ''}`}
         aria-hidden={!isMobileMenuOpen}
       >
         <div className="mobile-nav-drawer-inner">
-          {/* Close Header */}
+          {/* iOS Top Bar Header */}
           <div className="mobile-drawer-header">
             <div className="mobile-drawer-brand-group">
               <img
                 src="/apple-touch-icon.png"
                 alt="Clamour Emblem"
                 className="mobile-drawer-logo"
-                width="24"
-                height="24"
+                width="28"
+                height="28"
               />
-              <span className="mobile-drawer-brand">THE STATE OF CLAMOUR</span>
+              <div className="mobile-drawer-brand-text">
+                <span className="mobile-drawer-brand">THE STATE OF CLAMOUR</span>
+                <span className="mobile-drawer-brand-sub">ANNUAL SANCTUARY 2026</span>
+              </div>
             </div>
             <button
               type="button"
@@ -347,145 +350,179 @@ export const FloatingNavbar: React.FC<Props> = ({
               onClick={closeMobileMenu}
               aria-label="Tutup menu"
             >
-              <X size={20} strokeWidth={2} />
+              <X size={18} strokeWidth={2.4} />
             </button>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="mobile-drawer-links" aria-label="Mobile Navigation">
-            <button
-              type="button"
-              className={`mobile-drawer-link ${currentView === 'home' ? 'is-active' : ''}`}
-              onClick={handleHomeClick}
-            >
-              <span className="mobile-drawer-link-kicker">01</span>
-              <span className="mobile-drawer-link-label">BERANDA RESMI</span>
-            </button>
+          {/* Group 1: Navigasi Hari Acara (Events & Days) */}
+          <div className="mobile-nav-section">
+            <span className="mobile-nav-section-title">EKSPLORASI ACARA</span>
+            <div className="mobile-nav-group">
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentView === 'home' ? 'is-active' : ''}`}
+                onClick={handleHomeClick}
+              >
+                <div className="mobile-nav-item-content">
+                  <span className="mobile-nav-item-title">Beranda Resmi</span>
+                  <span className="mobile-nav-item-sub">Manifesto &amp; Sanctuary Utama</span>
+                </div>
+                <div className="mobile-nav-item-trailing">
+                  {currentView === 'home' && <span className="mobile-nav-active-pill">AKTIF</span>}
+                  <ChevronRight size={16} className="mobile-nav-chevron" />
+                </div>
+              </button>
 
-            <div className="mobile-drawer-divider" />
+              <div className="mobile-nav-inset-divider" />
 
-            <button
-              type="button"
-              className={`mobile-drawer-link ${currentView === 'event-night-1' ? 'is-active' : ''}`}
-              onClick={handleNight1Click}
-            >
-              <span className="mobile-drawer-link-kicker">02</span>
-              <span className="mobile-drawer-link-label">DAY 1 · 30 OKT (SWEAR IN CONTINENTAL)</span>
-            </button>
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentView === 'event-night-1' ? 'is-active' : ''}`}
+                onClick={handleNight1Click}
+              >
+                <div className="mobile-nav-item-content">
+                  <div className="mobile-nav-title-row">
+                    <span className="mobile-nav-item-title">Day 1 · Swear in Continental</span>
+                    <span className="mobile-nav-date-badge">30 OKT</span>
+                  </div>
+                  <span className="mobile-nav-item-sub">Tetra Solo &amp; Mizu Commonroom</span>
+                </div>
+                <div className="mobile-nav-item-trailing">
+                  {currentView === 'event-night-1' && <span className="mobile-nav-active-pill">AKTIF</span>}
+                  <ChevronRight size={16} className="mobile-nav-chevron" />
+                </div>
+              </button>
 
-            <div className="mobile-drawer-divider" />
+              <div className="mobile-nav-inset-divider" />
 
-            <button
-              type="button"
-              className={`mobile-drawer-link ${currentView === 'event-night-2' ? 'is-active' : ''}`}
-              onClick={handleNight2Click}
-            >
-              <span className="mobile-drawer-link-kicker">03</span>
-              <span className="mobile-drawer-link-label">DAY 2 · 31 OKT (THE UNDER-VAULT)</span>
-            </button>
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentView === 'event-night-2' ? 'is-active' : ''}`}
+                onClick={handleNight2Click}
+              >
+                <div className="mobile-nav-item-content">
+                  <div className="mobile-nav-title-row">
+                    <span className="mobile-nav-item-title">Day 2 · The Under-Vault</span>
+                    <span className="mobile-nav-date-badge">31 OKT</span>
+                  </div>
+                  <span className="mobile-nav-item-sub">Tetra Solo &amp; Mizu Commonroom</span>
+                </div>
+                <div className="mobile-nav-item-trailing">
+                  {currentView === 'event-night-2' && <span className="mobile-nav-active-pill">AKTIF</span>}
+                  <ChevronRight size={16} className="mobile-nav-chevron" />
+                </div>
+              </button>
+            </div>
+          </div>
 
-            <div className="mobile-drawer-divider" />
+          {/* Group 2: Tiket & Akses Venue */}
+          <div className="mobile-nav-section">
+            <span className="mobile-nav-section-title">TIKET &amp; RESERVASI TEMPAT</span>
+            <div className="mobile-nav-group">
+              <button
+                type="button"
+                className={`mobile-nav-item mobile-nav-item--featured ${currentView === 'reservasi' ? 'is-active' : ''}`}
+                onClick={handleReservasiClick}
+              >
+                <div className="mobile-nav-item-content">
+                  <div className="mobile-nav-title-row">
+                    <span className="mobile-nav-item-title text-gold font-semibold">Reservasi VIP Meja &amp; Sofa</span>
+                    <span className="mobile-nav-highlight-badge">KUNCI MEJA</span>
+                  </div>
+                  <span className="mobile-nav-item-sub">Live Floor Plan 75 Meja (Tetra &amp; Mizu)</span>
+                </div>
+                <div className="mobile-nav-item-trailing">
+                  {currentView === 'reservasi' && <span className="mobile-nav-active-pill">AKTIF</span>}
+                  <ChevronRight size={16} className="mobile-nav-chevron" />
+                </div>
+              </button>
 
-            <button
-              type="button"
-              className="mobile-drawer-link"
-              onClick={handleTicketClick}
-            >
-              <span className="mobile-drawer-link-kicker">04</span>
-              <span className="mobile-drawer-link-label">TIKET RESMI (ARTATIX)</span>
-            </button>
+              <div className="mobile-nav-inset-divider" />
 
-            <div className="mobile-drawer-divider" />
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentView === 'denah' ? 'is-active' : ''}`}
+                onClick={handleDenahClick}
+              >
+                <div className="mobile-nav-item-content">
+                  <span className="mobile-nav-item-title">Denah &amp; Orientasi Venue</span>
+                  <span className="mobile-nav-item-sub">Peta Dua Lantai &amp; Posisi Stage</span>
+                </div>
+                <div className="mobile-nav-item-trailing">
+                  {currentView === 'denah' && <span className="mobile-nav-active-pill">AKTIF</span>}
+                  <ChevronRight size={16} className="mobile-nav-chevron" />
+                </div>
+              </button>
 
-            <button
-              type="button"
-              className="mobile-drawer-link"
-              onClick={handleDenahClick}
-            >
-              <span className="mobile-drawer-link-kicker">05</span>
-              <span className="mobile-drawer-link-label">DENAH &amp; ORIENTASI VENUE</span>
-            </button>
+              <div className="mobile-nav-inset-divider" />
 
-            <div className="mobile-drawer-divider" />
+              <button
+                type="button"
+                className="mobile-nav-item"
+                onClick={handleTicketClick}
+              >
+                <div className="mobile-nav-item-content">
+                  <div className="mobile-nav-title-row">
+                    <span className="mobile-nav-item-title">Tiket Masuk (Artatix)</span>
+                    <ArrowUpRight size={14} className="text-[#c5a869]" />
+                  </div>
+                  <span className="mobile-nav-item-sub">Beli Tiket Presale &amp; General Admission</span>
+                </div>
+                <div className="mobile-nav-item-trailing">
+                  <ChevronRight size={16} className="mobile-nav-chevron" />
+                </div>
+              </button>
+            </div>
+          </div>
 
-            <button
-              type="button"
-              className="mobile-drawer-link"
-              onClick={handleReservasiClick}
-            >
-              <span className="mobile-drawer-link-kicker">06</span>
-              <span className="mobile-drawer-link-label">RESERVASI VIP (SOFA &amp; TABLE)</span>
-            </button>
+          {/* Group 3: Panduan & FAQ */}
+          <div className="mobile-nav-section">
+            <span className="mobile-nav-section-title">INFORMASI &amp; PERATURAN</span>
+            <div className="mobile-nav-group">
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentView === 'full-dossier' ? 'is-active' : ''}`}
+                onClick={handleOpenDossierTab}
+              >
+                <div className="mobile-nav-item-content">
+                  <span className="mobile-nav-item-title">Panduan Acara &amp; FAQ</span>
+                  <span className="mobile-nav-item-sub">Dresscode, Batasan Usia &amp; Prosedur Masuk</span>
+                </div>
+                <div className="mobile-nav-item-trailing">
+                  {currentView === 'full-dossier' && <span className="mobile-nav-active-pill">AKTIF</span>}
+                  <ChevronRight size={16} className="mobile-nav-chevron" />
+                </div>
+              </button>
+            </div>
+          </div>
 
-            <div className="mobile-drawer-divider" />
-
-            <button
-              type="button"
-              className="mobile-drawer-link"
-              onClick={handleOpenDossierTab}
-            >
-              <span className="mobile-drawer-link-kicker">07</span>
-              <span className="mobile-drawer-link-label">PANDUAN &amp; FAQ</span>
-            </button>
-          </nav>
-
-          {/* Bottom CTA & Social Dispatch */}
-          <div className="mobile-drawer-bottom">
-            <button
-              type="button"
-              className="mobile-drawer-cta"
-              onClick={handleReservasiClick}
-            >
-              RESERVE VIP SOFA &amp; MEJA →
-            </button>
-
-            {/* Official Social Dispatch Links */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginTop: '0.5rem' }}>
+          {/* Bottom Social & Metadata Dispatch */}
+          <div className="mobile-drawer-footer">
+            <div className="mobile-drawer-socials">
               <a
                 href="https://www.instagram.com/thestateofclamor/?hl=en"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  color: 'var(--color-gold-antique)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.72rem',
-                  letterSpacing: '0.12em',
-                  textDecoration: 'none'
-                }}
+                className="mobile-drawer-social-link"
               >
-                <Instagram size={15} />
+                <Instagram size={14} />
                 <span>@thestateofclamor</span>
               </a>
-
-              <span style={{ color: 'var(--color-dim)', fontSize: '0.7rem' }}>·</span>
-
+              <span className="mobile-drawer-social-dot">·</span>
               <a
                 href="https://www.tiktok.com/@thestateofclamor"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  color: 'var(--color-gold-antique)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.72rem',
-                  letterSpacing: '0.12em',
-                  textDecoration: 'none'
-                }}
+                className="mobile-drawer-social-link"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z" />
                 </svg>
                 <span>TikTok</span>
               </a>
             </div>
-
-            <span className="mobile-drawer-meta">
-              MIZU COMMONROOM · 30–31 OKT 2026
+            <span className="mobile-drawer-venue-tag">
+              MIZU COMMONROOM &amp; TETRA SOLO · 30–31 OKT 2026
             </span>
           </div>
         </div>
