@@ -1,4 +1,4 @@
-﻿# 🤖 Panduan Integrasi AI Agent ke Supabase (The State of Clamour)
+# 🤖 Panduan Integrasi AI Agent ke Supabase (The State of Clamour)
 
 Dokumen ini memandu bagaimana AI Agent eksternal Anda dapat membaca dan memperbarui ketersediaan meja di Supabase menggunakan **Public Anon Key**.
 
@@ -77,7 +77,9 @@ GET https://<project-ref>.supabase.co/rest/v1/table_reservation_logs?order=creat
 
 ---
 
-## 5. 🏷️ Daftar Kode Meja Resmi Lantai 1 (Untuk Prompt AI)
+## 5. 🏷️ Daftar Kode Meja Resmi (Untuk Prompt AI)
+
+### Lantai 1:
 - Top Entrance: ST-1, ST-2, ST-3
 - Luxury Sofas: SOFA 1, SOFA 2, SOFA 3, SOFA 4
 - Center Booths: T-1, T-2, T-3, T-4, T-5, T-6
@@ -87,3 +89,14 @@ GET https://<project-ref>.supabase.co/rest/v1/table_reservation_logs?order=creat
 - Smoking Room Booths: T-11, T-12
 - Smoking Room High Tables: ST-16, ST-17, ST-18, ST-19, ST-20, ST-21, ST-22
 - Photo Booth Corner: ST-4, ST-5, ST-6
+
+### Lantai 2:
+- Private Alcoves: TS-1, TS-2, TS-3
+- Stage Front Cocktails: T-1, T-2, T-3, T-4, T-5, T-6, T-7, T-8, T-9, T-10
+- Balcony High Stools: TS-4, TS-5, TS-6, TS-7, TS-8
+- VIP Sofas Row 2: VIP 8, VIP 9, VIP 10, VIP 11
+- Center VVIP Sofas: VVIP 1, VVIP 2
+- VIP Sofas Row 1: VIP 1, VIP 2, VIP 3, VIP 4, VIP 5, VIP 6, VIP 7
+- Mezzanine Balcony: M1, M2, M3, M4, M5, M6
+
+> **Catatan Penting untuk AI**: Karena kode T-1 s/d T-10 ada di Lantai 1 dan Lantai 2, selalu sertakan filter `floor` saat query atau update (contoh: `?table_code=eq.T-1&floor=eq.2&day=eq.day-1` atau `"p_floor": 2` di RPC).
