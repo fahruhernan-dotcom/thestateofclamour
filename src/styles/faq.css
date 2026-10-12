@@ -1,0 +1,228 @@
+/* ========================================================================== */
+/* OFFICIAL FAQ & PRIORITY RSVP GUIDE STYLING (PURE VANILLA CSS)              */
+/* The State of Clamour: Swear in Continental                                  */
+/* ========================================================================== */
+
+.official-faq-section {
+  width: 100%;
+  max-width: 900px;
+  margin: 4.5rem auto 3.5rem;
+  padding: 0 1.25rem;
+  box-sizing: border-box;
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 2.25rem;
+}
+
+.faq-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
+  background: rgba(197, 168, 105, 0.08);
+  border: 1px solid rgba(197, 168, 105, 0.25);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--color-gold-antique, #c5a869);
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+
+.faq-title {
+  font-family: var(--font-monumental, 'Cinzel', serif);
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-ivory, #f5eedc);
+  margin: 0 0 0.6rem;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.faq-desc {
+  max-width: 620px;
+  margin: 0 auto;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.88rem;
+  color: var(--color-muted, #a6a4a0);
+  line-height: 1.6;
+}
+
+.faq-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.faq-accordion-item {
+  width: 100%;
+  border-radius: 12px;
+  background: rgba(13, 16, 22, 0.85);
+  border: 1px solid rgba(197, 168, 105, 0.18);
+  overflow: hidden;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.faq-accordion-item:hover {
+  border-color: rgba(197, 168, 105, 0.35);
+}
+
+.faq-accordion-item.is-open {
+  background: rgba(18, 22, 30, 0.95);
+  border-color: rgba(197, 168, 105, 0.45);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(197, 168, 105, 0.08);
+}
+
+.faq-trigger-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem 1.35rem;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-ivory, #f5eedc) !important;
+  font-family: inherit;
+  font-size: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  transition: background 200ms ease;
+  outline: none;
+}
+
+.faq-trigger-btn:hover {
+  background: rgba(197, 168, 105, 0.04);
+}
+
+.faq-trigger-left {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.faq-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(197, 168, 105, 0.08);
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  flex-shrink: 0;
+  color: var(--color-gold-antique, #c5a869);
+}
+
+.faq-question-text {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-ivory, #f5eedc);
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+.faq-chevron {
+  color: var(--color-gold-antique, #c5a869);
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  margin-left: 0.75rem;
+}
+
+.faq-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.faq-content-body {
+  padding: 1rem 1.35rem 1.35rem;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.86rem;
+  color: #c4c0b6;
+  line-height: 1.65;
+  border-top: 1px solid rgba(197, 168, 105, 0.1);
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .faq-content-body {
+    padding-left: 4.1rem;
+  }
+}
+
+.faq-list {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.faq-list li {
+  color: #d4cfc7;
+}
+
+.faq-bank-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  margin: 0.85rem 0 1rem;
+}
+
+@media (min-width: 600px) {
+  .faq-bank-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.faq-bank-card {
+  padding: 0.85rem 1.15rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  box-sizing: border-box;
+}
+
+.faq-bank-label {
+  font-size: 0.68rem;
+  color: var(--color-dim, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: block;
+}
+
+.faq-bank-acc {
+  font-family: var(--font-mono, monospace);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-ivory, #f5eedc);
+  display: block;
+  margin: 0.25rem 0;
+}
+
+.faq-bank-name {
+  font-size: 0.76rem;
+  color: var(--color-gold-antique, #c5a869);
+  display: block;
+}
+
+.faq-contact-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.76rem;
+  margin-top: 0.5rem;
+}

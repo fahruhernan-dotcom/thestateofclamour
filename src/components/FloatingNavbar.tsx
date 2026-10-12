@@ -254,37 +254,37 @@ export const FloatingNavbar: React.FC<Props> = ({
           <div className="nav-right-cluster">
             {/* Desktop Navigation Links: Repositioned directly next to TICKETS */}
             <nav className="header-desktop-nav nav-links-cluster" aria-label="Menu">
-              {/* NIGHT 1 */}
+              {/* DAY 1 */}
               <button
                 type="button"
                 className={`header-nav-link header-nav-text nav-link-item ${
                   currentView === 'event-night-1' ? 'header-nav-link--active active-pill' : ''
                 }`}
                 onClick={handleNight1Click}
-                title="Dossier Night 1"
+                title="Day 1 // Swear in Continental"
                 style={{ background: 'transparent', cursor: 'pointer' }}
               >
                 <span className="nav-roll-inner">
-                  <span className="nav-roll-default">NIGHT 1</span>
-                  <span className="nav-roll-hover" aria-hidden="true">NIGHT 1</span>
+                  <span className="nav-roll-default">DAY 1</span>
+                  <span className="nav-roll-hover" aria-hidden="true">DAY 1</span>
                 </span>
               </button>
 
               <span className="nav-links-dot" aria-hidden="true">·</span>
 
-              {/* NIGHT 2 */}
+              {/* DAY 2 */}
               <button
                 type="button"
                 className={`header-nav-link header-nav-text nav-link-item ${
                   currentView === 'event-night-2' ? 'header-nav-link--active active-pill' : ''
                 }`}
                 onClick={handleNight2Click}
-                title="Dossier Night 2"
+                title="Day 2 // The Under-Vault"
                 style={{ background: 'transparent', cursor: 'pointer' }}
               >
                 <span className="nav-roll-inner">
-                  <span className="nav-roll-default">NIGHT 2</span>
-                  <span className="nav-roll-hover" aria-hidden="true">NIGHT 2</span>
+                  <span className="nav-roll-default">DAY 2</span>
+                  <span className="nav-roll-hover" aria-hidden="true">DAY 2</span>
                 </span>
               </button>
             </nav>
@@ -370,7 +370,7 @@ export const FloatingNavbar: React.FC<Props> = ({
               onClick={handleNight1Click}
             >
               <span className="mobile-drawer-link-kicker">02</span>
-              <span className="mobile-drawer-link-label">MALAM I · 30 OKT (SWEAR IN CONTINENTAL)</span>
+              <span className="mobile-drawer-link-label">DAY 1 · 30 OKT (SWEAR IN CONTINENTAL)</span>
             </button>
 
             <div className="mobile-drawer-divider" />
@@ -381,7 +381,7 @@ export const FloatingNavbar: React.FC<Props> = ({
               onClick={handleNight2Click}
             >
               <span className="mobile-drawer-link-kicker">03</span>
-              <span className="mobile-drawer-link-label">MALAM II · 31 OKT (THE UNDER-VAULT)</span>
+              <span className="mobile-drawer-link-label">DAY 2 · 31 OKT (THE UNDER-VAULT)</span>
             </button>
 
             <div className="mobile-drawer-divider" />

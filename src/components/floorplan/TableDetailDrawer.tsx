@@ -31,11 +31,14 @@ export const TableDetailDrawer: React.FC<Props> = ({
       onSelectForBooking(spot);
     }
 
-    const eventTheme = day === 'day-1' ? 'Swear in Continental' : 'The Under-Vault';
-    const message = `Halo ${admin.name}, saya ingin reservasi meja *${spot.code}* di *Lantai ${spot.floor}* (${spot.name}) untuk The State of Clamour: ${eventTheme} (${admin.dateLabel}). Mohon konfirmasi ketersediaannya. Terima kasih!`;
+    const venueName = spot.venue === 'tetra' ? 'Tetra Solo' : 'Mizu Commonroom';
+    const dayName = day === 'day-1' ? 'Day 1 (30 Okt)' : 'Day 2 (31 Okt)';
+    const message = `Halo ${admin.name}, saya ingin reservasi meja *${spot.code}* di *${venueName}* (${spot.name}) untuk The State of Clamour: ${dayName}.\n\n• Minimum Charge: ${minSpend}\n• Booking Fee: ${spot.formattedBookingFee || '-'}\n• Kapasitas: ${spot.capacityText} (${spot.complementTickets || 2} Tiket Masuk)\n\nMohon konfirmasi ketersediaan meja untuk pembayaran Booking Fee. Terima kasih!`;
     const waUrl = `https://wa.me/${admin.phone}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank', 'noopener,noreferrer');
   };
+
+  const venueLabel = spot.venue === 'tetra' ? 'TETRA SOLO' : 'MIZU COMMONROOM';
 
   return (
     <div className="table-drawer-overlay" onClick={onClose} role="dialog" aria-modal="true">
@@ -44,7 +47,7 @@ export const TableDetailDrawer: React.FC<Props> = ({
         <div className="drawer-header">
           <div className="drawer-title-cluster">
             <div className="drawer-meta-badges">
-              <span className="badge-floor">LANTAI {spot.floor}</span>
+              <span className="badge-floor">{venueLabel}</span>
               <span className="badge-floor">{spot.zoneTag}</span>
               <span className={`badge-status ${isAvailable ? 'is-available' : 'is-occupied'}`}>
                 {isAvailable ? (
@@ -74,22 +77,38 @@ export const TableDetailDrawer: React.FC<Props> = ({
         {/* Details Grid */}
         <div className="drawer-details-grid">
           <div className="detail-card">
-            <span className="detail-label">Kapasitas Tamu</span>
+            <span className="detail-label">Kapasitas &amp; Tiket</span>
             <span className="detail-value flex items-center gap-1">
-              <Users size={14} className="text-gold-antique" /> {spot.capacityText}
+              <Users size={14} className="text-gold-antique" /> {spot.capacityText} ({spot.complementTickets || 2} Tiket)
             </span>
           </div>
 
           <div className="detail-card">
-            <span className="detail-label">Minimum Spend ({day === 'day-1' ? 'Day 1' : 'Day 2'})</span>
+            <span className="detail-label">Minimum Charge ({day === 'day-1' ? 'Day 1' : 'Day 2'})</span>
             <span className="detail-value gold">{minSpend}</span>
           </div>
+
+          {spot.formattedBookingFee && (
+            <div className="detail-card" style={{ gridColumn: 'span 2' }}>
+              <span className="detail-label">Booking Fee (Kuncian Meja)</span>
+              <span className="detail-value" style={{ color: 'var(--color-ivory)' }}>
+                <strong style={{ color: 'var(--color-gold-antique)' }}>{spot.formattedBookingFee}</strong>
+                <span style={{ fontSize: '0.72rem', color: 'var(--color-muted)', marginLeft: '6px' }}>
+                  (Transfer ke BCA: 0374541630 a/n M. Ferdian Wahyu)
+                </span>
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Description & Inclusions */}
         <p className="text-xs text-[#a6a4a0] leading-relaxed">
           {spot.description}
         </p>
+
+        <div style={{ background: 'rgba(197, 168, 105, 0.06)', border: '1px solid rgba(197, 168, 105, 0.15)', borderRadius: '8px', padding: '0.65rem 0.85rem', fontSize: '0.72rem', color: 'var(--color-muted)', lineHeight: '1.45' }}>
+          💡 <strong style={{ color: 'var(--color-gold-antique)' }}>Ketentuan:</strong> Booking Fee mengunci meja dan sudah termasuk {spot.complementTickets || 2} tiket complimentary. Minimum charge diselesaikan secara terpisah di lokasi acara.
+        </div>
 
         {spot.inclusions && spot.inclusions.length > 0 && (
           <div className="drawer-inclusions-list">

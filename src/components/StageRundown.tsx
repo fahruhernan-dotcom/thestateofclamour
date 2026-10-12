@@ -67,7 +67,7 @@ export const StageRundown: React.FC<Props> = ({
             />
             <div className="event-roster-banner-scrim" />
             <div className="event-roster-banner-badges">
-              <span className="event-night-tag">MALAM I · 30 OKT 2026</span>
+              <span className="event-night-tag">DAY 1 · 30 OKT 2026</span>
               <span className="event-venue-tag">MAIN ASSEMBLY</span>
             </div>
           </div>
@@ -75,7 +75,7 @@ export const StageRundown: React.FC<Props> = ({
           <div className="event-roster-body">
             <div className="event-roster-header">
               <h3 className="event-roster-title">
-                NIGHT I — SWEAR IN CONTINENTAL
+                DAY 1 — SWEAR IN CONTINENTAL
               </h3>
               <p className="event-roster-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             </div>
@@ -97,13 +97,13 @@ export const StageRundown: React.FC<Props> = ({
 
             {/* Apple Fluid Action Affordance */}
             <div className="event-roster-action">
-              <span className="event-action-text">JELAJAHI MALAM I</span>
+              <span className="event-action-text">JELAJAHI DAY 1</span>
               <span className="event-action-arrow">→</span>
             </div>
           </div>
         </article>
 
-        {/* Panel 2: Night II */}
+        {/* Panel 2: Day 2 */}
         <article
           className="event-roster-card"
           onClick={onOpenNight2}
@@ -115,19 +115,19 @@ export const StageRundown: React.FC<Props> = ({
               onOpenNight2();
             }
           }}
-          aria-label="Buka detail acara Night 2 — Subterranean Modular Techno"
+          aria-label="Buka detail acara Day 2 — The Under-Vault"
         >
           {/* Cinematic Atmospheric Banner */}
           <div className="event-roster-banner-wrap">
             <img
               src="/assets/gothic_cathedral_ritual_concert.png"
-              alt="Night II — The Under-Vault Modular Techno"
+              alt="Day 2 — The Under-Vault"
               className="event-roster-banner-img"
               loading="lazy"
             />
             <div className="event-roster-banner-scrim" />
             <div className="event-roster-banner-badges">
-              <span className="event-night-tag">MALAM II · 31 OKT 2026</span>
+              <span className="event-night-tag">DAY 2 · 31 OKT 2026</span>
               <span className="event-venue-tag">THE UNDER-VAULT</span>
             </div>
           </div>
@@ -135,7 +135,7 @@ export const StageRundown: React.FC<Props> = ({
           <div className="event-roster-body">
             <div className="event-roster-header">
               <h3 className="event-roster-title">
-                NIGHT II — THE UNDER-VAULT
+                DAY 2 — THE UNDER-VAULT
               </h3>
               <p className="event-roster-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             </div>
@@ -157,7 +157,7 @@ export const StageRundown: React.FC<Props> = ({
 
             {/* Apple Fluid Action Affordance */}
             <div className="event-roster-action">
-              <span className="event-action-text">JELAJAHI MALAM II</span>
+              <span className="event-action-text">JELAJAHI DAY 2</span>
               <span className="event-action-arrow">→</span>
             </div>
           </div>

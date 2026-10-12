@@ -11,8 +11,8 @@ import {
   Flame
 } from 'lucide-react';
 import { TicketTier } from '../types';
-import { EventVenueMapSection } from '../components/event/EventVenueMapSection';
-import { EventReservationSection } from '../components/event/EventReservationSection';
+import { FloorPlanViewer } from '../components/floorplan/FloorPlanViewer';
+import { OfficialFAQSection } from '../components/OfficialFAQSection';
 import '../styles/streaming-event.css';
 
 interface Props {
@@ -26,13 +26,10 @@ interface Props {
 
 export const NightTwoEventPage: React.FC<Props> = ({
   tickets,
-  initialPackageId,
   onBack,
   onCheckout,
-  onViewNight1,
-  onToast,
+  onViewNight1
 }) => {
-  const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>(initialPackageId);
   const [activeSection, setActiveSection] = useState<'spotlight' | 'rundown' | 'denah' | 'reservasi' | 'tickets' | 'panduan'>('spotlight');
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -51,13 +48,6 @@ export const NightTwoEventPage: React.FC<Props> = ({
       const targetY = el.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
     }
-  };
-
-  const handleSelectZoneForReservation = (packageId?: string) => {
-    if (packageId) {
-      setSelectedPackageId(packageId);
-    }
-    scrollToSection('reservasi');
   };
 
   return (
@@ -92,7 +82,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
 
           {/* Monumental Clean Typography Title */}
           <h1 className="streaming-hero-title">
-            <span className="streaming-title-line-1">NIGHT II</span>
+            <span className="streaming-title-line-1">DAY 2</span>
             <span className="streaming-title-line-2">THE UNDER-VAULT</span>
           </h1>
 
@@ -395,47 +385,32 @@ export const NightTwoEventPage: React.FC<Props> = ({
           </div>
         </section>
 
-        {/* Section: Denah & Tata Ruang Venue */}
-        <section id="denah" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
-          <div className="streaming-section-header">
-            <div>
-              <span className="streaming-section-subtitle">TATA RUANG &amp; PANGGUNG</span>
-              <h2 className="streaming-section-title">DENAH VENUE // THE UNDER-VAULT BUNKER</h2>
-            </div>
-            <span style={{ fontSize: '0.8rem', color: '#c5a059' }}>
-              Pilih sofa / meja VIP untuk reservasi
-            </span>
-          </div>
-
-          <EventVenueMapSection
-            onSelectZoneForReservation={handleSelectZoneForReservation}
-            dayBadge="NIGHT II // THE UNDER-VAULT"
-          />
-        </section>
-
-        {/* Section: Reservasi Meja VIP Malam 2 */}
+        {/* Section: Denah & Reservasi Meja VIP Day 2 */}
         <section id="reservasi" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
           <div className="streaming-section-header">
             <div>
-              <span className="streaming-section-subtitle">LAYANAN SOFA &amp; MEJA VIP</span>
-              <h2 className="streaming-section-title">RESERVASI VIP // MALAM II (31 OKT)</h2>
+              <span className="streaming-section-subtitle">DENAH VENUE &amp; RESERVASI MEJA</span>
+              <h2 className="streaming-section-title">DENAH &amp; MEJA // DAY 2 (31 OKT 2026)</h2>
             </div>
-            <span className="streaming-badge-box">TERMASUK AKSES TIKET VIP</span>
+            <span style={{ fontSize: '0.8rem', color: '#c5a059' }}>
+              Tetra Solo &amp; Mizu Commonroom
+            </span>
           </div>
 
-          <EventReservationSection
+          <FloorPlanViewer
             day="day-2"
-            initialPackageId={selectedPackageId}
-            onToast={onToast || (() => {})}
           />
         </section>
+
+        {/* Section: Panduan & FAQ Resmi */}
+        <OfficialFAQSection />
 
         {/* Section: Pilihan Tiket Masuk */}
         <section id="tickets" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
           <div className="streaming-section-header">
             <div>
               <span className="streaming-section-subtitle">AKSES TIKET RESMI</span>
-              <h2 className="streaming-section-title">TIKET MASUK // NIGHT II &amp; FULL PASS</h2>
+              <h2 className="streaming-section-title">TIKET MASUK // DAY 2 &amp; FULL PASS</h2>
             </div>
             <span style={{ fontSize: '0.8rem', color: '#46d369' }}>
               Transaksi Terverifikasi Artatix

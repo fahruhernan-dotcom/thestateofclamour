@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FloorPlanViewer } from '../components/floorplan/FloorPlanViewer';
-import { venueZones } from '../data/reservationData';
-import { Compass, Volume2, Users, Calendar, ArrowLeft } from 'lucide-react';
+import { OfficialFAQSection } from '../components/OfficialFAQSection';
+import { Compass, Calendar, ArrowLeft } from 'lucide-react';
 import '../styles/denah.css';
 
 interface Props {
@@ -11,7 +11,6 @@ interface Props {
 
 export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) => {
   const [selectedDay, setSelectedDay] = useState<'day-1' | 'day-2'>('day-1');
-  const [selectedZoneId, setSelectedZoneId] = useState<string>('zone-vvip');
 
   return (
     <main className="denah-page-container">
@@ -70,65 +69,8 @@ export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) =>
         />
       </section>
 
-      {/* Zone Detail Ledger Cards */}
-      <section className="denah-ledger-section">
-        <div className="section-eyebrow" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <span>DETAIL SPESIFIKASI &amp; FASILITAS ZONA SANCTUARY</span>
-        </div>
-
-        <div className="denah-zones-grid">
-          {venueZones.map(zone => {
-            const isSelected = zone.id === selectedZoneId;
-            return (
-              <article
-                key={zone.id}
-                id={`zone-card-${zone.id}`}
-                className={`denah-zone-card ${isSelected ? 'is-active' : ''}`}
-                onClick={() => setSelectedZoneId(zone.id)}
-              >
-                <div className="zone-card-header">
-                  <span className="zone-code-tag">{zone.code}</span>
-                  <span className="zone-category-tag">{zone.category}</span>
-                </div>
-
-                <h3 className="zone-card-title">{zone.name}</h3>
-                <div className="zone-sound-profile">
-                  <Volume2 size={13} style={{ display: 'inline', marginRight: '4px', verticalAlign: '-1px' }} />
-                  {zone.soundProfile}
-                </div>
-
-                <p className="zone-card-desc">{zone.description}</p>
-
-                <ul className="zone-facilities-list">
-                  {zone.facilities.map((fac, idx) => (
-                    <li key={idx}>{fac}</li>
-                  ))}
-                </ul>
-
-                <div className="zone-card-footer">
-                  {zone.associatedPackageId ? (
-                    <button
-                      type="button"
-                      className="zone-reserve-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onNavigateToReservasi(zone.associatedPackageId);
-                      }}
-                    >
-                      RESERVASI DI ZONA INI →
-                    </button>
-                  ) : (
-                    <div style={{ fontSize: '0.72rem', color: 'var(--color-dim)', textAlign: 'center', padding: '0.4rem 0' }}>
-                      <Users size={12} style={{ display: 'inline', marginRight: '4px' }} />
-                      {zone.capacity}
-                    </div>
-                  )}
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </section>
+      {/* Official FAQ & Guidelines */}
+      <OfficialFAQSection />
 
       {/* Bottom Fast Access Banner */}
       <section className="denah-bottom-banner">

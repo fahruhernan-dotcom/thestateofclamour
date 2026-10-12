@@ -4,6 +4,7 @@ import {
   ADMIN_DAY2
 } from '../data/reservationData';
 import { FloorPlanViewer } from '../components/floorplan/FloorPlanViewer';
+import { OfficialFAQSection } from '../components/OfficialFAQSection';
 import {
   Crown,
   MessageCircle,
@@ -201,6 +202,9 @@ export const ReservasiPage: React.FC<Props> = ({
           />
         </div>
       </section>
+
+      {/* Official FAQ & Priority RSVP Guide */}
+      <OfficialFAQSection />
     </main>
   );
 };

@@ -3,7 +3,6 @@ import { FloorLevel, SpotCategory, TableSpot } from '../../types/tableTypes';
 import { useTableAvailability } from '../../hooks/useTableAvailability';
 import { useFloorPlanPanZoom } from '../../hooks/useFloorPlanPanZoom';
 import { TableDetailDrawer } from './TableDetailDrawer';
-import { isSupabaseConfigured } from '../../services/supabaseClient';
 import {
   Layers,
   Lock,
@@ -95,7 +94,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
       <section className="floorplan-controls-cluster">
         <div className="floorplan-switch-row">
           {/* Floor Switcher Tabs */}
-          <div className="floor-tabs-group" role="tablist" aria-label="Pilih Lantai Venue">
+          <div className="floor-tabs-group" role="tablist" aria-label="Pilih Venue">
             <button
               type="button"
               className={`floor-tab-btn ${currentFloor === 1 ? 'is-active' : ''}`}
@@ -105,8 +104,8 @@ export const FloorPlanViewer: React.FC<Props> = ({
               }}
             >
               <Layers size={14} />
-              <span>LANTAI 01</span>
-              <span className="floor-tab-badge">GROUND &amp; STAGES</span>
+              <span>TETRA SOLO</span>
+              <span className="floor-tab-badge">HALL &amp; STAGES</span>
             </button>
 
             <button
@@ -118,8 +117,8 @@ export const FloorPlanViewer: React.FC<Props> = ({
               }}
             >
               <Layers size={14} />
-              <span>LANTAI 02</span>
-              <span className="floor-tab-badge">VIP MEZZANINE</span>
+              <span>MIZU COMMONROOM</span>
+              <span className="floor-tab-badge">VIP &amp; MEZZANINE</span>
             </button>
           </div>
 
@@ -165,7 +164,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
               disabled={isLoading}
             >
               <RefreshCw size={11} className={isLoading ? 'animate-spin' : ''} />
-              <span>{isSupabaseConfigured ? 'Supabase Live' : 'Refresh'}</span>
+              <span>Cek Ketersediaan</span>
             </button>
           </div>
         </div>
@@ -241,9 +240,17 @@ export const FloorPlanViewer: React.FC<Props> = ({
                   <div className="table-card-name">{spot.name}</div>
 
                   <div className="table-card-meta">
-                    <span className="table-card-capacity">{spot.capacityText}</span>
+                    <span className="table-card-capacity">
+                      {spot.capacityText} · {spot.complementTickets || 2} Tiket
+                    </span>
                     <span className="table-card-price">{formattedPrice}</span>
                   </div>
+
+                  {spot.formattedBookingFee && (
+                    <div style={{ fontSize: '0.68rem', color: '#c5a869', marginTop: '0.2rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      Booking Fee: <strong>{spot.formattedBookingFee}</strong>
+                    </div>
+                  )}
 
                   <button
                     type="button"

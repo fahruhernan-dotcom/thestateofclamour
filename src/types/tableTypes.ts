@@ -26,6 +26,10 @@ export interface TableSpot {
   minSpendDay2: number;
   formattedMinSpendDay1: string;
   formattedMinSpendDay2: string;
+  bookingFee?: number;
+  formattedBookingFee?: string;
+  complementTickets?: number;
+  venue?: 'tetra' | 'mizu';
   // Normalized percentage coordinates (0 - 100) on the original floor plan image
   x: number;
   y: number;

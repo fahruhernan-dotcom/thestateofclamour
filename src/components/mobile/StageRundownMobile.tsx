@@ -44,13 +44,13 @@ export const StageRundownMobile: React.FC<Props> = ({
             />
             <div className="rundown-mobile-banner-scrim" />
             <div className="rundown-mobile-badge-row">
-              <span className="rundown-mobile-night-tag">MALAM I · 30 OKT</span>
+              <span className="rundown-mobile-night-tag">DAY 1 · 30 OKT</span>
               <span className="rundown-mobile-venue-tag">MAIN ASSEMBLY</span>
             </div>
           </div>
 
           <div className="rundown-mobile-body">
-            <h3 className="rundown-mobile-title">MALAM I — SWEAR IN CONTINENTAL</h3>
+            <h3 className="rundown-mobile-title">DAY 1 — SWEAR IN CONTINENTAL</h3>
             <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
               Konser panggung utama sinematik dan brass akustik megah di Main Assembly Hall berketinggian 14 meter.
@@ -65,38 +65,38 @@ export const StageRundownMobile: React.FC<Props> = ({
             </div>
 
             <div className="rundown-mobile-action-row">
-              <span className="rundown-mobile-action-text">JELAJAHI MALAM I</span>
+              <span className="rundown-mobile-action-text">JELAJAHI DAY 1</span>
               <ArrowRight size={14} style={{ color: 'var(--color-gold-antique)' }} />
             </div>
           </div>
         </article>
 
-        {/* Night 2 Card */}
+        {/* Day 2 Card */}
         <article
           className="rundown-mobile-card"
           onClick={onOpenNight2}
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenNight2(); } }}
           role="button"
           tabIndex={0}
-          aria-label="Buka detail acara Malam II — The Under-Vault"
+          aria-label="Buka detail acara Day 2 — The Under-Vault"
         >
           <div className="rundown-mobile-banner">
             <img
               src="/assets/gothic_cathedral_ritual_concert.png"
-              alt="Night II — The Under-Vault Modular Techno"
+              alt="Day 2 — The Under-Vault"
               className="rundown-mobile-banner-img"
               loading="lazy"
               decoding="async"
             />
             <div className="rundown-mobile-banner-scrim" />
             <div className="rundown-mobile-badge-row">
-              <span className="rundown-mobile-night-tag">MALAM II · 31 OKT</span>
+              <span className="rundown-mobile-night-tag">DAY 2 · 31 OKT</span>
               <span className="rundown-mobile-venue-tag">THE UNDER-VAULT</span>
             </div>
           </div>
 
           <div className="rundown-mobile-body">
-            <h3 className="rundown-mobile-title">MALAM II — THE UNDER-VAULT</h3>
+            <h3 className="rundown-mobile-title">DAY 2 — THE UNDER-VAULT</h3>
             <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
               Pengalaman rave berkecepatan 142 BPM dengan visual laser strobo monokromatik dan tata suara Funktion-One.
@@ -111,7 +111,7 @@ export const StageRundownMobile: React.FC<Props> = ({
             </div>
 
             <div className="rundown-mobile-action-row">
-              <span className="rundown-mobile-action-text">JELAJAHI MALAM II</span>
+              <span className="rundown-mobile-action-text">JELAJAHI DAY 2</span>
               <ArrowRight size={14} style={{ color: 'var(--color-gold-antique)' }} />
             </div>
           </div>
