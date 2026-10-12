@@ -30,7 +30,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 41.5,
     y: 12.5,
     description: 'Meja standing cocktail area utara dekat Central Bar dan Stage 2.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'NORTH PASSAGE'
@@ -53,7 +53,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 38.5,
     y: 8.0,
     description: 'Meja standing cocktail sudut utara atas.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'NORTH PASSAGE'
@@ -76,7 +76,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 44.0,
     y: 8.0,
     description: 'Meja standing cocktail utara dekat akses Mezzanine.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'NORTH PASSAGE'
@@ -101,7 +101,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 56.0,
     y: 14.5,
     description: 'Sofa premier sayap utara dengan kenyamanan busa tebal dan jarak pandang strategis ke Stage 2 dan Central Bar.',
-    inclusions: ['VIP Admission 8-10 Pax', '2 Spirit Premium + 6 Mixer', 'Dedicated Butler', 'Fruit Platter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vvip-royal',
     zoneTag: 'NORTH SOFA ROW'
@@ -124,7 +124,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 62.0,
     y: 14.5,
     description: 'Sofa premier utara baris tengah. Pilihan favorit untuk rombongan VIP dengan akses cepat ke Bar.',
-    inclusions: ['VIP Admission 8-10 Pax', '2 Spirit Premium + 6 Mixer', 'Dedicated Butler', 'Fruit Platter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vvip-royal',
     zoneTag: 'NORTH SOFA ROW'
@@ -147,7 +147,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 68.0,
     y: 14.5,
     description: 'Sofa premier utara berdampingan dengan akses koridor timur menuju Photo Booth.',
-    inclusions: ['VIP Admission 8-10 Pax', '2 Spirit Premium + 6 Mixer', 'Dedicated Butler', 'Fruit Platter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vvip-royal',
     zoneTag: 'NORTH SOFA ROW'
@@ -170,7 +170,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 74.0,
     y: 14.5,
     description: 'Sofa eksklusif pojok utara-timur dengan privasi ekstra dan sudut pandang panggung luas.',
-    inclusions: ['VIP Admission 8-10 Pax', '2 Spirit Premium + 6 Mixer', 'Dedicated Butler', 'Fruit Platter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vvip-royal',
     zoneTag: 'NORTH SOFA ROW'
@@ -195,7 +195,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 55.8,
     y: 26.8,
     description: 'Booth tengah baris depan sayap barat menghadap Stage 2.',
-    inclusions: ['VIP Admission 4-6 Pax', '1 Spirit Premium + 4 Mixer', 'Dedicated Table Service'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'CENTER BOOTHS'
@@ -218,7 +218,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 64.8,
     y: 26.8,
     description: 'Booth tengah baris depan sayap timur menghadap Stage 2.',
-    inclusions: ['VIP Admission 4-6 Pax', '1 Spirit Premium + 4 Mixer', 'Dedicated Table Service'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'CENTER BOOTHS'
@@ -241,7 +241,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 55.8,
     y: 35.2,
     description: 'Booth tengah baris kedua sayap barat.',
-    inclusions: ['VIP Admission 4-6 Pax', '1 Spirit Premium + 4 Mixer', 'Dedicated Table Service'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'CENTER BOOTHS'
@@ -264,7 +264,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 64.8,
     y: 35.2,
     description: 'Booth tengah baris kedua sayap timur.',
-    inclusions: ['VIP Admission 4-6 Pax', '1 Spirit Premium + 4 Mixer', 'Dedicated Table Service'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'CENTER BOOTHS'
@@ -287,7 +287,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 55.8,
     y: 43.6,
     description: 'Booth tengah langsung menghadap Stage 2.',
-    inclusions: ['VIP Admission 4-6 Pax', '1 Spirit Premium + 4 Mixer', 'Dedicated Table Service'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'CENTER BOOTHS'
@@ -310,7 +310,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 64.8,
     y: 43.6,
     description: 'Booth tengah langsung menghadap Stage 2 sisi timur.',
-    inclusions: ['VIP Admission 4-6 Pax', '1 Spirit Premium + 4 Mixer', 'Dedicated Table Service'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'CENTER BOOTHS'
@@ -335,7 +335,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 30.8,
     y: 24.5,
     description: 'Meja samping bar utama dengan akses minuman instan.',
-    inclusions: ['VIP Admission 4 Pax', '1 Spirit Pilihan + 4 Mixer'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'BAR SIDE'
@@ -358,7 +358,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 30.8,
     y: 31.8,
     description: 'Meja samping bar dengan pemandangan langsung ke Stage 1 dan koridor utama.',
-    inclusions: ['VIP Admission 4 Pax', '1 Spirit Pilihan + 4 Mixer'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'BAR SIDE'
@@ -381,7 +381,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 30.8,
     y: 39.5,
     description: 'Meja samping bar baris ketiga.',
-    inclusions: ['VIP Admission 4 Pax', '1 Spirit Pilihan + 4 Mixer'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'BAR SIDE'
@@ -404,7 +404,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 30.8,
     y: 46.8,
     description: 'Meja samping bar dekat entrance Kitchen.',
-    inclusions: ['VIP Admission 4 Pax', '1 Spirit Pilihan + 4 Mixer'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'BAR SIDE'
@@ -429,7 +429,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 20.3,
     y: 24.5,
     description: 'Meja santai di taman terbuka utara, dekat Stage 1.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'OUTDOOR'
@@ -452,7 +452,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 12.8,
     y: 24.5,
     description: 'Meja santai outdoor sisi barat menghadap Stage 1.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'OUTDOOR'
@@ -475,7 +475,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 5.5,
     y: 39.3,
     description: 'Meja outdoor sayap barat dikelilingi vegetasi tropis.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'OUTDOOR'
@@ -498,7 +498,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 13.0,
     y: 48.8,
     description: 'Meja santai outdoor selatan taman.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'OUTDOOR'
@@ -521,7 +521,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 20.3,
     y: 48.8,
     description: 'Meja santai outdoor selatan sudut timur.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'OUTDOOR'
@@ -546,7 +546,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 7.2,
     y: 59.3,
     description: 'Meja tinggi santai sudut barat bawah.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'WEST WING'
@@ -569,7 +569,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 8.5,
     y: 67.6,
     description: 'Meja santai sudut barat bawah.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'WEST WING'
@@ -592,7 +592,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 13.0,
     y: 73.2,
     description: 'Meja santai barat dekat akses luar.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'WEST WING'
@@ -615,7 +615,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 21.0,
     y: 73.2,
     description: 'Meja santai barat depan koridor kitchen.',
-    inclusions: ['Entry Admission 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'WEST WING'
@@ -640,7 +640,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 46.8,
     y: 70.8,
     description: 'Sofa booth di dalam Smoking Room ber-AC khusus.',
-    inclusions: ['VIP Admission 4 Pax', '1 Spirit Premium + Mixer', 'Dedicated Asytray'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'SMOKING ROOM'
@@ -663,7 +663,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 77.2,
     y: 70.8,
     description: 'Sofa booth timur di dalam Smoking Room ber-AC khusus.',
-    inclusions: ['VIP Admission 4 Pax', '1 Spirit Premium + Mixer', 'Dedicated Asytray'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-side',
     zoneTag: 'SMOKING ROOM'
@@ -686,7 +686,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 59.2,
     y: 64.8,
     description: 'Meja santai di dalam smoking room tengah.',
-    inclusions: ['Entry 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'SMOKING ROOM'
@@ -709,7 +709,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 68.2,
     y: 64.8,
     description: 'Meja santai di dalam smoking room timur.',
-    inclusions: ['Entry 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'SMOKING ROOM'
@@ -732,7 +732,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 48.0,
     y: 78.5,
     description: 'Meja santai selatan smoking room.',
-    inclusions: ['Entry 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'SMOKING ROOM'
@@ -755,7 +755,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 54.5,
     y: 78.5,
     description: 'Meja santai selatan smoking room.',
-    inclusions: ['Entry 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'SMOKING ROOM'
@@ -778,7 +778,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 60.5,
     y: 78.5,
     description: 'Meja santai selatan smoking room.',
-    inclusions: ['Entry 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'SMOKING ROOM'
@@ -801,7 +801,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 67.0,
     y: 78.5,
     description: 'Meja santai selatan smoking room.',
-    inclusions: ['Entry 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'SMOKING ROOM'
@@ -824,7 +824,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 74.5,
     y: 78.5,
     description: 'Meja santai selatan smoking room dekat toilet.',
-    inclusions: ['Entry 4 Pax', 'Beer Bucket / Cocktail Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'SMOKING ROOM'
@@ -849,7 +849,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 89.0,
     y: 34.0,
     description: 'Meja santai samping Photo Booth eksklusif.',
-    inclusions: ['Entry 4 Pax', 'Free Photo Print Token + Drinks'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'PHOTO AREA'
@@ -872,7 +872,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 93.0,
     y: 29.5,
     description: 'Meja santai timur dekat Photo Booth.',
-    inclusions: ['Entry 4 Pax', 'Free Photo Print Token + Drinks'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'PHOTO AREA'
@@ -895,7 +895,7 @@ export const FLOOR_ONE_SPOTS: TableSpot[] = [
     x: 93.0,
     y: 34.0,
     description: 'Meja santai timur dekat Back Stage corridor.',
-    inclusions: ['Entry 4 Pax', 'Drinks package'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'PHOTO AREA'
@@ -922,7 +922,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 62.5,
     y: 50.0,
     description: 'Singgasana paling prestisius di Lantai 2 dengan sudut pandang lurus paling sempurna ke Panggung Grand Piano & Drums.',
-    inclusions: ['VIP Admission 10-12 Pax (RFID Wristbands)', '2 Spirit Super Premium / Champagne + Mixer', 'Dedicated Personal Butler & Bodyguard', 'VIP Valet Parking (2 Mobil)', 'Fresh Fruit & Canapes Platter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vvip-royal',
     zoneTag: 'CENTER VVIP'
@@ -945,7 +945,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 76.0,
     y: 50.0,
     description: 'Singgasana prestisius sayap kanan baris tengah lantai 2 dengan akses cepat ke Bar & Cashier.',
-    inclusions: ['VIP Admission 10-12 Pax (RFID Wristbands)', '2 Spirit Super Premium / Champagne + Mixer', 'Dedicated Personal Butler & Bodyguard', 'VIP Valet Parking (2 Mobil)', 'Fresh Fruit & Canapes Platter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vvip-royal',
     zoneTag: 'CENTER VVIP'
@@ -970,7 +970,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 25.5,
     y: 50.0,
     description: 'Sofa VIP baris atas sayap barat dekat lorong Entrance/Exit.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 2'
@@ -993,7 +993,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 34.5,
     y: 50.0,
     description: 'Sofa VIP baris atas barat tengah.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 2'
@@ -1016,7 +1016,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 43.5,
     y: 50.0,
     description: 'Sofa VIP baris atas menghadap panggung.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 2'
@@ -1039,7 +1039,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 52.5,
     y: 50.0,
     description: 'Sofa VIP baris atas tepat di samping VVIP 1.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 2'
@@ -1064,7 +1064,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 25.5,
     y: 61.5,
     description: 'Sofa VIP baris depan sayap barat.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler', 'Best Balcony Proximity'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 1'
@@ -1087,7 +1087,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 33.5,
     y: 61.5,
     description: 'Sofa VIP baris depan pandangan bersih.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 1'
@@ -1110,7 +1110,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 42.5,
     y: 61.5,
     description: 'Sofa VIP baris depan tengah barat.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 1'
@@ -1133,7 +1133,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 52.5,
     y: 61.5,
     description: 'Sofa VIP baris depan tepat di tengah.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 1'
@@ -1156,7 +1156,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 63.5,
     y: 61.5,
     description: 'Sofa VIP baris depan tengah timur.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 1'
@@ -1179,7 +1179,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 71.5,
     y: 61.5,
     description: 'Sofa VIP baris depan timur.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 1'
@@ -1202,7 +1202,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 78.5,
     y: 61.5,
     description: 'Sofa VIP baris depan sudut timur dekat Bar.',
-    inclusions: ['VIP Admission 6-8 Pax', '1 Premium Spirit + 4 Mixer', 'Dedicated Butler'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'VIP ROW 1'
@@ -1227,7 +1227,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 27.5,
     y: 78.0,
     description: 'Meja balkon melengkung kaca elevasi tinggi barat.',
-    inclusions: ['Admission 6 Pax', '1 Spirit + Mixer', 'Panoramic View'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'MEZZANINE BALCONY'
@@ -1250,7 +1250,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 34.5,
     y: 80.0,
     description: 'Meja balkon melengkung kaca sudut barat.',
-    inclusions: ['Admission 6 Pax', '1 Spirit + Mixer', 'Panoramic View'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'MEZZANINE BALCONY'
@@ -1273,7 +1273,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 46.0,
     y: 81.5,
     description: 'Meja balkon tengah barat dengan sudut pandang mata burung ke lantai 1.',
-    inclusions: ['Admission 6 Pax', '1 Spirit + Mixer', 'Panoramic View'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'MEZZANINE BALCONY'
@@ -1296,7 +1296,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 54.0,
     y: 81.5,
     description: 'Meja balkon tengah timur dengan sudut pandang mata burung ke lantai 1.',
-    inclusions: ['Admission 6 Pax', '1 Spirit + Mixer', 'Panoramic View'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'MEZZANINE BALCONY'
@@ -1319,7 +1319,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 66.5,
     y: 80.0,
     description: 'Meja balkon melengkung kaca sudut timur.',
-    inclusions: ['Admission 6 Pax', '1 Spirit + Mixer', 'Panoramic View'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'MEZZANINE BALCONY'
@@ -1342,7 +1342,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 73.5,
     y: 78.0,
     description: 'Meja balkon melengkung kaca elevasi timur.',
-    inclusions: ['Admission 6 Pax', '1 Spirit + Mixer', 'Panoramic View'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-vip-mezzanine',
     zoneTag: 'MEZZANINE BALCONY'
@@ -1367,7 +1367,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 23.5,
     y: 17.5,
     description: 'Sofa booth privat alcove barat paling atas.',
-    inclusions: ['Admission 4 Pax', '1 Spirit Bottle + 4 Mixer'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'PRIVATE ALCOVE'
@@ -1390,7 +1390,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 19.5,
     y: 24.5,
     description: 'Sofa booth privat alcove barat tengah.',
-    inclusions: ['Admission 4 Pax', '1 Spirit Bottle + 4 Mixer'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'PRIVATE ALCOVE'
@@ -1413,7 +1413,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 18.5,
     y: 35.0,
     description: 'Sofa booth privat alcove barat bawah.',
-    inclusions: ['Admission 4 Pax', '1 Spirit Bottle + 4 Mixer'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'PRIVATE ALCOVE'
@@ -1436,7 +1436,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 35.5,
     y: 39.5,
     description: 'Meja bar tinggi di belakang VIP Sofa Row 2.',
-    inclusions: ['Admission 4 Pax', 'Spirit / Cocktail Bucket'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'HIGH STOOLS'
@@ -1459,7 +1459,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 43.5,
     y: 39.5,
     description: 'Meja bar tinggi tengah barat di belakang VIP Sofa.',
-    inclusions: ['Admission 4 Pax', 'Spirit / Cocktail Bucket'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'HIGH STOOLS'
@@ -1482,7 +1482,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 54.5,
     y: 39.5,
     description: 'Meja bar tinggi tengah di belakang VIP Sofa.',
-    inclusions: ['Admission 4 Pax', 'Spirit / Cocktail Bucket'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'HIGH STOOLS'
@@ -1505,7 +1505,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 62.5,
     y: 39.5,
     description: 'Meja bar tinggi tengah timur di belakang VIP Sofa.',
-    inclusions: ['Admission 4 Pax', 'Spirit / Cocktail Bucket'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'HIGH STOOLS'
@@ -1528,7 +1528,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 70.5,
     y: 39.5,
     description: 'Meja bar tinggi timur di belakang VIP Sofa.',
-    inclusions: ['Admission 4 Pax', 'Spirit / Cocktail Bucket'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'HIGH STOOLS'
@@ -1553,7 +1553,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 32.5,
     y: 20.0,
     description: 'Meja bundar tepat di depan stage panggung akustik barat.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1576,7 +1576,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 38.5,
     y: 20.0,
     description: 'Meja bundar tepat di depan stage panggung akustik tengah barat.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1599,7 +1599,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 60.5,
     y: 20.0,
     description: 'Meja bundar tepat di depan stage panggung akustik tengah timur.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1622,7 +1622,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 67.5,
     y: 20.0,
     description: 'Meja bundar tepat di depan stage panggung akustik timur.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1645,7 +1645,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 35.5,
     y: 28.5,
     description: 'Meja cocktail tengah barat.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1668,7 +1668,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 29.5,
     y: 28.5,
     description: 'Meja cocktail tengah sayap barat dekat Alcove.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1691,7 +1691,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 41.5,
     y: 28.5,
     description: 'Meja cocktail tengah barat menghadap Stage.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1714,7 +1714,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 29.5,
     y: 36.5,
     description: 'Meja cocktail tengah selatan barat dekat High Stool.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1737,7 +1737,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 60.5,
     y: 28.5,
     description: 'Meja cocktail tengah timur.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'
@@ -1760,7 +1760,7 @@ export const FLOOR_TWO_SPOTS: TableSpot[] = [
     x: 67.5,
     y: 28.5,
     description: 'Meja cocktail tengah timur dekat koridor Bar.',
-    inclusions: ['Entry 4 Pax', 'Cocktail / Spirit Starter'],
+    inclusions: [],
     isBookable: true,
     packageIdRef: 'pkg-high-cocktail',
     zoneTag: 'STAGE FRONT'

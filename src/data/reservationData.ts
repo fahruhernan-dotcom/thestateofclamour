@@ -63,96 +63,90 @@ export const reservationPackages: ReservationPackage[] = [
     formattedMinSpendDay1: 'Rp 5.000.000',
     formattedMinSpendDay2: 'Rp 6.000.000',
     inclusions: [
-      'Free VIP Admission untuk 8–10 Hadirin (Gelang RFID Khusus)',
-      '2 Botol Premium Spirit / Champagne Pilihan + 6 Chaser/Mixer',
-      'Personal Dedicated Butler & Keamanan Meja Eksklusif',
-      'Sudut pandang lurus terbaik ke Panggung Konser & DJ Sanctum',
-      'Akses Jalur Khusus (Fast Track Entry) & 2 Reserved Valet Parking',
-      'Platter Buah Segar & Kudapan Eksklusif Malam'
+      'Kapasitas Meja: 8 PAX',
+      '4 Tiket Masuk Komplimen (RFID)',
+      'Booking Fee Kuncian Meja: Rp 500.000',
+      'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE A',
     zoneName: 'Center Pit Depan Panggung',
-    badgeLabel: 'MOST PRESTIGIOUS',
+    badgeLabel: 'VVIP PIT',
     isPopular: true
   },
   {
     id: 'pkg-vip-mezzanine',
     name: 'VIP MEZZANINE BALCONY SOFA',
-    tagline: 'Kenyamanan sofa berkelas di balkon elevasi 4 meter',
-    capacityText: '6 – 8 Hadirin',
-    minSpendDay1: 3500000,
-    minSpendDay2: 4000000,
-    formattedMinSpendDay1: 'Rp 3.500.000',
-    formattedMinSpendDay2: 'Rp 4.000.000',
+    tagline: 'Kenyamanan sofa balkon elevasi atas',
+    capacityText: '6 Hadirin',
+    minSpendDay1: 5500000,
+    minSpendDay2: 5500000,
+    formattedMinSpendDay1: 'Rp 5.500.000',
+    formattedMinSpendDay2: 'Rp 5.500.000',
     inclusions: [
-      'Free VIP Admission untuk 6–8 Hadirin',
-      '1 Botol Premium Spirit Pilihan + 4 Mixer',
-      'Sudut pandang panorama luas ke seluruh aula dari balkon atas',
-      'Dedicated Bar Runner & Pelayanan Cepat',
-      'Private Bar Access tanpa antrean di lantai atas',
-      'Akses sofa eksklusif sepanjang acara'
+      'Kapasitas Meja: 6 PAX',
+      '3 Tiket Masuk Komplimen (RFID)',
+      'Booking Fee Kuncian Meja: Rp 500.000',
+      'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE B',
     zoneName: 'Mezzanine Balcony Atas',
-    badgeLabel: 'ELEVATED PANORAMA'
+    badgeLabel: 'MEZZANINE'
   },
   {
     id: 'pkg-vip-side',
-    name: 'VIP SIDE STAGE LOUNGE',
-    tagline: 'Sofa intim di sayap panggung dengan atmosfer energi konser',
-    capacityText: '6 – 8 Hadirin',
-    minSpendDay1: 3000000,
-    minSpendDay2: 3500000,
-    formattedMinSpendDay1: 'Rp 3.000.000',
-    formattedMinSpendDay2: 'Rp 3.500.000',
+    name: 'VIP TABLE SOFA (MIZU & TETRA)',
+    tagline: 'Sofa VIP eksklusif area panggung & lounge',
+    capacityText: '6 Hadirin',
+    minSpendDay1: 4000000,
+    minSpendDay2: 4000000,
+    formattedMinSpendDay1: 'Rp 4.000.000',
+    formattedMinSpendDay2: 'Rp 4.000.000',
     inclusions: [
-      'Free VIP Admission untuk 6–8 Hadirin',
-      '1 Botol Premium Spirit + 4 Mixer',
-      'Dekat dengan backstage entrance & panggung aksi',
-      'Pelayanan meja personal',
-      'Akses mudah ke jalur toilet VIP & area istirahat'
+      'Kapasitas Meja: 4 – 6 PAX',
+      '2 – 3 Tiket Masuk Komplimen (RFID)',
+      'Booking Fee Kuncian Meja: Rp 300.000 – Rp 400.000',
+      'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE C',
-    zoneName: 'Sayap Kiri / Kanan Panggung',
-    badgeLabel: 'INTIMATE LOUNGE'
+    zoneName: 'Area Sofa VIP',
+    badgeLabel: 'TABLE SOFA'
   },
   {
     id: 'pkg-high-cocktail',
-    name: 'HIGH COCKTAIL STANDING TABLE',
-    tagline: 'Meja tinggi sosial untuk grup penikmat dansa & koktail',
+    name: 'TABLE / SMALL TABLE',
+    tagline: 'Meja santai festival 4 pax',
     capacityText: '4 Hadirin',
-    minSpendDay1: 1500000,
-    minSpendDay2: 1750000,
-    formattedMinSpendDay1: 'Rp 1.500.000',
-    formattedMinSpendDay2: 'Rp 1.750.000',
+    minSpendDay1: 2000000,
+    minSpendDay2: 2500000,
+    formattedMinSpendDay1: 'Rp 2.000.000 – Rp 2.500.000',
+    formattedMinSpendDay2: 'Rp 2.000.000 – Rp 2.500.000',
     inclusions: [
-      'Free Admission untuk 4 Hadirin',
-      '1 Botol Spirit / 1 Bucket Premium Craft Beer + Snack Platter',
-      'Meja cocktail tinggi di tepi dancefloor',
-      'Akses cepat bolak-balik antara meja dan lantai dansa',
-      'Ice bucket refill sepanjang malam'
+      'Kapasitas Meja: 4 PAX',
+      '2 Tiket Masuk Komplimen (RFID)',
+      'Booking Fee Kuncian Meja: Rp 200.000 – Rp 250.000',
+      'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE D',
-    zoneName: 'Cocktail Perimeter',
-    badgeLabel: 'SOCIAL PARTY'
+    zoneName: 'Assembly Table',
+    badgeLabel: 'TABLE 4 PAX'
   },
   {
     id: 'pkg-bar-standing',
-    name: 'BAR STOOL RESERVED SEAT',
-    tagline: 'Tempat duduk santai tepat di depan Central Mixology Bar',
-    capacityText: '2 Hadirin',
-    minSpendDay1: 750000,
-    minSpendDay2: 900000,
-    formattedMinSpendDay1: 'Rp 750.000',
-    formattedMinSpendDay2: 'Rp 900.000',
+    name: 'SMALL TABLE (TETRA)',
+    tagline: 'Meja festival intim 4 pax area Tetra',
+    capacityText: '4 Hadirin',
+    minSpendDay1: 1500000,
+    minSpendDay2: 1500000,
+    formattedMinSpendDay1: 'Rp 1.500.000',
+    formattedMinSpendDay2: 'Rp 1.500.000',
     inclusions: [
-      'Free Admission untuk 2 Hadirin',
-      'Welcome Cocktail Terkurasi dari Head Bartender',
-      'Bar credit senilai minimum spend untuk minuman & makanan',
-      'Kursi bar empuk dengan interaksi langsung ke mixologist'
+      'Kapasitas Meja: 4 PAX',
+      '2 Tiket Masuk Komplimen (RFID)',
+      'Booking Fee Kuncian Meja: Rp 200.000',
+      'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE E',
-    zoneName: 'Central Mixology Bar',
+    zoneName: 'Tetra Small Table',
     badgeLabel: 'COCKTAIL LOVER'
   }
 ];
