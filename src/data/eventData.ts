@@ -67,7 +67,7 @@ export const earlyBirdTickets: TicketTier[] = [
     category: '1 Night Pass · 30 Oct',
     price: 100000,
     perks: ['Single night admission (30 Oct)', 'General assembly access', 'Verified RFID access pass'],
-    status: 'active',
+    status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Early Bird',
     sortOrder: 1
@@ -79,7 +79,7 @@ export const earlyBirdTickets: TicketTier[] = [
     category: '1 Night Pass · 31 Oct',
     price: 100000,
     perks: ['Single night admission (31 Oct)', 'General assembly access', 'Verified RFID access pass'],
-    status: 'active',
+    status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Early Bird',
     sortOrder: 2
@@ -91,7 +91,7 @@ export const earlyBirdTickets: TicketTier[] = [
     category: '2 Nights Pass · 30 & 31 Oct',
     price: 180000,
     perks: ['Full 2-night admission (30 & 31 Oct)', 'Save Rp 20.000 vs single day passes', 'General assembly access all nights'],
-    status: 'active',
+    status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Best Value',
     isProtagonist: true,

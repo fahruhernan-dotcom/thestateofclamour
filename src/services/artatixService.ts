@@ -128,11 +128,10 @@ export async function fetchLiveArtatixTickets(
 ): Promise<ArtatixSyncResult> {
   const isDevLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
   
-  // Candidate proxy URLs (in local dev, omit .php fallback which is for Apache cPanel)
-  const candidateEndpoints = [
-    '/api-artatix/customer/ticket/swear_in_continental?isTicketExclusive=0&isMerch=0',
-    ...(isDevLocal ? [] : ['/api-artatix.php'])
-  ];
+  // In local dev use Vite proxy; in production cPanel use api-artatix.php
+  const candidateEndpoints = isDevLocal
+    ? ['/api-artatix/customer/ticket/swear_in_continental?isTicketExclusive=0&isMerch=0']
+    : ['./api-artatix.php', '/api-artatix.php'];
 
   for (const endpoint of candidateEndpoints) {
     try {
@@ -149,6 +148,12 @@ export async function fetchLiveArtatixTickets(
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+        continue;
+      }
+
+      // Guard against .htaccess SPA fallback returning index.html
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
         continue;
       }
 

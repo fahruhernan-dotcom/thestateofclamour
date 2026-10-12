@@ -1,7 +1,7 @@
 <?php
 /**
  * api-artatix.php
- * Lightweight cPanel reverse proxy for Artatix Customer Ticket API.
+ * Lightweight cPanel reverse proxy for Artatix Customer Ticket API with 30s cache.
  * Solves cross-origin CORS limitations when deployed on Apache/PHP servers.
  */
 
@@ -15,12 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+// 30-second micro-cache to prevent rate-limiting and timeouts
+$cacheFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'artatix_ticket_cache.json';
+if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < 30)) {
+    $cachedData = @file_get_contents($cacheFile);
+    if (!empty($cachedData)) {
+        echo $cachedData;
+        exit;
+    }
+}
+
 $targetUrl = 'https://api.artatix.co.id/api/v1/customer/ticket/swear_in_continental?isTicketExclusive=0&isMerch=0';
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $targetUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Accept: application/json, text/plain, */*',
@@ -34,7 +46,11 @@ $curlErr = curl_error($ch);
 unset($ch);
 
 if ($response !== false && $httpCode === 200) {
+    @file_put_contents($cacheFile, $response);
     echo $response;
+} elseif (file_exists($cacheFile)) {
+    // Graceful stale fallback
+    echo @file_get_contents($cacheFile);
 } else {
     http_response_code($httpCode ?: 502);
     echo json_encode([
