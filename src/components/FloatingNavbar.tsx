@@ -37,7 +37,6 @@ export const FloatingNavbar: React.FC<Props> = ({
     }
     return true;
   });
-  const [activeTab, setActiveTab] = useState<string>('lineup');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const lastScrollYRef = useRef(0);
 
@@ -117,19 +116,6 @@ export const FloatingNavbar: React.FC<Props> = ({
             setIsVisible(true);
           }
 
-          // Active tab tracking for home sections
-          if (currentView === 'home') {
-            const el = document.getElementById('lineup');
-            if (el) {
-              const rect = el.getBoundingClientRect();
-              if (rect.top <= 200 && rect.bottom >= 150) {
-                setActiveTab('lineup');
-              } else {
-                setActiveTab('');
-              }
-            }
-          }
-
           lastScrollYRef.current = currentY;
           ticking = false;
         });
@@ -195,20 +181,6 @@ export const FloatingNavbar: React.FC<Props> = ({
   const handleHomeClick = () => handleNavClick('home', '', 'hero');
   const handleNight1Click = () => handleNavClick('event-night-1', '#/event/night-1');
   const handleNight2Click = () => handleNavClick('event-night-2', '#/event/night-2');
-  
-  const handleLineupClick = () => {
-    if (currentView === 'home') {
-      handleNavClick('home', '#lineup', 'lineup');
-    } else {
-      const el = document.getElementById('spotlight');
-      if (el) {
-        const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-      } else {
-        handleNavClick('home', '#lineup', 'lineup');
-      }
-    }
-  };
 
   const handleTicketClick = () => {
     if (currentView === 'event-night-1' || currentView === 'event-night-2') {
@@ -277,77 +249,44 @@ export const FloatingNavbar: React.FC<Props> = ({
             <span className="nav-brand-title site-logo-lockup">CLAMOUR</span>
           </button>
 
-          {/* Desktop Minimal Navigation Links (Only 3 Core Items, IDLIX Pill Nav) */}
-          <nav className="header-desktop-nav nav-links-cluster items-center gap-1.5" aria-label="Menu">
-            {/* MALAM I */}
-            <button
-              type="button"
-              className={`header-nav-link header-nav-text nav-link-item ${
-                currentView === 'event-night-1' ? 'header-nav-link--active active-pill' : ''
-              }`}
-              onClick={handleNight1Click}
-              title="Dossier Malam I"
-              style={{ background: 'transparent', cursor: 'pointer' }}
-            >
-              <span className="nav-roll-inner">
-                <span className="nav-roll-default">MALAM I</span>
-                <span className="nav-roll-hover" aria-hidden="true">MALAM I</span>
-              </span>
-            </button>
+          {/* Right Action Cluster: Desktop Nav Links (NIGHT 1 & NIGHT 2) + TICKETS CTA + Mobile Burger */}
+          <div className="nav-right-cluster">
+            {/* Desktop Navigation Links: Repositioned directly next to TICKETS */}
+            <nav className="header-desktop-nav nav-links-cluster" aria-label="Menu">
+              {/* NIGHT 1 */}
+              <button
+                type="button"
+                className={`header-nav-link header-nav-text nav-link-item ${
+                  currentView === 'event-night-1' ? 'header-nav-link--active active-pill' : ''
+                }`}
+                onClick={handleNight1Click}
+                title="Dossier Night 1"
+                style={{ background: 'transparent', cursor: 'pointer' }}
+              >
+                <span className="nav-roll-inner">
+                  <span className="nav-roll-default">NIGHT 1</span>
+                  <span className="nav-roll-hover" aria-hidden="true">NIGHT 1</span>
+                </span>
+              </button>
 
-            <span className="nav-links-dot" aria-hidden="true">·</span>
+              <span className="nav-links-dot" aria-hidden="true">·</span>
 
-            {/* MALAM II */}
-            <button
-              type="button"
-              className={`header-nav-link header-nav-text nav-link-item ${
-                currentView === 'event-night-2' ? 'header-nav-link--active active-pill' : ''
-              }`}
-              onClick={handleNight2Click}
-              title="Dossier Malam II"
-              style={{ background: 'transparent', cursor: 'pointer' }}
-            >
-              <span className="nav-roll-inner">
-                <span className="nav-roll-default">MALAM II</span>
-                <span className="nav-roll-hover" aria-hidden="true">MALAM II</span>
-              </span>
-            </button>
-
-            <span className="nav-links-dot" aria-hidden="true">·</span>
-
-            {/* LINEUP */}
-            <button
-              type="button"
-              className={`header-nav-link header-nav-text nav-link-item ${
-                currentView === 'home' && activeTab === 'lineup' ? 'header-nav-link--active active-pill' : ''
-              }`}
-              onClick={handleLineupClick}
-              title="Teaser Lineup Spotlight"
-              style={{ background: 'transparent', cursor: 'pointer' }}
-            >
-              <span className="nav-roll-inner">
-                <span className="nav-roll-default">LINEUP</span>
-                <span className="nav-roll-hover" aria-hidden="true">LINEUP</span>
-              </span>
-            </button>
-          </nav>
-
-          {/* Right Action & Mobile Toggle */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Mobile Menu Toggle */}
-            <button
-              type="button"
-              className={`nav-mobile-toggle header-mobile-menu-trigger ${isMobileMenuOpen ? 'is-active' : ''}`}
-              onClick={() => setIsMobileMenuOpen(prev => !prev)}
-              aria-label={isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'}
-            >
-              <span className="nav-toggle-icon nav-toggle-burger">
-                <Menu size={18} strokeWidth={2} />
-              </span>
-              <span className="nav-toggle-icon nav-toggle-close">
-                <X size={18} strokeWidth={2} />
-              </span>
-            </button>
+              {/* NIGHT 2 */}
+              <button
+                type="button"
+                className={`header-nav-link header-nav-text nav-link-item ${
+                  currentView === 'event-night-2' ? 'header-nav-link--active active-pill' : ''
+                }`}
+                onClick={handleNight2Click}
+                title="Dossier Night 2"
+                style={{ background: 'transparent', cursor: 'pointer' }}
+              >
+                <span className="nav-roll-inner">
+                  <span className="nav-roll-default">NIGHT 2</span>
+                  <span className="nav-roll-hover" aria-hidden="true">NIGHT 2</span>
+                </span>
+              </button>
+            </nav>
 
             {/* Desktop Right CTA Button */}
             <div className="nav-action-desktop-only">
@@ -363,6 +302,21 @@ export const FloatingNavbar: React.FC<Props> = ({
                 </span>
               </button>
             </div>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              type="button"
+              className={`nav-mobile-toggle header-mobile-menu-trigger ${isMobileMenuOpen ? 'is-active' : ''}`}
+              onClick={() => setIsMobileMenuOpen(prev => !prev)}
+              aria-label={isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'}
+            >
+              <span className="nav-toggle-icon nav-toggle-burger">
+                <Menu size={18} strokeWidth={2} />
+              </span>
+              <span className="nav-toggle-icon nav-toggle-close">
+                <X size={18} strokeWidth={2} />
+              </span>
+            </button>
           </div>
         </div>
       </header>

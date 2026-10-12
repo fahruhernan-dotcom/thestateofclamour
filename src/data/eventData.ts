@@ -144,13 +144,16 @@ export const archivedIndividualArtists: Artist[] = [
   }
 ];
 
-// Flyer cards: 3 preview cards for the teaser carousel test
-export const teaserFlyerArtists: Artist[] = [
+// ---------------------------------------------------------------------------
+// DUAL-TIER LINEUP (DAY 1 & DAY 2)
+// Using official Gothic teaser poster for all cards until client releases individual assets
+// ---------------------------------------------------------------------------
+export const day1Artists: Artist[] = [
   {
-    id: 'art-teaser-flyer-1',
+    id: 'art-day1-1',
     eventId: 'evt-clamour-2026',
-    name: 'Swear In Continental · I',
-    dayLabel: '30 — 31 Oktober',
+    name: 'Swear In Continental · ?',
+    dayLabel: 'Day 1 · 30 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '20:00 WIB',
     imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
@@ -160,35 +163,76 @@ export const teaserFlyerArtists: Artist[] = [
     sortOrder: 1
   },
   {
-    id: 'art-teaser-flyer-2',
+    id: 'art-day1-2',
     eventId: 'evt-clamour-2026',
-    name: 'Swear In Continental · II',
-    dayLabel: '30 — 31 Oktober',
+    name: 'Swear In Continental · ?',
+    dayLabel: 'Day 1 · 30 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '22:00 WIB',
-    imageUrl: '/assets/guest_malvin_poster.png',
+    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
     videoUrl: null,
-    posterUrl: '/assets/guest_malvin_poster.png',
+    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
     audioPreviewUrl: null,
     sortOrder: 2
   },
   {
-    id: 'art-teaser-flyer-3',
+    id: 'art-day1-3',
     eventId: 'evt-clamour-2026',
-    name: 'Swear In Continental · III',
-    dayLabel: '30 — 31 Oktober',
+    name: 'Swear In Continental · ?',
+    dayLabel: 'Day 1 · 30 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '00:00 WIB',
-    imageUrl: '/assets/guest_far_poster.png',
+    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
     videoUrl: null,
-    posterUrl: '/assets/guest_far_poster.png',
+    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
     audioPreviewUrl: null,
     sortOrder: 3
   }
 ];
 
-export const teaserFlyerArtist: Artist = teaserFlyerArtists[0];
+export const day2Artists: Artist[] = [
+  {
+    id: 'art-day2-1',
+    eventId: 'evt-clamour-2026',
+    name: 'Swear In Continental · ?',
+    dayLabel: 'Day 2 · 31 Okt',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '20:00 WIB',
+    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    videoUrl: null,
+    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    audioPreviewUrl: null,
+    sortOrder: 1
+  },
+  {
+    id: 'art-day2-2',
+    eventId: 'evt-clamour-2026',
+    name: 'Swear In Continental · ?',
+    dayLabel: 'Day 2 · 31 Okt',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '22:00 WIB',
+    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    videoUrl: null,
+    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    audioPreviewUrl: null,
+    sortOrder: 2
+  },
+  {
+    id: 'art-day2-3',
+    eventId: 'evt-clamour-2026',
+    name: 'Swear In Continental · ?',
+    dayLabel: 'Day 2 · 31 Okt',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '00:00 WIB',
+    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    videoUrl: null,
+    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    audioPreviewUrl: null,
+    sortOrder: 3
+  }
+];
 
-export const initialArtists: Artist[] = IS_LINEUP_TEASER_MODE
-  ? teaserFlyerArtists
-  : archivedIndividualArtists;
+export const teaserFlyerArtists: Artist[] = day1Artists;
+export const teaserFlyerArtist: Artist = day1Artists[0];
+
+export const initialArtists: Artist[] = [...day1Artists, ...day2Artists];

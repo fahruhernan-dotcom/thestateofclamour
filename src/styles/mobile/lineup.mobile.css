@@ -85,13 +85,15 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: pan-y pan-x;
   touch-action: manipulation;
-  /* MOTION OFFSET PROPERTIES: GPU-accelerated translateY, rotateZ, scale, blur, and opacity */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* MOTION OFFSET PROPERTIES: GPU-accelerated translateY, rotateZ, scale, and opacity */
   transform: translate3d(0, calc(var(--card-translate-y, 0) * 1px), 0)
     rotateZ(calc(var(--card-rotate-z, 0) * 1deg))
     scale(var(--card-scale, 1));
-  filter: var(--card-filter, none);
+  filter: none;
   opacity: var(--card-opacity, 1);
-  will-change: transform, filter, opacity;
+  will-change: transform, opacity;
   transition: border-color 250ms ease, box-shadow 250ms ease;
 }
 
@@ -128,28 +130,6 @@
   will-change: transform;
 }
 
-/* Strobe Camera Flash Flare */
-.lineup-mobile-strobe-flash {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-  opacity: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(197, 168, 105, 0.4) 40%, transparent 80%);
-  mix-blend-mode: screen;
-  transition: opacity 250ms ease;
-}
-
-.lineup-mobile-strobe-flash.is-flashing {
-  animation: mobile-camera-flash 450ms ease-out forwards;
-}
-
-@keyframes mobile-camera-flash {
-  0% { opacity: 0.9; filter: brightness(2); }
-  35% { opacity: 0.25; }
-  60% { opacity: 0.65; }
-  100% { opacity: 0; }
-}
 
 /* Dark Vignette / Scrim Gradient (Matches Desktop .guest-portrait-scrim) */
 .lineup-mobile-scrim {

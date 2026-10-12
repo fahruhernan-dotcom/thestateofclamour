@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Artist } from '../types';
-import { IS_LINEUP_TEASER_MODE } from '../data/eventData';
+import { IS_LINEUP_TEASER_MODE, day1Artists as defaultDay1Artists, day2Artists as defaultDay2Artists } from '../data/eventData';
 import { silenceSec1, setAudioOwner, getAudioOwner, isSec1AudioActive } from '../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../utils/mediaPreloader';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -19,7 +19,6 @@ interface GuestCardProps {
   artist: Artist;
   artistIndex: number;
   cardIndex: number;
-  isFlashing: boolean;
   isClone?: boolean;
   isCardActive: boolean;
   isAudioPlaying: boolean;
@@ -33,7 +32,6 @@ const GuestCard: React.FC<GuestCardProps> = ({
   artist,
   artistIndex,
   cardIndex,
-  isFlashing,
   isClone,
   isCardActive,
   isAudioPlaying,
@@ -72,7 +70,8 @@ const GuestCard: React.FC<GuestCardProps> = ({
   };
 
   const handleMouseEnter = () => {
-    // Only preview audio on hover for cursor/mouse devices (avoids synthesized hover conflicts on iPad/touchscreens)
+    // Only preview audio on hover for cursor/mouse devices when not in teaser mode
+    if (IS_LINEUP_TEASER_MODE || !artist.audioPreviewUrl) return;
     if (hasFinePointer()) {
       onCardMouseEnter(artist, cardIndex, artistIndex);
     }
@@ -84,13 +83,17 @@ const GuestCard: React.FC<GuestCardProps> = ({
         cardRef.current.style.setProperty('--card-tilt-x', '0deg');
         cardRef.current.style.setProperty('--card-tilt-y', '0deg');
       }
-      onCardMouseLeave();
+      if (!IS_LINEUP_TEASER_MODE && artist.audioPreviewUrl) {
+        onCardMouseLeave();
+      }
     }
   };
 
   const handleCardClick = () => {
-    // Tap or click on the card body toggles the artist audio preview on/off (both touch/iPad and cursor devices)
-    // Synchronously unlock and play video sound within the tap gesture for iOS Safari / iPadOS
+    // In teaser mode, audio preview is disabled
+    if (IS_LINEUP_TEASER_MODE || !artist.audioPreviewUrl) return;
+
+    // Tap or click on the card body toggles the artist audio preview on/off
     const video = videoRef.current;
     if (video && !isAudioPlaying) {
       video.muted = false;
@@ -187,12 +190,6 @@ const GuestCard: React.FC<GuestCardProps> = ({
           />
         )}
 
-        {/* Strobe Camera Flash Flare */}
-        <div
-          className={`guest-strobe-flash ${isFlashing ? 'is-flashing' : ''}`}
-          aria-hidden="true"
-        />
-
         {/* Portrait Dark Scrim */}
         <div className="guest-portrait-scrim" />
       </div>
@@ -202,7 +199,7 @@ const GuestCard: React.FC<GuestCardProps> = ({
           <p className="guest-day-kicker">
             {artist.dayLabel} · {artist.performanceTime}
           </p>
-          {isAudioPlaying && (
+          {isAudioPlaying && !IS_LINEUP_TEASER_MODE && (
             <span className="guest-sound-active-tag" title="Audio Preview Active">
               <span className="equalizer-bars mini">
                 <span className="bar bar-1" />
@@ -252,20 +249,42 @@ const GuestCard: React.FC<GuestCardProps> = ({
   );
 };
 
-const LineupSectionDesktop: React.FC<Props> = ({
-  artists,
-  onToast: _onToast,
-  onOpenNight1,
-  onOpenNight2,
-}) => {
+/* -------------------------------------------------------------------------- */
+/* LineupDayTierRow: Independent Horizontal Carousel for a Single Day Tier    */
+/* -------------------------------------------------------------------------- */
+interface LineupDayTierRowProps {
+  tierId: string;
+  dayBadge: string;
+  dayMeta: string;
+  tierArtists: Artist[];
+  isSectionVisible: boolean;
+  activeAudioArtistId: string | null;
+  slopeDirection?: 1 | -1;
+  onCardTap: (artist: Artist, cardIdx: number, artistIdx: number) => void;
+  onCardMouseEnter: (artist: Artist, cardIdx: number, artistIdx: number) => void;
+  onCardMouseLeave: () => void;
+  onOpenModal: (artist: Artist) => void;
+  onPlayArtistAudio: (artistId: string) => void;
+}
 
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const [activeFlashes, setActiveFlashes] = useState<{ [key: string]: boolean }>({});
+const LineupDayTierRow: React.FC<LineupDayTierRowProps> = ({
+  tierId,
+  dayBadge,
+  dayMeta,
+  tierArtists,
+  isSectionVisible,
+  activeAudioArtistId,
+  slopeDirection = 1,
+  onCardTap,
+  onCardMouseEnter,
+  onCardMouseLeave,
+  onOpenModal,
+  onPlayArtistAudio,
+}) => {
+  const carouselRef = useRef<HTMLDivElement | null>(null);
   const [activeArtistIndex, setActiveArtistIndex] = useState(0);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [isSectionVisible, setIsSectionVisible] = useState(false);
-  const [activeAudioArtistId, setActiveAudioArtistId] = useState<string | null>(null);
-  const carouselRef = useRef<HTMLDivElement | null>(null);
+
   const isProgrammaticScrollRef = useRef(false);
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
@@ -277,66 +296,19 @@ const LineupSectionDesktop: React.FC<Props> = ({
   const startCardIdxRef = useRef(0);
   const hasCenteredRef = useRef(false);
 
-  const triggerFlash = useCallback((artistId: string) => {
-    setActiveFlashes((prev) => ({ ...prev, [artistId]: true }));
-    setTimeout(() => {
-      setActiveFlashes((prev) => ({ ...prev, [artistId]: false }));
-    }, 450);
-  }, []);
-
-  const playArtistAudio = useCallback((artistId: string) => {
-    if (isSec1AudioActive()) {
-      silenceSec1();
-    }
-    setAudioOwner('sec2-lineup');
-    setActiveAudioArtistId(artistId);
-  }, []);
-
-  const stopArtistAudio = useCallback(() => {
-    setActiveAudioArtistId(null);
-    if (getAudioOwner() === 'sec2-lineup') {
-      setAudioOwner('none');
-    }
-  }, []);
-
-  const handleCardMouseEnter = useCallback((artist: Artist, cardIdx: number, artistIdx: number) => {
-    triggerFlash(artist.id);
-    setActiveArtistIndex(artistIdx);
-    setActiveCardIndex(cardIdx);
-    playArtistAudio(artist.id);
-  }, [playArtistAudio, triggerFlash]);
-
-  const handleCardMouseLeave = useCallback(() => {
-    stopArtistAudio();
-  }, [stopArtistAudio]);
-
-  const handleCardTap = useCallback((artist: Artist, cardIdx: number, artistIdx: number) => {
-    if (activeAudioArtistId === artist.id) {
-      // Toggle OFF if already playing
-      stopArtistAudio();
-    } else {
-      // Toggle ON
-      triggerFlash(artist.id);
-      setActiveArtistIndex(artistIdx);
-      setActiveCardIndex(cardIdx);
-      playArtistAudio(artist.id);
-    }
-  }, [activeAudioArtistId, playArtistAudio, stopArtistAudio, triggerFlash]);
-
   // 5 repetitions: Set 0, 1, 2 (CENTER), 3, 4
-  // Enables smooth infinite looping carousel across desktop and mobile
   const REPETITIONS = 5;
   const CENTER_SET = 2;
 
   const handleActiveIndexChange = useCallback((closestIdx: number) => {
     setActiveCardIndex(closestIdx);
-    if (artists.length > 0) {
-      const artistIdx = closestIdx % artists.length;
+    if (tierArtists.length > 0) {
+      const artistIdx = closestIdx % tierArtists.length;
       setActiveArtistIndex(artistIdx);
     }
-  }, [artists.length]);
+  }, [tierArtists.length]);
 
-  // High performance offset-linked animation hook (gated to isSectionVisible)
+  // Kinetic offset-linked animation hook (gated to isSectionVisible)
   const { scheduleUpdate } = useCarouselOffset(carouselRef, {
     enabled: isSectionVisible,
     onActiveIndexChange: handleActiveIndexChange,
@@ -347,78 +319,10 @@ const LineupSectionDesktop: React.FC<Props> = ({
     maxParallaxX: 30,
     maxTranslateY: 130,
     maxRotateZ: 8.5,
+    slopeDirection,
   });
 
-
-  // Check section visibility: if Section 2 is not scrolled into view, stay idle and stop audio
-  const checkAudioEligibility = useCallback(() => {
-    const sec = sectionRef.current;
-    if (!sec) return;
-    const r = sec.getBoundingClientRect();
-    const inView = r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
-    setIsSectionVisible(inView);
-
-    if (!inView) {
-      if (activeAudioArtistId !== null) {
-        stopArtistAudio();
-      }
-    }
-  }, [activeAudioArtistId, stopArtistAudio]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', checkAudioEligibility, { passive: true });
-    checkAudioEligibility();
-    return () => window.removeEventListener('scroll', checkAudioEligibility);
-  }, [checkAudioEligibility]);
-
-  // Section visibility observer
-  useEffect(() => {
-    const sec = sectionRef.current;
-    if (!sec) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          setIsSectionVisible(entry.isIntersecting);
-          checkAudioEligibility();
-        });
-      },
-      { threshold: [0, 0.15, 0.3, 0.5] }
-    );
-
-    observer.observe(sec);
-    return () => observer.disconnect();
-  }, [checkAudioEligibility]);
-
-  // Listen to Audio Coordinator events for immediate mutual exclusion
-  useEffect(() => {
-    const handleOwnerChange = (e: Event) => {
-      const customEvent = e as CustomEvent<{ owner: string }>;
-      if (customEvent.detail?.owner === 'sec1-storytelling') {
-        stopArtistAudio();
-      }
-    };
-
-    const handleSec1Silenced = () => {
-      checkAudioEligibility();
-    };
-
-    const handleSec2Silenced = () => {
-      stopArtistAudio();
-    };
-
-    window.addEventListener('how:audio-owner-change', handleOwnerChange);
-    window.addEventListener('how:audio-sec2-silenced', handleSec2Silenced);
-    window.addEventListener('how:audio-sec1-silenced', handleSec1Silenced);
-
-    return () => {
-      window.removeEventListener('how:audio-owner-change', handleOwnerChange);
-      window.removeEventListener('how:audio-sec2-silenced', handleSec2Silenced);
-      window.removeEventListener('how:audio-sec1-silenced', handleSec1Silenced);
-    };
-  }, [checkAudioEligibility, stopArtistAudio]);
-
-  // Endless looping sets for smooth continuous carousel navigation
+  // Endless looping sets
   const carouselItems = useMemo(() => {
     const list: {
       artist: Artist;
@@ -428,71 +332,91 @@ const LineupSectionDesktop: React.FC<Props> = ({
     }[] = [];
 
     for (let r = 0; r < REPETITIONS; r++) {
-      artists.forEach((artist, idx) => {
+      tierArtists.forEach((artist, idx) => {
         list.push({
           artist,
-          uniqueKey: `${artist.id}-rep-${r}`,
+          uniqueKey: `${tierId}-${artist.id}-rep-${r}`,
           isClone: r !== CENTER_SET,
           originalIndex: idx,
         });
       });
     }
     return list;
-  }, [artists]);
+  }, [tierArtists, tierId]);
 
-  const handleOpenModal = (artist: Artist) => {
-    if (IS_LINEUP_TEASER_MODE) return;
-    stopArtistAudio();
-    setIsSectionVisible(false); // silence audio when modal is opened
-    const isDay1 =
-      artist.id === 'art-malvin' ||
-      artist.id === 'art-basboi' ||
-      artist.dayLabel?.toLowerCase().includes('1') ||
-      artist.dayLabel?.includes('30');
+  // Deterministic centering on middle set (Set 2) via getBoundingClientRect
+  const centerCarouselMiddle = useCallback((smooth = false) => {
+    const el = carouselRef.current;
+    if (!el || tierArtists.length === 0) return;
 
-    if (isDay1 && onOpenNight1) {
-      onOpenNight1();
-    } else if (onOpenNight2) {
-      onOpenNight2();
-    }
-  };
+    const initialIndex = CENTER_SET * tierArtists.length;
+    const initialCard = el.children[initialIndex] as HTMLElement | undefined;
+    if (!initialCard) return;
 
-  // Center the carousel on the middle set once on initial mount
+    const elRect = el.getBoundingClientRect();
+    const cardRect = initialCard.getBoundingClientRect();
+    if (elRect.width === 0 || cardRect.width === 0) return;
+
+    const offsetFromCenter = (cardRect.left + cardRect.width / 2) - (elRect.left + elRect.width / 2);
+    const targetScroll = Math.round(el.scrollLeft + offsetFromCenter);
+
+    isProgrammaticScrollRef.current = true;
+    el.style.scrollSnapType = 'none';
+    el.scrollTo({
+      left: Math.max(0, targetScroll),
+      behavior: smooth ? 'smooth' : 'instant',
+    });
+    setActiveCardIndex(initialIndex);
+    setActiveArtistIndex(0);
+    scheduleUpdate();
+
+    requestAnimationFrame(() => {
+      el.style.scrollSnapType = 'x mandatory';
+      isProgrammaticScrollRef.current = false;
+      scheduleUpdate();
+    });
+  }, [tierArtists.length, scheduleUpdate]);
+
+  // Center on mount and when layout dimensions are measured
   useEffect(() => {
-    if (hasCenteredRef.current || artists.length === 0) return;
+    if (hasCenteredRef.current || tierArtists.length === 0) return;
     const el = carouselRef.current;
     if (!el) return;
 
     hasCenteredRef.current = true;
-    isProgrammaticScrollRef.current = true;
-    const initialIndex = CENTER_SET * artists.length;
-    setActiveCardIndex(initialIndex);
-    setActiveArtistIndex(0);
+    centerCarouselMiddle(false);
 
-    const initialCard = el.children[initialIndex] as HTMLElement | undefined;
-    if (initialCard) {
-      initialCard.scrollIntoView({ behavior: 'instant' as ScrollBehavior, block: 'nearest', inline: 'center' });
+    const timer = setTimeout(() => {
+      centerCarouselMiddle(false);
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [centerCarouselMiddle, tierArtists.length]);
+
+  // When section enters viewport, ensure alignment is primed
+  useEffect(() => {
+    if (!isSectionVisible) return;
+    const el = carouselRef.current;
+    if (el && el.scrollLeft === 0) {
+      centerCarouselMiddle(false);
     }
     scheduleUpdate();
-    requestAnimationFrame(() => {
-      isProgrammaticScrollRef.current = false;
-    });
-  }, [artists.length, scheduleUpdate]);
+  }, [centerCarouselMiddle, isSectionVisible, scheduleUpdate]);
 
-  // Find currently centered card index in carousel
   const getClosestCardIndex = useCallback(() => {
     const el = carouselRef.current;
     if (!el || el.children.length === 0) return 0;
 
-    const scrollCenter = el.scrollLeft + el.clientWidth / 2;
+    const elRect = el.getBoundingClientRect();
+    const containerCenter = elRect.left + elRect.width / 2;
     let closestIdx = 0;
     let minDiff = Infinity;
 
     for (let i = 0; i < el.children.length; i++) {
       const child = el.children[i] as HTMLElement;
-      if (!child || child.offsetWidth === 0) continue; // Skip hidden elements
-      const childCenter = child.offsetLeft + child.offsetWidth / 2;
-      const diff = Math.abs(scrollCenter - childCenter);
+      if (!child || child.offsetWidth === 0) continue;
+      const childRect = child.getBoundingClientRect();
+      const childCenter = childRect.left + childRect.width / 2;
+      const diff = Math.abs(containerCenter - childCenter);
       if (diff < minDiff) {
         minDiff = diff;
         closestIdx = i;
@@ -507,66 +431,107 @@ const LineupSectionDesktop: React.FC<Props> = ({
     scheduleUpdate();
   };
 
-  // Navigate to specific artist dot
   const scrollToArtist = (targetArtistIdx: number) => {
     const el = carouselRef.current;
-    if (!el || artists.length === 0) return;
+    if (!el || tierArtists.length === 0) return;
 
     const currentIdx = getClosestCardIndex();
-    const currentArtistIdx = currentIdx % artists.length;
+    const currentArtistIdx = currentIdx % tierArtists.length;
 
     let step = targetArtistIdx - currentArtistIdx;
-    if (artists.length > 4) {
-      if (step > artists.length / 2) step -= artists.length;
-      if (step < -artists.length / 2) step += artists.length;
+    if (tierArtists.length > 4) {
+      if (step > tierArtists.length / 2) step -= tierArtists.length;
+      if (step < -tierArtists.length / 2) step += tierArtists.length;
     }
 
     const targetChildIdx = currentIdx + step;
     const targetCard = el.children[targetChildIdx] as HTMLElement | undefined;
 
     if (targetCard) {
-      targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const elRect = el.getBoundingClientRect();
+      const cardRect = targetCard.getBoundingClientRect();
+      const offsetFromCenter = (cardRect.left + cardRect.width / 2) - (elRect.left + elRect.width / 2);
+      const targetScroll = Math.round(el.scrollLeft + offsetFromCenter);
+
+      isProgrammaticScrollRef.current = true;
+      el.scrollTo({
+        left: Math.max(0, targetScroll),
+        behavior: 'smooth',
+      });
       setActiveCardIndex(targetChildIdx);
       setActiveArtistIndex(targetArtistIdx);
       scheduleUpdate();
+      setTimeout(() => {
+        isProgrammaticScrollRef.current = false;
+        scheduleUpdate();
+      }, 350);
+
       if (activeAudioArtistId !== null) {
-        playArtistAudio(artists[targetArtistIdx].id);
+        onPlayArtistAudio(tierArtists[targetArtistIdx].id);
       }
     }
   };
 
   const handleStepNext = () => {
     const el = carouselRef.current;
-    if (!el || artists.length === 0) return;
+    if (!el || tierArtists.length === 0) return;
     const currentIdx = getClosestCardIndex();
     const nextIdx = currentIdx + 1;
     const nextCard = el.children[nextIdx] as HTMLElement | undefined;
     if (nextCard) {
-      nextCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const elRect = el.getBoundingClientRect();
+      const cardRect = nextCard.getBoundingClientRect();
+      const offsetFromCenter = (cardRect.left + cardRect.width / 2) - (elRect.left + elRect.width / 2);
+      const targetScroll = Math.round(el.scrollLeft + offsetFromCenter);
+
+      isProgrammaticScrollRef.current = true;
+      el.scrollTo({
+        left: Math.max(0, targetScroll),
+        behavior: 'smooth',
+      });
       setActiveCardIndex(nextIdx);
-      const nextArtistIdx = nextIdx % artists.length;
+      const nextArtistIdx = nextIdx % tierArtists.length;
       setActiveArtistIndex(nextArtistIdx);
       scheduleUpdate();
+      setTimeout(() => {
+        isProgrammaticScrollRef.current = false;
+        scheduleUpdate();
+      }, 350);
+
       if (activeAudioArtistId !== null) {
-        playArtistAudio(artists[nextArtistIdx].id);
+        onPlayArtistAudio(tierArtists[nextArtistIdx].id);
       }
     }
   };
 
   const handleStepPrev = () => {
     const el = carouselRef.current;
-    if (!el || artists.length === 0) return;
+    if (!el || tierArtists.length === 0) return;
     const currentIdx = getClosestCardIndex();
     const prevIdx = Math.max(0, currentIdx - 1);
     const prevCard = el.children[prevIdx] as HTMLElement | undefined;
     if (prevCard) {
-      prevCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const elRect = el.getBoundingClientRect();
+      const cardRect = prevCard.getBoundingClientRect();
+      const offsetFromCenter = (cardRect.left + cardRect.width / 2) - (elRect.left + elRect.width / 2);
+      const targetScroll = Math.round(el.scrollLeft + offsetFromCenter);
+
+      isProgrammaticScrollRef.current = true;
+      el.scrollTo({
+        left: Math.max(0, targetScroll),
+        behavior: 'smooth',
+      });
       setActiveCardIndex(prevIdx);
-      const prevArtistIdx = (prevIdx + artists.length) % artists.length;
+      const prevArtistIdx = (prevIdx + tierArtists.length) % tierArtists.length;
       setActiveArtistIndex(prevArtistIdx);
       scheduleUpdate();
+      setTimeout(() => {
+        isProgrammaticScrollRef.current = false;
+        scheduleUpdate();
+      }, 350);
+
       if (activeAudioArtistId !== null) {
-        playArtistAudio(artists[prevArtistIdx].id);
+        onPlayArtistAudio(tierArtists[prevArtistIdx].id);
       }
     }
   };
@@ -660,13 +625,10 @@ const LineupSectionDesktop: React.FC<Props> = ({
       // Natural drag / flick threshold: 40px
       let targetIdx = startIdx;
       if (deltaX < -40) {
-        // Dragged left -> advance to next card
         targetIdx = Math.min(totalCards - 1, startIdx + 1);
       } else if (deltaX > 40) {
-        // Dragged right -> go to previous card
         targetIdx = Math.max(0, startIdx - 1);
       } else {
-        // Subtle move -> snap to closest card
         targetIdx = getClosestCardIndex();
       }
 
@@ -674,11 +636,11 @@ const LineupSectionDesktop: React.FC<Props> = ({
       if (targetCard) {
         targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         setActiveCardIndex(targetIdx);
-        if (artists.length > 0) {
-          const nextArtistIdx = targetIdx % artists.length;
+        if (tierArtists.length > 0) {
+          const nextArtistIdx = targetIdx % tierArtists.length;
           setActiveArtistIndex(nextArtistIdx);
           if (activeAudioArtistId !== null) {
-            playArtistAudio(artists[nextArtistIdx].id);
+            onPlayArtistAudio(tierArtists[nextArtistIdx].id);
           }
         }
       }
@@ -697,14 +659,12 @@ const LineupSectionDesktop: React.FC<Props> = ({
   };
 
   return (
-    <section id="lineup" ref={sectionRef} className="cinematic-section">
-      <h2 className="section-headline">
-        THE GUESTS
-      </h2>
-
-      <p className="section-subheadline">
-        When the gates unlock, the silence breaks.
-      </p>
+    <div className="lineup-tier-block" id={tierId}>
+      {/* Tier Header: Day Badge & Ambient Venue Meta */}
+      <div className="lineup-tier-header">
+        <span className="lineup-tier-badge">{dayBadge}</span>
+        <span className="lineup-tier-meta">{dayMeta}</span>
+      </div>
 
       {/* Kinetic Offset-Linked Carousel with 3D Tilt & Video Interaction */}
       <div
@@ -714,13 +674,13 @@ const LineupSectionDesktop: React.FC<Props> = ({
         onKeyDown={handleKeyDown}
         tabIndex={0}
         role="region"
-        aria-label="Lineup Artists Carousel"
+        aria-label={`${dayBadge} Artists Carousel`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={finishDrag}
         onPointerCancel={finishDrag}
         onClickCapture={handleClickCapture}
-        className={`guests-editorial-grid ${artists.length === 1 ? 'is-single-guest' : ''}`}
+        className={`guests-editorial-grid ${tierArtists.length === 1 ? 'is-single-guest' : ''}`}
       >
         {carouselItems.map((item, index) => {
           const isCardActive = isSectionVisible && index === activeCardIndex;
@@ -734,30 +694,29 @@ const LineupSectionDesktop: React.FC<Props> = ({
               isClone={item.isClone}
               isCardActive={isCardActive}
               isAudioPlaying={isSectionVisible && activeAudioArtistId === item.artist.id}
-              isFlashing={!!activeFlashes[item.artist.id]}
-              onCardTap={handleCardTap}
-              onCardMouseEnter={handleCardMouseEnter}
-              onCardMouseLeave={handleCardMouseLeave}
-              onOpenModal={handleOpenModal}
+              onCardTap={onCardTap}
+              onCardMouseEnter={onCardMouseEnter}
+              onCardMouseLeave={onCardMouseLeave}
+              onOpenModal={onOpenModal}
             />
           );
         })}
       </div>
 
-      {/* Mobile Carousel Indicators & Quick Selector */}
+      {/* Carousel Navigation Indicators */}
       <div className="guest-carousel-mobile-controls">
         <div className="guest-carousel-navigation-bar">
           <button
             type="button"
             className="guest-carousel-arrow-btn"
             onClick={handleStepPrev}
-            aria-label="Previous Guest"
+            aria-label={`Previous ${dayBadge} Guest`}
           >
             <ChevronLeft size={16} />
           </button>
 
           <div className="guest-carousel-dots">
-            {artists.map((artist, idx) => (
+            {tierArtists.map((artist, idx) => (
               <button
                 key={artist.id}
                 type="button"
@@ -775,7 +734,7 @@ const LineupSectionDesktop: React.FC<Props> = ({
             type="button"
             className="guest-carousel-arrow-btn"
             onClick={handleStepNext}
-            aria-label="Next Guest"
+            aria-label={`Next ${dayBadge} Guest`}
           >
             <ChevronRight size={16} />
           </button>
@@ -786,6 +745,199 @@ const LineupSectionDesktop: React.FC<Props> = ({
           <span className="guest-carousel-swipe-arrow">→</span>
         </div>
       </div>
+    </div>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* LineupSectionDesktop: Dual Stacked Tiers (Day 1 & Day 2)                   */
+/* -------------------------------------------------------------------------- */
+const LineupSectionDesktop: React.FC<Props> = ({
+  artists,
+  onToast: _onToast,
+  onOpenNight1,
+  onOpenNight2,
+}) => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
+  const [activeAudioArtistId, setActiveAudioArtistId] = useState<string | null>(null);
+
+  // Partition or fallback to day1Artists and day2Artists
+  const day1List = useMemo(() => {
+    const filtered = artists.filter(
+      (a) => a.dayLabel?.toLowerCase().includes('1') || a.dayLabel?.includes('30')
+    );
+    return filtered.length > 0 ? filtered : defaultDay1Artists;
+  }, [artists]);
+
+  const day2List = useMemo(() => {
+    const filtered = artists.filter(
+      (a) => a.dayLabel?.toLowerCase().includes('2') || a.dayLabel?.includes('31')
+    );
+    return filtered.length > 0 ? filtered : defaultDay2Artists;
+  }, [artists]);
+
+  const playArtistAudio = useCallback((artistId: string) => {
+    if (IS_LINEUP_TEASER_MODE) return;
+    if (isSec1AudioActive()) {
+      silenceSec1();
+    }
+    setAudioOwner('sec2-lineup');
+    setActiveAudioArtistId(artistId);
+  }, []);
+
+  const stopArtistAudio = useCallback(() => {
+    setActiveAudioArtistId(null);
+    if (getAudioOwner() === 'sec2-lineup') {
+      setAudioOwner('none');
+    }
+  }, []);
+
+  const handleCardMouseEnter = useCallback((artist: Artist, _cardIdx: number, _artistIdx: number) => {
+    playArtistAudio(artist.id);
+  }, [playArtistAudio]);
+
+  const handleCardMouseLeave = useCallback(() => {
+    stopArtistAudio();
+  }, [stopArtistAudio]);
+
+  const handleCardTap = useCallback((artist: Artist, _cardIdx: number, _artistIdx: number) => {
+    if (activeAudioArtistId === artist.id) {
+      stopArtistAudio();
+    } else {
+      playArtistAudio(artist.id);
+    }
+  }, [activeAudioArtistId, playArtistAudio, stopArtistAudio]);
+
+  // Check section visibility: if Section 2 is not scrolled into view, stay idle and stop audio
+  const checkAudioEligibility = useCallback(() => {
+    const sec = sectionRef.current;
+    if (!sec) return;
+    const r = sec.getBoundingClientRect();
+    const inView = r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
+    setIsSectionVisible(inView);
+
+    if (!inView) {
+      if (activeAudioArtistId !== null) {
+        stopArtistAudio();
+      }
+    }
+  }, [activeAudioArtistId, stopArtistAudio]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', checkAudioEligibility, { passive: true });
+    checkAudioEligibility();
+    return () => window.removeEventListener('scroll', checkAudioEligibility);
+  }, [checkAudioEligibility]);
+
+  // Section visibility observer
+  useEffect(() => {
+    const sec = sectionRef.current;
+    if (!sec) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsSectionVisible(entry.isIntersecting);
+          checkAudioEligibility();
+        });
+      },
+      { threshold: [0, 0.15, 0.3, 0.5] }
+    );
+
+    observer.observe(sec);
+    return () => observer.disconnect();
+  }, [checkAudioEligibility]);
+
+  // Listen to Audio Coordinator events for immediate mutual exclusion
+  useEffect(() => {
+    const handleOwnerChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ owner: string }>;
+      if (customEvent.detail?.owner === 'sec1-storytelling') {
+        stopArtistAudio();
+      }
+    };
+
+    const handleSec1Silenced = () => {
+      checkAudioEligibility();
+    };
+
+    const handleSec2Silenced = () => {
+      stopArtistAudio();
+    };
+
+    window.addEventListener('how:audio-owner-change', handleOwnerChange);
+    window.addEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+    window.addEventListener('how:audio-sec1-silenced', handleSec1Silenced);
+
+    return () => {
+      window.removeEventListener('how:audio-owner-change', handleOwnerChange);
+      window.removeEventListener('how:audio-sec2-silenced', handleSec2Silenced);
+      window.removeEventListener('how:audio-sec1-silenced', handleSec1Silenced);
+    };
+  }, [checkAudioEligibility, stopArtistAudio]);
+
+  const handleOpenModal = (artist: Artist) => {
+    if (IS_LINEUP_TEASER_MODE) return;
+    stopArtistAudio();
+    setIsSectionVisible(false);
+    const isDay1 =
+      artist.id === 'art-malvin' ||
+      artist.id === 'art-basboi' ||
+      artist.dayLabel?.toLowerCase().includes('1') ||
+      artist.dayLabel?.includes('30');
+
+    if (isDay1 && onOpenNight1) {
+      onOpenNight1();
+    } else if (onOpenNight2) {
+      onOpenNight2();
+    }
+  };
+
+  return (
+    <section id="lineup" ref={sectionRef} className="cinematic-section">
+      <h2 className="section-headline">
+        THE GUESTS
+      </h2>
+
+      <p className="section-subheadline">
+        When the gates unlock, the silence breaks.
+      </p>
+
+      {/* Tier 1: Day 1 · 30 Okt (Top-Left to Bottom-Right / Kanan Bawah ke Atas Kiri) */}
+      <LineupDayTierRow
+        tierId="tier-day-1"
+        slopeDirection={1}
+        dayBadge="DAY 1 · 30 OKTOBER 2026"
+        dayMeta="GATE OPENS 15:00 WIB // MIZU COMMONROOM"
+        tierArtists={day1List}
+        isSectionVisible={isSectionVisible}
+        activeAudioArtistId={activeAudioArtistId}
+        onCardTap={handleCardTap}
+        onCardMouseEnter={handleCardMouseEnter}
+        onCardMouseLeave={handleCardMouseLeave}
+        onOpenModal={handleOpenModal}
+        onPlayArtistAudio={playArtistAudio}
+      />
+
+      {/* Atmospheric Gold Hairline Divider */}
+      <div className="lineup-tier-divider" />
+
+      {/* Tier 2: Day 2 · 31 Okt (Bottom-Left to Top-Right / Kiri Bawah ke Kanan Atas) */}
+      <LineupDayTierRow
+        tierId="tier-day-2"
+        slopeDirection={-1}
+        dayBadge="DAY 2 · 31 OKTOBER 2026"
+        dayMeta="GATE OPENS 15:00 WIB // MIZU COMMONROOM"
+        tierArtists={day2List}
+        isSectionVisible={isSectionVisible}
+        activeAudioArtistId={activeAudioArtistId}
+        onCardTap={handleCardTap}
+        onCardMouseEnter={handleCardMouseEnter}
+        onCardMouseLeave={handleCardMouseLeave}
+        onOpenModal={handleOpenModal}
+        onPlayArtistAudio={playArtistAudio}
+      />
     </section>
   );
 };

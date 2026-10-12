@@ -78,11 +78,11 @@
   box-shadow: 0 0 0 rgba(0, 0, 0, 0), 0 0 0 rgba(197, 168, 105, 0);
 }
 
-/* STATE 2: Scrolled (Sticky Pill Capsule melayang - Diperlebar Proporsional) */
+/* STATE 2: Scrolled (Sticky Pill Capsule melayang - Proporsional Kompak) */
 .navbar-capsule-bar.is-morphed,
 .cinematic-navbar.is-morphed .navbar-capsule-bar,
 .cinematic-navbar.is-morphed .navbar-inner-bar {
-  max-width: 1140px;
+  max-width: 1040px;
   margin-top: 14px;
   border-radius: 25px; /* Exact half of 50px = perfect smooth capsule pill */
   padding: 0 1.5rem 0 1.85rem;
@@ -97,7 +97,7 @@
   .navbar-capsule-bar.is-morphed,
   .cinematic-navbar.is-morphed .navbar-capsule-bar,
   .cinematic-navbar.is-morphed .navbar-inner-bar {
-    max-width: 1240px;
+    max-width: 1120px;
     padding: 0 1.75rem 0 2rem;
   }
 }
@@ -125,10 +125,19 @@
 }
 
 /* Desktop Nav Cluster */
+.nav-right-cluster {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .header-desktop-nav,
 .nav-links-cluster {
   display: none;
   align-items: center;
+  white-space: nowrap;
   gap: 0.85rem;
 }
 
@@ -136,7 +145,7 @@
   .header-desktop-nav,
   .nav-links-cluster {
     display: flex;
-    gap: 1.1rem;
+    gap: 1rem;
   }
 }
 

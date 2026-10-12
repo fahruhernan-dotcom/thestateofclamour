@@ -10,6 +10,7 @@ interface UseCarouselOffsetOptions {
   maxParallaxX?: number; // max inner parallax translation in % (default: 30)
   maxTranslateY?: number; // vertical ascent/descent along the diagonal path (default: 135)
   maxRotateZ?: number; // rotational tilt along the diagonal path in deg (default: 8.5)
+  slopeDirection?: 1 | -1; // +1: descending diagonal (Day 1), -1: ascending diagonal (Day 2)
 }
 
 /**
@@ -30,12 +31,13 @@ export function useCarouselOffset(
     enabled = true,
     onActiveIndexChange,
     maxOffsetDistance = 420,
-    minScale = 0.62,
-    maxBlur = 6,
-    minOpacity = 0.25,
+    minScale = 0.65,
+    maxBlur = 0,
+    minOpacity = 0.45,
     maxParallaxX = 30,
     maxTranslateY = 135,
     maxRotateZ = 8.5,
+    slopeDirection = 1,
   } = options;
 
   const rafIdRef = useRef<number | null>(null);
@@ -48,15 +50,14 @@ export function useCarouselOffset(
   }, [onActiveIndexChange]);
 
   const updateOffsets = useCallback(() => {
-    if (!enabled) return;
     const container = containerRef.current;
     if (!container) return;
 
-    const containerWidth = container.clientWidth;
-    if (containerWidth === 0) return;
+    const containerRect = container.getBoundingClientRect();
+    if (containerRect.width === 0) return;
 
-    const scrollCenter = container.scrollLeft + containerWidth / 2;
-    const range = maxOffsetDistance > 0 ? maxOffsetDistance : Math.max(380, containerWidth * 0.4);
+    const containerCenter = containerRect.left + containerRect.width / 2;
+    const range = maxOffsetDistance > 0 ? maxOffsetDistance : Math.max(380, containerRect.width * 0.4);
 
     const children = Array.from(container.children) as HTMLElement[];
     let closestIndex = 0;
@@ -66,8 +67,9 @@ export function useCarouselOffset(
       const child = children[i];
       if (!child || child.offsetWidth === 0) continue;
 
-      const cardCenter = child.offsetLeft + child.offsetWidth / 2;
-      const offset = cardCenter - scrollCenter;
+      const childRect = child.getBoundingClientRect();
+      const cardCenter = childRect.left + childRect.width / 2;
+      const offset = cardCenter - containerCenter;
       const absOffset = Math.abs(offset);
 
       if (absOffset < minAbsOffset) {
@@ -75,8 +77,8 @@ export function useCarouselOffset(
         closestIndex = i;
       }
 
-      // Generous 90px spotlight deadzone: center card is 100% razor-sharp, zero blur, scale 1.0, full opacity
-      const DEADZONE = 90;
+      // Spotlight deadzone (100px): center card is 100% razor-sharp, zero blur, scale 1.0, full opacity
+      const DEADZONE = 100;
       const isCenterSpotlight = absOffset <= DEADZONE;
 
       const effOffset = isCenterSpotlight ? 0 : (absOffset - DEADZONE) * Math.sign(offset);
@@ -90,19 +92,20 @@ export function useCarouselOffset(
       // Trajectory norm extends beyond ±1 so peripheral cards continue along the diagonal path
       const normPath = Math.max(-2.5, Math.min(2.5, effOffset / effectiveRange));
 
-      // Sine easing for organic physical momentum matching Motion.dev
+      // Sine easing for organic physical momentum
       const easeNorm = Math.sin((absNorm * Math.PI) / 2);
 
+      const slope = slopeDirection === -1 ? -1 : 1;
       const scale = isCenterSpotlight ? 1 : 1 - easeNorm * (1 - minScale);
       const blur = isCenterSpotlight ? 0 : easeNorm * maxBlur;
       const opacity = isCenterSpotlight ? 1 : 1 - easeNorm * (1 - minOpacity);
       const parallaxX = isCenterSpotlight ? 0 : -norm * maxParallaxX;
-      const translateY = isCenterSpotlight ? 0 : normPath * maxTranslateY;
-      const rotateZ = isCenterSpotlight ? 0 : normPath * maxRotateZ;
+      const translateY = isCenterSpotlight ? 0 : slope * normPath * maxTranslateY;
+      const rotateZ = isCenterSpotlight ? 0 : slope * normPath * maxRotateZ;
 
       const sStr = scale.toFixed(3);
-      const bStr = blur <= 0.15 ? '0' : blur.toFixed(1);
-      const fStr = blur <= 0.15 ? 'none' : `blur(${blur.toFixed(1)}px)`;
+      const bStr = blur <= 0.1 ? '0' : blur.toFixed(1);
+      const fStr = blur <= 0.1 ? 'none' : `blur(${blur.toFixed(1)}px)`;
       const oStr = opacity.toFixed(3);
       const pStr = parallaxX.toFixed(1);
       const yStr = translateY.toFixed(1);
@@ -146,6 +149,7 @@ export function useCarouselOffset(
     maxParallaxX,
     maxTranslateY,
     maxRotateZ,
+    slopeDirection,
   ]);
 
   const scheduleUpdate = useCallback(() => {
