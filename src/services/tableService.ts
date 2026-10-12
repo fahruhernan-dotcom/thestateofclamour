@@ -1,6 +1,6 @@
 // Service to fetch and subscribe to table reservations from Supabase with resilient offline fallback
 import { supabase, isSupabaseConfigured } from './supabaseClient';
-import { TableLiveState, TableStatus } from '../types/tableTypes';
+import { TableLiveState } from '../types/tableTypes';
 import { INITIAL_OCCUPIED_SPOTS, getAllSpots } from '../data/floorPlanData';
 
 const TABLE_NAME = import.meta.env.VITE_SUPABASE_TABLE_NAME || 'table_reservations';
@@ -59,9 +59,10 @@ export async function fetchTableStates(
       data.forEach(row => {
         const spotId = row.spot_id || row.spotId || row.id;
         if (spotId) {
+          const isReserved = row.is_reserved === true || row.status === 'reserved' || row.status === 'occupied';
           map[spotId] = {
             spotId,
-            status: (row.status as TableStatus) || 'available',
+            status: isReserved ? 'reserved' : 'available',
             day: row.day || day,
             reservedBy: row.reserved_by || row.reservedBy,
             updatedAt: row.updated_at || row.updatedAt
