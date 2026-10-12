@@ -330,7 +330,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
                     >
                       <div className="hotspot-badge">
                         {isOccupied && <Lock className="lock-icon-badge" />}
-                        <span>{spot.code}</span>
+                        <span>{spot.code.startsWith('SOFA ') ? spot.code.replace('SOFA ', 'SF-') : spot.code}</span>
                       </div>
                     </button>
                   );
