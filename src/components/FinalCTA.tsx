@@ -55,6 +55,9 @@ export const FinalCTA: React.FC<Props> = ({ onToast }) => {
 
   return (
     <section className="final-gateway-section">
+      {/* Background Photo */}
+      <div className="final-gateway-backdrop" aria-hidden="true" />
+
       <div className="final-gateway-panel">
         <h2 className="section-headline" style={{ marginBottom: '2.25rem' }}>
           WELCOME TO<br />THE CONTINENTAL
