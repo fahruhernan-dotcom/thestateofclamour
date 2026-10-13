@@ -33,7 +33,7 @@ export const EventReservationSection: React.FC<Props> = ({
   }, [initialPackageId]);
 
   const activeAdmin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
-  const dayTitleLabel = day === 'day-1' ? 'DAY 1 // JUMAT, 30 OKT (SWEAR IN CONTINENTAL)' : 'DAY 2 // SABTU, 31 OKT (THE UNDER-VAULT)';
+  const dayTitleLabel = day === 'day-1' ? 'DAY 1 // JUMAT, 30 OKT (SWEAR IN CONTINENTAL)' : 'DAY 2 // SABTU, 31 OKT (SWEAR IN CONTINENTAL)';
 
   const waReservation = buildWhatsAppReservationUrl({
     day,

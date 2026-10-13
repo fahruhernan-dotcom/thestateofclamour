@@ -279,7 +279,7 @@ export const FloatingNavbar: React.FC<Props> = ({
                   currentView === 'event-night-2' ? 'header-nav-link--active active-pill' : ''
                 }`}
                 onClick={handleNight2Click}
-                title="Day 2 // The Under-Vault"
+                title="Day 2 // Swear in Continental"
                 style={{ background: 'transparent', cursor: 'pointer' }}
               >
                 <span className="nav-roll-inner">
@@ -402,7 +402,7 @@ export const FloatingNavbar: React.FC<Props> = ({
               >
                 <div className="mobile-nav-item-content">
                   <div className="mobile-nav-title-row">
-                    <span className="mobile-nav-item-title">Day 2 · The Under-Vault</span>
+                    <span className="mobile-nav-item-title">Day 2 · Swear in Continental</span>
                     <span className="mobile-nav-date-badge">31 OKT</span>
                   </div>
                   <span className="mobile-nav-item-sub">Tetra Solo &amp; Mizu Commonroom</span>

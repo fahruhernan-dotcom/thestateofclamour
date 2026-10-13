@@ -328,8 +328,8 @@ export function buildWhatsAppReservationUrl({
     ? (day === 'day-1' ? pkg.formattedMinSpendDay1 : pkg.formattedMinSpendDay2)
     : '-';
 
-  const dayLabel = day === 'day-1' ? 'DAY 1 (Jumat, 30 Okt 2026 - Swear In Continental)' : 'DAY 2 (Sabtu, 31 Okt 2026 - The Under-Vault)';
-  const eventTheme = day === 'day-1' ? 'SWEAR IN CONTINENTAL' : 'THE UNDER-VAULT';
+  const dayLabel = day === 'day-1' ? 'DAY 1 (Jumat, 30 Okt 2026 - Swear in Continental)' : 'DAY 2 (Sabtu, 31 Okt 2026 - Swear in Continental)';
+  const eventTheme = 'SWEAR IN CONTINENTAL';
 
   let message = `Halo ${admin.name},\n`;
   message += `Saya tertarik untuk melakukan reservasi meja/sofa di acara *THE STATE OF CLAMOUR: ${eventTheme}*.\n\n`;
@@ -371,7 +371,7 @@ export function buildWhatsAppReservationUrl({
 
 export function buildAdminGeneralInquiryUrl(day: 'day-1' | 'day-2') {
   const admin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
-  const eventTheme = day === 'day-1' ? 'Swear in Continental' : 'The Under-Vault';
+  const eventTheme = 'Swear in Continental';
   const message = `Halo ${admin.name}, saya ingin konsultasi mengenai tiket & reservasi meja untuk acara The State of Clamour: ${eventTheme} (${admin.dateLabel}). Mohon informasinya. Terima kasih!`;
   const url = `https://wa.me/${admin.phone}?text=${encodeURIComponent(message)}`;
   return {

@@ -78,12 +78,12 @@ export const StageRundownMobile: React.FC<Props> = ({
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenNight2(); } }}
           role="button"
           tabIndex={0}
-          aria-label="Buka detail acara Day 2 — The Under-Vault"
+          aria-label="Buka detail acara Day 2 — Swear in Continental"
         >
           <div className="rundown-mobile-banner">
             <img
               src="/assets/gothic_cathedral_ritual_concert.png"
-              alt="Day 2 — The Under-Vault"
+              alt="Day 2 — Swear in Continental"
               className="rundown-mobile-banner-img"
               loading="lazy"
               decoding="async"
@@ -91,12 +91,12 @@ export const StageRundownMobile: React.FC<Props> = ({
             <div className="rundown-mobile-banner-scrim" />
             <div className="rundown-mobile-badge-row">
               <span className="rundown-mobile-night-tag">DAY 2 · 31 OKT</span>
-              <span className="rundown-mobile-venue-tag">THE UNDER-VAULT</span>
+              <span className="rundown-mobile-venue-tag">SWEAR IN CONTINENTAL</span>
             </div>
           </div>
 
           <div className="rundown-mobile-body">
-            <h3 className="rundown-mobile-title">DAY 2 — THE UNDER-VAULT</h3>
+            <h3 className="rundown-mobile-title">DAY 2 — SWEAR IN CONTINENTAL</h3>
             <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
               Pengalaman rave berkecepatan 142 BPM dengan visual laser strobo monokromatik dan tata suara Funktion-One.

@@ -12,8 +12,6 @@ import {
   ZoomOut,
   RotateCcw,
   Move,
-  Map as MapIcon,
-  LayoutGrid,
   Calendar
 } from 'lucide-react';
 import '../../styles/floorplan.css';
@@ -58,7 +56,6 @@ export const FloorPlanViewer: React.FC<Props> = ({
   } = useTableAvailability(day, initialFloor);
 
   const [activeCategory, setActiveCategory] = useState<'all' | SpotCategory>('all');
-  const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
 
   const {
     scale,
@@ -124,7 +121,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
               <Calendar size={13} className="floorplan-day-icon" />
               <div className="floorplan-day-text">
                 <span className="floorplan-day-title">DAY 2</span>
-                <span className="floorplan-day-sub">31 OKT · THE UNDER-VAULT</span>
+                <span className="floorplan-day-sub">31 OKT · SWEAR IN CONTINENTAL</span>
               </div>
             </button>
           </div>
@@ -157,28 +154,6 @@ export const FloorPlanViewer: React.FC<Props> = ({
               <Layers size={14} />
               <span>MIZU COMMONROOM</span>
               <span className="floor-tab-badge">VIP &amp; MEZZANINE</span>
-            </button>
-          </div>
-
-          {/* View Mode Toggle: Denah vs Daftar Meja */}
-          <div className="view-mode-toggle" role="tablist" aria-label="Pilihan Tampilan">
-            <button
-              type="button"
-              className={`view-mode-btn ${viewMode === 'map' ? 'is-active' : ''}`}
-              onClick={() => setViewMode('map')}
-              title="Tampilan Denah Peta Interaktif"
-            >
-              <MapIcon size={13} />
-              <span>Denah</span>
-            </button>
-            <button
-              type="button"
-              className={`view-mode-btn ${viewMode === 'list' ? 'is-active' : ''}`}
-              onClick={() => setViewMode('list')}
-              title="Tampilan Daftar Meja Cepat"
-            >
-              <LayoutGrid size={13} />
-              <span>Daftar Meja</span>
             </button>
           </div>
 
@@ -226,11 +201,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
       <div className="floorplan-guide-banner">
         <div className="floorplan-guide-item">
           <Info size={13} style={{ color: '#d1c9bc', flexShrink: 0 }} />
-          <span>
-            {viewMode === 'map'
-              ? 'Ketuk pin meja untuk melihat spesifikasi, harga minimum spend, dan reservasi WhatsApp.'
-              : 'Pilih meja dari daftar berikut untuk melihat spesifikasi dan reservasi langsung.'}
-          </span>
+          <span>Ketuk pin meja untuk melihat spesifikasi, harga minimum spend, dan reservasi WhatsApp.</span>
         </div>
         <div className="floorplan-guide-legend">
           <span className="floorplan-legend-item available">
@@ -242,188 +213,123 @@ export const FloorPlanViewer: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Viewport: Conditional between Map Canvas and Table List View */}
-      {viewMode === 'list' ? (
-        <div className="floorplan-list-view">
-          <div className="floorplan-list-grid">
-            {filteredSpots.map(spot => {
-              const liveState = states[spot.id];
-              const isOccupied = liveState?.status === 'reserved' || liveState?.status === 'occupied' || liveState?.status === 'locked';
-              const isSelected = selectedSpotId === spot.id;
-              const formattedPrice = day === 'day-1' ? spot.formattedMinSpendDay1 : spot.formattedMinSpendDay2;
-
-              return (
-                <div
-                  key={spot.id}
-                  className={`floorplan-table-card ${isOccupied ? 'is-occupied' : 'is-available'} ${isSelected ? 'is-selected' : ''}`}
-                  onClick={() => selectSpot(spot.id)}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <div className="table-card-top">
-                    <span className="table-card-code">{spot.code}</span>
-                    <span className={`table-card-status ${isOccupied ? 'occupied' : 'available'}`}>
-                      {isOccupied ? (
-                        <>
-                          <Lock size={10} /> Terisi
-                        </>
-                      ) : (
-                        <>
-                          <span className="card-status-dot available" /> Tersedia
-                        </>
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="table-card-name">{spot.name}</div>
-
-                  <div className="table-card-meta">
-                    <span className="table-card-capacity">
-                      {spot.capacityText} · {spot.complementTickets || 2} Tiket
-                    </span>
-                    <span className="table-card-price">{formattedPrice}</span>
-                  </div>
-
-                  {spot.formattedBookingFee && (
-                    <div style={{ fontSize: '0.68rem', color: '#c5a869', marginTop: '0.2rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                      Booking Fee: <strong>{spot.formattedBookingFee}</strong>
-                    </div>
-                  )}
-
-                  <button
-                    type="button"
-                    className="table-card-action-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      selectSpot(spot.id);
-                    }}
-                  >
-                    {isOccupied ? 'Lihat Spesifikasi' : 'Pilih & Reservasi →'}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : (
-        /* Interactive Map Canvas Viewport */
+      {/* Interactive Map Canvas Viewport (Auto Denah) */}
+      <div
+        ref={containerRef}
+        className={`floorplan-canvas-frame ${isDragging ? 'is-dragging' : ''}`}
+        onMouseDown={handleMouseDown}
+        onDoubleClick={handleDoubleClick}
+      >
+        {/* Transform Layer for Zoom & Pan */}
         <div
-          ref={containerRef}
-          className={`floorplan-canvas-frame ${isDragging ? 'is-dragging' : ''}`}
-          onMouseDown={handleMouseDown}
-          onDoubleClick={handleDoubleClick}
+          ref={contentRef}
+          className="floorplan-zoom-content"
+          style={{
+            transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})`,
+            transition: isDragging ? 'none' : 'transform 0.15s ease-out'
+          }}
         >
-          {/* Transform Layer for Zoom & Pan */}
+          {/* Architectural Stage Wrapped tightly to Exact Image Aspect Ratio */}
           <div
-            ref={contentRef}
-            className="floorplan-zoom-content"
+            className="floorplan-map-stage"
             style={{
-              transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})`,
-              transition: isDragging ? 'none' : 'transform 0.15s ease-out'
+              aspectRatio: floorAspectRatio
             }}
           >
-            {/* Architectural Stage Wrapped tightly to Exact Image Aspect Ratio */}
-            <div
-              className="floorplan-map-stage"
-              style={{
-                aspectRatio: floorAspectRatio
-              }}
-            >
-              {/* Architectural Background Render */}
-              <img
-                src={floorImageUrl}
-                alt={`Denah Arsitektural Lantai ${currentFloor}`}
-                className="floorplan-base-image"
-                loading="eager"
-                draggable={false}
-              />
+            {/* Architectural Background Render */}
+            <img
+              src={floorImageUrl}
+              alt={`Denah Arsitektural Lantai ${currentFloor}`}
+              className="floorplan-base-image"
+              loading="eager"
+              draggable={false}
+            />
 
-              <div className="floorplan-vignette" />
+            <div className="floorplan-vignette" />
 
-              {/* Hotspots Layer - 1:1 Matched with Image Pixels */}
-              <div className="floorplan-hotspots-layer">
-                {filteredSpots.map(spot => {
-                  const liveState = states[spot.id];
-                  const isOccupied = liveState?.status === 'reserved' || liveState?.status === 'occupied' || liveState?.status === 'locked';
-                  const isSelected = selectedSpotId === spot.id;
+            {/* Hotspots Layer - 1:1 Matched with Image Pixels */}
+            <div className="floorplan-hotspots-layer">
+              {filteredSpots.map(spot => {
+                const liveState = states[spot.id];
+                const isOccupied = liveState?.status === 'reserved' || liveState?.status === 'occupied' || liveState?.status === 'locked';
+                const isSelected = selectedSpotId === spot.id;
 
-                  return (
-                    <button
-                      key={spot.id}
-                      type="button"
-                      className={`table-hotspot-pin ${isOccupied ? 'is-occupied' : 'is-available'} ${isSelected ? 'is-selected' : ''}`}
-                      style={{
-                        left: `${spot.x}%`,
-                        top: `${spot.y}%`
-                      }}
-                      onClick={(e) => {
-                        if (hasDragged) {
-                          e.stopPropagation();
-                          return;
-                        }
-                        selectSpot(spot.id);
-                      }}
-                      title={`${spot.code}: ${isOccupied ? 'Terisi' : 'Tersedia'}`}
-                      aria-label={`${spot.code} (${isOccupied ? 'Terisi' : 'Tersedia'})`}
-                    >
-                      <div className="hotspot-badge">
-                        {isOccupied && <Lock className="lock-icon-badge" />}
-                        <span>{spot.code.startsWith('SOFA ') ? spot.code.replace('SOFA ', 'SF-') : spot.code}</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+                return (
+                  <button
+                    key={spot.id}
+                    type="button"
+                    className={`table-hotspot-pin ${isOccupied ? 'is-occupied' : 'is-available'} ${isSelected ? 'is-selected' : ''}`}
+                    style={{
+                      left: `${spot.x}%`,
+                      top: `${spot.y}%`
+                    }}
+                    onClick={(e) => {
+                      if (hasDragged) {
+                        e.stopPropagation();
+                        return;
+                      }
+                      selectSpot(spot.id);
+                    }}
+                    title={`${spot.code}: ${isOccupied ? 'Terisi' : 'Tersedia'}`}
+                    aria-label={`${spot.code} (${isOccupied ? 'Terisi' : 'Tersedia'})`}
+                  >
+                    <div className="hotspot-badge">
+                      {isOccupied && <Lock className="lock-icon-badge" />}
+                      <span>{spot.code.startsWith('SOFA ') ? spot.code.replace('SOFA ', 'SF-') : spot.code}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
-
-          {/* Floating Zoom & Pan HUD Controls */}
-          <div className="floorplan-hud-controls" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="hud-control-btn"
-              onClick={zoomIn}
-              title="Perbesar Peta (Zoom In)"
-              aria-label="Perbesar Peta"
-            >
-              <ZoomIn size={15} />
-            </button>
-
-            <span className="hud-zoom-badge" title="Tingkat Zoom">
-              {Math.round(scale * 100)}%
-            </span>
-
-            <button
-              type="button"
-              className="hud-control-btn"
-              onClick={zoomOut}
-              title="Perkecil Peta (Zoom Out)"
-              aria-label="Perkecil Peta"
-              disabled={scale <= 1.0}
-            >
-              <ZoomOut size={15} />
-            </button>
-
-            <div className="hud-divider" />
-
-            <button
-              type="button"
-              className="hud-control-btn"
-              onClick={resetView}
-              title="Reset Posisi & Zoom (100%)"
-              aria-label="Reset Tampilan"
-            >
-              <RotateCcw size={14} />
-            </button>
-          </div>
-
-          {/* Gestures Navigation Hint Pill */}
-          <div className="floorplan-gesture-hint">
-            <Move size={12} className="text-zinc-400" />
-            <span>Geser untuk navigasi · Scroll / cubit untuk zoom</span>
-          </div>
         </div>
-      )}
+
+        {/* Floating Zoom & Pan HUD Controls */}
+        <div className="floorplan-hud-controls" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            className="hud-control-btn"
+            onClick={zoomIn}
+            title="Perbesar Peta (Zoom In)"
+            aria-label="Perbesar Peta"
+          >
+            <ZoomIn size={15} />
+          </button>
+
+          <span className="hud-zoom-badge" title="Tingkat Zoom">
+            {Math.round(scale * 100)}%
+          </span>
+
+          <button
+            type="button"
+            className="hud-control-btn"
+            onClick={zoomOut}
+            title="Perkecil Peta (Zoom Out)"
+            aria-label="Perkecil Peta"
+            disabled={scale <= 1.0}
+          >
+            <ZoomOut size={15} />
+          </button>
+
+          <div className="hud-divider" />
+
+          <button
+            type="button"
+            className="hud-control-btn"
+            onClick={resetView}
+            title="Reset Posisi & Zoom (100%)"
+            aria-label="Reset Tampilan"
+          >
+            <RotateCcw size={14} />
+          </button>
+        </div>
+
+        {/* Gestures Navigation Hint Pill */}
+        <div className="floorplan-gesture-hint">
+          <Move size={12} className="text-zinc-400" />
+          <span>Geser untuk navigasi · Scroll / cubit untuk zoom</span>
+        </div>
+      </div>
 
       {/* Table Detail Drawer Modal */}
       {selectedSpot && (

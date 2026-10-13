@@ -56,7 +56,7 @@ export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) =>
             onClick={() => setSelectedDay('day-2')}
           >
             <Calendar size={13} />
-            <span>DAY 2: THE UNDER-VAULT (31 OKT)</span>
+            <span>DAY 2: SWEAR IN CONTINENTAL (31 OKT)</span>
           </button>
         </div>
       </header>

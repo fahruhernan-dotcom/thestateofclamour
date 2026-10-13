@@ -9,7 +9,6 @@ import {
   Crown,
   MessageCircle,
   ArrowLeft,
-  Calendar,
   Sparkles,
   ShieldCheck
 } from 'lucide-react';
@@ -86,7 +85,7 @@ export const ReservasiPage: React.FC<Props> = ({
 
   const handleConciergeChat = (day: 'day-1' | 'day-2') => {
     const admin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
-    const eventName = day === 'day-1' ? 'Swear in Continental' : 'The Under-Vault';
+    const eventName = 'Swear in Continental';
     const msg = `Halo ${admin.name}, saya ingin konsultasi reservasi meja VIP & sofa party untuk The State of Clamour: ${eventName} (${admin.dateLabel}). Mohon informasi rekomendasi posisi terbaik & paket yang tersedia. Terima kasih!`;
     const url = `https://wa.me/${admin.phone}?text=${encodeURIComponent(msg)}`;
     onToast(`Menghubungi ${admin.name}...`);
@@ -128,36 +127,6 @@ export const ReservasiPage: React.FC<Props> = ({
         <div className="concierge-section-header">
           <Sparkles size={13} className="concierge-header-icon" />
           <span>LAYANAN KONSULTASI VIP LANGSUNG</span>
-        </div>
-
-        {/* Tactile Apple-Style Day Switcher */}
-        <div className="reservasi-day-segmented" role="tablist" aria-label="Pilih Hari Acara">
-          <button
-            type="button"
-            className={`segmented-pill-btn ${selectedDay === 'day-1' ? 'is-active' : ''}`}
-            onClick={() => handleDaySelect('day-1')}
-            role="tab"
-            aria-selected={selectedDay === 'day-1'}
-          >
-            <Calendar size={13} />
-            <div className="segmented-pill-text">
-              <span className="pill-title">DAY 1</span>
-              <span className="pill-sub">30 OKT · SWEAR IN CONTINENTAL</span>
-            </div>
-          </button>
-          <button
-            type="button"
-            className={`segmented-pill-btn ${selectedDay === 'day-2' ? 'is-active' : ''}`}
-            onClick={() => handleDaySelect('day-2')}
-            role="tab"
-            aria-selected={selectedDay === 'day-2'}
-          >
-            <Calendar size={13} />
-            <div className="segmented-pill-text">
-              <span className="pill-title">DAY 2</span>
-              <span className="pill-sub">31 OKT · THE UNDER-VAULT</span>
-            </div>
-          </button>
         </div>
 
         <div
@@ -216,7 +185,7 @@ export const ReservasiPage: React.FC<Props> = ({
 
             <div className="concierge-card-body">
               <h2 className="concierge-title">{ADMIN_DAY2.name}</h2>
-              <p className="concierge-theme">Theme: The Under-Vault</p>
+              <p className="concierge-theme">Theme: Swear in Continental</p>
               <p className="concierge-desc">
                 Dedicated hospitality, bottle packages, private butler &amp; reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 2.
               </p>
@@ -244,26 +213,20 @@ export const ReservasiPage: React.FC<Props> = ({
           </article>
         </div>
 
-        {/* Mobile Carousel Pagination Dots */}
+        {/* Mobile Carousel Pagination Dots (Apple Minimalist) */}
         <div className="concierge-carousel-dots" role="tablist" aria-label="Navigasi VIP Concierge">
           <button
             type="button"
-            className={`carousel-dot-btn ${selectedDay === 'day-1' ? 'is-active' : ''}`}
+            className={`carousel-dot ${selectedDay === 'day-1' ? 'is-active' : ''}`}
             onClick={() => handleDaySelect('day-1')}
-            aria-label="Pilih Admin Day 1"
-          >
-            <span className="dot-indicator" />
-            <span className="dot-label">Day 1 · Swear in Continental</span>
-          </button>
+            aria-label="Pilih Night 01 - Swear in Continental"
+          />
           <button
             type="button"
-            className={`carousel-dot-btn ${selectedDay === 'day-2' ? 'is-active' : ''}`}
+            className={`carousel-dot ${selectedDay === 'day-2' ? 'is-active' : ''}`}
             onClick={() => handleDaySelect('day-2')}
-            aria-label="Pilih Admin Day 2"
-          >
-            <span className="dot-indicator" />
-            <span className="dot-label">Day 2 · The Under-Vault</span>
-          </button>
+            aria-label="Pilih Night 02 - Swear in Continental"
+          />
         </div>
 
         <div className="concierge-guarantee-note">
@@ -283,8 +246,8 @@ export const ReservasiPage: React.FC<Props> = ({
           </h2>
           <p className="inventory-section-desc">
             Status ketersediaan meja otomatis tersinkronisasi dengan{' '}
-            <strong>{selectedDay === 'day-1' ? 'DAY 1: Swear in Continental (30 Okt)' : 'DAY 2: The Under-Vault (31 Okt)'}</strong>.
-            Klik pin meja pada denah atau gunakan Mode Daftar untuk melihat detail spesifikasi serta reservasi instan.
+            <strong>{selectedDay === 'day-1' ? 'DAY 1: Swear in Continental (30 Okt)' : 'DAY 2: Swear in Continental (31 Okt)'}</strong>.
+            Klik pin meja pada denah untuk melihat detail spesifikasi serta reservasi instan.
           </p>
         </div>
 

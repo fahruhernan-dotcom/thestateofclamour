@@ -115,33 +115,33 @@ export const StageRundown: React.FC<Props> = ({
               onOpenNight2();
             }
           }}
-          aria-label="Buka detail acara Day 2 — The Under-Vault"
+          aria-label="Buka detail acara Day 2 — Swear in Continental"
         >
           {/* Cinematic Atmospheric Banner */}
           <div className="event-roster-banner-wrap">
             <img
               src="/assets/gothic_cathedral_ritual_concert.png"
-              alt="Day 2 — The Under-Vault"
+              alt="Day 2 — Swear in Continental"
               className="event-roster-banner-img"
               loading="lazy"
             />
             <div className="event-roster-banner-scrim" />
             <div className="event-roster-banner-badges">
               <span className="event-night-tag">DAY 2 · 31 OKT 2026</span>
-              <span className="event-venue-tag">THE UNDER-VAULT</span>
+              <span className="event-venue-tag">SWEAR IN CONTINENTAL</span>
             </div>
           </div>
 
           <div className="event-roster-body">
             <div className="event-roster-header">
               <h3 className="event-roster-title">
-                DAY 2 — THE UNDER-VAULT
+                DAY 2 — SWEAR IN CONTINENTAL
               </h3>
               <p className="event-roster-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             </div>
 
             <p className="event-roster-desc">
-              Perjalanan sonik modular synthesizer analog real-time dan gelombang sub-bass di bunker bawah tanah The Under-Vault.
+              Perjalanan sonik modular synthesizer analog real-time dan gelombang sub-bass di panggung Swear in Continental.
             </p>
 
             {/* Clean Typographic Metadata Strip (Zero Pill Box Clutter) */}

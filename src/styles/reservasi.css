@@ -789,79 +789,6 @@
   opacity: 0.75;
 }
 
-/* Unified Apple Segmented Day Switcher */
-.reservasi-day-segmented {
-  display: flex;
-  max-width: 680px;
-  margin: 0 auto 1.5rem;
-  padding: 4px;
-  background: rgba(14, 17, 24, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
-  gap: 6px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.segmented-pill-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #9ca3af;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  transition: all 180ms ease;
-  min-height: 48px;
-  box-sizing: border-box;
-}
-
-.segmented-pill-btn:hover {
-  color: #f3f0ea;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.segmented-pill-btn.is-active {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-}
-
-.segmented-pill-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.1rem;
-  text-align: left;
-}
-
-.pill-title {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  line-height: 1.1;
-}
-
-.pill-sub {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.02em;
-  color: rgba(229, 226, 220, 0.5);
-  line-height: 1.15;
-}
-
-.segmented-pill-btn.is-active .pill-sub {
-  color: rgba(255, 255, 255, 0.75);
-}
 
 /* Concierge Grid & Cards */
 .reservasi-concierge-grid {
@@ -909,13 +836,14 @@
   margin-bottom: 0.25rem;
 }
 
-/* Mobile Carousel Dots Navigation */
+/* Mobile Carousel Dots Navigation (Apple Minimalist Pagination) */
 .concierge-carousel-dots {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+  gap: 8px;
+  margin-top: 1rem;
+  padding: 4px;
 }
 
 @media (min-width: 768px) {
@@ -924,41 +852,27 @@
   }
 }
 
-.carousel-dot-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #9ca3af;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-  font-size: 0.72rem;
+.carousel-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.22);
+  border: none;
+  padding: 0;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  user-select: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-.carousel-dot-btn .dot-indicator {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
-  transition: all 0.2s ease;
+.carousel-dot:hover {
+  background: rgba(255, 255, 255, 0.45);
 }
 
-.carousel-dot-btn.is-active {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(220, 38, 38, 0.4);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.carousel-dot-btn.is-active .dot-indicator {
-  background: #ff5252;
-  box-shadow: 0 0 8px rgba(255, 82, 82, 0.8);
+.carousel-dot.is-active {
+  width: 22px;
+  background: var(--color-crimson, #b3242c);
+  box-shadow: 0 0 10px rgba(179, 36, 44, 0.6);
 }
 
 .concierge-badge {
@@ -1172,19 +1086,6 @@
 
   .reservasi-concierge-section {
     margin-bottom: 2.5rem;
-  }
-
-  .reservasi-day-segmented {
-    flex-direction: column;
-    border-radius: 12px;
-    padding: 4px;
-    gap: 4px;
-  }
-
-  .segmented-pill-btn {
-    padding: 0.65rem 0.85rem;
-    min-height: 48px;
-    justify-content: flex-start;
   }
 
   /* Horizontal swipe carousel for VIP Concierge cards on mobile */
