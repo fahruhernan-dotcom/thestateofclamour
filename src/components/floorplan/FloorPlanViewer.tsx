@@ -13,13 +13,16 @@ import {
   RotateCcw,
   Move,
   Map as MapIcon,
-  LayoutGrid
+  LayoutGrid,
+  Calendar
 } from 'lucide-react';
 import '../../styles/floorplan.css';
 
 interface Props {
   initialFloor?: FloorLevel;
   day?: 'day-1' | 'day-2';
+  onDayChange?: (day: 'day-1' | 'day-2') => void;
+  showDaySwitcher?: boolean;
   onNavigateToBookingForm?: (spot: TableSpot) => void;
 }
 
@@ -36,6 +39,8 @@ const CATEGORY_FILTERS: { key: 'all' | SpotCategory; label: string }[] = [
 export const FloorPlanViewer: React.FC<Props> = ({
   initialFloor = 1,
   day = 'day-1',
+  onDayChange,
+  showDaySwitcher,
   onNavigateToBookingForm
 }) => {
   const {
@@ -92,6 +97,39 @@ export const FloorPlanViewer: React.FC<Props> = ({
     <div className="floorplan-container">
       {/* Top Controls Cluster */}
       <section className="floorplan-controls-cluster">
+        {/* Tier 1: Day Switcher Segmented Control (Placed directly above Venue tabs) */}
+        {(showDaySwitcher ?? Boolean(onDayChange)) && (
+          <div className="floorplan-day-segmented" role="tablist" aria-label="Pilih Hari Acara">
+            <button
+              type="button"
+              className={`floorplan-day-btn ${day === 'day-1' ? 'is-active' : ''}`}
+              onClick={() => onDayChange?.('day-1')}
+              role="tab"
+              aria-selected={day === 'day-1'}
+            >
+              <Calendar size={13} className="floorplan-day-icon" />
+              <div className="floorplan-day-text">
+                <span className="floorplan-day-title">DAY 1</span>
+                <span className="floorplan-day-sub">30 OKT · SWEAR IN CONTINENTAL</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className={`floorplan-day-btn ${day === 'day-2' ? 'is-active' : ''}`}
+              onClick={() => onDayChange?.('day-2')}
+              role="tab"
+              aria-selected={day === 'day-2'}
+            >
+              <Calendar size={13} className="floorplan-day-icon" />
+              <div className="floorplan-day-text">
+                <span className="floorplan-day-title">DAY 2</span>
+                <span className="floorplan-day-sub">31 OKT · THE UNDER-VAULT</span>
+              </div>
+            </button>
+          </div>
+        )}
+
         <div className="floorplan-switch-row">
           {/* Floor Switcher Tabs */}
           <div className="floor-tabs-group" role="tablist" aria-label="Pilih Venue">

@@ -65,6 +65,7 @@ export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) =>
       <section className="w-full max-w-6xl mx-auto mb-12">
         <FloorPlanViewer
           day={selectedDay}
+          onDayChange={setSelectedDay}
           onNavigateToBookingForm={(spot) => onNavigateToReservasi(spot.packageIdRef)}
         />
       </section>

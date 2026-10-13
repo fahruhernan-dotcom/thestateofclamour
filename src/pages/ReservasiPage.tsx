@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   ADMIN_DAY1,
   ADMIN_DAY2
@@ -27,6 +27,62 @@ export const ReservasiPage: React.FC<Props> = ({
   onToast
 }) => {
   const [selectedDay, setSelectedDay] = useState<'day-1' | 'day-2'>('day-1');
+  const conciergeCarouselRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToCard = (idx: number) => {
+    const el = conciergeCarouselRef.current;
+    if (!el) return;
+    const card = el.children[idx] as HTMLElement | undefined;
+    if (card) {
+      const targetLeft = card.offsetLeft - (el.clientWidth - card.clientWidth) / 2;
+      el.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+    }
+  };
+
+  const handleDaySelect = (day: 'day-1' | 'day-2') => {
+    setSelectedDay(day);
+    scrollToCard(day === 'day-1' ? 0 : 1);
+  };
+
+  // Synchronize carousel position when selectedDay changes
+  useEffect(() => {
+    const el = conciergeCarouselRef.current;
+    if (!el) return;
+    const idx = selectedDay === 'day-1' ? 0 : 1;
+    const card = el.children[idx] as HTMLElement | undefined;
+    if (card) {
+      const targetLeft = card.offsetLeft - (el.clientWidth - card.clientWidth) / 2;
+      if (Math.abs(el.scrollLeft - targetLeft) > 30) {
+        el.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+      }
+    }
+  }, [selectedDay]);
+
+  const handleCarouselScroll = () => {
+    const el = conciergeCarouselRef.current;
+    if (!el || el.children.length === 0) return;
+    if (window.innerWidth >= 768) return;
+
+    const scrollCenter = el.scrollLeft + el.clientWidth / 2;
+    let closestIdx = 0;
+    let minDiff = Infinity;
+
+    for (let i = 0; i < el.children.length; i++) {
+      const child = el.children[i] as HTMLElement;
+      if (!child) continue;
+      const childCenter = child.offsetLeft + child.offsetWidth / 2;
+      const diff = Math.abs(scrollCenter - childCenter);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIdx = i;
+      }
+    }
+
+    const newDay = closestIdx === 0 ? 'day-1' : 'day-2';
+    if (newDay !== selectedDay) {
+      setSelectedDay(newDay);
+    }
+  };
 
   const handleConciergeChat = (day: 'day-1' | 'day-2') => {
     const admin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
@@ -79,7 +135,7 @@ export const ReservasiPage: React.FC<Props> = ({
           <button
             type="button"
             className={`segmented-pill-btn ${selectedDay === 'day-1' ? 'is-active' : ''}`}
-            onClick={() => setSelectedDay('day-1')}
+            onClick={() => handleDaySelect('day-1')}
             role="tab"
             aria-selected={selectedDay === 'day-1'}
           >
@@ -92,7 +148,7 @@ export const ReservasiPage: React.FC<Props> = ({
           <button
             type="button"
             className={`segmented-pill-btn ${selectedDay === 'day-2' ? 'is-active' : ''}`}
-            onClick={() => setSelectedDay('day-2')}
+            onClick={() => handleDaySelect('day-2')}
             role="tab"
             aria-selected={selectedDay === 'day-2'}
           >
@@ -104,7 +160,11 @@ export const ReservasiPage: React.FC<Props> = ({
           </button>
         </div>
 
-        <div className="reservasi-concierge-grid">
+        <div
+          ref={conciergeCarouselRef}
+          onScroll={handleCarouselScroll}
+          className="reservasi-concierge-grid"
+        >
           {/* Day 1 Admin Card */}
           <article className={`concierge-card ${selectedDay === 'day-1' ? 'is-selected-day' : ''}`}>
             <div className="concierge-card-header">
@@ -184,6 +244,28 @@ export const ReservasiPage: React.FC<Props> = ({
           </article>
         </div>
 
+        {/* Mobile Carousel Pagination Dots */}
+        <div className="concierge-carousel-dots" role="tablist" aria-label="Navigasi VIP Concierge">
+          <button
+            type="button"
+            className={`carousel-dot-btn ${selectedDay === 'day-1' ? 'is-active' : ''}`}
+            onClick={() => handleDaySelect('day-1')}
+            aria-label="Pilih Admin Day 1"
+          >
+            <span className="dot-indicator" />
+            <span className="dot-label">Day 1 · Swear in Continental</span>
+          </button>
+          <button
+            type="button"
+            className={`carousel-dot-btn ${selectedDay === 'day-2' ? 'is-active' : ''}`}
+            onClick={() => handleDaySelect('day-2')}
+            aria-label="Pilih Admin Day 2"
+          >
+            <span className="dot-indicator" />
+            <span className="dot-label">Day 2 · The Under-Vault</span>
+          </button>
+        </div>
+
         <div className="concierge-guarantee-note">
           <ShieldCheck size={14} className="guarantee-icon shrink-0" />
           <span>Nomor WhatsApp resmi di atas adalah satu-satunya kanal terverifikasi reservasi VIP Table The State of Clamour.</span>
@@ -210,6 +292,7 @@ export const ReservasiPage: React.FC<Props> = ({
         <div className="reservasi-floorplan-container">
           <FloorPlanViewer
             day={selectedDay}
+            onDayChange={handleDaySelect}
           />
         </div>
       </section>
