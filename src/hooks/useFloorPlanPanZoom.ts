@@ -4,7 +4,7 @@ export interface UseFloorPlanPanZoomOptions {
   minScale?: number;
   maxScale?: number;
   scaleStep?: number;
-  dragThreshold?: number; // Pixels moved before considering it a drag instead of a click
+  dragThreshold?: number;
 }
 
 export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
@@ -12,37 +12,46 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
     minScale = 1.0,
     maxScale = 3.5,
     scaleStep = 0.35,
-    dragThreshold = 6
+    dragThreshold = 8
   } = options;
 
   const [scale, setScale] = useState<number>(1.0);
   const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [hasDragged, setHasDragged] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
-  // Drag tracking refs
-  const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const posStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  // Synchronized refs to avoid stale closures in stable event listeners
+  const posRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const scaleRef = useRef<number>(1.0);
   const hasDraggedRef = useRef<boolean>(false);
-  const totalMovementRef = useRef<number>(0);
+  const isDraggingRef = useRef<boolean>(false);
 
-  // Touch tracking refs
-  const initialTouchDistanceRef = useRef<number | null>(null);
-  const initialScaleRef = useRef<number>(1.0);
+  // Sync state changes with refs
+  useEffect(() => {
+    posRef.current = position;
+  }, [position]);
 
-  // Clamp position so the map doesn't drift away into void
+  useEffect(() => {
+    scaleRef.current = scale;
+  }, [scale]);
+
+  // Extended leeway pan clamping: allows corners of venue to be pulled comfortably into mobile view center
   const clampPosition = useCallback((pos: { x: number; y: number }, currentScale: number) => {
-    if (!containerRef.current || !contentRef.current) return pos;
+    if (!containerRef.current) return pos;
 
     const container = containerRef.current.getBoundingClientRect();
     const contentWidth = container.width * currentScale;
     const contentHeight = container.height * currentScale;
 
-    // Maximum pan bounds
-    const maxPanX = Math.max(0, (contentWidth - container.width) / 2);
-    const maxPanY = Math.max(0, (contentHeight - container.height) / 2);
+    // Generous leeway margin: 40% of container size so edge tables can be centered on phones
+    const extraLeewayX = container.width * 0.4;
+    const extraLeewayY = container.height * 0.4;
+
+    const maxPanX = Math.max(extraLeewayX, (contentWidth - container.width) / 2 + extraLeewayX);
+    const maxPanY = Math.max(extraLeewayY, (contentHeight - container.height) / 2 + extraLeewayY);
 
     return {
       x: Math.max(-maxPanX, Math.min(maxPanX, pos.x)),
@@ -53,11 +62,14 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
   const resetView = useCallback(() => {
     setScale(1.0);
     setPosition({ x: 0, y: 0 });
+    posRef.current = { x: 0, y: 0 };
+    scaleRef.current = 1.0;
   }, []);
 
   const zoomIn = useCallback(() => {
     setScale(prev => {
       const next = Math.min(maxScale, Number((prev + scaleStep).toFixed(2)));
+      scaleRef.current = next;
       return next;
     });
   }, [maxScale, scaleStep]);
@@ -65,8 +77,10 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
   const zoomOut = useCallback(() => {
     setScale(prev => {
       const next = Math.max(minScale, Number((prev - scaleStep).toFixed(2)));
+      scaleRef.current = next;
       if (next === minScale) {
         setPosition({ x: 0, y: 0 });
+        posRef.current = { x: 0, y: 0 };
       }
       return next;
     });
@@ -75,47 +89,56 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
   const setZoomLevel = useCallback((targetScale: number) => {
     const clamped = Math.max(minScale, Math.min(maxScale, targetScale));
     setScale(clamped);
+    scaleRef.current = clamped;
     if (clamped === minScale) {
       setPosition({ x: 0, y: 0 });
+      posRef.current = { x: 0, y: 0 };
     }
   }, [minScale, maxScale]);
 
-  // Handle Mouse Down
+  // DESKTOP: Mouse Drag Handling
+  const mouseDragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const mousePosStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    // Only primary button
     if (e.button !== 0) return;
 
-    dragStartRef.current = { x: e.clientX, y: e.clientY };
-    posStartRef.current = { ...position };
+    mouseDragStartRef.current = { x: e.clientX, y: e.clientY };
+    mousePosStartRef.current = { ...posRef.current };
     hasDraggedRef.current = false;
-    totalMovementRef.current = 0;
+    setHasDragged(false);
+    isDraggingRef.current = true;
     setIsDragging(true);
-  }, [position]);
+  }, []);
 
-  // Global mouse move & up listeners when dragging
   useEffect(() => {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const dx = e.clientX - dragStartRef.current.x;
-      const dy = e.clientY - dragStartRef.current.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      totalMovementRef.current = dist;
+      if (!isDraggingRef.current) return;
+      const dx = e.clientX - mouseDragStartRef.current.x;
+      const dy = e.clientY - mouseDragStartRef.current.y;
+      const dist = Math.hypot(dx, dy);
 
-      if (dist > dragThreshold) {
+      if (dist > dragThreshold && !hasDraggedRef.current) {
         hasDraggedRef.current = true;
+        setHasDragged(true);
       }
 
-      setPosition(() => {
-        const nextPos = {
-          x: posStartRef.current.x + dx,
-          y: posStartRef.current.y + dy
-        };
-        return clampPosition(nextPos, scale);
-      });
+      const nextPos = clampPosition(
+        {
+          x: mousePosStartRef.current.x + dx,
+          y: mousePosStartRef.current.y + dy
+        },
+        scaleRef.current
+      );
+
+      posRef.current = nextPos;
+      setPosition(nextPos);
     };
 
     const handleMouseUp = () => {
+      isDraggingRef.current = false;
       setIsDragging(false);
     };
 
@@ -126,45 +149,47 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, scale, clampPosition, dragThreshold]);
+  }, [isDragging, clampPosition, dragThreshold]);
 
-  // Handle Wheel Zoom with focal point at cursor
+  // DESKTOP: Wheel Zoom with focal point at cursor
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleWheel = (e: WheelEvent) => {
-      // Prevent default page scroll when interacting with the canvas
       e.preventDefault();
 
-      // Normalize deltaY (dampens large trackpad/mouse flicks)
       const rawDelta = e.deltaY;
       const normalizedDelta = Math.max(-100, Math.min(100, rawDelta));
-      // Gentle linear zoom delta: capped at ±0.06 (6% scale change per notch)
       const zoomDelta = Math.max(-0.06, Math.min(0.06, -normalizedDelta * 0.0008));
 
-      setScale(prevScale => {
-        const targetScale = Math.max(minScale, Math.min(maxScale, Number((prevScale + zoomDelta).toFixed(3))));
+      const prevScale = scaleRef.current;
+      const targetScale = Math.max(minScale, Math.min(maxScale, Number((prevScale + zoomDelta).toFixed(3))));
 
-        if (Math.abs(targetScale - prevScale) < 0.001) return prevScale;
-        if (targetScale === minScale) {
-          setPosition({ x: 0, y: 0 });
-          return minScale;
-        }
+      if (Math.abs(targetScale - prevScale) < 0.001) return;
 
-        const rect = container.getBoundingClientRect();
-        const cursorX = e.clientX - rect.left - rect.width / 2;
-        const cursorY = e.clientY - rect.top - rect.height / 2;
+      if (targetScale === minScale) {
+        scaleRef.current = minScale;
+        posRef.current = { x: 0, y: 0 };
+        setScale(minScale);
+        setPosition({ x: 0, y: 0 });
+        return;
+      }
 
-        setPosition(prevPos => {
-          const ratio = targetScale / prevScale;
-          const newX = cursorX - (cursorX - prevPos.x) * ratio;
-          const newY = cursorY - (cursorY - prevPos.y) * ratio;
-          return clampPosition({ x: newX, y: newY }, targetScale);
-        });
+      const rect = container.getBoundingClientRect();
+      const cursorX = e.clientX - rect.left - rect.width / 2;
+      const cursorY = e.clientY - rect.top - rect.height / 2;
+      const ratio = targetScale / prevScale;
 
-        return targetScale;
-      });
+      const prevPos = posRef.current;
+      const newX = cursorX - (cursorX - prevPos.x) * ratio;
+      const newY = cursorY - (cursorY - prevPos.y) * ratio;
+      const clampedPos = clampPosition({ x: newX, y: newY }, targetScale);
+
+      scaleRef.current = targetScale;
+      posRef.current = clampedPos;
+      setScale(targetScale);
+      setPosition(clampedPos);
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
@@ -173,79 +198,108 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
     };
   }, [minScale, maxScale, clampPosition]);
 
-  // Handle Touch Events (1 finger pan when zoomed, 2 fingers pinch always)
+  // MOBILE: Touch Events (1-finger pan, 2-finger pinch zoom with focal point, tap detection)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    let touchStartClient = { x: 0, y: 0 };
     let touchStartPos = { x: 0, y: 0 };
-    let touchStartPosRef = { x: 0, y: 0 };
+    let initialPinchDist: number | null = null;
+    let initialPinchScale = 1.0;
+    let initialPinchFocal = { x: 0, y: 0 };
+    let initialPinchPos = { x: 0, y: 0 };
     let lastTapTimestamp = 0;
-    const touchDragThreshold = 14; // Higher threshold for touch screens to prevent swallowing finger taps
 
-    const handleTouchStart = (e: TouchEvent) => {
+    const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 1) {
-        touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        touchStartPosRef = { ...position };
+        touchStartClient = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        touchStartPos = { ...posRef.current };
         hasDraggedRef.current = false;
-        totalMovementRef.current = 0;
+        setHasDragged(false);
+        isDraggingRef.current = true;
         setIsDragging(true);
+        initialPinchDist = null;
       } else if (e.touches.length === 2) {
-        // Pinch start
         const t1 = e.touches[0];
         const t2 = e.touches[1];
-        const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
-        initialTouchDistanceRef.current = dist;
-        initialScaleRef.current = scale;
+        initialPinchDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        initialPinchScale = scaleRef.current;
+
+        const rect = container.getBoundingClientRect();
+        initialPinchFocal = {
+          x: (t1.clientX + t2.clientX) / 2 - rect.left - rect.width / 2,
+          y: (t1.clientY + t2.clientY) / 2 - rect.top - rect.height / 2
+        };
+        initialPinchPos = { ...posRef.current };
+        hasDraggedRef.current = true;
+        setHasDragged(true);
       }
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 1 && isDragging) {
-        const dx = e.touches[0].clientX - touchStartPos.x;
-        const dy = e.touches[0].clientY - touchStartPos.y;
+    const onTouchMove = (e: TouchEvent) => {
+      // 1 Finger Pan: Move canvas freely in all zoom levels
+      if (e.touches.length === 1 && isDraggingRef.current) {
+        const dx = e.touches[0].clientX - touchStartClient.x;
+        const dy = e.touches[0].clientY - touchStartClient.y;
         const dist = Math.hypot(dx, dy);
-        totalMovementRef.current = dist;
 
-        if (dist > touchDragThreshold) {
+        if (dist > dragThreshold && !hasDraggedRef.current) {
           hasDraggedRef.current = true;
+          setHasDragged(true);
         }
 
-        // Only preventDefault and pan if the map is zoomed in beyond 1.05x.
-        // At 1.0x (overview mode), allow natural vertical webpage scrolling on mobile devices!
-        if (scale > 1.05) {
-          e.preventDefault();
-          setPosition(() => {
-            const nextPos = {
-              x: touchStartPosRef.x + dx,
-              y: touchStartPosRef.y + dy
-            };
-            return clampPosition(nextPos, scale);
-          });
-        }
-      } else if (e.touches.length === 2 && initialTouchDistanceRef.current !== null) {
+        e.preventDefault();
+
+        const nextPos = clampPosition(
+          {
+            x: touchStartPos.x + dx,
+            y: touchStartPos.y + dy
+          },
+          scaleRef.current
+        );
+
+        posRef.current = nextPos;
+        setPosition(nextPos);
+      }
+      // 2 Fingers Pinch to Zoom with Focal Point Center
+      else if (e.touches.length === 2 && initialPinchDist !== null && initialPinchDist > 0) {
         e.preventDefault();
         const t1 = e.touches[0];
         const t2 = e.touches[1];
-        const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
-        const factor = dist / initialTouchDistanceRef.current;
-        const newScale = Math.max(minScale, Math.min(maxScale, Number((initialScaleRef.current * factor).toFixed(2))));
-        setScale(newScale);
+        const currentDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const factor = currentDist / initialPinchDist;
+        const targetScale = Math.max(minScale, Math.min(maxScale, Number((initialPinchScale * factor).toFixed(2))));
+
+        const ratio = targetScale / initialPinchScale;
+        const focalX = initialPinchFocal.x;
+        const focalY = initialPinchFocal.y;
+        const newX = focalX - (focalX - initialPinchPos.x) * ratio;
+        const newY = focalY - (focalY - initialPinchPos.y) * ratio;
+
+        const clampedPos = clampPosition({ x: newX, y: newY }, targetScale);
+
+        scaleRef.current = targetScale;
+        posRef.current = clampedPos;
+        setScale(targetScale);
+        setPosition(clampedPos);
       }
     };
 
-    const handleTouchEnd = (e: TouchEvent) => {
+    const onTouchEnd = (e: TouchEvent) => {
       if (e.touches.length === 0) {
+        isDraggingRef.current = false;
         setIsDragging(false);
-        initialTouchDistanceRef.current = null;
+        initialPinchDist = null;
 
-        // Mobile double-tap detection (< 300ms between taps without dragging)
+        // Double-tap zoom toggle on touch screens (< 300ms without dragging)
         const now = Date.now();
         if (now - lastTapTimestamp < 300 && !hasDraggedRef.current) {
-          if (scale > 1.2) {
+          if (scaleRef.current > 1.2) {
             resetView();
           } else {
             const targetScale = 2.0;
+            scaleRef.current = targetScale;
             setScale(targetScale);
           }
           lastTapTimestamp = 0;
@@ -253,27 +307,31 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
           lastTapTimestamp = now;
         }
       } else if (e.touches.length === 1) {
-        initialTouchDistanceRef.current = null;
+        // Switch back to 1 finger pan smoothly
+        touchStartClient = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        touchStartPos = { ...posRef.current };
+        initialPinchDist = null;
+        isDraggingRef.current = true;
       }
     };
 
-    container.addEventListener('touchstart', handleTouchStart, { passive: true });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
-    container.addEventListener('touchend', handleTouchEnd);
-    container.addEventListener('touchcancel', handleTouchEnd);
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchmove', onTouchMove, { passive: false });
+    container.addEventListener('touchend', onTouchEnd);
+    container.addEventListener('touchcancel', onTouchEnd);
 
     return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
-      container.removeEventListener('touchend', handleTouchEnd);
-      container.removeEventListener('touchcancel', handleTouchEnd);
+      container.removeEventListener('touchstart', onTouchStart);
+      container.removeEventListener('touchmove', onTouchMove);
+      container.removeEventListener('touchend', onTouchEnd);
+      container.removeEventListener('touchcancel', onTouchEnd);
     };
-  }, [scale, position, isDragging, minScale, maxScale, clampPosition, resetView]);
+  }, [clampPosition, minScale, maxScale, dragThreshold, resetView]);
 
   // Double Click / Double Tap quick zoom toggle
   const handleDoubleClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    if (scale > 1.2) {
+    if (scaleRef.current > 1.2) {
       resetView();
     } else {
       if (!containerRef.current) return;
@@ -282,16 +340,19 @@ export function useFloorPlanPanZoom(options: UseFloorPlanPanZoomOptions = {}) {
       const cursorY = e.clientY - rect.top - rect.height / 2;
       const targetScale = 2.0;
 
+      const clampedPos = clampPosition({ x: -cursorX * 0.8, y: -cursorY * 0.8 }, targetScale);
+      scaleRef.current = targetScale;
+      posRef.current = clampedPos;
       setScale(targetScale);
-      setPosition(clampPosition({ x: -cursorX * 0.8, y: -cursorY * 0.8 }, targetScale));
+      setPosition(clampedPos);
     }
-  }, [scale, resetView, clampPosition]);
+  }, [resetView, clampPosition]);
 
   return {
     scale,
     position,
     isDragging,
-    hasDragged: hasDraggedRef.current,
+    hasDragged,
     containerRef,
     contentRef,
     handleMouseDown,
