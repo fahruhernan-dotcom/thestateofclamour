@@ -239,19 +239,22 @@ export const TicketSection: React.FC<Props> = ({
               gap: '0.65rem',
               padding: '0.85rem 1.6rem',
               borderRadius: '9999px',
-              background: 'rgba(197, 168, 105, 0.08)',
-              border: '1px solid var(--color-gold-hairline)',
-              color: 'var(--color-gold-antique)',
-              fontFamily: 'var(--font-monumental)',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              color: '#ffffff',
+              fontFamily: 'var(--font-monumental, "Cinzel", serif)',
               fontSize: '0.74rem',
               fontWeight: 700,
-              letterSpacing: '0.15em',
+              letterSpacing: '0.12em',
               textDecoration: 'none',
               cursor: 'pointer',
-              transition: 'all 250ms ease'
+              transition: 'all 250ms ease',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
             }}
           >
-            <span>INGIN SOFA PRIVAT &amp; LAYANAN BUTLER? RESERVASI MEJA VIP →</span>
+            <span>RESERVASI MEJA VIP →</span>
           </a>
         </div>
 

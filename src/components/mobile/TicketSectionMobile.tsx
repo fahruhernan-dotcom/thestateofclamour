@@ -313,24 +313,28 @@ export const TicketSectionMobile: React.FC<Props> = ({
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.5rem',
+              gap: '0.45rem',
               width: '100%',
-              maxWidth: '320px',
-              padding: '0.75rem 1rem',
+              maxWidth: '280px',
+              padding: '0.75rem 1.25rem',
               borderRadius: '9999px',
-              background: 'rgba(197, 168, 105, 0.08)',
-              border: '1px solid var(--color-gold-hairline)',
-              color: 'var(--color-gold-antique)',
-              fontFamily: 'var(--font-monumental)',
-              fontSize: '0.66rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              color: '#ffffff',
+              fontFamily: 'var(--font-monumental, "Cinzel", serif)',
+              fontSize: '0.72rem',
               fontWeight: 700,
-              letterSpacing: '0.12em',
+              letterSpacing: '0.1em',
               textDecoration: 'none',
               textAlign: 'center',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)'
             }}
           >
-            <span>INGIN SOFA PRIVAT? RESERVASI MEJA VIP →</span>
+            <span>RESERVASI MEJA VIP →</span>
           </a>
         </div>
       </div>
