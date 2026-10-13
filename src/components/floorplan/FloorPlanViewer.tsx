@@ -107,7 +107,10 @@ export const FloorPlanViewer: React.FC<Props> = ({
               <Calendar size={13} className="floorplan-day-icon" />
               <div className="floorplan-day-text">
                 <span className="floorplan-day-title">DAY 1</span>
-                <span className="floorplan-day-sub">30 OKT · SWEAR IN CONTINENTAL</span>
+                <span className="floorplan-day-sub">
+                  <span className="floorplan-day-date">30 OKT</span>
+                  <span className="floorplan-day-event"> · SWEAR IN CONTINENTAL</span>
+                </span>
               </div>
             </button>
 
@@ -121,7 +124,10 @@ export const FloorPlanViewer: React.FC<Props> = ({
               <Calendar size={13} className="floorplan-day-icon" />
               <div className="floorplan-day-text">
                 <span className="floorplan-day-title">DAY 2</span>
-                <span className="floorplan-day-sub">31 OKT · SWEAR IN CONTINENTAL</span>
+                <span className="floorplan-day-sub">
+                  <span className="floorplan-day-date">31 OKT</span>
+                  <span className="floorplan-day-event"> · SWEAR IN CONTINENTAL</span>
+                </span>
               </div>
             </button>
           </div>
@@ -138,8 +144,8 @@ export const FloorPlanViewer: React.FC<Props> = ({
                 selectSpot(null);
               }}
             >
-              <Layers size={14} />
-              <span>TETRA SOLO</span>
+              <Layers size={13} className="floor-tab-icon" />
+              <span className="floor-tab-name">TETRA SOLO</span>
               <span className="floor-tab-badge">HALL &amp; STAGES</span>
             </button>
 
@@ -151,8 +157,8 @@ export const FloorPlanViewer: React.FC<Props> = ({
                 selectSpot(null);
               }}
             >
-              <Layers size={14} />
-              <span>MIZU COMMONROOM</span>
+              <Layers size={13} className="floor-tab-icon" />
+              <span className="floor-tab-name">MIZU COMMONROOM</span>
               <span className="floor-tab-badge">VIP &amp; MEZZANINE</span>
             </button>
           </div>
