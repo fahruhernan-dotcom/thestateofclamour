@@ -1,4 +1,4 @@
-// Media Preloader & Scroll Gate Coordinator for THE STATE OF CLAMOUR
+// Media Preloader & Scroll Gate Coordinator for THE STATE OF CLAMOR
 // Truly preloads Section 1 Canvas Frames & Recap Video for stutter-free 120fps scrolling.
 
 export interface PreloaderState {

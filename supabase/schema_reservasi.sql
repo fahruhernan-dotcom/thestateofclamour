@@ -1,5 +1,5 @@
 -- =====================================================================================
--- THE STATE OF CLAMOUR: SWEAR IN CONTINENTAL
+-- THE STATE OF CLAMOR: SWEAR IN CONTINENTAL
 -- SUPABASE SCHEMA RESERVASI MEJA & AUDIT LOG (FOKUS LANTAI 1)
 -- =====================================================================================
 -- Petunjuk:

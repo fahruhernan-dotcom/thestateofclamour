@@ -1,5 +1,5 @@
 // TypeScript definitions for Dual-Floor Seating & Reservation System
-// The State of Clamour: Swear in Continental (Lantai 1 & Lantai 2)
+// The State of Clamor: Swear in Continental (Lantai 1 & Lantai 2)
 
 export type FloorLevel = 1 | 2;
 

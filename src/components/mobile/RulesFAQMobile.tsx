@@ -20,7 +20,7 @@ const protocols: ProtocolItem[] = [
     id: 'p1',
     badge: 'ARAHAN // 01',
     title: '18+ WAJIB IDENTITAS FISIK RESMI',
-    desc: 'Wajib membawa kartu identitas fisik resmi yang masih berlaku (KTP / Paspor / SIM) untuk penukaran gelang RFID di loket gerbang. Foto atau tangkapan layar HP tidak berlaku.',
+    desc: 'Wajib membawa kartu identitas fisik resmi yang masih berlaku (KTP / Paspor / SIM) untuk penukaran gelang fisik resmi di loket gerbang. Foto atau tangkapan layar HP tidak berlaku.',
     spec: 'Verifikasi Fisik Ketat di Loket',
     icon: <Shield size={16} style={{ color: 'var(--color-gold-antique)' }} />,
   },
@@ -35,8 +35,8 @@ const protocols: ProtocolItem[] = [
   {
     id: 'p3',
     badge: 'ARAHAN // 03',
-    title: 'AKSES GELANG RFID & TRANSAKSI NON-TUNAI',
-    desc: 'Transaksi 100% nontunai menggunakan gelang RFID resmi atau QRIS di seluruh bar & stand. Tanpa toleransi untuk obat-obatan terlarang, senjata tajam, cairan dari luar, atau calo tiket liar.',
+    title: 'GELANG RESMI & TRANSAKSI NON-TUNAI',
+    desc: 'Transaksi 100% nontunai menggunakan QRIS resmi di seluruh bar & stand. Tanpa toleransi untuk obat-obatan terlarang, senjata tajam, cairan dari luar, atau calo tiket liar.',
     spec: 'Hanya Tiket Resmi Artatix',
     icon: <FileText size={16} style={{ color: 'var(--color-gold-antique)' }} />,
   },
@@ -53,12 +53,12 @@ export const RulesFAQMobile: React.FC<Props> = ({ onOpenDossier, onToast }) => {
   const handleAcceptProtocols = () => {
     setIsAccepted(true);
     if (onToast) {
-      onToast('Protokol resmi telah disetujui. Selamat datang di The State of Clamour.');
+      onToast('Protokol resmi telah disetujui. Selamat datang di The State of Clamor.');
     }
   };
 
   return (
-    <section id="before-you-enter" className="rules-mobile-section" aria-label="Panduan Masuk The State of Clamour">
+    <section id="before-you-enter" className="rules-mobile-section" aria-label="Panduan Masuk The State of Clamor">
       <div className="rules-mobile-header">
         <span className="rules-mobile-eyebrow">PANDUAN SEBELUM MASUK</span>
         <h2 className="rules-mobile-headline">SAFETY PROTOCOLS</h2>

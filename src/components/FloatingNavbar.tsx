@@ -208,15 +208,8 @@ export const FloatingNavbar: React.FC<Props> = ({
 
   const handleReservasiClick = () => {
     closeMobileMenu();
-    if (currentView === 'event-night-1' || currentView === 'event-night-2') {
-      const el = document.getElementById('reservasi');
-      if (el) {
-        const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-        return;
-      }
-    }
-    handleNavClick('reservasi', '#/reservasi', 'reservasi');
+    const dayParam = currentView === 'event-night-2' ? 'day-2' : 'day-1';
+    handleNavClick('reservasi', `#/reservasi?day=${dayParam}`, 'reservasi');
   };
 
   return (
@@ -237,17 +230,17 @@ export const FloatingNavbar: React.FC<Props> = ({
             type="button"
             className="site-logo-action nav-brand-link"
             onClick={handleHomeClick}
-            aria-label="Kembali ke Beranda The State of Clamour"
+            aria-label="Kembali ke Beranda The State of Clamor"
             style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
           >
             <img
               src="/apple-touch-icon.png"
-              alt="Clamour Emblem"
+              alt="Clamor Emblem"
               className="nav-brand-logo-img logo-img"
               width="24"
               height="24"
             />
-            <span className="nav-brand-title site-logo-lockup">CLAMOUR</span>
+            <span className="nav-brand-title site-logo-lockup">CLAMOR</span>
           </button>
 
           {/* Right Action Cluster: Desktop Nav Links (NIGHT 1 & NIGHT 2) + TICKETS CTA + Mobile Burger */}
@@ -334,13 +327,13 @@ export const FloatingNavbar: React.FC<Props> = ({
             <div className="mobile-drawer-brand-group">
               <img
                 src="/apple-touch-icon.png"
-                alt="Clamour Emblem"
+                alt="Clamor Emblem"
                 className="mobile-drawer-logo"
                 width="28"
                 height="28"
               />
               <div className="mobile-drawer-brand-text">
-                <span className="mobile-drawer-brand">THE STATE OF CLAMOUR</span>
+                <span className="mobile-drawer-brand">THE STATE OF CLAMOR</span>
                 <span className="mobile-drawer-brand-sub">ANNUAL SANCTUARY 2026</span>
               </div>
             </div>

@@ -10,6 +10,7 @@ import {
 import { TicketTier } from '../types';
 import { FloorPlanViewer } from '../components/floorplan/FloorPlanViewer';
 import { OfficialFAQSection } from '../components/OfficialFAQSection';
+import { MultiStageRundown } from '../components/event/MultiStageRundown';
 import '../styles/streaming-event.css';
 
 interface Props {
@@ -17,11 +18,13 @@ interface Props {
   initialPackageId?: string;
   onBack: () => void;
   onCheckout: (ticket: TicketTier) => void;
+  onOpenReservasi?: (day: 'day-1' | 'day-2') => void;
   onViewNight1?: () => void;
   onToast?: (msg: string) => void;
 }
 
 export const NightTwoEventPage: React.FC<Props> = ({
+  onOpenReservasi,
   onViewNight1
 }) => {
   const [activeSection, setActiveSection] = useState<'spotlight' | 'rundown' | 'reservasi' | 'faq'>('spotlight');
@@ -45,7 +48,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
         <div className="streaming-backdrop-wrap">
           <img
             src="/assets/gothic_cathedral_ritual_concert.png"
-            alt="The State of Clamour Night 2 Gothic Ritual Concert"
+            alt="The State of Clamor Night 2 Gothic Ritual Concert"
             className="streaming-backdrop-img"
           />
         </div>
@@ -60,7 +63,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
           {/* Eyebrow / Kicker */}
           <div className="streaming-hero-eyebrow">
             <span className="streaming-eyebrow-dash">—</span>
-            <span>THE STATE OF CLAMOUR</span>
+            <span>THE STATE OF CLAMOR</span>
             <span className="streaming-eyebrow-sep">/</span>
             <span>CHAPTER 01</span>
           </div>
@@ -84,7 +87,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
           <div className="streaming-hero-actions">
             <button
               type="button"
-              onClick={() => scrollToSection('reservasi')}
+              onClick={() => onOpenReservasi ? onOpenReservasi('day-2') : scrollToSection('reservasi')}
               className="streaming-btn-primary is-night-2 btn-press"
             >
               <span>RESERVASI SEKARANG</span>
@@ -158,7 +161,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
       {/* 3. MAIN DOSSIER BODY CONTAINER                                         */}
       {/* ---------------------------------------------------------------------- */}
       <div className="streaming-section-container">
-        
+
         {/* Spotlight Showcase: Teaser Headliner Night II */}
         <section id="spotlight" style={{ marginBottom: '4rem', scrollMarginTop: '80px' }}>
           <div className="streaming-section-header">
@@ -215,11 +218,11 @@ export const NightTwoEventPage: React.FC<Props> = ({
             {/* Teaser Information */}
             <div className="streaming-spotlight-info">
               <span className="streaming-spotlight-sub" style={{ color: '#eb5757' }}>
-                THE UNDER-VAULT ANALOG MODULAR EXPERIENCE
+                SWEAR IN CONTINENTAL // NIGHT II
               </span>
               <h3 className="streaming-spotlight-title">SECRET HEADLINER (TBA)</h3>
               <p className="streaming-spotlight-desc">
-                Produser internasional dan penjelajah modular analog terpilih yang akan mengambil alih ruang The Under-Vault selama 150 menit tanpa henti. Dentuman 140 BPM bertekanan akustik tinggi dalam bunker berperedam granit. Seluruh tiket resmi menjamin akses penuh saat pengumuman fase berikutnya dirilis.
+                Sosok rahasia di balik puncak ritual dua malam The State of Clamor. Siapkan energimu — pengumuman resmi segera dirilis.
               </p>
 
               <div className="streaming-spotlight-meta-grid">
@@ -227,28 +230,28 @@ export const NightTwoEventPage: React.FC<Props> = ({
                   <Clock size={16} style={{ color: '#eb5757', flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <strong>WAKTU SHOW</strong>
-                    <p>23:00 — 01:30 WIB (150 Menit)</p>
+                    <p>Puncak Acara (23:00 — Selesai)</p>
                   </div>
                 </div>
                 <div className="streaming-meta-block">
                   <MapPin size={16} style={{ color: 'var(--color-crimson)', flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <strong>LOKASI PANGGUNG</strong>
-                    <p>The Under-Vault Bunker (Basement Lt. -1)</p>
+                    <p>Tetra Solo (Lantai 1)</p>
                   </div>
                 </div>
                 <div className="streaming-meta-block">
                   <Volume2 size={16} style={{ color: '#eb5757', flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong>TATA SUARA</strong>
-                    <p>28Hz Sub-Bass High Pressure Array</p>
+                    <strong>FORMAT</strong>
+                    <p>Live Performance</p>
                   </div>
                 </div>
                 <div className="streaming-meta-block">
                   <ShieldCheck size={16} style={{ color: '#eb5757', flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <strong>BATAS USIA</strong>
-                    <p>18+ (Wajib KTP Fisik Asli)</p>
+                    <p>18+ (Wajib KTP Asli)</p>
                   </div>
                 </div>
               </div>
@@ -256,103 +259,17 @@ export const NightTwoEventPage: React.FC<Props> = ({
           </div>
         </section>
 
-        {/* Section: Rundown Acara (Streaming Running Order Format) */}
+        {/* Section: Rundown Acara (Multi-Stage Timetable / Coming Soon) */}
         <section id="rundown" style={{ marginBottom: '4.5rem', scrollMarginTop: '80px' }}>
           <div className="streaming-section-header">
             <div>
-              <span className="streaming-section-subtitle" style={{ color: '#eb5757' }}>SUSUNAN ACARA HARIAN</span>
+              <span className="streaming-section-subtitle" style={{ color: '#eb5757' }}>SUSUNAN ACARA &amp; TIMETABLE</span>
               <h2 className="streaming-section-title">RUNDOWN // MALAM II (31 OKT 2026)</h2>
             </div>
-            <span style={{ fontSize: '0.8rem', color: 'rgba(245, 242, 235, 0.6)' }}>
-              Total Durasi: 7 Jam
-            </span>
+            <span className="streaming-badge-box is-tba">COMING SOON</span>
           </div>
 
-          <div className="streaming-episodes-grid">
-            {/* Act 01 */}
-            <article className="streaming-episode-card">
-              <div className="streaming-episode-thumb">
-                <img src="/assets/day2_billboard_vault.jpg" alt="Under-Vault Door Open" />
-                <span className="streaming-episode-num-badge">01</span>
-                <span className="streaming-episode-duration">90 MIN</span>
-              </div>
-              <div className="streaming-episode-details">
-                <div className="streaming-episode-top-row">
-                  <h3 className="streaming-episode-title">Under-Vault Gate Open &amp; Drone Soundscape</h3>
-                  <span className="streaming-episode-stage-pill" style={{ borderColor: 'rgba(235, 87, 87, 0.3)', color: '#ff8888' }}>
-                    20:00 — 21:30 WIB
-                  </span>
-                </div>
-                <p className="streaming-episode-desc">
-                  Penukaran gelang RFID di gerbang bunker, penyesuaian akustik ruang bawah tanah, dan paparan drone frekuensi rendah pengantar.
-                </p>
-              </div>
-            </article>
-
-            {/* Act 02 */}
-            <article className="streaming-episode-card">
-              <div className="streaming-episode-thumb">
-                <img src="/assets/day2_billboard_vault.jpg" alt="Modular Warm-up" />
-                <span className="streaming-episode-num-badge">02</span>
-                <span className="streaming-episode-duration">90 MIN</span>
-              </div>
-              <div className="streaming-episode-details">
-                <div className="streaming-episode-top-row">
-                  <h3 className="streaming-episode-title">Resident Modular Architect Warm-Up</h3>
-                  <span className="streaming-episode-stage-pill" style={{ borderColor: 'rgba(235, 87, 87, 0.3)', color: '#ff8888' }}>
-                    21:30 — 23:00 WIB
-                  </span>
-                </div>
-                <p className="streaming-episode-desc">
-                  Membangun ketegangan ritmik analog 132 BPM menuju atmosfer hipnotis ruang bawah tanah dengan modulasi synthesizer langsung.
-                </p>
-              </div>
-            </article>
-
-            {/* Act 03: Headliner Main Event */}
-            <article className="streaming-episode-card is-headliner-red">
-              <div className="streaming-episode-thumb">
-                <img src="/assets/day2_billboard_vault.jpg" alt="Headliner Vault Takeover" />
-                <span className="streaming-episode-num-badge" style={{ background: '#eb5757', color: '#fff' }}>
-                  ★ 03
-                </span>
-                <span className="streaming-episode-duration">150 MIN</span>
-              </div>
-              <div className="streaming-episode-details">
-                <div className="streaming-episode-top-row">
-                  <h3 className="streaming-episode-title" style={{ color: '#ff8888' }}>
-                    ★ SECRET HEADLINER (TBA) — Vault Takeover
-                  </h3>
-                  <span className="streaming-episode-stage-pill" style={{ borderColor: '#eb5757', color: '#ff8888' }}>
-                    23:00 — 01:30 WIB
-                  </span>
-                </div>
-                <p className="streaming-episode-desc">
-                  Sesi live modular 140 BPM bertekanan akustik tinggi di panggung monolitik. Gelombang sub-bass 28Hz yang mengguncang dinding granit bunker.
-                </p>
-              </div>
-            </article>
-
-            {/* Act 04 */}
-            <article className="streaming-episode-card">
-              <div className="streaming-episode-thumb">
-                <img src="/assets/day2_billboard_vault.jpg" alt="Subterranean Overdrive Closing" />
-                <span className="streaming-episode-num-badge">04</span>
-                <span className="streaming-episode-duration">90 MIN</span>
-              </div>
-              <div className="streaming-episode-details">
-                <div className="streaming-episode-top-row">
-                  <h3 className="streaming-episode-title">Subterranean Overdrive &amp; B2B Aftermath</h3>
-                  <span className="streaming-episode-stage-pill" style={{ borderColor: 'rgba(235, 87, 87, 0.3)', color: '#ff8888' }}>
-                    01:30 — 03:00 WIB
-                  </span>
-                </div>
-                <p className="streaming-episode-desc">
-                  Penutupan ritual bunker dengan gelombang analog mendalam hingga pintu kedap suara The Under-Vault disegel kembali.
-                </p>
-              </div>
-            </article>
-          </div>
+          <MultiStageRundown day="day-2" />
         </section>
 
         {/* Section: Denah & Reservasi Meja VIP Day 2 */}

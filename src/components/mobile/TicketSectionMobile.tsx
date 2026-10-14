@@ -115,7 +115,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
   };
 
   return (
-    <section id="the-passage" ref={sectionRef} className="tickets-mobile-section" aria-label="Tiket Masuk The State of Clamour">
+    <section id="the-passage" ref={sectionRef} className="tickets-mobile-section" aria-label="Tiket Masuk The State of Clamor">
       {/* Mobile Cathedral Atmospheric Backdrop */}
       <div className="passage-mobile-cathedral-backdrop" aria-hidden="true">
         <picture>
@@ -135,16 +135,13 @@ export const TicketSectionMobile: React.FC<Props> = ({
       </div>
 
       <div className={`tickets-mobile-header ${isRevealed ? 'is-revealed' : ''}`}>
-        <span className="tickets-mobile-eyebrow">THE THRESHOLD</span>
-        <h2 className="tickets-mobile-headline">THE PASSAGE</h2>
-        <p className="tickets-mobile-tagline">
-          Entry begins here.
-        </p>
+        <span className="tickets-mobile-eyebrow">OFFICIAL ACCESS</span>
+        <h2 className="tickets-mobile-headline">TIKET</h2>
 
         <div className="tickets-mobile-hairline-draw" aria-hidden="true" />
 
         <p className="tickets-mobile-subtext">
-          All passes include verified RFID access to the venue. Select your tier below.
+          All passes include official wristband admission. Select your tier below.
         </p>
       </div>
 
@@ -177,7 +174,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="50" cy="50" r="46" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
                   <circle cx="50" cy="50" r="41" stroke="currentColor" strokeWidth="0.8" />
-                  <text x="50" y="52" textAnchor="middle" fontSize="6.5" fontFamily="Cinzel" fill="currentColor" letterSpacing="0.2em">CLAMOUR</text>
+                  <text x="50" y="52" textAnchor="middle" fontSize="6.5" fontFamily="Cinzel" fill="currentColor" letterSpacing="0.2em">CLAMOR</text>
                   <text x="50" y="60" textAnchor="middle" fontSize="4.2" fontFamily="Inter" fill="currentColor" letterSpacing="0.15em">ADMIT ONE</text>
                 </svg>
               </div>
@@ -249,7 +246,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
 
                 <div className="ticket-mobile-auth-guarantee">
                   <ShieldCheck size={11} style={{ color: 'var(--color-gold-antique)' }} />
-                  <span>OFFICIAL VERIFIED RFID PASS</span>
+                  <span>OFFICIAL WRISTBAND PASS</span>
                 </div>
               </div>
             </article>

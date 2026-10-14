@@ -25,6 +25,8 @@ export const App: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [highlightedTicketId, setHighlightedTicketId] = useState<string | null>(null);
   const [selectedReservationPackageId, setSelectedReservationPackageId] = useState<string | undefined>(undefined);
+  const [selectedReservationDay, setSelectedReservationDay] = useState<'day-1' | 'day-2'>('day-1');
+  const [previousView, setPreviousView] = useState<ViewMode>('home');
 
   // Preserve home scroll position across page transitions
   const homeScrollYRef = useRef<number>(0);
@@ -57,12 +59,13 @@ export const App: React.FC = () => {
   }, []);
 
   // Parse view from hash
-  const parseViewFromHash = (hash: string): { view: ViewMode; tab?: 'protocols' | 'architecture' | 'timetable' | 'guide'; scrollTarget?: string } => {
+  const parseViewFromHash = (hash: string): { view: ViewMode; tab?: 'protocols' | 'architecture' | 'timetable' | 'guide'; scrollTarget?: string; day?: 'day-1' | 'day-2' } => {
     if (hash === '#/denah' || hash === '#denah') {
       return { view: 'denah' };
     }
-    if (hash === '#/reservasi' || hash === '#reservasi') {
-      return { view: 'reservasi' };
+    if (hash.startsWith('#/reservasi') || hash.startsWith('#reservasi')) {
+      const day = (hash.includes('day=day-2') || hash.includes('day-2')) ? 'day-2' : 'day-1';
+      return { view: 'reservasi', day };
     }
     if (hash.startsWith('#/event/night-1') || hash === '#event-night-1' || hash === '#night-1' || hash === '#/day-1' || hash === '#day-1') {
       const scrollTarget = hash.includes('#denah') ? 'denah' : hash.includes('#reservasi') ? 'reservasi' : undefined;
@@ -88,10 +91,12 @@ export const App: React.FC = () => {
   // Sync hash routing on mount and hashchange with motion
   useEffect(() => {
     const handleHash = () => {
-      const { view, tab, scrollTarget } = parseViewFromHash(window.location.hash);
+      const { view, tab, scrollTarget, day } = parseViewFromHash(window.location.hash);
       if (tab) setDossierInitialTab(tab);
+      if (day) setSelectedReservationDay(day);
 
       if (view !== currentView) {
+        setPreviousView(currentView);
         if (currentView === 'home' && view !== 'home') {
           homeScrollYRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
         }
@@ -253,6 +258,10 @@ export const App: React.FC = () => {
 
     if (currentView === view && window.location.hash === hash) return;
 
+    if (currentView !== view) {
+      setPreviousView(currentView);
+    }
+
     // Capture home scroll position before navigating away
     if (currentView === 'home' && view !== 'home') {
       homeScrollYRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
@@ -317,9 +326,23 @@ export const App: React.FC = () => {
     navigateTo('denah', '#/denah');
   };
 
-  const handleOpenReservasi = (packageId?: string) => {
+  const handleOpenReservasi = (packageId?: string, targetDay: 'day-1' | 'day-2' = 'day-1') => {
+    setPreviousView(currentView);
     if (packageId) setSelectedReservationPackageId(packageId);
-    navigateTo('reservasi', '#/reservasi');
+    setSelectedReservationDay(targetDay);
+    navigateTo('reservasi', `#/reservasi?day=${targetDay}`);
+  };
+
+  const handleBackFromReservasi = () => {
+    if (previousView === 'event-night-1') {
+      handleOpenNight1();
+    } else if (previousView === 'event-night-2') {
+      handleOpenNight2();
+    } else if (previousView === 'denah') {
+      handleOpenDenah();
+    } else {
+      handleBackToHome();
+    }
   };
 
   const handleOpenDossier = (tab: 'protocols' | 'architecture' | 'timetable' | 'guide' = 'timetable') => {
@@ -399,7 +422,8 @@ export const App: React.FC = () => {
         {currentView === 'reservasi' && (
           <ReservasiPage
             initialPackageId={selectedReservationPackageId}
-            onBack={handleBackToHome}
+            initialDay={selectedReservationDay}
+            onBack={handleBackFromReservasi}
             onNavigateToDenah={handleOpenDenah}
             onToast={showToast}
           />
@@ -411,6 +435,7 @@ export const App: React.FC = () => {
             initialPackageId={selectedReservationPackageId}
             onBack={handleBackToHome}
             onCheckout={handleCheckout}
+            onOpenReservasi={(day) => handleOpenReservasi(undefined, day || 'day-1')}
             onViewNight2={handleOpenNight2}
             onToast={showToast}
           />
@@ -422,6 +447,7 @@ export const App: React.FC = () => {
             initialPackageId={selectedReservationPackageId}
             onBack={handleBackToHome}
             onCheckout={handleCheckout}
+            onOpenReservasi={(day) => handleOpenReservasi(undefined, day || 'day-2')}
             onViewNight1={handleOpenNight1}
             onToast={showToast}
           />
@@ -442,7 +468,7 @@ export const App: React.FC = () => {
       <Footer />
 
       {/* Discreet Atmospheric Toast Alert */}
-      <div className={`clamour-toast-alert ${toastMessage ? 'is-visible' : ''}`} role="status">
+      <div className={`clamor-toast-alert ${toastMessage ? 'is-visible' : ''}`} role="status">
         <Check size={15} style={{ color: 'var(--color-gold-antique)' }} />
         <span>{toastMessage}</span>
       </div>

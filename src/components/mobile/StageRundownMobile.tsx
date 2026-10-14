@@ -15,7 +15,7 @@ export const StageRundownMobile: React.FC<Props> = ({
   onOpenFullDossier,
 }) => {
   return (
-    <section id="the-night" className="rundown-mobile-section" aria-label="Jadwal Acara The State of Clamour">
+    <section id="the-night" className="rundown-mobile-section" aria-label="Jadwal Acara The State of Clamor">
       <div className="rundown-mobile-header">
         <span className="rundown-mobile-eyebrow">DETAIL ACARA</span>
         <h2 className="rundown-mobile-headline">NIGHTLY SCHEDULE</h2>
@@ -53,7 +53,7 @@ export const StageRundownMobile: React.FC<Props> = ({
             <h3 className="rundown-mobile-title">DAY 1 — SWEAR IN CONTINENTAL</h3>
             <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
-              Konser panggung utama sinematik dan brass akustik megah di Main Assembly Hall berketinggian 14 meter.
+              Puncak pertunjukan spektakuler untuk membuka malam pertama ritual The State of Clamor.
             </p>
 
             <div className="rundown-mobile-meta-strip">
@@ -99,7 +99,7 @@ export const StageRundownMobile: React.FC<Props> = ({
             <h3 className="rundown-mobile-title">DAY 2 — SWEAR IN CONTINENTAL</h3>
             <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
-              Pengalaman rave berkecepatan 142 BPM dengan visual laser strobo monokromatik dan tata suara Funktion-One.
+              Puncak ritual malam kedua dengan set audio visual imersif penutup The State of Clamor.
             </p>
 
             <div className="rundown-mobile-meta-strip">

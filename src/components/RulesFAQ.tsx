@@ -26,7 +26,7 @@ export const RulesFAQ: React.FC<Props> = ({ onOpenDossier, onToast }) => {
       </p>
 
       <p className="section-body-text">
-        The State of Clamour adalah pagelaran malam yang beretika dan teratur. Pelajari poin utama di bawah atau buka dosir lengkap panduan acara.
+        The State of Clamor adalah pagelaran malam yang beretika dan teratur. Pelajari poin utama di bawah atau buka dosir lengkap panduan acara.
       </p>
 
       {/* Sleek 3-Pillar Minimalist Directives */}
@@ -38,7 +38,7 @@ export const RulesFAQ: React.FC<Props> = ({ onOpenDossier, onToast }) => {
           </div>
           <h3 className="pillar-title">18+ WAJIB IDENTITAS FISIK</h3>
           <p className="pillar-desc">
-            Wajib membawa kartu identitas fisik resmi yang masih berlaku (KTP / Paspor / SIM) untuk penukaran gelang RFID di loket. Tangkapan layar HP atau kartu pelajar tidak berlaku.
+            Wajib membawa kartu identitas fisik resmi yang masih berlaku (KTP / Paspor / SIM) untuk penukaran gelang fisik resmi di loket. Tangkapan layar HP atau kartu pelajar tidak berlaku.
           </p>
           <div className="pillar-footer-spec">
             <CheckCircle2 size={13} style={{ color: 'var(--color-gold-antique)' }} />
@@ -66,9 +66,9 @@ export const RulesFAQ: React.FC<Props> = ({ onOpenDossier, onToast }) => {
           <div className="pillar-icon-wrap">
             <FileText size={20} style={{ color: 'var(--color-gold-antique)' }} />
           </div>
-          <h3 className="pillar-title">AKSES RFID & TANPA TOLERANSI</h3>
+          <h3 className="pillar-title">GELANG RESMI & TANPA TOLERANSI</h3>
           <p className="pillar-desc">
-            Transaksi 100% nontunai menggunakan gelang RFID atau QRIS resmi. Tanpa toleransi untuk obat-obatan terlarang, benda tajam, cairan dari luar, atau calo tiket liar.
+            Transaksi 100% nontunai menggunakan QRIS resmi. Tanpa toleransi untuk obat-obatan terlarang, benda tajam, cairan dari luar, atau calo tiket liar.
           </p>
           <div className="pillar-footer-spec">
             <CheckCircle2 size={13} style={{ color: 'var(--color-gold-antique)' }} />
@@ -84,7 +84,7 @@ export const RulesFAQ: React.FC<Props> = ({ onOpenDossier, onToast }) => {
             <FileText size={24} style={{ color: 'var(--color-gold-antique)' }} />
           </div>
           <div className="dossier-gateway-text">
-            <span className="dossier-doc-kicker">INFORMASI RESMI EVENT // THE STATE OF CLAMOUR</span>
+            <span className="dossier-doc-kicker">INFORMASI RESMI EVENT // THE STATE OF CLAMOR</span>
             <h4 className="dossier-gateway-heading">PANDUAN LENGKAP ACARA & RUNDOWN RESMI</h4>
             <p className="dossier-gateway-sub">
               Pelajari denah lengkap ruangan venue, profil akustik panggung, jadwal rundown menyeluruh, panduan transportasi, dan pos medis darurat.

@@ -57,7 +57,7 @@ export const EventDetailsPage: React.FC<Props> = ({
           <span>DETAIL RESMI ACARA // 30 — 31 OKTOBER 2026</span>
         </div>
         <h1 className="dossier-main-headline text-gold-metallic">
-          THE STATE OF CLAMOUR
+          THE STATE OF CLAMOR
         </h1>
         <p className="dossier-subheadline">
           SWEAR IN CONTINENTAL — Panduan resmi acara, susunan rundown panggung jam demi jam, arsitektur venue, dan tata tertib kehadiran.
@@ -136,7 +136,7 @@ export const EventDetailsPage: React.FC<Props> = ({
               <div className="protocol-entry-content">
                 <h3 className="protocol-entry-title">BATAS USIA & VERIFIKASI IDENTITAS WAJIB</h3>
                 <p className="protocol-entry-text">
-                  The State of Clamour adalah acara khusus <strong>18+</strong>. Tidak ada pengecualian yang diberikan dalam kondisi apa pun.
+                  The State of Clamor adalah acara khusus <strong>18+</strong>. Tidak ada pengecualian yang diberikan dalam kondisi apa pun.
                 </p>
                 <div className="protocol-entry-specs">
                   <div className="spec-check-item">
@@ -201,7 +201,7 @@ export const EventDetailsPage: React.FC<Props> = ({
                 <div className="protocol-entry-specs">
                   <div className="spec-check-item">
                     <CheckCircle2 size={15} className="spec-check-icon" />
-                    <span><strong>Protokol Masuk Kembali (Re-Entry):</strong> Diizinkan bagi pemegang gelang RFID terverifikasi hingga pukul 23:30 WIB.</span>
+                    <span><strong>Protokol Masuk Kembali (Re-Entry):</strong> Diizinkan bagi pemegang gelang fisik resmi terverifikasi hingga pukul 23:30 WIB.</span>
                   </div>
                   <div className="spec-check-item">
                     <AlertTriangle size={15} className="spec-warn-icon" />
@@ -214,14 +214,14 @@ export const EventDetailsPage: React.FC<Props> = ({
             <article className="dossier-protocol-entry">
               <div className="protocol-entry-num">05</div>
               <div className="protocol-entry-content">
-                <h3 className="protocol-entry-title">INTEGRITAS GELANG RFID & KEASLIAN TIKET</h3>
+                <h3 className="protocol-entry-title">INTEGRITAS GELANG FISIK & KEASLIAN TIKET</h3>
                 <p className="protocol-entry-text">
                   Artatix adalah satu-satunya mitra tiket resmi kami. Barcode tiket yang dibeli melalui calo atau pihak ketiga tidak terverifikasi tidak akan berlaku dan tidak ada pengembalian dana.
                 </p>
                 <div className="protocol-entry-specs">
                   <div className="spec-check-item">
                     <AlertTriangle size={15} className="spec-warn-icon" />
-                    <span><strong>Aturan Gelang:</strong> Gelang tangan RFID yang tampak robek, terpotong, direkatkan kembali, atau dialihkan ke orang lain akan langsung dibatalkan hak aksesnya di tempat.</span>
+                    <span><strong>Aturan Gelang:</strong> Gelang tangan fisik yang tampak robek, terpotong, direkatkan kembali, atau dialihkan ke orang lain akan langsung dibatalkan hak aksesnya di tempat.</span>
                   </div>
                 </div>
               </div>
@@ -360,7 +360,7 @@ export const EventDetailsPage: React.FC<Props> = ({
               </div>
               <div className="dossier-tt-row">
                 <span className="tt-col-time">02:30 — 04:00</span>
-                <span className="tt-col-artist">THE STATE OF CLAMOUR FINAL CONVERGENCE</span>
+                <span className="tt-col-artist">THE STATE OF CLAMOR FINAL CONVERGENCE</span>
                 <span className="tt-col-stage">DUAL TRANSMISSION</span>
               </div>
             </div>
@@ -380,16 +380,16 @@ export const EventDetailsPage: React.FC<Props> = ({
 
           <div className="dossier-faq-ledger">
             <div className="dossier-faq-card">
-              <h3 className="dossier-faq-q">Bagaimana cara penukaran gelang RFID?</h3>
+              <h3 className="dossier-faq-q">Bagaimana cara penukaran gelang fisik tiket?</h3>
               <p className="dossier-faq-a">
-                Tunjukkan e-tiket barcode resmi dari Artatix bersama KTP/SIM/Paspor fisik asli Anda di loket penukaran gerbang. Anda akan menerima gelang RFID terenkripsi yang berfungsi sebagai tiket akses masuk sekaligus dompet pembayaran nontunai. Loket penukaran dibuka mulai pukul 19:00 WIB (60 menit sebelum pintu dibuka).
+                Tunjukkan e-tiket barcode resmi dari Artatix bersama KTP/SIM/Paspor fisik asli Anda di loket penukaran gerbang. Anda akan menerima gelang fisik resmi yang berfungsi sebagai tanda akses masuk venue. Loket penukaran dibuka mulai pukul 19:00 WIB (60 menit sebelum pintu dibuka).
               </p>
             </div>
 
             <div className="dossier-faq-card">
               <h3 className="dossier-faq-q">Apakah uang tunai diterima di dalam venue?</h3>
               <p className="dossier-faq-a">
-                Tidak. The State of Clamour adalah acara 100% nontunai (cashless). Semua transaksi pembelian makanan, minuman, dan merchandise menggunakan gelang RFID atau seluruh saluran pembayaran QRIS (BCA, Mandiri, GoPay, OVO, ShopeePay, Dana).
+                Tidak. The State of Clamor adalah acara 100% nontunai (cashless). Semua transaksi pembelian makanan, minuman, dan merchandise menggunakan seluruh saluran pembayaran digital QRIS resmi (BCA, Mandiri, GoPay, OVO, ShopeePay, Dana).
               </p>
             </div>
 
@@ -414,7 +414,7 @@ export const EventDetailsPage: React.FC<Props> = ({
       <footer className="dossier-bottom-cta">
         <div className="dossier-cta-inner">
           <div>
-            <span className="section-eyebrow" style={{ marginBottom: '0.4rem', display: 'block' }}>THE STATE OF CLAMOUR</span>
+            <span className="section-eyebrow" style={{ marginBottom: '0.4rem', display: 'block' }}>THE STATE OF CLAMOR</span>
             <h3 className="dossier-cta-title">SIAP MEMASUKI ACARA?</h3>
             <p className="dossier-cta-desc">Tiket terjual cepat. Amankan kategori tiket pilihan Anda sebelum kuota penuh.</p>
           </div>

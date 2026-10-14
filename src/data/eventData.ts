@@ -1,9 +1,9 @@
 import { Announcement, Artist, EventData, TicketTier } from '../types';
 
 export const initialEvent: EventData = {
-  id: 'evt-clamour-2026',
-  slug: 'the-state-of-clamour-2026',
-  title: 'THE STATE OF CLAMOUR',
+  id: 'evt-clamor-2026',
+  slug: 'the-state-of-clamor-2026',
+  title: 'THE STATE OF CLAMOR',
   tagline: 'SWEAR IN CONTINENTAL',
   description: 'Two nights of nocturnal sound and monumental assembly.',
   startDate: '2026-10-30T20:00:00+07:00',
@@ -16,8 +16,8 @@ export const initialEvent: EventData = {
 };
 
 export const initialAnnouncement: Announcement = {
-  id: 'ann-clamour-01',
-  eventId: 'evt-clamour-2026',
+  id: 'ann-clamor-01',
+  eventId: 'evt-clamor-2026',
   message: 'SWEAR IN CONTINENTAL · 30 — 31 OCTOBER 2026 · GATES UNSEALED 20:00',
   isEnabled: false,
   badgeText: 'DISPATCH'
@@ -34,7 +34,7 @@ export const OFFICIAL_TIKTOK_URL = 'https://www.tiktok.com/@thestateofclamor';
 export const archivedBlindTickets: TicketTier[] = [
   {
     id: 'tkt-blind-day1',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'BLIND TICKET DAY 1',
     category: '1 Night Pass · 30 Oct',
     price: 50000,
@@ -46,7 +46,7 @@ export const archivedBlindTickets: TicketTier[] = [
   },
   {
     id: 'tkt-blind-day2',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'BLIND TICKET DAY 2',
     category: '1 Night Pass · 31 Oct',
     price: 50000,
@@ -62,11 +62,11 @@ export const archivedBlindTickets: TicketTier[] = [
 export const earlyBirdTickets: TicketTier[] = [
   {
     id: 'tkt-early-day1',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'EARLY BIRD DAY 1',
     category: '1 Night Pass · 30 Oct',
     price: 100000,
-    perks: ['Single night admission (30 Oct)', 'General assembly access', 'Verified RFID access pass'],
+    perks: ['Single night admission (30 Oct)', 'General assembly access', 'Official wristband access pass'],
     status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Early Bird',
@@ -74,11 +74,11 @@ export const earlyBirdTickets: TicketTier[] = [
   },
   {
     id: 'tkt-early-day2',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'EARLY BIRD DAY 2',
     category: '1 Night Pass · 31 Oct',
     price: 100000,
-    perks: ['Single night admission (31 Oct)', 'General assembly access', 'Verified RFID access pass'],
+    perks: ['Single night admission (31 Oct)', 'General assembly access', 'Official wristband access pass'],
     status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Early Bird',
@@ -86,7 +86,7 @@ export const earlyBirdTickets: TicketTier[] = [
   },
   {
     id: 'tkt-early-2days',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'EARLY BIRD 2 DAYS PASS',
     category: '2 Nights Pass · 30 & 31 Oct',
     price: 180000,
@@ -111,14 +111,16 @@ export const initialTickets: TicketTier[] = earlyBirdTickets;
 // false -> guestlist shows the individual guest cards (Malvin & Far) again.
 // When the official per-guest flyers are ready, update imageUrl/posterUrl
 // below and flip this flag to false. No component logic needs to change.
-// ---------------------------------------------------------------------------
 export const IS_LINEUP_TEASER_MODE = true;
+
+// Set to true once the official multi-stage running order / lineup is publicly announced
+export const IS_RUNDOWN_RELEASED = false;
 
 // Individual guests (hidden while teaser mode is on — data & logic kept intact)
 export const archivedIndividualArtists: Artist[] = [
   {
     id: 'art-malvin',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'Malvin',
     dayLabel: 'Day 1',
     stageName: 'Mizu Commonroom',
@@ -131,7 +133,7 @@ export const archivedIndividualArtists: Artist[] = [
   },
   {
     id: 'art-far',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'Far',
     dayLabel: 'Day 2',
     stageName: 'Mizu Commonroom',
@@ -151,40 +153,40 @@ export const archivedIndividualArtists: Artist[] = [
 export const day1Artists: Artist[] = [
   {
     id: 'art-day1-1',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'Swear In Continental · ?',
     dayLabel: 'Day 1 · 30 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '20:00 WIB',
-    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     audioPreviewUrl: null,
     sortOrder: 1
   },
   {
     id: 'art-day1-2',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'Swear In Continental · ?',
     dayLabel: 'Day 1 · 30 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '22:00 WIB',
-    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     audioPreviewUrl: null,
     sortOrder: 2
   },
   {
     id: 'art-day1-3',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'Swear In Continental · ?',
     dayLabel: 'Day 1 · 30 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '00:00 WIB',
-    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     audioPreviewUrl: null,
     sortOrder: 3
   }
@@ -193,40 +195,40 @@ export const day1Artists: Artist[] = [
 export const day2Artists: Artist[] = [
   {
     id: 'art-day2-1',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'Swear In Continental · ?',
     dayLabel: 'Day 2 · 31 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '20:00 WIB',
-    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     audioPreviewUrl: null,
     sortOrder: 1
   },
   {
     id: 'art-day2-2',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'Swear In Continental · ?',
     dayLabel: 'Day 2 · 31 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '22:00 WIB',
-    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     audioPreviewUrl: null,
     sortOrder: 2
   },
   {
     id: 'art-day2-3',
-    eventId: 'evt-clamour-2026',
+    eventId: 'evt-clamor-2026',
     name: 'Swear In Continental · ?',
     dayLabel: 'Day 2 · 31 Okt',
     stageName: 'Mizu Commonroom',
     performanceTime: '00:00 WIB',
-    imageUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamour_gothic_poster.jpg',
+    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     audioPreviewUrl: null,
     sortOrder: 3
   }

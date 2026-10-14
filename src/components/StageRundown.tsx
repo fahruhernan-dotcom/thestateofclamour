@@ -81,7 +81,7 @@ export const StageRundown: React.FC<Props> = ({
             </div>
 
             <p className="event-roster-desc">
-              Konser panggung utama sinematik dan brass akustik megah di Main Assembly Hall berketinggian 14 meter.
+              Puncak pertunjukan spektakuler untuk membuka malam pertama ritual The State of Clamor.
             </p>
 
             {/* Clean Typographic Metadata Strip (Zero Pill Box Clutter) */}
@@ -141,7 +141,7 @@ export const StageRundown: React.FC<Props> = ({
             </div>
 
             <p className="event-roster-desc">
-              Perjalanan sonik modular synthesizer analog real-time dan gelombang sub-bass di panggung Swear in Continental.
+              Puncak ritual malam kedua dengan set audio visual imersif penutup The State of Clamor.
             </p>
 
             {/* Clean Typographic Metadata Strip (Zero Pill Box Clutter) */}
@@ -185,7 +185,7 @@ export const StageRundown: React.FC<Props> = ({
             <span>DOSIR RESMI</span>
           </div>
           <h3 className="master-banner-title">
-            THE STATE OF CLAMOUR — DOSIR RESMI
+            THE STATE OF CLAMOR — DOSIR RESMI
           </h3>
           <p className="master-banner-desc">
             Rundown lengkap 2 malam paralel, denah seluruh panggung, tata tertib identitas fisik, dan panduan masuk.

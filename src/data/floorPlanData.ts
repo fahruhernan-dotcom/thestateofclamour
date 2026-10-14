@@ -10,6 +10,13 @@
 
 import { TableSpot, FloorLevel } from '../types/tableTypes';
 
+// =====================================================================================
+// MASTER TOGGLE: HIDE AVAILABILITY STATUS (NON-TRANSPARANSI SESUAI ARAHAN KLIEN)
+// true  -> Hide status sold/available, hide counter, hide gembok, semua meja bisa dipilih
+// false -> Tampilkan live status (Tersedia hijau vs Terisi merah dengan counter & gembok)
+// =====================================================================================
+export const HIDE_TABLE_AVAILABILITY_STATUS = true;
+
 export const FLOOR_ONE_SPOTS: TableSpot[] = [
   // --- TOP ENTRANCE HIGH TABLES (ST-1 to ST-3) ---
   {

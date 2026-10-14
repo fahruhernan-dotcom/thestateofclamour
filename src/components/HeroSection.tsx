@@ -777,7 +777,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
       ref={heroTrackRef}
       id="hero"
       className="hero-scroll-track"
-      aria-label="The State of Clamour // Swear In Continental"
+      aria-label="The State of Clamor // Swear In Continental"
     >
       <div className="hero-sticky-stage">
         {/* 0. Instant Fallback Poster (Master Key Visual) */}
@@ -785,7 +785,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
           <source media="(max-width: 768px)" srcSet="/assets/hero_scroll_poster_mobile.jpg" />
           <img
             src="/assets/hero_scroll_poster.jpg"
-            alt="The State of Clamour // Swear In Continental"
+            alt="The State of Clamor // Swear In Continental"
             className="hero-cinematic-poster-fallback-img"
             aria-hidden="true"
           />
@@ -803,7 +803,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
 
         {/* 3. Semantic H1 for SEO */}
         <h1 className="sr-only">
-          THE STATE OF CLAMOUR — SWEAR IN CONTINENTAL
+          THE STATE OF CLAMOR — SWEAR IN CONTINENTAL
         </h1>
 
         {/* 4. Initial Hero Poster Metadata (Dissolves between 0.00 -> 0.18) */}

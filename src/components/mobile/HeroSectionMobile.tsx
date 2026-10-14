@@ -697,14 +697,14 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
       id="hero"
       data-section="hero-mobile"
       className="hero-mobile-track"
-      aria-label="The State of Clamour // Swear In Continental (Mobile)"
+      aria-label="The State of Clamor // Swear In Continental (Mobile)"
     >
       <div className="hero-mobile-sticky">
         {/* Layer 0: Instant Fallback Poster (Zero-delay Paint, identical to Frame 1) */}
         <div className="hero-mobile-poster-fallback">
           <img
             src="/assets/hero_scroll_poster_mobile_2k.jpg"
-            alt="The State of Clamour // Swear In Continental"
+            alt="The State of Clamor // Swear In Continental"
             className="hero-mobile-poster-fallback-img"
           />
         </div>

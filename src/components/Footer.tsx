@@ -5,11 +5,11 @@ export const Footer: React.FC = () => {
   return (
     <footer className="cinematic-footer">
       <p className="footer-brand-title">
-        THE STATE OF CLAMOUR
+        THE STATE OF CLAMOR
       </p>
 
       <p className="footer-credits-note">
-        © 2026 THE STATE OF CLAMOUR. SWEAR IN CONTINENTAL. ALL RIGHTS RESERVED.
+        © 2026 THE STATE OF CLAMOR. SWEAR IN CONTINENTAL. ALL RIGHTS RESERVED.
       </p>
 
       <div className="footer-social-cluster">

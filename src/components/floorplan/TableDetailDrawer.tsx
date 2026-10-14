@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { TableSpot, TableStatus } from '../../types/tableTypes';
 import { ADMIN_DAY1, ADMIN_DAY2 } from '../../data/reservationData';
-import { X, Lock, CheckCircle2, Users, MessageCircle, Copy, Check } from 'lucide-react';
+import { HIDE_TABLE_AVAILABILITY_STATUS } from '../../data/floorPlanData';
+import { X, Lock, CheckCircle2, Users, MessageCircle, Copy, Check, Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface Props {
@@ -45,7 +46,7 @@ export const TableDetailDrawer: React.FC<Props> = ({
 
   if (!spot) return null;
 
-  const isAvailable = status === 'available';
+  const isAvailable = HIDE_TABLE_AVAILABILITY_STATUS ? true : status === 'available';
   const minSpend = day === 'day-1' ? spot.formattedMinSpendDay1 : spot.formattedMinSpendDay2;
   const admin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
 
@@ -58,7 +59,7 @@ export const TableDetailDrawer: React.FC<Props> = ({
 
     const venueName = spot.venue === 'tetra' ? 'Tetra Solo' : 'Mizu Commonroom';
     const dayName = day === 'day-1' ? 'Day 1 (30 Okt)' : 'Day 2 (31 Okt)';
-    const message = `Halo ${admin.name}, saya ingin reservasi meja *${spot.code}* di *${venueName}* (${spot.name}) untuk The State of Clamour: ${dayName}.\n\n• Minimum Charge: ${minSpend}\n• Booking Fee: ${spot.formattedBookingFee || '-'}\n• Kapasitas: ${spot.capacityText} (${spot.complementTickets || 2} Tiket Masuk)\n\nMohon konfirmasi ketersediaan meja untuk pembayaran Booking Fee. Terima kasih!`;
+    const message = `Halo ${admin.name}, saya ingin reservasi meja *${spot.code}* di *${venueName}* (${spot.name}) untuk The State of Clamor: ${dayName}.\n\n• Minimum Charge: ${minSpend}\n• Booking Fee: ${spot.formattedBookingFee || '-'}\n• Kapasitas: ${spot.capacityText} (${spot.complementTickets || 2} Tiket Masuk)\n\nMohon konfirmasi ketersediaan meja untuk pembayaran Booking Fee. Terima kasih!`;
     const waUrl = `https://wa.me/${admin.phone}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank', 'noopener,noreferrer');
   };
@@ -85,17 +86,23 @@ export const TableDetailDrawer: React.FC<Props> = ({
               <div className="drawer-meta-badges">
                 <span className="badge-floor">{venueLabel}</span>
                 <span className="badge-zone">{spot.zoneTag}</span>
-                <span className={`badge-status ${isAvailable ? 'is-available' : 'is-occupied'}`}>
-                  {isAvailable ? (
-                    <>
-                      <CheckCircle2 size={11} /> TERSEDIA
-                    </>
-                  ) : (
-                    <>
-                      <Lock size={11} /> TERISI / BOOKED
-                    </>
-                  )}
-                </span>
+                {HIDE_TABLE_AVAILABILITY_STATUS ? (
+                  <span className="badge-status is-available">
+                    <Sparkles size={11} /> RESERVASI VIP
+                  </span>
+                ) : (
+                  <span className={`badge-status ${isAvailable ? 'is-available' : 'is-occupied'}`}>
+                    {isAvailable ? (
+                      <>
+                        <CheckCircle2 size={11} /> TERSEDIA
+                      </>
+                    ) : (
+                      <>
+                        <Lock size={11} /> TERISI / BOOKED
+                      </>
+                    )}
+                  </span>
+                )}
               </div>
               <div className="drawer-title-row">
                 <h2 className="drawer-table-code">{spot.code}</h2>

@@ -1,5 +1,5 @@
 // Configuration and Data for Party Reservations & Floor Plan
-// The State of Clamour: Swear in Continental (30–31 October 2026)
+// The State of Clamor: Swear in Continental (30–31 October 2026)
 
 export interface ReservationPackage {
   id: string;
@@ -64,7 +64,7 @@ export const reservationPackages: ReservationPackage[] = [
     formattedMinSpendDay2: 'Rp 6.000.000',
     inclusions: [
       'Kapasitas Meja: 8 PAX',
-      '4 Tiket Masuk Komplimen (RFID)',
+      '4 Tiket Masuk Komplimen (Gelang Resmi)',
       'Booking Fee Kuncian Meja: Rp 500.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
@@ -84,7 +84,7 @@ export const reservationPackages: ReservationPackage[] = [
     formattedMinSpendDay2: 'Rp 5.500.000',
     inclusions: [
       'Kapasitas Meja: 6 PAX',
-      '3 Tiket Masuk Komplimen (RFID)',
+      '3 Tiket Masuk Komplimen (Gelang Resmi)',
       'Booking Fee Kuncian Meja: Rp 500.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
@@ -103,7 +103,7 @@ export const reservationPackages: ReservationPackage[] = [
     formattedMinSpendDay2: 'Rp 4.000.000',
     inclusions: [
       'Kapasitas Meja: 4 – 6 PAX',
-      '2 – 3 Tiket Masuk Komplimen (RFID)',
+      '2 – 3 Tiket Masuk Komplimen (Gelang Resmi)',
       'Booking Fee Kuncian Meja: Rp 300.000 – Rp 400.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
@@ -122,7 +122,7 @@ export const reservationPackages: ReservationPackage[] = [
     formattedMinSpendDay2: 'Rp 2.000.000 – Rp 2.500.000',
     inclusions: [
       'Kapasitas Meja: 4 PAX',
-      '2 Tiket Masuk Komplimen (RFID)',
+      '2 Tiket Masuk Komplimen (Gelang Resmi)',
       'Booking Fee Kuncian Meja: Rp 200.000 – Rp 250.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
@@ -141,7 +141,7 @@ export const reservationPackages: ReservationPackage[] = [
     formattedMinSpendDay2: 'Rp 1.500.000',
     inclusions: [
       'Kapasitas Meja: 4 PAX',
-      '2 Tiket Masuk Komplimen (RFID)',
+      '2 Tiket Masuk Komplimen (Gelang Resmi)',
       'Booking Fee Kuncian Meja: Rp 200.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
@@ -176,11 +176,11 @@ export const venueZones: VenueZone[] = [
     category: 'vip',
     capacity: '4 Unit Sofa (Maks 40 Hadirin)',
     soundProfile: 'Optimal Acoustic Center Field',
-    description: 'Sofa paling prestisius tepat di tengah aula menghadap panggung. Dilengkapi layanan pelayan khusus dan kenyamanan tanpa batas.',
+    description: 'Sofa utama di area tengah yang menghadap langsung ke panggung.',
     facilities: [
-      'Sofa mewah busa tebal dengan meja marmer gelap',
-      'Dedicated personal butler & keamanan meja khusus',
-      'Paket minuman premium spirit & champagne inklusif'
+      'Sofa nyaman dengan meja luas',
+      'Pendampingan staf venue ke area meja',
+      'Paket minuman sesuai ketentuan reservasi'
     ],
     associatedPackageId: 'pkg-vvip-royal'
   },
@@ -250,7 +250,7 @@ export const venueZones: VenueZone[] = [
     category: 'bar',
     capacity: 'Layanan Cepat 360°',
     soundProfile: 'Ambient Acoustic Dip',
-    description: 'Stasiun bar utama yang menyajikan racikan koktail khas malam Clamour, deretan draught beer dingin, dan minuman segar.',
+    description: 'Stasiun bar utama yang menyajikan racikan koktail khas malam Clamor, deretan draught beer dingin, dan minuman segar.',
     facilities: [
       'Sistem pembayaran cashless cepat (QRIS, Kartu)',
       'Bartender profesional berlisensi mixology',
@@ -293,7 +293,7 @@ export const venueZones: VenueZone[] = [
     category: 'facility',
     capacity: '6 Jalur Pemeriksaan',
     soundProfile: 'Entrance Transit Hub',
-    description: 'Pintu gerbang monumen utama tempat penukaran e-voucher tiket resmi Artatix menjadi gelang RFID fisik dan verifikasi identitas 18+.',
+    description: 'Pintu gerbang monumen utama tempat penukaran e-voucher tiket resmi Artatix menjadi gelang fisik resmi dan verifikasi identitas 18+.',
     facilities: [
       'Pemindai barcode kecepatan tinggi Artatix',
       'Jalur khusus VIP / Reservasi tanpa antre',
@@ -332,7 +332,7 @@ export function buildWhatsAppReservationUrl({
   const eventTheme = 'SWEAR IN CONTINENTAL';
 
   let message = `Halo ${admin.name},\n`;
-  message += `Saya tertarik untuk melakukan reservasi meja/sofa di acara *THE STATE OF CLAMOUR: ${eventTheme}*.\n\n`;
+  message += `Saya tertarik untuk melakukan reservasi meja/sofa di acara *THE STATE OF CLAMOR: ${eventTheme}*.\n\n`;
   message += `*DETAIL PERMINTAAN RESERVASI:*\n`;
   message += `- *Jadwal Acara:* ${dayLabel}\n`;
   
@@ -372,7 +372,7 @@ export function buildWhatsAppReservationUrl({
 export function buildAdminGeneralInquiryUrl(day: 'day-1' | 'day-2') {
   const admin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
   const eventTheme = 'Swear in Continental';
-  const message = `Halo ${admin.name}, saya ingin konsultasi mengenai tiket & reservasi meja untuk acara The State of Clamour: ${eventTheme} (${admin.dateLabel}). Mohon informasinya. Terima kasih!`;
+  const message = `Halo ${admin.name}, saya ingin konsultasi mengenai tiket & reservasi meja untuk acara The State of Clamor: ${eventTheme} (${admin.dateLabel}). Mohon informasinya. Terima kasih!`;
   const url = `https://wa.me/${admin.phone}?text=${encodeURIComponent(message)}`;
   return {
     url,

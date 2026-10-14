@@ -121,7 +121,7 @@ export const OfficialFAQSection: React.FC = () => {
       question: 'Apa saja fasilitas khusus untuk tamu reservasi meja?',
       answer: (
         <p style={{ margin: '0.2rem 0' }}>
-          Tamu reservasi mendapatkan layanan prioritas: fast-track gate entry tanpa antre reguler, pengawalan langsung ke nomor meja oleh tim hospitality, dedicated butler service, dan kemudahan pemesanan botol di meja.
+          Tamu reservasi meja mendapatkan kepastian tempat duduk/sofa yang dipesan, pendampingan dari staf venue ke nomor meja, serta kemudahan pemesanan langsung di area meja.
         </p>
       )
     },
@@ -202,7 +202,7 @@ export const OfficialFAQSection: React.FC = () => {
             </span>
             <div className="faq-wallet-actions">
               <a
-                href={`https://wa.me/${ADMIN_DAY1.phone}?text=${encodeURIComponent('Halo Admin Day 1, saya ingin konfirmasi pembayaran reservasi The State of Clamour.')}`}
+                href={`https://wa.me/${ADMIN_DAY1.phone}?text=${encodeURIComponent('Halo Admin Day 1, saya ingin konfirmasi pembayaran reservasi The State of Clamor.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="faq-wallet-link"
@@ -211,7 +211,7 @@ export const OfficialFAQSection: React.FC = () => {
                 <span>Admin Day 1 ({ADMIN_DAY1.displayPhone})</span>
               </a>
               <a
-                href={`https://wa.me/${ADMIN_DAY2.phone}?text=${encodeURIComponent('Halo Admin Day 2, saya ingin konfirmasi pembayaran reservasi The State of Clamour.')}`}
+                href={`https://wa.me/${ADMIN_DAY2.phone}?text=${encodeURIComponent('Halo Admin Day 2, saya ingin konfirmasi pembayaran reservasi The State of Clamor.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="faq-wallet-link"

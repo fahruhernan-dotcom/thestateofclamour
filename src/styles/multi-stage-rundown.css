@@ -1,0 +1,438 @@
+/* ========================================================================== */
+/* APPLE-GRADE MULTI-STAGE RUNDOWN STYLES                                     */
+/* WWDC Fluid Interfaces, Liquid Glass Materials & Apple Typography           */
+/* ========================================================================== */
+
+.apple-rundown-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 1. TOP CONTROL BAR (APPLE SEGMENTED TIME JUMPER & VIEW TOGGLE)             */
+/* -------------------------------------------------------------------------- */
+
+.apple-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Time Jumper (Segmented Capsule) */
+.apple-time-jumper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.35rem;
+  background: rgba(18, 22, 32, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.apple-time-jumper::-webkit-scrollbar {
+  display: none;
+}
+
+.apple-jump-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(245, 242, 235, 0.7);
+  font-family: var(--font-body, system-ui, -apple-system, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.apple-jump-pill:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.apple-jump-pill:active {
+  transform: scale(0.96);
+}
+
+.apple-jump-pill.is-active {
+  background: rgba(212, 175, 55, 0.16);
+  border-color: rgba(212, 175, 55, 0.45);
+  color: #f7e7b4;
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.apple-jump-pill.is-active.is-peak {
+  background: rgba(212, 175, 55, 0.22);
+  border-color: #d4af37;
+  color: #fde68a;
+}
+
+.apple-pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d4af37;
+}
+
+/* View Mode Switcher Toggle */
+.apple-view-toggle {
+  display: flex;
+  align-items: center;
+  background: rgba(14, 18, 26, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 0.25rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.apple-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  color: rgba(245, 242, 235, 0.65);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms ease;
+  white-space: nowrap;
+}
+
+.apple-toggle-btn:hover {
+  color: #ffffff;
+}
+
+.apple-toggle-btn:active {
+  transform: scale(0.96);
+}
+
+.apple-toggle-btn.is-active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. HORIZONTAL TIMELINE VIEW (WITH FROZEN STICKY STAGE COLUMN)              */
+/* -------------------------------------------------------------------------- */
+
+.apple-scroll-viewport {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 13, 20, 0.75);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom Scrollbar */
+.apple-scroll-viewport::-webkit-scrollbar {
+  height: 6px;
+}
+
+.apple-scroll-viewport::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 9999px;
+}
+
+.apple-scroll-viewport::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 9999px;
+}
+
+.apple-scroll-viewport::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.55);
+}
+
+/* Board Canvas */
+.apple-timeline-board {
+  display: flex;
+  flex-direction: column;
+  min-width: 1140px;
+  padding: 1.25rem;
+  gap: 1.25rem;
+}
+
+/* Header Row: Waktu Mengalir dari Kiri ke Kanan */
+.apple-time-header-row {
+  display: grid;
+  grid-template-columns: 210px repeat(4, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Sticky Corner Cell */
+.apple-sticky-corner {
+  position: sticky;
+  left: 1.25rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(14, 18, 26, 0.92);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 235, 0.7);
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.4);
+}
+
+.apple-time-column-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.65rem 0.9rem;
+  background: rgba(18, 22, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 180ms ease;
+  scroll-snap-align: start;
+}
+
+.apple-time-column-card.is-peak {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: linear-gradient(180deg, rgba(32, 25, 12, 0.6) 0%, rgba(18, 22, 32, 0.7) 100%);
+}
+
+.apple-column-session {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #d4af37;
+  text-transform: uppercase;
+}
+
+.apple-column-hour {
+  font-family: var(--font-monumental, sans-serif);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+/* Stage Row */
+.apple-stage-row {
+  display: grid;
+  grid-template-columns: 210px repeat(4, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+/* Frozen Sticky Stage Header Card (Kiri Nempel Terus) */
+.apple-sticky-stage-card {
+  position: sticky;
+  left: 1.25rem;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 1.1rem;
+  background: rgba(14, 18, 26, 0.92);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left-width: 4px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.45);
+}
+
+.apple-stage-name {
+  font-family: var(--font-monumental, sans-serif);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+
+.apple-stage-floor-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgba(245, 242, 235, 0.7);
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  align-self: flex-start;
+  letter-spacing: 0.04em;
+}
+
+/* Act Slot Card (Liquid Glass) */
+.apple-act-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 1.1rem;
+  background: rgba(14, 18, 26, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  scroll-snap-align: start;
+}
+
+.apple-act-card:hover {
+  background: rgba(22, 28, 42, 0.85);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.apple-act-card:active {
+  transform: scale(0.985);
+}
+
+.apple-act-card.is-headliner {
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  background: linear-gradient(135deg, rgba(35, 28, 12, 0.65) 0%, rgba(14, 18, 26, 0.9) 100%);
+  box-shadow: 0 4px 25px rgba(212, 175, 55, 0.1), inset 0 1px 0 rgba(212, 175, 55, 0.3);
+}
+
+.apple-act-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.apple-act-session-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #d4af37;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.apple-act-duration-pill {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(245, 242, 235, 0.6);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.apple-act-title {
+  font-family: var(--font-monumental, sans-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.apple-act-card.is-headliner .apple-act-title {
+  color: #fce7b0;
+}
+
+.apple-act-desc {
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: rgba(245, 242, 235, 0.65);
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. VERTICAL TIMELINE VIEW (ALTERNATIVE PERSPECTIVE)                        */
+/* -------------------------------------------------------------------------- */
+
+.apple-vertical-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.apple-vertical-block {
+  background: rgba(14, 18, 26, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.apple-vertical-block.is-peak {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: linear-gradient(180deg, rgba(32, 25, 12, 0.5) 0%, rgba(14, 18, 26, 0.85) 100%);
+}
+
+.apple-vertical-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.85rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.apple-vertical-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.apple-vertical-hour {
+  font-family: var(--font-monumental, sans-serif);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.apple-vertical-phase {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.apple-vertical-stages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .apple-vertical-stages-grid {
+    grid-template-columns: 1fr;
+  }
+}

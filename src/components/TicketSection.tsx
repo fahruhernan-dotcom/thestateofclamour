@@ -89,11 +89,8 @@ export const TicketSection: React.FC<Props> = ({
       <div className="passage-inner-container">
         {/* Opening Chamber Choreography */}
         <div className={`passage-header-zone ${isRevealed ? 'is-revealed' : ''}`}>
-          <span className="section-eyebrow">THE THRESHOLD</span>
-          <h2 className="section-headline">THE PASSAGE</h2>
-          <p className="passage-hero-tagline">
-            Entry begins here.
-          </p>
+          <span className="section-eyebrow">OFFICIAL ACCESS</span>
+          <h2 className="section-headline">TIKET</h2>
 
           {/* Antique Gold Hairline Draw */}
           <div className="passage-divider-container" aria-hidden="true">
@@ -101,7 +98,7 @@ export const TicketSection: React.FC<Props> = ({
           </div>
 
           <p className="section-body-text passage-subtext-reveal">
-            All passes include verified RFID access to the venue. Select your tier below.
+            All passes include official wristband admission. Select your tier below.
           </p>
         </div>
 
@@ -137,7 +134,7 @@ export const TicketSection: React.FC<Props> = ({
                     <circle cx="50" cy="50" r="46" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
                     <circle cx="50" cy="50" r="41" stroke="currentColor" strokeWidth="0.8" />
                     <path d="M50 15 L53 23 L62 23 L55 28 L57 36 L50 31 L43 36 L45 28 L38 23 L47 23 Z" fill="currentColor" opacity="0.6" />
-                    <text x="50" y="52" textAnchor="middle" fontSize="6.5" fontFamily="Cinzel" fill="currentColor" letterSpacing="0.2em">CLAMOUR</text>
+                    <text x="50" y="52" textAnchor="middle" fontSize="6.5" fontFamily="Cinzel" fill="currentColor" letterSpacing="0.2em">CLAMOR</text>
                     <text x="50" y="60" textAnchor="middle" fontSize="4.2" fontFamily="Inter" fill="currentColor" letterSpacing="0.15em">ADMIT ONE</text>
                     <text x="50" y="68" textAnchor="middle" fontSize="3.8" fontFamily="Inter" fill="currentColor" letterSpacing="0.1em">OCT 2026</text>
                   </svg>
@@ -214,7 +211,7 @@ export const TicketSection: React.FC<Props> = ({
 
                   <div className="admission-auth-guarantee">
                     <ShieldCheck size={11} style={{ color: 'var(--color-gold-antique)', flexShrink: 0 }} />
-                    <span>OFFICIAL VERIFIED RFID PASS</span>
+                    <span>OFFICIAL WRISTBAND PASS</span>
                   </div>
                 </div>
               </article>

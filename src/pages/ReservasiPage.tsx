@@ -16,16 +16,18 @@ import '../styles/reservasi.css';
 
 interface Props {
   initialPackageId?: string;
+  initialDay?: 'day-1' | 'day-2';
   onBack: () => void;
   onNavigateToDenah?: () => void;
   onToast: (msg: string) => void;
 }
 
 export const ReservasiPage: React.FC<Props> = ({
+  initialDay = 'day-1',
   onBack,
   onToast
 }) => {
-  const [selectedDay, setSelectedDay] = useState<'day-1' | 'day-2'>('day-1');
+  const [selectedDay, setSelectedDay] = useState<'day-1' | 'day-2'>(initialDay);
   const conciergeCarouselRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToCard = (idx: number) => {
@@ -57,6 +59,13 @@ export const ReservasiPage: React.FC<Props> = ({
     }
   }, [selectedDay]);
 
+  // Synchronize when initialDay prop updates
+  useEffect(() => {
+    if (initialDay && initialDay !== selectedDay) {
+      setSelectedDay(initialDay);
+    }
+  }, [initialDay]);
+
   const handleCarouselScroll = () => {
     const el = conciergeCarouselRef.current;
     if (!el || el.children.length === 0) return;
@@ -86,7 +95,7 @@ export const ReservasiPage: React.FC<Props> = ({
   const handleConciergeChat = (day: 'day-1' | 'day-2') => {
     const admin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
     const eventName = 'Swear in Continental';
-    const msg = `Halo ${admin.name}, saya ingin konsultasi reservasi meja VIP & sofa party untuk The State of Clamour: ${eventName} (${admin.dateLabel}). Mohon informasi rekomendasi posisi terbaik & paket yang tersedia. Terima kasih!`;
+    const msg = `Halo ${admin.name}, saya ingin konsultasi reservasi meja VIP & sofa party untuk The State of Clamor: ${eventName} (${admin.dateLabel}). Mohon informasi rekomendasi posisi terbaik & paket yang tersedia. Terima kasih!`;
     const url = `https://wa.me/${admin.phone}?text=${encodeURIComponent(msg)}`;
     onToast(`Menghubungi ${admin.name}...`);
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -100,10 +109,10 @@ export const ReservasiPage: React.FC<Props> = ({
           type="button"
           onClick={onBack}
           className="reservasi-back-btn btn-press"
-          aria-label="Kembali ke Beranda"
+          aria-label="Kembali"
         >
           <ArrowLeft size={14} />
-          <span>Kembali ke Beranda</span>
+          <span>Kembali</span>
         </button>
       </div>
 
@@ -117,16 +126,34 @@ export const ReservasiPage: React.FC<Props> = ({
           RESERVASI MEJA &amp; SOFA
         </h1>
         <p className="reservasi-subtitle-desc">
-          Pesan meja atau sofa eksklusif Anda untuk <strong>The State of Clamour</strong> (30 &amp; 31 Okt 2026).
-          Pilih nomor meja secara interaktif dengan status live Supabase, atau konsultasikan langsung dengan VIP Concierge resmi.
+          Pilih nomor meja pada denah interaktif di bawah untuk cek ketersediaan &amp; reservasi instan, atau konsultasikan kebutuhan eksklusif Anda langsung dengan VIP Concierge resmi.
         </p>
       </header>
 
-      {/* Dual VIP Concierge Hotline Cards */}
+      {/* Interactive Floor Plan & Table Inventory Section (Placed First) */}
+      <section className="reservasi-inventory-section" aria-label="Inventaris Meja Interaktif">
+        {/* Embedded FloorPlanViewer Component */}
+        <div className="reservasi-floorplan-container">
+          <FloorPlanViewer
+            day={selectedDay}
+            onDayChange={handleDaySelect}
+          />
+        </div>
+      </section>
+
+      {/* Dual VIP Concierge Hotline Cards (Placed Below Map) */}
       <section className="reservasi-concierge-section" aria-label="VIP Concierge Hotline">
         <div className="concierge-section-header">
-          <Sparkles size={13} className="concierge-header-icon" />
-          <span>LAYANAN KONSULTASI VIP LANGSUNG</span>
+          <div className="concierge-eyebrow">
+            <Sparkles size={13} className="concierge-header-icon" />
+            <span>BANTUAN RESERVASI MEJA</span>
+          </div>
+          <h2 className="concierge-main-heading">
+            KONSULTASI &amp; INFO MEJA
+          </h2>
+          <p className="concierge-main-subtext">
+            Butuh info posisi meja, kapasitas rombongan, atau bantuan booking? Hubungi admin resmi kami langsung via WhatsApp.
+          </p>
         </div>
 
         <div
@@ -148,7 +175,7 @@ export const ReservasiPage: React.FC<Props> = ({
               <h2 className="concierge-title">{ADMIN_DAY1.name}</h2>
               <p className="concierge-theme">Theme: Swear in Continental</p>
               <p className="concierge-desc">
-                Dedicated hospitality, bottle packages, private butler &amp; reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 1.
+                Reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 1.
               </p>
 
               <div className="concierge-meta-box">
@@ -187,7 +214,7 @@ export const ReservasiPage: React.FC<Props> = ({
               <h2 className="concierge-title">{ADMIN_DAY2.name}</h2>
               <p className="concierge-theme">Theme: Swear in Continental</p>
               <p className="concierge-desc">
-                Dedicated hospitality, bottle packages, private butler &amp; reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 2.
+                Reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 2.
               </p>
 
               <div className="concierge-meta-box">
@@ -231,32 +258,7 @@ export const ReservasiPage: React.FC<Props> = ({
 
         <div className="concierge-guarantee-note">
           <ShieldCheck size={14} className="guarantee-icon shrink-0" />
-          <span>Nomor WhatsApp resmi di atas adalah satu-satunya kanal terverifikasi reservasi VIP Table The State of Clamour.</span>
-        </div>
-      </section>
-
-      {/* Interactive Floor Plan & Table Inventory Section */}
-      <section className="reservasi-inventory-section" aria-label="Inventaris Meja Interaktif">
-        <div className="inventory-section-header">
-          <div className="section-eyebrow">
-            <span>DENAH VENUE &amp; INVENTARIS MEJA REAL-TIME</span>
-          </div>
-          <h2 className="inventory-section-title">
-            PILIH POSISI MEJA &amp; CEK KETERSEDIAAN
-          </h2>
-          <p className="inventory-section-desc">
-            Status ketersediaan meja otomatis tersinkronisasi dengan{' '}
-            <strong>{selectedDay === 'day-1' ? 'DAY 1: Swear in Continental (30 Okt)' : 'DAY 2: Swear in Continental (31 Okt)'}</strong>.
-            Klik pin meja pada denah untuk melihat detail spesifikasi serta reservasi instan.
-          </p>
-        </div>
-
-        {/* Embedded FloorPlanViewer Component */}
-        <div className="reservasi-floorplan-container">
-          <FloorPlanViewer
-            day={selectedDay}
-            onDayChange={handleDaySelect}
-          />
+          <span>Nomor WhatsApp resmi di atas adalah satu-satunya kanal terverifikasi reservasi VIP Table The State of Clamor.</span>
         </div>
       </section>
 

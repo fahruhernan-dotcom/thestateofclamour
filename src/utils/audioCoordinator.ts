@@ -1,4 +1,4 @@
-// Audio Coordinator for THE STATE OF CLAMOUR (HOUSE OF WITNESSES 2026)
+// Audio Coordinator for THE STATE OF CLAMOR (HOUSE OF WITNESSES 2026)
 // Guarantees strict mutual exclusion between:
 // - Section 1: GuestStorytellingTransition / HeroSection (01 // THE GUESTS - Recap video)
 // - Section 2: LineupSection (02 // THE RELEASE - The Guests Lineup cards)

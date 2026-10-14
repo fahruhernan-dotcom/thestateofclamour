@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FloorLevel, SpotCategory, TableSpot } from '../../types/tableTypes';
+import { HIDE_TABLE_AVAILABILITY_STATUS } from '../../data/floorPlanData';
 import { useTableAvailability } from '../../hooks/useTableAvailability';
 import { useFloorPlanPanZoom } from '../../hooks/useFloorPlanPanZoom';
 import { TableDetailDrawer } from './TableDetailDrawer';
@@ -91,7 +92,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
   const floorAspectRatio = currentFloor === 1 ? '1492 / 1054' : '1381 / 1139';
 
   return (
-    <div className="floorplan-container">
+    <div className={`floorplan-container ${HIDE_TABLE_AVAILABILITY_STATUS ? 'hide-availability' : ''}`}>
       {/* Top Controls Cluster */}
       <section className="floorplan-controls-cluster">
         {/* Tier 1: Day Switcher Segmented Control (Placed directly above Venue tabs) */}
@@ -265,6 +266,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
                     key={spot.id}
                     type="button"
                     className={`table-hotspot-pin ${isOccupied ? 'is-occupied' : 'is-available'} ${isSelected ? 'is-selected' : ''}`}
+                    data-status={liveState?.status || 'available'}
                     style={{
                       left: `${spot.x}%`,
                       top: `${spot.y}%`
@@ -276,8 +278,8 @@ export const FloorPlanViewer: React.FC<Props> = ({
                       }
                       selectSpot(spot.id);
                     }}
-                    title={`${spot.code}: ${isOccupied ? 'Terisi' : 'Tersedia'}`}
-                    aria-label={`${spot.code} (${isOccupied ? 'Terisi' : 'Tersedia'})`}
+                    title={HIDE_TABLE_AVAILABILITY_STATUS ? `${spot.code}: ${spot.name}` : `${spot.code}: ${isOccupied ? 'Terisi' : 'Tersedia'}`}
+                    aria-label={HIDE_TABLE_AVAILABILITY_STATUS ? `${spot.code}: ${spot.name}` : `${spot.code} (${isOccupied ? 'Terisi' : 'Tersedia'})`}
                   >
                     <div className="hotspot-badge">
                       {isOccupied && <Lock className="lock-icon-badge" />}

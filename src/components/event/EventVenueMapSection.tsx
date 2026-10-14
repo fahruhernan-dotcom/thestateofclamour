@@ -38,7 +38,7 @@ export const EventVenueMapSection: React.FC<Props> = ({
           TATA LETAK SANCTUARY &amp; PETA ZONA
         </h2>
         <p className="dossier-sub-desc" style={{ maxWidth: '640px', color: 'var(--color-muted)', fontSize: '0.88rem', marginTop: '0.5rem' }}>
-          Navigasi menyeluruh aula perakitan malam The State of Clamour. Pelajari penempatan panggung, area sofa eksklusif, zona dansa, dan pos keselamatan.
+          Navigasi menyeluruh aula perakitan malam The State of Clamor. Pelajari penempatan panggung, area sofa eksklusif, zona dansa, dan pos keselamatan.
         </p>
       </div>
 
@@ -230,7 +230,7 @@ export const EventVenueMapSection: React.FC<Props> = ({
                 ★ VVIP ROYAL CENTER PIT (ZONE A) ★
               </text>
               <text x="450" y="210" textAnchor="middle" fill="#c5a869" fontFamily="Inter, sans-serif" fontSize="8.5" fontWeight="600">
-                4 LUXURY SOFAS · BEST CENTER VIEW · BUTLER INCLUDED
+                4 SOFA VIP · POSISI DEPAN PANGGUNG
               </text>
             </g>
 
@@ -403,7 +403,7 @@ export const EventVenueMapSection: React.FC<Props> = ({
                 strokeWidth="1.2"
               />
               <text x="450" y="530" textAnchor="middle" fill="#f5eedc" fontFamily="Cinzel, serif" fontSize="10" fontWeight="700">
-                MAIN ENTRANCE GATES &amp; RFID EXCHANGE
+                MAIN ENTRANCE GATES &amp; WRISTBAND EXCHANGE
               </text>
               <text x="450" y="548" textAnchor="middle" fill="#c5a869" fontFamily="Inter, sans-serif" fontSize="8">
                 TICKETING CHECK-IN · FAST TRACK VIP ENTRY · 18+ ID VERIFICATION

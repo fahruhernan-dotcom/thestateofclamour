@@ -439,7 +439,7 @@ export const LineupSectionMobile: React.FC<Props> = ({
       ref={sectionRef}
       id="lineup"
       className="lineup-mobile-section"
-      aria-label="Lineup Artis The State of Clamour"
+      aria-label="Lineup Artis The State of Clamor"
     >
       {/* Mobile Headline Header */}
       <div className="lineup-mobile-header">

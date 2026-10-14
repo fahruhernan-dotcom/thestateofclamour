@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------------
  * DUAL-FLOOR NIGHTCLUB SEATING SYSTEM (LANTAI 1 & LANTAI 2)
- * The State of Clamour: Swear in Continental
+ * The State of Clamor: Swear in Continental
  * --------------------------------------------------------------------------- */
 
 .floorplan-container {
@@ -425,6 +425,32 @@
   border: 1px solid rgba(224, 49, 62, 0.45);
   color: #f87171;
   box-shadow: 0 0 10px rgba(224, 49, 62, 0.3);
+}
+
+/* HIDE AVAILABILITY MODE OVERRIDES (Logika tetap jalan, cuma di-hide visualnya) */
+.floorplan-container.hide-availability .floor-stats-pill {
+  display: none !important;
+}
+
+.floorplan-container.hide-availability .floorplan-guide-legend {
+  display: none !important;
+}
+
+.floorplan-container.hide-availability .lock-icon-badge {
+  display: none !important;
+}
+
+.floorplan-container.hide-availability .table-hotspot-pin.is-occupied .hotspot-badge {
+  background: rgba(10, 14, 22, 0.94) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #34d399 !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.25) !important;
+}
+
+.floorplan-container.hide-availability .table-hotspot-pin.is-occupied:hover .hotspot-badge {
+  background: #10b981 !important;
+  color: #041f14 !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.65) !important;
 }
 
 /* STATUS: SELECTED PIN */

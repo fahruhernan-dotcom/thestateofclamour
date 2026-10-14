@@ -1,6 +1,6 @@
-# Video Generation Prompts — The State of Clamour
+# Video Generation Prompts — The State of Clamor
 
-Dokumentasi prompt video untuk aset visual dan transisi sinematik The State of Clamour.
+Dokumentasi prompt video untuk aset visual dan transisi sinematik The State of Clamor.
 
 ---
 

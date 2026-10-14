@@ -146,7 +146,7 @@ export const CrypticPreloader: React.FC<CrypticPreloaderProps> = ({ onComplete }
       aria-valuenow={displayPercent}
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label="Loading The State of Clamour"
+      aria-label="Loading The State of Clamor"
     >
       {/* 35mm Analog Film Grain Texture */}
       <div className="preloader-grain" aria-hidden="true" />

@@ -1,0 +1,662 @@
+/* ========================================================================== */
+/* GOTHIC CATHEDRAL MULTI-STAGE RUNDOWN STYLES                                */
+/* Design Match: Cormorant Garamond + Inter, Master Timeline & 3 Stage Columns*/
+/* ========================================================================== */
+
+.gothic-rundown-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  color: #f5f2eb;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 1. HERO HEADER CLUSTER (CATHEDRAL BANNER)                                   */
+/* -------------------------------------------------------------------------- */
+
+.gothic-hero-header {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #080a0f;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.5rem 3rem;
+}
+
+.gothic-hero-bg-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 0.38;
+  filter: saturate(1.1) contrast(1.15);
+  pointer-events: none;
+}
+
+.gothic-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 10, 15, 0.96) 0%, rgba(8, 10, 15, 0.7) 40%, rgba(8, 10, 15, 0.92) 100%);
+  pointer-events: none;
+}
+
+.gothic-hero-content-left {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 480px;
+}
+
+.gothic-hero-eyebrow {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+
+.gothic-hero-title {
+  font-family: 'Cormorant Garamond', 'Cinzel', Georgia, serif;
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: #f7e7b4;
+  margin: 0;
+  text-transform: uppercase;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+}
+
+.gothic-hero-quote {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: rgba(245, 242, 235, 0.78);
+  margin: 0.25rem 0 0 0;
+}
+
+.gothic-hero-meta-right {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  text-align: right;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.gothic-meta-day-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(245, 242, 235, 0.5);
+  text-transform: uppercase;
+}
+
+.gothic-meta-date-main {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+}
+
+.gothic-meta-venue-line {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(245, 242, 235, 0.6);
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. MASTER TIMELINE AXIS (SORE ──► PAGI)                                     */
+/* -------------------------------------------------------------------------- */
+
+.gothic-master-timeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(14, 18, 26, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gothic-timeline-sun-anchor,
+.gothic-timeline-moon-anchor {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 235, 0.6);
+  white-space: nowrap;
+}
+
+.gothic-timeline-nodes-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  position: relative;
+  min-width: 600px;
+}
+
+.gothic-timeline-line-connector {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.2) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(212, 175, 55, 0.2) 100%);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.gothic-timeline-node-item {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: #080a0f;
+  padding: 0 0.85rem;
+  cursor: pointer;
+  transition: transform 180ms ease;
+}
+
+.gothic-timeline-node-item:hover {
+  transform: translateY(-2px);
+}
+
+.gothic-timeline-node-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.gothic-timeline-num-badge {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #d4af37;
+  letter-spacing: 0.05em;
+}
+
+.gothic-timeline-node-name {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.gothic-timeline-node-item.is-headliner .gothic-timeline-node-name {
+  color: #f7e7b4;
+}
+
+.gothic-timeline-node-time {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: rgba(245, 242, 235, 0.55);
+  letter-spacing: 0.04em;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. PARALLEL 3 STAGE COLUMNS BOARD                                         */
+/* -------------------------------------------------------------------------- */
+
+.gothic-stages-columns-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Individual Stage Column */
+.gothic-stage-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: rgba(12, 15, 22, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: border-color 200ms ease;
+}
+
+.gothic-stage-col.is-tetra-1 {
+  border-top: 2px solid #d4af37;
+}
+
+.gothic-stage-col.is-tetra-2 {
+  border-top: 2px solid #e63946;
+}
+
+.gothic-stage-col.is-mizu {
+  border-top: 2px solid #38bdf8;
+}
+
+/* Stage Column Banner Header */
+.gothic-stage-banner-header {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 85px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gothic-stage-banner-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.gothic-stage-banner-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 10, 15, 0.2) 0%, rgba(8, 10, 15, 0.88) 100%);
+}
+
+.gothic-stage-banner-text {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.gothic-stage-banner-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+.gothic-stage-banner-floor {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(245, 242, 235, 0.6);
+}
+
+/* Acts List inside Column */
+.gothic-acts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* Act Card */
+.gothic-act-card {
+  display: grid;
+  grid-template-columns: 80px 1fr 68px;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(8, 10, 15, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  transition: all 180ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.gothic-act-card:hover {
+  background: rgba(20, 25, 36, 0.85);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.gothic-act-card.is-headliner {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: linear-gradient(90deg, rgba(30, 24, 12, 0.5) 0%, rgba(8, 10, 15, 0.8) 100%);
+}
+
+/* Left Time Column */
+.gothic-act-time-col {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgba(245, 242, 235, 0.7);
+  letter-spacing: 0.02em;
+}
+
+/* Center Details */
+.gothic-act-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.gothic-act-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.gothic-act-circle-num {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #d4af37;
+  letter-spacing: 0.02em;
+}
+
+.gothic-act-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.gothic-act-card.is-headliner .gothic-act-name {
+  color: #f7e7b4;
+}
+
+.gothic-act-subtext {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.65rem;
+  color: rgba(245, 242, 235, 0.45);
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+/* Right Media Thumbnail & Status Pill */
+.gothic-act-media-col {
+  position: relative;
+  width: 68px;
+  height: 48px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gothic-act-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gothic-act-status-pill {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+}
+
+.gothic-act-status-pill.live {
+  background: rgba(16, 185, 129, 0.85);
+  color: #ffffff;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+}
+
+.gothic-act-status-pill.tba {
+  background: rgba(0, 0, 0, 0.7);
+  color: rgba(245, 242, 235, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. RESPONSIVE DESIGN (TABLET & MOBILE)                                     */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+  .gothic-hero-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .gothic-hero-meta-right {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .gothic-stages-columns-board {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .gothic-stage-col {
+    min-width: 300px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 5. GOTHIC COMING SOON TEASER CARD                                          */
+/* -------------------------------------------------------------------------- */
+
+.gothic-comingsoon-card {
+  position: relative;
+  background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08) 0%, rgba(12, 16, 24, 0.85) 60%);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 10px;
+  padding: 3.5rem 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.gothic-comingsoon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 999px;
+  padding: 0.35rem 0.95rem;
+}
+
+.gothic-comingsoon-lock-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: #d4af37;
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.2);
+  margin-top: 0.25rem;
+}
+
+.gothic-comingsoon-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.gothic-comingsoon-desc {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: rgba(245, 242, 235, 0.65);
+  max-width: 620px;
+  margin: 0;
+}
+
+.gothic-comingsoon-spaces-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+  width: 100%;
+  max-width: 820px;
+  margin-top: 0.75rem;
+}
+
+.gothic-comingsoon-space-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem 1.15rem;
+  background: rgba(8, 10, 15, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  text-align: left;
+  transition: border-color 200ms ease, transform 180ms ease;
+}
+
+.gothic-comingsoon-space-item:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  transform: translateY(-2px);
+}
+
+.space-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.space-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.space-status-badge {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(245, 242, 235, 0.65);
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+}
+
+.space-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.space-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+
+.space-desc {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.68rem;
+  color: rgba(245, 242, 235, 0.5);
+  letter-spacing: 0.02em;
+}
+
+.gothic-comingsoon-meta-pills {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.gothic-comingsoon-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(245, 242, 235, 0.7);
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .gothic-comingsoon-card {
+    padding: 2.25rem 1.25rem 1.75rem;
+  }
+
+  .gothic-comingsoon-title {
+    font-size: 1.45rem;
+  }
+
+  .gothic-comingsoon-spaces-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .gothic-comingsoon-meta-pills {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

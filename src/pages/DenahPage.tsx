@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FloorPlanViewer } from '../components/floorplan/FloorPlanViewer';
 import { OfficialFAQSection } from '../components/OfficialFAQSection';
+import { HIDE_TABLE_AVAILABILITY_STATUS } from '../data/floorPlanData';
 import { Compass, Calendar, ArrowLeft } from 'lucide-react';
 import '../styles/denah.css';
 
@@ -36,8 +37,10 @@ export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) =>
           TATA LETAK SANCTUARY &amp; DENAH PARTY
         </h1>
         <p className="denah-subtitle-desc">
-          Navigasi interaktif denah <strong>Lantai 1</strong> &amp; <strong>Lantai 2</strong> The State of Clamour.
-          Status meja (Tersedia vs Terisi) tersinkronisasi secara real-time. Klik pin meja untuk spesifikasi dan reservasi langsung via WhatsApp.
+          Navigasi interaktif denah <strong>Lantai 1</strong> &amp; <strong>Lantai 2</strong> The State of Clamor.
+          {HIDE_TABLE_AVAILABILITY_STATUS
+            ? ' Klik pin meja untuk melihat spesifikasi, kapasitas, dan reservasi langsung via WhatsApp Admin.'
+            : ' Status meja (Tersedia vs Terisi) tersinkronisasi secara real-time. Klik pin meja untuk spesifikasi dan reservasi langsung via WhatsApp.'}
         </p>
 
         {/* Day Selector Pill */}

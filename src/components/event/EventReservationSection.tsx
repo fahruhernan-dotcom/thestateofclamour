@@ -59,7 +59,7 @@ export const EventReservationSection: React.FC<Props> = ({
   };
 
   const handleFastGeneralInquiry = () => {
-    const msg = `Halo ${activeAdmin.name}, saya ingin konsultasi ketersediaan meja/sofa VIP untuk acara The State of Clamour (${activeAdmin.dateLabel}). Mohon info nomor meja yang masih available. Terima kasih!`;
+    const msg = `Halo ${activeAdmin.name}, saya ingin konsultasi ketersediaan meja/sofa VIP untuk acara The State of Clamor (${activeAdmin.dateLabel}). Mohon info nomor meja yang masih available. Terima kasih!`;
     const url = `https://wa.me/${activeAdmin.phone}?text=${encodeURIComponent(msg)}`;
     onToast(`Menghubungi ${activeAdmin.name}...`);
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -70,13 +70,13 @@ export const EventReservationSection: React.FC<Props> = ({
       {/* Header Cluster */}
       <div className="dossier-sub-header">
         <div className="section-eyebrow">
-          <span>VIP HOSPITALITY &amp; BOTTLE SERVICE // {dayTitleLabel}</span>
+          <span>RESERVASI MEJA // {dayTitleLabel}</span>
         </div>
         <h2 className="dossier-sub-title text-gold-metallic">
-          RESERVASI MEJA &amp; SOFA PARTY
+          RESERVASI MEJA &amp; SOFA
         </h2>
         <p className="dossier-sub-desc" style={{ maxWidth: '660px', color: 'var(--color-muted)', fontSize: '0.88rem', marginTop: '0.5rem' }}>
-          Nikmati malam megah dengan kenyamanan sofa privat, dedicated personal butler, serta paket botol minuman premium terkurasi. Reservasi terhubung langsung ke WhatsApp <strong>{activeAdmin.name}</strong>.
+          Pilih posisi meja atau sofa favoritmu untuk menikmati malam pertunjukan. Reservasi terhubung langsung ke WhatsApp <strong>{activeAdmin.name}</strong>.
         </p>
       </div>
 

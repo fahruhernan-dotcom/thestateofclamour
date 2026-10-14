@@ -1,5 +1,5 @@
 -- =====================================================================================
--- THE STATE OF CLAMOUR: SWEAR IN CONTINENTAL
+-- THE STATE OF CLAMOR: SWEAR IN CONTINENTAL
 -- SUPABASE MIGRATION & SEED DATA LANTAI 2 (VIP MEZZANINE & LOUNGE)
 -- =====================================================================================
 -- Petunjuk:
