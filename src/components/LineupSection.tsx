@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Artist } from '../types';
-import { IS_LINEUP_TEASER_MODE, day1Artists as defaultDay1Artists, day2Artists as defaultDay2Artists } from '../data/eventData';
+import { IS_LINEUP_TEASER_MODE, day1Artists as defaultDay1Artists, day2Artists as defaultDay2Artists, getArtistDisplayName, isArtistRevealed } from '../data/eventData';
 import { silenceSec1, setAudioOwner, getAudioOwner, isSec1AudioActive } from '../utils/audioCoordinator';
 import { getCachedVideoUrl } from '../utils/mediaPreloader';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -43,9 +43,10 @@ const GuestCard: React.FC<GuestCardProps> = ({
   const cardRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // Flyer card: static poster visual + audio-only source (e.g. Gothic poster with Far's track)
-  const isFlyerCard = !artist.videoUrl && !!artist.audioPreviewUrl;
-  const mediaSrc = artist.videoUrl || artist.audioPreviewUrl || null;
+  // Flyer card: static poster visual (e.g. official portrait poster)
+  const isFlyerCard = !artist.videoUrl;
+  const displayName = getArtistDisplayName(artist);
+  const isRevealed = isArtistRevealed(artist);
 
   const hasFinePointer = () => {
     if (typeof window === 'undefined') return false;
@@ -149,25 +150,22 @@ const GuestCard: React.FC<GuestCardProps> = ({
       onMouseEnter={handleMouseEnter}
       onClick={handleCardClick}
       title={isAudioPlaying ? 'Klik untuk jeda preview audio' : 'Klik untuk putar preview audio'}
-      aria-label={`${artist.name} - ${artist.stageName}`}
+      aria-label={`${displayName} - ${artist.stageName}`}
     >
       <div className="guest-portrait-frame">
-        {isFlyerCard && (
-          <img
-            src={artist.imageUrl}
-            alt={`${artist.name} — official flyer`}
-            className="guest-portrait-img"
-            loading="lazy"
-            draggable={false}
-          />
-        )}
-        {mediaSrc ? (
+        <img
+          src={artist.imageUrl}
+          alt={`${displayName} — official flyer`}
+          className="guest-portrait-img"
+          loading="lazy"
+          draggable={false}
+        />
+        {artist.videoUrl && (
           <video
             ref={videoRef}
-            src={getCachedVideoUrl(mediaSrc) || mediaSrc}
-            poster={isFlyerCard ? undefined : (artist.posterUrl || artist.imageUrl)}
-            className={isFlyerCard ? 'guest-audio-only-media' : 'guest-portrait-video'}
-            aria-hidden={isFlyerCard ? true : undefined}
+            src={getCachedVideoUrl(artist.videoUrl) || artist.videoUrl}
+            poster={artist.posterUrl || artist.imageUrl}
+            className="guest-portrait-video"
             autoPlay
             muted
             loop
@@ -180,24 +178,30 @@ const GuestCard: React.FC<GuestCardProps> = ({
               v.play().catch(() => { });
             }}
           />
-        ) : (
-          <img
-            src={artist.imageUrl}
-            alt={artist.name}
-            className="guest-portrait-img"
-            loading="lazy"
+        )}
+        {!artist.videoUrl && artist.audioPreviewUrl && (
+          <video
+            ref={videoRef}
+            src={getCachedVideoUrl(artist.audioPreviewUrl) || artist.audioPreviewUrl}
+            className="guest-audio-only-media"
+            aria-hidden={true}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
             draggable={false}
           />
         )}
 
-        {/* Portrait Dark Scrim */}
-        <div className="guest-portrait-scrim" />
+        {/* Portrait Dark Scrim (only for video cards, hidden on flyer cards) */}
+        {!isFlyerCard && <div className="guest-portrait-scrim" />}
       </div>
 
       <div className="guest-card-info-pane">
         <div className="guest-card-kicker-row">
           <p className="guest-day-kicker">
-            {artist.dayLabel} · {artist.performanceTime}
+            {artist.dayLabel}{artist.performanceTime ? ` · ${artist.performanceTime}` : ''}
           </p>
           {isAudioPlaying && !IS_LINEUP_TEASER_MODE && (
             <span className="guest-sound-active-tag" title="Audio Preview Active">
@@ -211,19 +215,19 @@ const GuestCard: React.FC<GuestCardProps> = ({
           )}
         </div>
         <h3 className="guest-artist-name">
-          {artist.name}
+          {displayName}
         </h3>
         <p className="guest-performance-meta">
           STAGE // {artist.stageName}
         </p>
 
-        {/* Dedicated Action Button to Detail Event Modal (hidden during teaser mode) */}
-        {!IS_LINEUP_TEASER_MODE && (
+        {/* Dedicated Action Button to Detail Event Modal (hidden during teaser mode or if artist is not yet revealed) */}
+        {!IS_LINEUP_TEASER_MODE && isRevealed && (
           <div
             className="guest-inspect-link"
             role="button"
             tabIndex={0}
-            aria-label={`Lihat detail event untuk ${artist.name}`}
+            aria-label={`Lihat detail event untuk ${displayName}`}
             title="Buka detail event acara"
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -716,18 +720,21 @@ const LineupDayTierRow: React.FC<LineupDayTierRowProps> = ({
           </button>
 
           <div className="guest-carousel-dots">
-            {tierArtists.map((artist, idx) => (
-              <button
-                key={artist.id}
-                type="button"
-                className={`guest-carousel-dot-btn ${activeArtistIndex === idx ? 'is-active' : ''}`}
-                onClick={() => scrollToArtist(idx)}
-                aria-label={`Lihat ${artist.name}`}
-              >
-                <span className="guest-carousel-dot-indicator" />
-                <span>{artist.name}</span>
-              </button>
-            ))}
+            {tierArtists.map((artist, idx) => {
+              const dotName = getArtistDisplayName(artist);
+              return (
+                <button
+                  key={artist.id}
+                  type="button"
+                  className={`guest-carousel-dot-btn ${activeArtistIndex === idx ? 'is-active' : ''}`}
+                  onClick={() => scrollToArtist(idx)}
+                  aria-label={`Lihat ${dotName}`}
+                >
+                  <span className="guest-carousel-dot-indicator" />
+                  <span>{dotName}</span>
+                </button>
+              );
+            })}
           </div>
 
           <button
@@ -765,14 +772,14 @@ const LineupSectionDesktop: React.FC<Props> = ({
   // Partition or fallback to day1Artists and day2Artists
   const day1List = useMemo(() => {
     const filtered = artists.filter(
-      (a) => a.dayLabel?.toLowerCase().includes('1') || a.dayLabel?.includes('30')
+      (a) => a.day === 1 || (!a.day && (a.dayLabel?.toLowerCase().includes('day 1') || a.dayLabel?.includes('30 Okt')) && !a.dayLabel?.toLowerCase().includes('day 2'))
     );
     return filtered.length > 0 ? filtered : defaultDay1Artists;
   }, [artists]);
 
   const day2List = useMemo(() => {
     const filtered = artists.filter(
-      (a) => a.dayLabel?.toLowerCase().includes('2') || a.dayLabel?.includes('31')
+      (a) => a.day === 2 || (!a.day && (a.dayLabel?.toLowerCase().includes('day 2') || a.dayLabel?.includes('31 Okt')) && !a.dayLabel?.toLowerCase().includes('day 1'))
     );
     return filtered.length > 0 ? filtered : defaultDay2Artists;
   }, [artists]);

@@ -1,0 +1,422 @@
+/* ========================================================================== */
+/* THE ALLIANCE: 5 COLLECTIVES OF THE STATE OF CLAMOR                          */
+/* ========================================================================== */
+
+.collectives-section {
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+  margin: 5rem auto 4.5rem;
+  padding: 3.5rem 1.5rem 4rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Background atmospheric aura */
+.collectives-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, rgba(138, 20, 36, 0.12) 0%, rgba(197, 168, 105, 0.05) 45%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+}
+
+.collectives-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* Top Ornamental Divider */
+.collectives-divider {
+  width: 100%;
+  max-width: 500px;
+  height: 1px;
+  margin: 0 auto 2.5rem;
+  background: linear-gradient(90deg, transparent 0%, var(--color-gold-hairline) 30%, var(--color-gold-antique) 50%, var(--color-gold-hairline) 70%, transparent 100%);
+  position: relative;
+}
+
+.collectives-divider::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  color: var(--color-gold-antique);
+  background: var(--color-background-primary, #060709);
+  padding: 0 0.65rem;
+}
+
+/* Eyebrow Badge */
+.collectives-eyebrow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-monumental);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  font-weight: 700;
+  color: var(--color-gold-antique);
+  background: rgba(197, 168, 105, 0.08);
+  border: 1px solid var(--color-gold-hairline);
+  padding: 0.4rem 1.25rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.collectives-eyebrow-badge::before,
+.collectives-eyebrow-badge::after {
+  content: '✦';
+  font-size: 0.6rem;
+  color: var(--color-gold-hairline);
+  opacity: 0.8;
+}
+
+/* Section Title & Subtitle */
+.collectives-headline {
+  font-family: var(--font-monumental);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--color-ivory);
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin: 0 0 0.85rem;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
+}
+
+.collectives-subheadline {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  color: var(--color-muted);
+  max-width: 650px;
+  margin: 0 auto 3rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+/* Collectives 5-Logo Grid Container */
+.collectives-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  align-items: stretch;
+  justify-content: center;
+}
+
+/* Individual Collective Card */
+.collective-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem 1.5rem;
+  border-radius: 12px;
+  background: rgba(13, 17, 23, 0.55);
+  border: 1px solid rgba(197, 168, 105, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 300ms var(--ease-cinematic, cubic-bezier(0.16, 1, 0.3, 1));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  cursor: default;
+}
+
+.collective-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(197, 168, 105, 0.6);
+  background: rgba(22, 27, 34, 0.75);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(197, 168, 105, 0.15);
+}
+
+/* Logo Image Slot with Uniform Optical Height */
+.collective-logo-wrap {
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.collective-logo-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: brightness(0.92) contrast(1.08);
+  transition: filter 300ms ease, transform 300ms ease;
+}
+
+.collective-card:hover .collective-logo-img {
+  filter: brightness(1) drop-shadow(0 0 12px rgba(245, 242, 235, 0.45));
+  transform: scale(1.04);
+}
+
+/* Metadata Text */
+.collective-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.collective-name {
+  font-family: var(--font-monumental);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-ivory);
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.collective-role {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--color-gold-antique);
+  text-transform: uppercase;
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* Subtle footer footnote */
+.collectives-footnote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  color: rgba(245, 242, 235, 0.45);
+  text-transform: uppercase;
+  margin-top: 2.75rem;
+}
+
+/* ========================================================================== */
+/* ========================================================================== */
+/* GLOBAL FOOTER COLLECTIVES LOCKUP                                           */
+/* ========================================================================== */
+
+.footer-collectives-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 3rem auto;
+  padding-bottom: 2.25rem;
+  border-bottom: 1px solid rgba(197, 168, 105, 0.15);
+  width: 100%;
+  max-width: 920px;
+  position: relative;
+}
+
+.footer-collectives-lockup::after {
+  content: '✦';
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  color: rgba(197, 168, 105, 0.55);
+  background: var(--color-void, #060709);
+  padding: 0 0.65rem;
+}
+
+.footer-collectives-label {
+  font-family: var(--font-monumental);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: rgba(197, 168, 105, 0.8);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.footer-collectives-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.75rem, 3.8vw, 3.25rem);
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.footer-collective-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  opacity: 0.72;
+  transition: opacity 240ms ease, transform 240ms ease, filter 240ms ease;
+}
+
+.footer-collective-item:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 10px rgba(197, 168, 105, 0.45));
+}
+
+.footer-collective-logo {
+  width: auto;
+  height: auto;
+  max-height: 22px;
+  max-width: 90px;
+  object-fit: contain;
+  filter: brightness(0.95) contrast(1.1);
+  display: block;
+}
+
+/* Individual Optical Weight Balancing in Footer */
+.footer-collective-logo.is-how {
+  max-height: 20px;
+  max-width: 85px;
+}
+
+.footer-collective-logo.is-superflame {
+  max-height: 22px;
+  max-width: 95px;
+}
+
+.footer-collective-logo.is-headroom {
+  max-height: 18px;
+  max-width: 72px;
+}
+
+.footer-collective-logo.is-syncsation {
+  max-height: 25px;
+  max-width: 125px;
+}
+
+.footer-collective-logo.is-tension {
+  max-height: 25px;
+  max-width: 75px;
+}
+
+/* ========================================================================== */
+/* RESPONSIVE BREAKPOINTS                                                     */
+/* ========================================================================== */
+
+@media (max-width: 1024px) {
+  .collectives-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .collective-card:last-child {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .collectives-section {
+    margin: 3.5rem auto 3rem;
+    padding: 2.5rem 1rem 3rem;
+  }
+
+  .collectives-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .collective-card:last-child {
+    grid-column: span 2;
+    max-width: 280px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .collective-card {
+    padding: 1.5rem 1rem 1.25rem;
+  }
+
+  .collective-logo-wrap {
+    height: 42px;
+    margin-bottom: 0.85rem;
+  }
+
+  .collective-name {
+    font-size: 0.72rem;
+  }
+
+  .collective-role {
+    font-size: 0.58rem;
+  }
+
+  .footer-collectives-lockup {
+    margin: 0 auto 2rem auto;
+    padding-bottom: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .footer-collectives-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    margin-bottom: 0.85rem;
+  }
+
+  .footer-collectives-row {
+    gap: 0.85rem 1.4rem;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .footer-collective-item {
+    height: 24px;
+  }
+
+  .footer-collective-logo {
+    max-height: 16px;
+    max-width: 65px;
+    object-fit: contain;
+  }
+
+  .footer-collective-logo.is-how {
+    max-height: 15px;
+    max-width: 60px;
+  }
+
+  .footer-collective-logo.is-superflame {
+    max-height: 16px;
+    max-width: 65px;
+  }
+
+  .footer-collective-logo.is-headroom {
+    max-height: 14px;
+    max-width: 52px;
+  }
+
+  .footer-collective-logo.is-syncsation {
+    max-height: 18px;
+    max-width: 80px;
+  }
+
+  .footer-collective-logo.is-tension {
+    max-height: 18px;
+    max-width: 58px;
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Artist } from '../../types';
-import { IS_LINEUP_TEASER_MODE, day1Artists as defaultDay1Artists, day2Artists as defaultDay2Artists } from '../../data/eventData';
+import { IS_LINEUP_TEASER_MODE, day1Artists as defaultDay1Artists, day2Artists as defaultDay2Artists, getArtistDisplayName, isArtistRevealed } from '../../data/eventData';
 import {
   silenceSec1,
   setAudioOwner,
@@ -151,8 +151,9 @@ const LineupMobileTierRow: React.FC<LineupMobileTierRowProps> = ({
       >
         {tierArtists.map((artist, idx) => {
           const isAudioPlaying = activeAudioArtistId === artist.id;
-          const isFlyerCard = !artist.videoUrl && !!artist.audioPreviewUrl;
-          const mediaSrc = artist.videoUrl || artist.audioPreviewUrl || null;
+          const isFlyerCard = !artist.videoUrl;
+          const displayName = getArtistDisplayName(artist);
+          const isRevealed = isArtistRevealed(artist);
 
           return (
             <article
@@ -164,51 +165,56 @@ const LineupMobileTierRow: React.FC<LineupMobileTierRowProps> = ({
               role="button"
               tabIndex={0}
               title={isAudioPlaying ? 'Ketuk untuk jeda preview audio' : 'Ketuk untuk putar preview audio'}
-              aria-label={`${artist.name} - ${artist.stageName}`}
+              aria-label={`${displayName} - ${artist.stageName}`}
             >
               {/* Portrait Media Frame */}
               <div className="lineup-mobile-portrait-frame">
-                {isFlyerCard && (
-                  <img
-                    src={artist.imageUrl}
-                    alt={`${artist.name} — official flyer`}
-                    className="lineup-mobile-media-img"
-                    loading="lazy"
-                  />
-                )}
-                {mediaSrc ? (
+                <img
+                  src={artist.imageUrl}
+                  alt={`${displayName} — official flyer`}
+                  className="lineup-mobile-media-img"
+                  loading="lazy"
+                />
+                {artist.videoUrl && (
                   <video
                     ref={(el) => {
                       videoRefs.current[artist.id] = el;
                     }}
-                    src={getCachedVideoUrl(mediaSrc) || mediaSrc}
-                    poster={isFlyerCard ? undefined : artist.posterUrl || artist.imageUrl}
-                    className={isFlyerCard ? 'lineup-mobile-audio-only-media' : 'lineup-mobile-media-video'}
-                    aria-hidden={isFlyerCard ? true : undefined}
+                    src={getCachedVideoUrl(artist.videoUrl) || artist.videoUrl}
+                    poster={artist.posterUrl || artist.imageUrl}
+                    className="lineup-mobile-media-video"
                     autoPlay
                     muted
                     loop
                     playsInline
                     preload="metadata"
                   />
-                ) : (
-                  <img
-                    src={artist.imageUrl}
-                    alt={artist.name}
-                    className="lineup-mobile-media-img"
-                    loading="lazy"
+                )}
+                {!artist.videoUrl && artist.audioPreviewUrl && (
+                  <video
+                    ref={(el) => {
+                      videoRefs.current[artist.id] = el;
+                    }}
+                    src={getCachedVideoUrl(artist.audioPreviewUrl) || artist.audioPreviewUrl}
+                    className="lineup-mobile-audio-only-media"
+                    aria-hidden={true}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
                   />
                 )}
 
-                {/* Dark Vignette / Scrim Gradient */}
-                <div className="lineup-mobile-scrim" />
+                {/* Dark Vignette / Scrim Gradient (only for video cards) */}
+                {!isFlyerCard && <div className="lineup-mobile-scrim" />}
               </div>
 
               {/* Info Pane Overlaid on Bottom of the Card */}
               <div className="lineup-mobile-info-pane">
                 <div className="lineup-mobile-kicker-row">
                   <span className="lineup-mobile-day-kicker">
-                    {artist.dayLabel} · {artist.performanceTime}
+                    {artist.dayLabel}{artist.performanceTime ? ` · ${artist.performanceTime}` : ''}
                   </span>
                   {isAudioPlaying && !IS_LINEUP_TEASER_MODE && (
                     <span className="lineup-mobile-sound-badge">
@@ -222,13 +228,13 @@ const LineupMobileTierRow: React.FC<LineupMobileTierRowProps> = ({
                   )}
                 </div>
 
-                <h3 className="lineup-mobile-artist-name">{artist.name}</h3>
+                <h3 className="lineup-mobile-artist-name">{displayName}</h3>
 
                 <span className="lineup-mobile-stage-meta">
                   STAGE // {artist.stageName}
                 </span>
 
-                {!IS_LINEUP_TEASER_MODE && (
+                {!IS_LINEUP_TEASER_MODE && isRevealed && (
                   <div
                     className="lineup-mobile-inspect-link"
                     onPointerDown={(e) => {
@@ -244,7 +250,7 @@ const LineupMobileTierRow: React.FC<LineupMobileTierRowProps> = ({
                     }}
                     role="button"
                     tabIndex={0}
-                    aria-label={`Lihat detail event untuk ${artist.name}`}
+                    aria-label={`Lihat detail event untuk ${displayName}`}
                     title="Buka detail event acara"
                   >
                     <span>LIHAT DETAIL EVENT</span>
@@ -290,14 +296,14 @@ export const LineupSectionMobile: React.FC<Props> = ({
   // Partition or fallback to day1Artists and day2Artists
   const day1List = useMemo(() => {
     const filtered = artists.filter(
-      (a) => a.dayLabel?.toLowerCase().includes('1') || a.dayLabel?.includes('30')
+      (a) => a.day === 1 || (!a.day && (a.dayLabel?.toLowerCase().includes('day 1') || a.dayLabel?.includes('30 Okt')) && !a.dayLabel?.toLowerCase().includes('day 2'))
     );
     return filtered.length > 0 ? filtered : defaultDay1Artists;
   }, [artists]);
 
   const day2List = useMemo(() => {
     const filtered = artists.filter(
-      (a) => a.dayLabel?.toLowerCase().includes('2') || a.dayLabel?.includes('31')
+      (a) => a.day === 2 || (!a.day && (a.dayLabel?.toLowerCase().includes('day 2') || a.dayLabel?.includes('31 Okt')) && !a.dayLabel?.toLowerCase().includes('day 1'))
     );
     return filtered.length > 0 ? filtered : defaultDay2Artists;
   }, [artists]);

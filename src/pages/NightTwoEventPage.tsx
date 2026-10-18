@@ -11,6 +11,7 @@ import { TicketTier } from '../types';
 import { FloorPlanViewer } from '../components/floorplan/FloorPlanViewer';
 import { OfficialFAQSection } from '../components/OfficialFAQSection';
 import { MultiStageRundown } from '../components/event/MultiStageRundown';
+import { collectives } from '../data/collectiveData';
 import '../styles/streaming-event.css';
 
 interface Props {
@@ -102,6 +103,25 @@ export const NightTwoEventPage: React.FC<Props> = ({
               JELAJAHI VENUE
             </button>
           </div>
+
+          {/* Compact Collective Logos Strip (Under Buttons) */}
+          <div className="streaming-hero-collectives">
+            <span className="streaming-hero-collectives-label">
+              IN ALLIANCE WITH //
+            </span>
+            <div className="streaming-hero-collectives-row">
+              {collectives.map((item) => (
+                <div key={item.id} className="streaming-hero-collective-item" title={`${item.name} — ${item.role}`}>
+                  <img
+                    src={item.logoUrl}
+                    alt={item.name}
+                    className="streaming-hero-collective-img"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -117,12 +137,12 @@ export const NightTwoEventPage: React.FC<Props> = ({
                 type="button"
                 onClick={onViewNight1}
                 className="streaming-night-tab is-switch"
-                title="Beralih ke Dossier Malam I"
+                title="Beralih ke Dossier Day 1"
               >
-                ← MALAM I · 30 OKT
+                ← DAY 1 · 30 OKT
               </button>
             )}
-            <span className="streaming-night-tab is-active">MALAM II · 31 OKT</span>
+            <span className="streaming-night-tab is-active">DAY 2 · 31 OKT</span>
           </div>
           <div className="streaming-nav-divider" />
 
@@ -166,7 +186,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
         <section id="spotlight" style={{ marginBottom: '4rem', scrollMarginTop: '80px' }}>
           <div className="streaming-section-header">
             <div>
-              <span className="streaming-section-subtitle" style={{ color: '#eb5757' }}>HEADLINER MALAM KEDUA</span>
+              <span className="streaming-section-subtitle" style={{ color: '#eb5757' }}>HEADLINER DAY 2</span>
               <h2 className="streaming-section-title">PENAMPIL UTAMA // PHASE 01 TEASER</h2>
             </div>
             <span className="streaming-badge-box is-tba">DIUMUMKAN SEGERA</span>
@@ -182,7 +202,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
             <div className="streaming-spotlight-visual">
               <img
                 src="/assets/gothic_cathedral_ritual_concert.png"
-                alt="Headliner Rahasia Malam 2"
+                alt="Headliner Rahasia Day 2"
                 className="streaming-spotlight-img"
               />
               <div className="streaming-spotlight-mystery-overlay">
@@ -211,18 +231,18 @@ export const NightTwoEventPage: React.FC<Props> = ({
                 }}
               >
                 <Sparkles size={11} />
-                <span>NIGHT II EXCLUSIVE</span>
+                <span>DAY 2 EXCLUSIVE</span>
               </div>
             </div>
 
             {/* Teaser Information */}
             <div className="streaming-spotlight-info">
               <span className="streaming-spotlight-sub" style={{ color: '#eb5757' }}>
-                SWEAR IN CONTINENTAL // NIGHT II
+                SWEAR IN CONTINENTAL // DAY 2
               </span>
               <h3 className="streaming-spotlight-title">SECRET HEADLINER (TBA)</h3>
               <p className="streaming-spotlight-desc">
-                Sosok rahasia di balik puncak ritual dua malam The State of Clamor. Siapkan energimu — pengumuman resmi segera dirilis.
+                Sosok rahasia di balik puncak ritual Day 1 & Day 2 The State of Clamor. Siapkan energimu — pengumuman resmi segera dirilis.
               </p>
 
               <div className="streaming-spotlight-meta-grid">
@@ -264,7 +284,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
           <div className="streaming-section-header">
             <div>
               <span className="streaming-section-subtitle" style={{ color: '#eb5757' }}>SUSUNAN ACARA &amp; TIMETABLE</span>
-              <h2 className="streaming-section-title">RUNDOWN // MALAM II (31 OKT 2026)</h2>
+              <h2 className="streaming-section-title">RUNDOWN // DAY 2 (31 OKT 2026)</h2>
             </div>
             <span className="streaming-badge-box is-tba">COMING SOON</span>
           </div>

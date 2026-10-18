@@ -1,9 +1,33 @@
 import React from 'react';
 import { Instagram, Music2 } from 'lucide-react';
+import { collectives } from '../data/collectiveData';
 
 export const Footer: React.FC = () => {
   return (
     <footer className="cinematic-footer">
+      {/* Global Collectives Lockup */}
+      <div className="footer-collectives-lockup">
+        <span className="footer-collectives-label">
+          ORGANIZED &amp; PRESENTED BY
+        </span>
+        <div className="footer-collectives-row">
+          {collectives.map((item) => (
+            <div
+              key={item.id}
+              className={`footer-collective-item is-${item.id.replace('col-', '')}`}
+              title={`${item.name} — ${item.role}`}
+            >
+              <img
+                src={item.logoUrl}
+                alt={item.name}
+                className={`footer-collective-logo is-${item.id.replace('col-', '')}`}
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
       <p className="footer-brand-title">
         THE STATE OF CLAMOR
       </p>

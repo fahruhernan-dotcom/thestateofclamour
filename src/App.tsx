@@ -7,7 +7,7 @@ import { DenahPage } from './pages/DenahPage';
 import { ReservasiPage } from './pages/ReservasiPage';
 import { FloatingNavbar } from './components/FloatingNavbar';
 import { Footer } from './components/Footer';
-import { initialEvent, getActiveTickets, initialArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
+import { initialEvent, getActiveTickets, PRESALE_1_RELEASE_TIME, initialArtists, IS_LINEUP_TEASER_MODE } from './data/eventData';
 import { Artist, EventData, TicketTier } from './types';
 import { Check } from 'lucide-react';
 import { CrypticPreloader } from './components/CrypticPreloader';
@@ -177,7 +177,7 @@ export const App: React.FC = () => {
     }, 3200);
   };
 
-  // Automated Early Bird Ticket Release Scheduler & Dynamic Artatix Sold-Out Sync
+  // Automated Presale 1 Ticket Release Scheduler & Dynamic Artatix Sync
   useEffect(() => {
     const syncTicketsWithScheduleAndArtatix = () => {
       const scheduledTickets = getActiveTickets();
@@ -196,6 +196,18 @@ export const App: React.FC = () => {
     // Single initial sync on page load
     syncTicketsWithScheduleAndArtatix();
 
+    // Release timer for Presale 1 (Friday, 16 Oct 2026 at 14:50 WIB)
+    const releaseTimestamp = new Date(PRESALE_1_RELEASE_TIME).getTime();
+    const remainingMs = releaseTimestamp - Date.now();
+
+    let timerId: ReturnType<typeof setTimeout> | null = null;
+    if (remainingMs > 0) {
+      timerId = setTimeout(() => {
+        syncTicketsWithScheduleAndArtatix();
+        showToast('LOKET PRESALE 1 TELAH DIBUKA RESMI!');
+      }, remainingMs);
+    }
+
     // Sync when tab wakes from sleep or visitor refocuses the window
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -203,12 +215,13 @@ export const App: React.FC = () => {
       }
     };
 
-    // Passive sync when visitor changes URL query (?tier=early_bird / ?tier=blind) or hash
+    // Passive sync when visitor changes URL query (?tier=presale_1 / ?tier=early_bird) or hash
     window.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
     window.addEventListener('popstate', syncTicketsWithScheduleAndArtatix);
 
     return () => {
+      if (timerId) clearTimeout(timerId);
       window.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('hashchange', syncTicketsWithScheduleAndArtatix);
       window.removeEventListener('popstate', syncTicketsWithScheduleAndArtatix);

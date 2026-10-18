@@ -158,29 +158,66 @@
   z-index: 1;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
+  gap: 1.5rem;
   margin-top: 2rem;
+  justify-content: center;
   align-items: stretch;
 }
 
-@media (min-width: 768px) {
-  .passage-matrix-grid {
-    grid-template-columns: repeat(auto-fit, minmax(290px, 360px));
-    justify-content: center;
-    gap: 1.5rem;
-    max-width: 1160px;
+/* --- 3-CARD TIER (EARLY BIRD): Tightly Centered Symmetrical Triad --- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .passage-matrix-grid.grid-tier-3 {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 310px));
+    max-width: 660px;
     margin-left: auto;
     margin-right: auto;
+    gap: 1.25rem;
+    justify-content: center;
   }
 }
 
-/* Individual Admission Document Card (Frosted Obsidian Glass) */
+@media (min-width: 1024px) {
+  .passage-matrix-grid.grid-tier-3 {
+    grid-template-columns: repeat(3, minmax(270px, 320px));
+    max-width: 1040px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+}
+
+/* --- 4-CARD TIER (PRESALE 1): 4 Columns on Wide Desktop, 2x2 on Tablet --- */
+@media (min-width: 768px) and (max-width: 1179px) {
+  .passage-matrix-grid.grid-tier-4 {
+    grid-template-columns: repeat(2, minmax(270px, 330px));
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1180px) {
+  .passage-matrix-grid.grid-tier-4 {
+    grid-template-columns: repeat(4, minmax(240px, 285px));
+    max-width: 1240px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1.25rem;
+    justify-content: center;
+  }
+}
+
+/* Individual Admission Document Card (Frosted Obsidian Glass Pass) */
 .admission-document-card {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1.75rem 1.4rem 1.35rem;
+  min-height: 485px;
+  padding: 2.1rem 1.6rem 1.5rem;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0) 38%),
     rgba(10, 13, 20, 0.34);
@@ -314,7 +351,8 @@
     0 0 32px rgba(220, 38, 38, 0.35),
     0 20px 48px rgba(0, 0, 0, 0.92),
     inset 0 0 24px rgba(185, 28, 28, 0.12);
-  padding-top: 2.2rem;
+  min-height: 500px;
+  padding-top: 2.4rem;
 }
 
 @media (min-width: 1080px) {
@@ -483,10 +521,13 @@
   font-family: var(--font-monumental);
   font-size: 1.25rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   margin: 0.25rem 0 0.85rem;
   color: var(--color-ivory);
-  line-height: 1.15;
+  line-height: 1.2;
+  min-height: 3.1rem;
+  display: flex;
+  align-items: center;
 }
 
 .admission-hairline-sep {
@@ -500,7 +541,7 @@
   display: flex;
   align-items: baseline;
   gap: 0.3rem;
-  margin-bottom: 1.15rem;
+  margin-bottom: 1.25rem;
 }
 
 .admission-price-curr {
@@ -522,8 +563,8 @@
 .admission-perks-list {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  margin-bottom: 1.5rem;
+  gap: 0.7rem;
+  margin-bottom: 1.65rem;
   flex-grow: 1;
   position: relative;
   z-index: 2;

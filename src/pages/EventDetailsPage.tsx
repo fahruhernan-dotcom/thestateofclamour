@@ -71,7 +71,9 @@ export const EventDetailsPage: React.FC<Props> = ({
           </div>
           <div className="spec-metric-block">
             <span className="spec-metric-label">BINTANG UTAMA</span>
-            <span className="spec-metric-val">{artists.map(a => a.name).join(' & ')}</span>
+            <span className="spec-metric-val">
+              {artists.filter(a => a.isRevealed !== false && a.name && a.name !== '?').map(a => a.name).join(' · ')} · More TBA
+            </span>
           </div>
           <div className="spec-metric-block">
             <span className="spec-metric-label">BATAS USIA</span>
@@ -313,7 +315,7 @@ export const EventDetailsPage: React.FC<Props> = ({
           <div className="dossier-timetable-block">
             <div className="dossier-timetable-day-header">
               <Calendar size={16} />
-              <span>MALAM I // JUMAT, 30 OKTOBER 2026</span>
+              <span>DAY 1 // JUMAT, 30 OKTOBER 2026</span>
             </div>
             <div className="dossier-timetable-list">
               <div className="dossier-tt-row">
@@ -340,7 +342,7 @@ export const EventDetailsPage: React.FC<Props> = ({
 
             <div className="dossier-timetable-day-header" style={{ marginTop: '2.5rem' }}>
               <Calendar size={16} />
-              <span>MALAM II // SABTU, 31 OKTOBER 2026</span>
+              <span>DAY 2 // SABTU, 31 OKTOBER 2026</span>
             </div>
             <div className="dossier-timetable-list">
               <div className="dossier-tt-row">

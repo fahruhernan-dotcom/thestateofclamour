@@ -61,8 +61,27 @@ export function matchArtatixItemToTier(
   const lText = cleanStr(`${localTier.name} ${localTier.category} ${localTier.id}`);
   const aPrice = Math.round(parseFloat(artatixItem.price) || 0);
 
+  // Strict Tier Isolation Guards: Never cross-match between Presale, Early Bird, and Blind
+  const isLocalPresale = lText.includes('presale');
+  const isArtatixPresale = aText.includes('presale');
+  if (isLocalPresale !== isArtatixPresale) {
+    return false;
+  }
+
+  const isLocalEarly = lText.includes('early') || lText.includes('bird');
+  const isArtatixEarly = aText.includes('early') || aText.includes('bird');
+  if (isLocalEarly !== isArtatixEarly) {
+    return false;
+  }
+
+  const isLocalBlind = lText.includes('blind');
+  const isArtatixBlind = aText.includes('blind');
+  if (isLocalBlind !== isArtatixBlind) {
+    return false;
+  }
+
   // 2. Blind Ticket Matching
-  if (lText.includes('blind') && aText.includes('blind')) {
+  if (isLocalBlind && isArtatixBlind) {
     if ((lText.includes('day 1') || lText.includes('day1')) && (aText.includes('day 1') || aText.includes('day1'))) {
       return true;
     }
@@ -71,7 +90,37 @@ export function matchArtatixItemToTier(
     }
   }
 
-  // 3. Early Bird 2 Days Pass Matching
+  // 3. Presale 1 Matching
+  if (isLocalPresale && isArtatixPresale) {
+    // 2 Days Pass
+    if ((lText.includes('2 day') || lText.includes('2days')) && (aText.includes('2 day') || aText.includes('2days') || aText.includes('terusan'))) {
+      return true;
+    }
+    // Couple Pass
+    if (lText.includes('couple') && aText.includes('couple')) {
+      return true;
+    }
+    // Group Pass
+    if (lText.includes('group') && aText.includes('group')) {
+      return true;
+    }
+    // Single 1 Day Pass
+    if (
+      !lText.includes('couple') && !lText.includes('group') && !lText.includes('2 day') &&
+      !aText.includes('couple') && !aText.includes('group') && !aText.includes('2 day')
+    ) {
+      if ((lText.includes('day 1') || lText.includes('single') || lText.includes('1 day')) && (aText.includes('day 1') || aText.includes('single') || aText.includes('1 day'))) {
+        return true;
+      }
+    }
+    // Price match fallback within Presale
+    if (aPrice > 0 && aPrice === localTier.price) {
+      return true;
+    }
+    return false;
+  }
+
+  // 4. Early Bird 2 Days Pass Matching
   const isLocal2Day = lText.includes('2 day') || lText.includes('2days') || lText.includes('pass') || localTier.id === 'tkt-early-2days';
   const isArtatix2Day = aText.includes('2 day') || aText.includes('2days') || aText.includes('terusan') || aText.includes('pass');
 
@@ -84,11 +133,8 @@ export function matchArtatixItemToTier(
     return false;
   }
 
-  // 4. Early Bird Single Day Matching
-  if (
-    (lText.includes('early') || lText.includes('bird')) &&
-    (aText.includes('early') || aText.includes('bird'))
-  ) {
+  // 5. Early Bird Single Day Matching
+  if (isLocalEarly && isArtatixEarly) {
     if ((lText.includes('day 1') || lText.includes('day1')) && (aText.includes('day 1') || aText.includes('day1'))) {
       return true;
     }
@@ -97,7 +143,7 @@ export function matchArtatixItemToTier(
     }
   }
 
-  // 5. Price-level match fallback if single day
+  // 6. Price-level match fallback if single day
   if (aPrice > 0 && aPrice === localTier.price) {
     if (lText.includes('day 1') && aText.includes('day 1')) return true;
     if (lText.includes('day 2') && aText.includes('day 2')) return true;

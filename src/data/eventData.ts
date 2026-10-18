@@ -64,9 +64,9 @@ export const earlyBirdTickets: TicketTier[] = [
     id: 'tkt-early-day1',
     eventId: 'evt-clamor-2026',
     name: 'EARLY BIRD DAY 1',
-    category: '1 Night Pass · 30 Oct',
+    category: 'Day 1 Pass · 30 Okt',
     price: 100000,
-    perks: ['Single night admission (30 Oct)', 'General assembly access', 'Official wristband access pass'],
+    perks: ['Akses masuk Day 1 (30 Okt)', 'General assembly access', 'Official wristband access pass'],
     status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Early Bird',
@@ -76,9 +76,9 @@ export const earlyBirdTickets: TicketTier[] = [
     id: 'tkt-early-day2',
     eventId: 'evt-clamor-2026',
     name: 'EARLY BIRD DAY 2',
-    category: '1 Night Pass · 31 Oct',
+    category: 'Day 2 Pass · 31 Okt',
     price: 100000,
-    perks: ['Single night admission (31 Oct)', 'General assembly access', 'Official wristband access pass'],
+    perks: ['Akses masuk Day 2 (31 Okt)', 'General assembly access', 'Official wristband access pass'],
     status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Early Bird',
@@ -88,9 +88,9 @@ export const earlyBirdTickets: TicketTier[] = [
     id: 'tkt-early-2days',
     eventId: 'evt-clamor-2026',
     name: 'EARLY BIRD 2 DAYS PASS',
-    category: '2 Nights Pass · 30 & 31 Oct',
+    category: '2 Days Pass · 30 & 31 Okt',
     price: 180000,
-    perks: ['Full 2-night admission (30 & 31 Oct)', 'Save Rp 20.000 vs single day passes', 'General assembly access all nights'],
+    perks: ['Akses penuh 2 Hari (30 & 31 Okt)', 'Hemat Rp 20.000 vs tiket harian', 'General assembly access all days'],
     status: 'sold_out',
     ticketUrl: TICKET_URL,
     badgeLabel: 'Best Value',
@@ -99,11 +99,103 @@ export const earlyBirdTickets: TicketTier[] = [
   }
 ];
 
-export const getActiveTickets = (): TicketTier[] => {
-  return earlyBirdTickets;
+// Active Presale 1 Tickets (Single, Couple, Group 1 Day Pass & 2 Days Pass - Artatix)
+export const presale1Tickets: TicketTier[] = [
+  {
+    id: 'tkt-presale1-single',
+    eventId: 'evt-clamor-2026',
+    name: 'PRESALE 1 · 1 DAY PASS',
+    category: '1 Day Pass · Single (1 Pax)',
+    price: 169000,
+    perks: [
+      'Akses masuk 1 Hari (Day 1 atau Day 2)',
+      'Akses seluruh stage & assembly',
+      'Official wristband access pass'
+    ],
+    status: 'active',
+    ticketUrl: TICKET_URL,
+    badgeLabel: 'Single',
+    sortOrder: 1
+  },
+  {
+    id: 'tkt-presale1-couple',
+    eventId: 'evt-clamor-2026',
+    name: 'PRESALE 1 · COUPLE PASS',
+    category: '1 Day Pass · Couple Bundle (2 Pax)',
+    price: 318000,
+    perks: [
+      'Admission untuk 2 Hadirin (Day 1 atau Day 2)',
+      'Hemat Rp 20.000 vs 2x Single Pass',
+      '2x Official wristband access pass'
+    ],
+    status: 'active',
+    ticketUrl: TICKET_URL,
+    badgeLabel: 'Couple Bundle',
+    sortOrder: 2
+  },
+  {
+    id: 'tkt-presale1-group',
+    eventId: 'evt-clamor-2026',
+    name: 'PRESALE 1 · GROUP PASS',
+    category: '1 Day Pass · Group Bundle (4 Pax)',
+    price: 596000,
+    perks: [
+      'Admission untuk 4 Hadirin (Day 1 atau Day 2)',
+      'Hanya Rp 149.000/org (Hemat Rp 80.000)',
+      '4x Official wristband access pass'
+    ],
+    status: 'active',
+    ticketUrl: TICKET_URL,
+    badgeLabel: 'Group Bundle',
+    sortOrder: 3
+  },
+  {
+    id: 'tkt-presale1-2days',
+    eventId: 'evt-clamor-2026',
+    name: 'PRESALE 1 · 2 DAYS PASS',
+    category: '2 Days Pass · Full Day 1 & Day 2',
+    price: 299000,
+    perks: [
+      'Akses penuh 2 Hari (Day 1 & Day 2)',
+      'Akses ke seluruh panggung & assembly',
+      'Official 2-Day wristband access pass'
+    ],
+    status: 'active',
+    ticketUrl: TICKET_URL,
+    badgeLabel: 'Best Value',
+    isProtagonist: true,
+    sortOrder: 4
+  }
+];
+
+// Release timestamp for Presale 1: Friday, 16 October 2026 at 14:50:00 WIB
+export const PRESALE_1_RELEASE_TIME = '2026-10-16T14:50:00+07:00';
+
+export const isPresale1Active = (releaseTime = PRESALE_1_RELEASE_TIME): boolean => {
+  if (typeof window !== 'undefined') {
+    const searchParams = new URLSearchParams(window.location.search);
+    const hash = window.location.hash;
+    if (
+      searchParams.get('tier') === 'presale_1' ||
+      searchParams.get('tier') === 'presale1' ||
+      searchParams.get('preview') === 'presale1' ||
+      hash.includes('preview-presale1') ||
+      hash.includes('presale-1')
+    ) {
+      return true;
+    }
+    if (searchParams.get('tier') === 'early_bird' || hash.includes('preview-early-bird')) {
+      return false;
+    }
+  }
+  return Date.now() >= new Date(releaseTime).getTime();
 };
 
-export const initialTickets: TicketTier[] = earlyBirdTickets;
+export const getActiveTickets = (): TicketTier[] => {
+  return isPresale1Active() ? presale1Tickets : earlyBirdTickets;
+};
+
+export const initialTickets: TicketTier[] = getActiveTickets();
 
 // ---------------------------------------------------------------------------
 // LINEUP TEASER MODE
@@ -147,90 +239,163 @@ export const archivedIndividualArtists: Artist[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // DUAL-TIER LINEUP (DAY 1 & DAY 2)
-// Using official Gothic teaser poster for all cards until client releases individual assets
+// Official lineup posters for confirmed artists + Secret Guest TBA for Day 1
 // ---------------------------------------------------------------------------
 export const day1Artists: Artist[] = [
   {
-    id: 'art-day1-1',
+    id: 'art-bobby-suryadi',
+    day: 1,
     eventId: 'evt-clamor-2026',
-    name: 'Swear In Continental · ?',
+    name: 'Bobby Suryadi',
     dayLabel: 'Day 1 · 30 Okt',
     stageName: 'Mizu Commonroom',
-    performanceTime: '20:00 WIB',
-    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    performanceTime: '',
+    imageUrl: '/assets/lineup_day1_bobby_suryadi.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    posterUrl: '/assets/lineup_day1_bobby_suryadi.jpg',
     audioPreviewUrl: null,
-    sortOrder: 1
+    sortOrder: 1,
+    isRevealed: true
   },
   {
-    id: 'art-day1-2',
+    id: 'art-pks',
+    day: 1,
     eventId: 'evt-clamor-2026',
-    name: 'Swear In Continental · ?',
+    name: 'Pemandu Karaoke Sedih',
     dayLabel: 'Day 1 · 30 Okt',
     stageName: 'Mizu Commonroom',
-    performanceTime: '22:00 WIB',
-    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    performanceTime: '',
+    imageUrl: '/assets/lineup_day1_pemandu_karaoke_sedih.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    posterUrl: '/assets/lineup_day1_pemandu_karaoke_sedih.jpg',
     audioPreviewUrl: null,
-    sortOrder: 2
+    sortOrder: 2,
+    isRevealed: true
   },
   {
-    id: 'art-day1-3',
+    id: 'art-wancoy',
+    day: 1,
     eventId: 'evt-clamor-2026',
-    name: 'Swear In Continental · ?',
+    name: 'Wancoy',
     dayLabel: 'Day 1 · 30 Okt',
-    stageName: 'Mizu Commonroom',
-    performanceTime: '00:00 WIB',
-    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    stageName: 'Tetra Solo · Stage 1',
+    performanceTime: '',
+    imageUrl: '/assets/lineup_day1_wancoy.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    posterUrl: '/assets/lineup_day1_wancoy.jpg',
     audioPreviewUrl: null,
-    sortOrder: 3
+    sortOrder: 3,
+    isRevealed: true
+  },
+  {
+    id: 'art-gedexpoll',
+    day: 1,
+    eventId: 'evt-clamor-2026',
+    name: 'Gedexpoll',
+    dayLabel: 'Day 1 · 30 Okt',
+    stageName: 'Tetra Solo · Stage 2',
+    performanceTime: '',
+    imageUrl: '/assets/lineup_day1_gedexpoll.jpg',
+    videoUrl: null,
+    posterUrl: '/assets/lineup_day1_gedexpoll.jpg',
+    audioPreviewUrl: null,
+    sortOrder: 4,
+    isRevealed: true
   }
 ];
 
 export const day2Artists: Artist[] = [
   {
-    id: 'art-day2-1',
+    id: 'art-raka-basboi-quest',
+    day: 2,
     eventId: 'evt-clamor-2026',
-    name: 'Swear In Continental · ?',
+    name: 'Raka x Basboi x Quest*',
     dayLabel: 'Day 2 · 31 Okt',
-    stageName: 'Mizu Commonroom',
-    performanceTime: '20:00 WIB',
-    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    stageName: 'Tetra Solo · Stage 1',
+    performanceTime: '',
+    imageUrl: '/assets/lineup_day2_raka_basboi_quest.jpg',
     videoUrl: null,
-    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    posterUrl: '/assets/lineup_day2_raka_basboi_quest.jpg',
     audioPreviewUrl: null,
-    sortOrder: 1
+    sortOrder: 1,
+    isRevealed: true
   },
   {
-    id: 'art-day2-2',
+    id: 'art-seto',
+    day: 2,
     eventId: 'evt-clamor-2026',
-    name: 'Swear In Continental · ?',
+    name: 'Seto',
     dayLabel: 'Day 2 · 31 Okt',
-    stageName: 'Mizu Commonroom',
-    performanceTime: '22:00 WIB',
+    stageName: 'Tetra Solo · Stage 2',
+    performanceTime: '',
     imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     videoUrl: null,
     posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     audioPreviewUrl: null,
-    sortOrder: 2
+    sortOrder: 2,
+    isRevealed: false
   },
   {
-    id: 'art-day2-3',
+    id: 'art-safa',
+    day: 2,
     eventId: 'evt-clamor-2026',
-    name: 'Swear In Continental · ?',
+    name: '$AFA',
     dayLabel: 'Day 2 · 31 Okt',
     stageName: 'Mizu Commonroom',
-    performanceTime: '00:00 WIB',
+    performanceTime: '',
     imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     videoUrl: null,
     posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
     audioPreviewUrl: null,
-    sortOrder: 3
+    sortOrder: 3,
+    isRevealed: false
+  },
+  {
+    id: 'art-egnever-mamiq',
+    day: 2,
+    eventId: 'evt-clamor-2026',
+    name: 'Egnever x Mamiq',
+    dayLabel: 'Day 2 · 31 Okt',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '',
+    imageUrl: '/assets/lineup_day2_egnever_mamiq.jpg',
+    videoUrl: null,
+    posterUrl: '/assets/lineup_day2_egnever_mamiq.jpg',
+    audioPreviewUrl: null,
+    sortOrder: 4,
+    isRevealed: true
+  },
+  {
+    id: 'art-muria',
+    day: 2,
+    eventId: 'evt-clamor-2026',
+    name: 'Muria',
+    dayLabel: 'Day 2 · 31 Okt',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '',
+    imageUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    videoUrl: null,
+    posterUrl: '/assets/state_of_clamor_gothic_poster.jpg',
+    audioPreviewUrl: null,
+    sortOrder: 5,
+    isRevealed: false
+  },
+  {
+    id: 'art-brena',
+    day: 2,
+    eventId: 'evt-clamor-2026',
+    name: 'Brena',
+    dayLabel: 'Day 2 · 31 Okt',
+    stageName: 'Mizu Commonroom',
+    performanceTime: '',
+    imageUrl: '/assets/lineup_day2_brena.jpg',
+    videoUrl: null,
+    posterUrl: '/assets/lineup_day2_brena.jpg',
+    audioPreviewUrl: null,
+    sortOrder: 6,
+    isRevealed: true
   }
 ];
 
@@ -238,3 +403,19 @@ export const teaserFlyerArtists: Artist[] = day1Artists;
 export const teaserFlyerArtist: Artist = day1Artists[0];
 
 export const initialArtists: Artist[] = [...day1Artists, ...day2Artists];
+
+/**
+ * Returns the public display name of an artist.
+ * If the artist is not yet revealed or photo is not yet ready, returns '?'
+ */
+export const getArtistDisplayName = (artist: Artist): string => {
+  if (artist.isRevealed === false) return '?';
+  return artist.name;
+};
+
+/**
+ * Checks whether an artist has been revealed officially with photo
+ */
+export const isArtistRevealed = (artist: Artist): boolean => {
+  return artist.isRevealed !== false;
+};

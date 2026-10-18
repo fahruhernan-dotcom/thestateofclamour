@@ -20,6 +20,7 @@ export const TicketSection: React.FC<Props> = ({
   const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
+  const gridTierClass = tickets.length === 3 ? 'grid-tier-3' : tickets.length === 4 ? 'grid-tier-4' : '';
 
   useEffect(() => {
     const sec = sectionRef.current;
@@ -103,12 +104,12 @@ export const TicketSection: React.FC<Props> = ({
         </div>
 
         {/* Sequential Reveal Grid (Staggered 120ms intervals) */}
-        <div className={`passage-matrix-grid ${isRevealed ? 'is-revealed' : ''}`}>
+        <div className={`passage-matrix-grid ${isRevealed ? 'is-revealed' : ''} ${gridTierClass}`}>
           {tickets.map((ticket, index) => {
             const isSoldOut = ticket.status === 'sold_out';
             const isActive = ticket.status === 'active';
             const isHighlighted = highlightedTicketId === ticket.id;
-            const isProtagonist = Boolean(ticket.isProtagonist || ticket.id === 'tkt-early-2days');
+            const isProtagonist = Boolean(ticket.isProtagonist || ticket.id === 'tkt-presale1-2days' || ticket.id === 'tkt-early-2days');
             const isVip = false;
 
             return (
@@ -220,7 +221,7 @@ export const TicketSection: React.FC<Props> = ({
         </div>
 
         {/* VIP Sofa & Floor Plan Gateway Callout */}
-        <div style={{ textAlign: 'center', marginTop: '2.5rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '2.5rem', marginBottom: '1rem' }}>
           <a
             href="#/reservasi"
             onClick={(e) => {

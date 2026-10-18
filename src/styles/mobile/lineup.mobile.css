@@ -311,9 +311,9 @@
   overflow: hidden;
 }
 
-/* Poster is 3:4 — match the frame so the full flyer stays visible */
+/* Poster is 9:16 — match the official vertical poster aspect ratio so the full flyer stays visible */
 .lineup-mobile-card.is-flyer-card .lineup-mobile-portrait-frame {
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 9 / 16;
 }
 
 .lineup-mobile-card.is-flyer-card .lineup-mobile-scrim {

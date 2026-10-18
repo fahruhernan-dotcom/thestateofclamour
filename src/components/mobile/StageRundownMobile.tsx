@@ -32,7 +32,7 @@ export const StageRundownMobile: React.FC<Props> = ({
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenNight1(); } }}
           role="button"
           tabIndex={0}
-          aria-label="Buka detail acara Malam I — Swear In Continental"
+          aria-label="Buka detail acara Day 1 — Swear In Continental"
         >
           <div className="rundown-mobile-banner">
             <img
@@ -53,7 +53,7 @@ export const StageRundownMobile: React.FC<Props> = ({
             <h3 className="rundown-mobile-title">DAY 1 — SWEAR IN CONTINENTAL</h3>
             <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
-              Puncak pertunjukan spektakuler untuk membuka malam pertama ritual The State of Clamor.
+              Puncak pertunjukan spektakuler untuk membuka ritual Day 1 The State of Clamor.
             </p>
 
             <div className="rundown-mobile-meta-strip">
@@ -99,7 +99,7 @@ export const StageRundownMobile: React.FC<Props> = ({
             <h3 className="rundown-mobile-title">DAY 2 — SWEAR IN CONTINENTAL</h3>
             <p className="rundown-mobile-tagline">SECRET HEADLINER // TO BE ANNOUNCED</p>
             <p className="rundown-mobile-desc">
-              Puncak ritual malam kedua dengan set audio visual imersif penutup The State of Clamor.
+              Puncak ritual Day 2 dengan set audio visual imersif penutup The State of Clamor.
             </p>
 
             <div className="rundown-mobile-meta-strip">

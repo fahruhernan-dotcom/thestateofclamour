@@ -65,7 +65,7 @@ export const reservationPackages: ReservationPackage[] = [
     inclusions: [
       'Kapasitas Meja: 8 PAX',
       '4 Tiket Masuk Komplimen (Gelang Resmi)',
-      'Booking Fee Kuncian Meja: Rp 500.000',
+      'Booking Fee Meja: Rp 500.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE A',
@@ -85,7 +85,7 @@ export const reservationPackages: ReservationPackage[] = [
     inclusions: [
       'Kapasitas Meja: 6 PAX',
       '3 Tiket Masuk Komplimen (Gelang Resmi)',
-      'Booking Fee Kuncian Meja: Rp 500.000',
+      'Booking Fee Meja: Rp 500.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE B',
@@ -104,7 +104,7 @@ export const reservationPackages: ReservationPackage[] = [
     inclusions: [
       'Kapasitas Meja: 4 – 6 PAX',
       '2 – 3 Tiket Masuk Komplimen (Gelang Resmi)',
-      'Booking Fee Kuncian Meja: Rp 300.000 – Rp 400.000',
+      'Booking Fee Meja: Rp 300.000 – Rp 400.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE C',
@@ -123,7 +123,7 @@ export const reservationPackages: ReservationPackage[] = [
     inclusions: [
       'Kapasitas Meja: 4 PAX',
       '2 Tiket Masuk Komplimen (Gelang Resmi)',
-      'Booking Fee Kuncian Meja: Rp 200.000 – Rp 250.000',
+      'Booking Fee Meja: Rp 200.000 – Rp 250.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE D',
@@ -142,7 +142,7 @@ export const reservationPackages: ReservationPackage[] = [
     inclusions: [
       'Kapasitas Meja: 4 PAX',
       '2 Tiket Masuk Komplimen (Gelang Resmi)',
-      'Booking Fee Kuncian Meja: Rp 200.000',
+      'Booking Fee Meja: Rp 200.000',
       'Minimum Charge F&B Diselesaikan di Venue'
     ],
     zoneCode: 'ZONE E',

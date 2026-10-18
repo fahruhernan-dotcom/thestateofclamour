@@ -11,6 +11,7 @@ import { TicketTier } from '../types';
 import { FloorPlanViewer } from '../components/floorplan/FloorPlanViewer';
 import { OfficialFAQSection } from '../components/OfficialFAQSection';
 import { MultiStageRundown } from '../components/event/MultiStageRundown';
+import { collectives } from '../data/collectiveData';
 import '../styles/streaming-event.css';
 
 interface Props {
@@ -102,6 +103,25 @@ export const NightOneEventPage: React.FC<Props> = ({
               JELAJAHI VENUE
             </button>
           </div>
+
+          {/* Compact Collective Logos Strip (Under Buttons) */}
+          <div className="streaming-hero-collectives">
+            <span className="streaming-hero-collectives-label">
+              IN ALLIANCE WITH //
+            </span>
+            <div className="streaming-hero-collectives-row">
+              {collectives.map((item) => (
+                <div key={item.id} className="streaming-hero-collective-item" title={`${item.name} — ${item.role}`}>
+                  <img
+                    src={item.logoUrl}
+                    alt={item.name}
+                    className="streaming-hero-collective-img"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -112,15 +132,15 @@ export const NightOneEventPage: React.FC<Props> = ({
         <div className="streaming-nav-inner">
           {/* Night Selector Tabs (Season Switcher DNA) */}
           <div className="streaming-night-tabs">
-            <span className="streaming-night-tab is-active">MALAM I · 30 OKT</span>
+            <span className="streaming-night-tab is-active">DAY 1 · 30 OKT</span>
             {onViewNight2 && (
               <button
                 type="button"
                 onClick={onViewNight2}
                 className="streaming-night-tab is-switch"
-                title="Beralih ke Dossier Malam II"
+                title="Beralih ke Dossier Day 2"
               >
-                MALAM II · 31 OKT →
+                DAY 2 · 31 OKT →
               </button>
             )}
           </div>
@@ -166,7 +186,7 @@ export const NightOneEventPage: React.FC<Props> = ({
         <section id="spotlight" style={{ marginBottom: '4rem', scrollMarginTop: '80px' }}>
           <div className="streaming-section-header">
             <div>
-              <span className="streaming-section-subtitle">HEADLINER MALAM PERTAMA</span>
+              <span className="streaming-section-subtitle">HEADLINER DAY 1</span>
               <h2 className="streaming-section-title">PENAMPIL UTAMA // PHASE 01 TEASER</h2>
             </div>
             <span className="streaming-badge-box is-tba">DIUMUMKAN SEGERA</span>
@@ -177,7 +197,7 @@ export const NightOneEventPage: React.FC<Props> = ({
             <div className="streaming-spotlight-visual">
               <img
                 src="/assets/day1_billboard_assembly.jpg"
-                alt="Headliner Rahasia Malam 1"
+                alt="Headliner Rahasia Day 1"
                 className="streaming-spotlight-img"
               />
               <div className="streaming-spotlight-mystery-overlay">
@@ -193,16 +213,16 @@ export const NightOneEventPage: React.FC<Props> = ({
               </div>
               <div className="streaming-spotlight-badge">
                 <Sparkles size={11} />
-                <span>NIGHT I EXCLUSIVE</span>
+                <span>DAY 1 EXCLUSIVE</span>
               </div>
             </div>
 
             {/* Teaser Information */}
             <div className="streaming-spotlight-info">
-              <span className="streaming-spotlight-sub">SWEAR IN CONTINENTAL // NIGHT I</span>
+              <span className="streaming-spotlight-sub">SWEAR IN CONTINENTAL // DAY 1</span>
               <h3 className="streaming-spotlight-title">SECRET HEADLINER (TBA)</h3>
               <p className="streaming-spotlight-desc">
-                Penampil kejutan yang siap mengambil alih panggung utama. Bersiap untuk puncak malam pertama — pengumuman resmi segera hadir.
+                Penampil kejutan yang siap mengambil alih panggung utama. Bersiap untuk puncak Day 1 — pengumuman resmi segera hadir.
               </p>
 
               <div className="streaming-spotlight-meta-grid">
@@ -244,7 +264,7 @@ export const NightOneEventPage: React.FC<Props> = ({
           <div className="streaming-section-header">
             <div>
               <span className="streaming-section-subtitle">SUSUNAN ACARA &amp; TIMETABLE</span>
-              <h2 className="streaming-section-title">RUNDOWN // MALAM I (30 OKT 2026)</h2>
+              <h2 className="streaming-section-title">RUNDOWN // DAY 1 (30 OKT 2026)</h2>
             </div>
             <span className="streaming-badge-box is-tba">COMING SOON</span>
           </div>

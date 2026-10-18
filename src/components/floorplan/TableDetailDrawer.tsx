@@ -1,9 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { TableSpot, TableStatus } from '../../types/tableTypes';
 import { ADMIN_DAY1, ADMIN_DAY2 } from '../../data/reservationData';
 import { HIDE_TABLE_AVAILABILITY_STATUS } from '../../data/floorPlanData';
-import { X, Lock, CheckCircle2, Users, MessageCircle, Copy, Check, Sparkles } from 'lucide-react';
+import {
+  X,
+  Lock,
+  CheckCircle2,
+  Users,
+  MessageCircle,
+  Copy,
+  Check,
+  Sparkles,
+  Ticket,
+  ShieldCheck,
+  CreditCard
+} from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface Props {
@@ -22,6 +34,9 @@ export const TableDetailDrawer: React.FC<Props> = ({
   onSelectForBooking
 }) => {
   const [copied, setCopied] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchCurrentY = useRef<number | null>(null);
 
   useEffect(() => {
     if (!spot) return;
@@ -44,11 +59,46 @@ export const TableDetailDrawer: React.FC<Props> = ({
     };
   }, [spot, onClose]);
 
+  // Mobile Sheet Swipe-to-dismiss gesture handling
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartY.current === null) return;
+    touchCurrentY.current = e.touches[0].clientY;
+    const deltaY = touchCurrentY.current - touchStartY.current;
+    if (deltaY > 0 && panelRef.current) {
+      panelRef.current.style.transform = `translateY(${deltaY}px)`;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartY.current !== null && touchCurrentY.current !== null) {
+      const deltaY = touchCurrentY.current - touchStartY.current;
+      if (deltaY > 85) {
+        onClose();
+        return;
+      }
+    }
+    if (panelRef.current) {
+      panelRef.current.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
+      panelRef.current.style.transform = '';
+      setTimeout(() => {
+        if (panelRef.current) panelRef.current.style.transition = '';
+      }, 280);
+    }
+    touchStartY.current = null;
+    touchCurrentY.current = null;
+  };
+
   if (!spot) return null;
 
   const isAvailable = HIDE_TABLE_AVAILABILITY_STATUS ? true : status === 'available';
   const minSpend = day === 'day-1' ? spot.formattedMinSpendDay1 : spot.formattedMinSpendDay2;
   const admin = day === 'day-1' ? ADMIN_DAY1 : ADMIN_DAY2;
+  const venueLabel = spot.venue === 'tetra' ? 'TETRA SOLO' : 'MIZU COMMONROOM';
+  const complementCount = spot.complementTickets || 2;
 
   const handleWhatsAppBooking = () => {
     if (!isAvailable) return;
@@ -59,7 +109,7 @@ export const TableDetailDrawer: React.FC<Props> = ({
 
     const venueName = spot.venue === 'tetra' ? 'Tetra Solo' : 'Mizu Commonroom';
     const dayName = day === 'day-1' ? 'Day 1 (30 Okt)' : 'Day 2 (31 Okt)';
-    const message = `Halo ${admin.name}, saya ingin reservasi meja *${spot.code}* di *${venueName}* (${spot.name}) untuk The State of Clamor: ${dayName}.\n\n• Minimum Charge: ${minSpend}\n• Booking Fee: ${spot.formattedBookingFee || '-'}\n• Kapasitas: ${spot.capacityText} (${spot.complementTickets || 2} Tiket Masuk)\n\nMohon konfirmasi ketersediaan meja untuk pembayaran Booking Fee. Terima kasih!`;
+    const message = `Halo ${admin.name}, saya ingin reservasi meja *${spot.code}* di *${venueName}* (${spot.name}) untuk The State of Clamor: ${dayName}.\n\n• Minimum Charge: ${minSpend}\n• Booking Fee: ${spot.formattedBookingFee || '-'}\n• Kapasitas: ${spot.capacityText} (${complementCount} Tiket Masuk)\n\nMohon konfirmasi ketersediaan meja untuk pembayaran Booking Fee. Terima kasih!`;
     const waUrl = `https://wa.me/${admin.phone}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank', 'noopener,noreferrer');
   };
@@ -68,15 +118,20 @@ export const TableDetailDrawer: React.FC<Props> = ({
     e.stopPropagation();
     navigator.clipboard.writeText('0374541630');
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2200);
   };
-
-  const venueLabel = spot.venue === 'tetra' ? 'TETRA SOLO' : 'MIZU COMMONROOM';
 
   return createPortal(
     <TooltipProvider>
       <div className="table-drawer-overlay" onClick={onClose} role="dialog" aria-modal="true">
-        <div className="table-drawer-panel" onClick={e => e.stopPropagation()}>
+        <div
+          ref={panelRef}
+          className="table-drawer-panel"
+          onClick={e => e.stopPropagation()}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           {/* iOS Grabber Handle for Mobile Sheets */}
           <div className="drawer-grabber" />
 
@@ -104,10 +159,9 @@ export const TableDetailDrawer: React.FC<Props> = ({
                   </span>
                 )}
               </div>
-              <div className="drawer-title-row">
+              <div className="drawer-heading-block">
                 <h2 className="drawer-table-code">{spot.code}</h2>
-                <span className="drawer-title-sep">·</span>
-                <span className="drawer-table-name">{spot.name}</span>
+                <p className="drawer-table-name">{spot.name}</p>
               </div>
             </div>
 
@@ -118,7 +172,7 @@ export const TableDetailDrawer: React.FC<Props> = ({
                 onClick={onClose}
                 aria-label="Tutup Detail Meja"
               >
-                <X size={15} strokeWidth={1.8} />
+                <X size={16} strokeWidth={2} />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={8}>
                 <span>Tutup</span>
@@ -127,79 +181,97 @@ export const TableDetailDrawer: React.FC<Props> = ({
             </Tooltip>
           </div>
 
-          {/* iOS Inset Grouped Specs Card */}
+          {/* Apple Inset Grouped Card 1: Pricing & Booking Fee */}
+          <div className="drawer-pricing-card">
+            <div className="pricing-stat-col">
+              <span className="pricing-label">Min. Charge ({day === 'day-1' ? 'Day 1' : 'Day 2'})</span>
+              <span className="pricing-value-hero">{minSpend}</span>
+            </div>
+            {spot.formattedBookingFee && (
+              <div className="pricing-stat-col has-border-left">
+                <span className="pricing-label">Booking Fee</span>
+                <span className="pricing-value-fee">{spot.formattedBookingFee}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Apple Inset Grouped Card 2: Table Specifications */}
           <div className="drawer-specs-grouped">
             <div className="drawer-spec-row">
               <div className="spec-label-cluster">
-                <Users size={13} className="spec-icon" />
+                <Users size={14} className="spec-icon" />
                 <span className="spec-label">Kapasitas Tamu</span>
               </div>
-              <span className="spec-value">{spot.capacityText} ({spot.complementTickets || 2} Tiket)</span>
+              <span className="spec-value">{spot.capacityText}</span>
             </div>
 
             <div className="drawer-spec-row">
               <div className="spec-label-cluster">
-                <span className="spec-label">Min. Charge ({day === 'day-1' ? 'Day 1' : 'Day 2'})</span>
+                <Ticket size={14} className="spec-icon spec-icon-accent" />
+                <span className="spec-label">Inklusi Tiket Masuk</span>
               </div>
-              <span className="spec-value spec-value-strong">{minSpend}</span>
+              <span className="spec-value spec-value-highlight">
+                {complementCount} Tiket Masuk Gratis
+              </span>
             </div>
+          </div>
 
-            {spot.formattedBookingFee && (
-              <div className="drawer-spec-row">
-                <div className="spec-label-cluster">
-                  <span className="spec-label">Booking Fee (Kuncian)</span>
+          {/* Apple Inset Grouped Card 3: Official Bank Verification Card */}
+          {spot.formattedBookingFee && (
+            <div className="drawer-bank-card">
+              <div className="bank-header-strip">
+                <div className="bank-badge-cluster">
+                  <CreditCard size={13} className="text-zinc-400" />
+                  <span className="bank-tag-apple">Rekening Resmi Pembayaran</span>
                 </div>
-                <span className="spec-value-badge">{spot.formattedBookingFee}</span>
+                <span className="bank-provider-pill">BCA</span>
               </div>
-            )}
-
-            {spot.formattedBookingFee && (
-              <div className="drawer-bank-row">
-                <div className="bank-info-cluster">
-                  <span className="bank-tag">Rekening Resmi</span>
-                  <span className="bank-account">BCA <strong>0374541630</strong> a/n M. Ferdian Wahyu</span>
+              <div className="bank-details-row">
+                <div className="bank-number-group">
+                  <span className="bank-account-number">0374 5416 30</span>
+                  <span className="bank-beneficiary-name">a/n M. Ferdian Wahyu</span>
                 </div>
                 <button
                   type="button"
-                  className="bank-copy-btn"
+                  className={`bank-copy-action ${copied ? 'is-copied' : ''}`}
                   onClick={handleCopyAccount}
                   title="Salin Nomor Rekening BCA"
                 >
-                  {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                  {copied ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
                   <span>{copied ? 'Tersalin' : 'Salin Rek'}</span>
                 </button>
               </div>
-            )}
-          </div>
-
-          {/* Description */}
-          {spot.description && (
-            <p className="drawer-description-text">
-              {spot.description}
-            </p>
+            </div>
           )}
 
-          {/* Ketentuan Resmi */}
+          {/* Apple Inset Grouped Card 4: Official Terms Guidelines */}
           <div className="drawer-terms-card">
-            <span className="terms-icon">💡</span>
+            <div className="terms-icon-wrapper">
+              <ShieldCheck size={16} className="terms-icon-svg" />
+            </div>
             <p className="terms-text">
-              <strong>Ketentuan:</strong> Booking Fee mengunci meja &amp; termasuk {spot.complementTickets || 2} tiket complimentary. Sisa minimum charge diselesaikan di lokasi acara.
+              <strong>Ketentuan:</strong> Booking Fee hanya untuk mengunci meja &amp; sudah termasuk <strong>{complementCount} tiket masuk gratis</strong>. Booking Fee <strong>tidak mengurangi nominal Minimum Charge</strong>.
             </p>
           </div>
 
-          {/* Action Button */}
+          {/* Action Button: Tactile WhatsApp CTA */}
           {isAvailable ? (
             <button
               type="button"
               className="drawer-cta-action is-available"
               onClick={handleWhatsAppBooking}
             >
-              <MessageCircle size={16} />
-              <span>Reservasi {spot.code} via WhatsApp</span>
+              <div className="cta-icon-bubble">
+                <MessageCircle size={18} />
+              </div>
+              <div className="cta-content-group">
+                <span className="cta-main-title">Reservasi {spot.code} via WhatsApp</span>
+                <span className="cta-sub-caption">Terhubung langsung dengan Admin {day === 'day-1' ? 'Day 1' : 'Day 2'}</span>
+              </div>
             </button>
           ) : (
             <div className="drawer-cta-action is-occupied">
-              <Lock size={15} />
+              <Lock size={16} />
               <span>Meja Ini Telah Terisi / Reserved</span>
             </div>
           )}
@@ -209,3 +281,5 @@ export const TableDetailDrawer: React.FC<Props> = ({
     document.body
   );
 };
+
+export default TableDetailDrawer;

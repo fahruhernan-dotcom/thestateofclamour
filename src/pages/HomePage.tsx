@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { HeroSection } from '../components/HeroSection';
 import { LineupSection } from '../components/LineupSection';
 import { TicketSection } from '../components/TicketSection';
-
+// import { CollectivesSection } from '../components/CollectivesSection';
 import { FinalCTA } from '../components/FinalCTA';
 import { Artist, EventData, TicketTier } from '../types';
 import { startPreload } from '../utils/mediaPreloader';
@@ -62,7 +62,8 @@ export const HomePage: React.FC<Props> = ({
         onOpenReservasi={onOpenReservasi}
       />
 
-
+      {/* Scene 04: The Alliance (Hidden per user request - logos active in Day pages & Footer) */}
+      {/* <CollectivesSection /> */}
 
       {/* Scene 05: Enter The State (Final Call to Action with Volumetric Beam) */}
       <FinalCTA onTicketClick={onScrollToTickets} onToast={onToast} />

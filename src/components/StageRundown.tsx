@@ -81,7 +81,7 @@ export const StageRundown: React.FC<Props> = ({
             </div>
 
             <p className="event-roster-desc">
-              Puncak pertunjukan spektakuler untuk membuka malam pertama ritual The State of Clamor.
+              Puncak pertunjukan spektakuler untuk membuka ritual Day 1 The State of Clamor.
             </p>
 
             {/* Clean Typographic Metadata Strip (Zero Pill Box Clutter) */}
@@ -141,7 +141,7 @@ export const StageRundown: React.FC<Props> = ({
             </div>
 
             <p className="event-roster-desc">
-              Puncak ritual malam kedua dengan set audio visual imersif penutup The State of Clamor.
+              Puncak ritual Day 2 dengan set audio visual imersif penutup The State of Clamor.
             </p>
 
             {/* Clean Typographic Metadata Strip (Zero Pill Box Clutter) */}
@@ -180,7 +180,7 @@ export const StageRundown: React.FC<Props> = ({
       >
         <div className="master-banner-left">
           <div className="master-banner-eyebrow">
-            <span>PANDUAN LENGKAP 2 MALAM</span>
+            <span>PANDUAN LENGKAP DAY 1 &amp; DAY 2</span>
             <span className="master-bullet">·</span>
             <span>DOSIR RESMI</span>
           </div>
@@ -188,7 +188,7 @@ export const StageRundown: React.FC<Props> = ({
             THE STATE OF CLAMOR — DOSIR RESMI
           </h3>
           <p className="master-banner-desc">
-            Rundown lengkap 2 malam paralel, denah seluruh panggung, tata tertib identitas fisik, dan panduan masuk.
+            Rundown lengkap Day 1 &amp; Day 2 paralel, denah seluruh panggung, tata tertib identitas fisik, dan panduan masuk.
           </p>
         </div>
 

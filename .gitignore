@@ -18,5 +18,6 @@ public/assets/continental.mp4
 
 # Raw source archives & build caches
 Source/
+drive-download*/
 *.tsbuildinfo
 dist-deploy.zip

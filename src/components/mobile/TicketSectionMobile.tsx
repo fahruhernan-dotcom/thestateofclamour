@@ -20,7 +20,7 @@ export const TicketSectionMobile: React.FC<Props> = ({
   const [isRevealed, setIsRevealed] = useState(false);
 
   // Default to the protagonist ticket (e.g. 2 Days Pass) if present, otherwise first ticket
-  const protagonistIdx = tickets.findIndex(t => t.isProtagonist || t.id === 'tkt-early-2days');
+  const protagonistIdx = tickets.findIndex(t => t.isProtagonist || t.id === 'tkt-presale1-2days' || t.id === 'tkt-early-2days');
   const targetInitial = protagonistIdx !== -1 ? protagonistIdx : 0;
   const [activeIndex, setActiveIndex] = useState(targetInitial);
 
@@ -295,8 +295,8 @@ export const TicketSectionMobile: React.FC<Props> = ({
           <span className="tickets-mobile-tier-name">{tickets[activeIndex]?.name}</span>
         </div>
 
-        {/* Mobile VIP Table & Sofa Callout */}
-        <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
+        {/* Mobile VIP Table Callout */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1.25rem' }}>
           <a
             href="#/reservasi"
             onClick={(e) => {

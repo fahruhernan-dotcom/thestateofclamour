@@ -36,6 +36,7 @@ export interface Artist {
   id: string;
   eventId: string;
   name: string;
+  day?: 1 | 2;
   dayLabel: string; // e.g. "Day 1", "Day 2"
   stageName: string; // e.g. "The Main Void", "The Sub-Bunker"
   performanceTime: string; // e.g. "22:30 WIB", "00:00 WIB"
@@ -44,6 +45,7 @@ export interface Artist {
   posterUrl?: string | null;
   audioPreviewUrl?: string | null; // Real audio URL (MP3/stream) per PRD
   sortOrder: number;
+  isRevealed?: boolean; // false = disembunyikan sebagai '?' sampai foto/pengumuman resmi siap
 }
 
 export interface Announcement {
