@@ -445,7 +445,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
                 <span style={{ color: 'var(--color-gold-antique)' }}>20:00 WIB</span>
               </div>
               <div style={{ marginTop: '0.35rem', fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.24em', color: 'var(--color-crimson)', textTransform: 'uppercase', fontWeight: 600 }}>
-                MIZU COMMONROOM
+                MIZU COMMONROOM &amp; TETRA
               </div>
             </div>
 
@@ -479,7 +479,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
                 <span style={{ color: 'var(--color-gold-antique)' }}>20:00 WIB</span>
               </div>
               <div style={{ marginTop: '0.35rem', fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.24em', color: 'var(--color-crimson)', textTransform: 'uppercase', fontWeight: 600 }}>
-                MIZU COMMONROOM
+                MIZU COMMONROOM &amp; TETRA
               </div>
             </div>
           </div>
@@ -495,7 +495,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
             </h2>
             <div className="story-mobile-sub-venue-block">
               <span className="story-mobile-sub-line">SWEAR IN CONTINENTAL</span>
-              <span className="story-mobile-sub-line">MIZU COMMONROOM</span>
+              <span className="story-mobile-sub-line">MIZU COMMONROOM & TETRA</span>
             </div>
           </div>
 
@@ -521,7 +521,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
                 <span className="schedule-date-tag">30 OCT</span>
                 <span className="schedule-artist-name">{IS_LINEUP_TEASER_MODE ? '?' : 'MALVIN'}</span>
                 <span className="schedule-time-tag">20:00</span>
-                <span className="schedule-venue-tag">MIZU</span>
+                <span className="schedule-venue-tag">MIZU &amp; TETRA</span>
               </div>
 
               {/* Day 2: Far / ? */}
@@ -529,7 +529,7 @@ export const GuestStorytellingTransition: React.FC<Props> = ({ onExploreGuests }
                 <span className="schedule-date-tag">31 OCT</span>
                 <span className="schedule-artist-name">{IS_LINEUP_TEASER_MODE ? '?' : 'FAR'}</span>
                 <span className="schedule-time-tag">20:00</span>
-                <span className="schedule-venue-tag">MIZU</span>
+                <span className="schedule-venue-tag">MIZU &amp; TETRA</span>
               </div>
             </div>
           </div>

@@ -120,7 +120,7 @@ export const ReservasiPage: React.FC<Props> = ({
       <header className="reservasi-header-cluster">
         <div className="reservasi-eyebrow-pill">
           <Crown size={12} className="reservasi-eyebrow-icon" />
-          <span>VIP HOSPITALITY // MIZU COMMONROOM</span>
+          <span>VIP HOSPITALITY // TETRA & MIZU COMMONROOM</span>
         </div>
         <h1 className="reservasi-main-title">
           RESERVASI MEJA &amp; SOFA
@@ -175,7 +175,7 @@ export const ReservasiPage: React.FC<Props> = ({
               <h2 className="concierge-title">{ADMIN_DAY1.name}</h2>
               <p className="concierge-theme">Theme: Swear in Continental</p>
               <p className="concierge-desc">
-                Reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 1.
+                Reservasi meja Tetra &amp; Mizu Commonroom khusus Day 1.
               </p>
 
               <div className="concierge-meta-box">
@@ -214,7 +214,7 @@ export const ReservasiPage: React.FC<Props> = ({
               <h2 className="concierge-title">{ADMIN_DAY2.name}</h2>
               <p className="concierge-theme">Theme: Swear in Continental</p>
               <p className="concierge-desc">
-                Reservasi meja Lantai 1 &amp; Lantai 2 khusus Day 2.
+                Reservasi meja Tetra &amp; Mizu Commonroom khusus Day 2.
               </p>
 
               <div className="concierge-meta-box">

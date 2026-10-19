@@ -439,7 +439,7 @@ export const FloatingNavbar: React.FC<Props> = ({
               >
                 <div className="mobile-nav-item-content">
                   <span className="mobile-nav-item-title">Denah &amp; Orientasi Venue</span>
-                  <span className="mobile-nav-item-sub">Peta Dua Lantai &amp; Posisi Stage</span>
+                  <span className="mobile-nav-item-sub">Peta Tetra &amp; Mizu Commonroom</span>
                 </div>
                 <div className="mobile-nav-item-trailing">
                   {currentView === 'denah' && <span className="mobile-nav-active-pill">AKTIF</span>}

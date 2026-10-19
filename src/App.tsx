@@ -16,7 +16,7 @@ import { fetchLiveArtatixTickets } from './services/artatixService';
 type ViewMode = 'home' | 'event-night-1' | 'event-night-2' | 'full-dossier' | 'denah' | 'reservasi';
 
 export const App: React.FC = () => {
-  const [event] = useState<EventData>(initialEvent);
+  const event: EventData = initialEvent;
   const [tickets, setTickets] = useState<TicketTier[]>(getActiveTickets);
   const artists: Artist[] = initialArtists;
   const [currentView, setCurrentView] = useState<ViewMode>('home');

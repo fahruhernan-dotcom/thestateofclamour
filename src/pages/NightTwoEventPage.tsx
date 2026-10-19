@@ -257,7 +257,7 @@ export const NightTwoEventPage: React.FC<Props> = ({
                   <MapPin size={16} style={{ color: 'var(--color-crimson)', flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <strong>LOKASI PANGGUNG</strong>
-                    <p>Tetra Solo (Lantai 1)</p>
+                    <p>Tetra Solo</p>
                   </div>
                 </div>
                 <div className="streaming-meta-block">

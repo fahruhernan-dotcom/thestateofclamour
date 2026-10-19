@@ -47,8 +47,8 @@ export const MultiStageRundown: React.FC<Props> = ({ day }) => {
           <span className="gothic-meta-date-main">
             {day === 'day-1' ? '30 OKT — 31 OKT' : '31 OKT — 01 NOV'}
           </span>
-          <span className="gothic-meta-venue-line">TETRA SOLO (L1)</span>
-          <span className="gothic-meta-venue-line">MIZU COMMONROOM (L2)</span>
+          <span className="gothic-meta-venue-line">TETRA SOLO</span>
+          <span className="gothic-meta-venue-line">MIZU COMMONROOM</span>
         </div>
       </header>
 
@@ -77,7 +77,7 @@ export const MultiStageRundown: React.FC<Props> = ({ day }) => {
               </div>
               <div className="space-info">
                 <strong className="space-name">TETRA — STAGE 1</strong>
-                <span className="space-desc">Panggung Utama 360° · Lantai 1</span>
+                <span className="space-desc">Panggung Utama 360° · Tetra</span>
               </div>
             </div>
 
@@ -88,7 +88,7 @@ export const MultiStageRundown: React.FC<Props> = ({ day }) => {
               </div>
               <div className="space-info">
                 <strong className="space-name">TETRA — STAGE 2</strong>
-                <span className="space-desc">Panggung Bawah Tanah · Lantai 1</span>
+                <span className="space-desc">Panggung Bawah Tanah · Tetra</span>
               </div>
             </div>
 
@@ -99,7 +99,7 @@ export const MultiStageRundown: React.FC<Props> = ({ day }) => {
               </div>
               <div className="space-info">
                 <strong className="space-name">MIZU — STAGE</strong>
-                <span className="space-desc">Commonroom Lounge · Lantai 2</span>
+                <span className="space-desc">Commonroom Lounge · Mizu Commonroom</span>
               </div>
             </div>
           </div>

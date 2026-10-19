@@ -12,7 +12,7 @@ interface Props {
 export const EventVenueMapSection: React.FC<Props> = ({
   defaultZoneId = 'zone-vvip',
   onSelectZoneForReservation,
-  dayBadge = 'MIZU COMMONROOM'
+  dayBadge = 'TETRA & MIZU COMMONROOM'
 }) => {
   const [selectedZoneId, setSelectedZoneId] = useState<string>(defaultZoneId);
   const [activeCategory, setActiveCategory] = useState<'all' | 'vip' | 'stage' | 'bar' | 'facility'>('all');
@@ -50,7 +50,7 @@ export const EventVenueMapSection: React.FC<Props> = ({
               <Compass size={14} /> NORTH ▲ STAGE
             </span>
             <span>SCALE: 1:100 ARCHITECTURAL</span>
-            <span>VEN: MIZU COMMONROOM</span>
+            <span>VEN: TETRA & MIZU COMMONROOM</span>
           </div>
 
           {/* Filter Pills */}

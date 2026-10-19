@@ -70,21 +70,21 @@ export const SIDEBAR_STAGES: StageSidebarItem[] = [
   {
     id: 'tetra-1',
     name: 'TETRA — STAGE 1',
-    floorLabel: 'Lantai 1',
+    floorLabel: 'Tetra',
     dotColor: '#d4af37',
     thumbUrl: '/assets/day1_billboard_assembly.jpg'
   },
   {
     id: 'tetra-2',
     name: 'TETRA — STAGE 2',
-    floorLabel: 'Lantai 1',
+    floorLabel: 'Tetra',
     dotColor: '#e63946',
     thumbUrl: '/assets/crimson_gothic_cathedral_hall.png'
   },
   {
     id: 'mizu',
     name: 'MIZU — STAGE',
-    floorLabel: 'Lantai 2',
+    floorLabel: 'Mizu Commonroom',
     dotColor: '#38bdf8',
     thumbUrl: '/assets/gothic_cathedral_ritual_concert.png'
   }
@@ -92,11 +92,11 @@ export const SIDEBAR_STAGES: StageSidebarItem[] = [
 
 export const GOTHIC_RUNDOWN_DATA: Record<'day-1' | 'day-2', StageColumnData[]> = {
   'day-1': [
-    // --- TETRA — STAGE 1 (LANTAI 1) ---
+    // --- TETRA — STAGE 1 (TETRA) ---
     {
       id: 'tetra-1',
       name: 'TETRA — STAGE 1',
-      floorLabel: 'Lantai 1',
+      floorLabel: 'Tetra',
       accentColor: '#d4af37',
       bannerImg: '/assets/day1_billboard_assembly.jpg',
       acts: [
@@ -136,11 +136,11 @@ export const GOTHIC_RUNDOWN_DATA: Record<'day-1' | 'day-2', StageColumnData[]> =
       ]
     },
 
-    // --- TETRA — STAGE 2 (LANTAI 1) ---
+    // --- TETRA — STAGE 2 (TETRA) ---
     {
       id: 'tetra-2',
       name: 'TETRA — STAGE 2',
-      floorLabel: 'Lantai 1',
+      floorLabel: 'Tetra',
       accentColor: '#e63946',
       bannerImg: '/assets/crimson_gothic_cathedral_hall.png',
       acts: [
@@ -180,11 +180,11 @@ export const GOTHIC_RUNDOWN_DATA: Record<'day-1' | 'day-2', StageColumnData[]> =
       ]
     },
 
-    // --- MIZU — STAGE (LANTAI 2) ---
+    // --- MIZU — STAGE (MIZU COMMONROOM) ---
     {
       id: 'mizu',
       name: 'MIZU — STAGE',
-      floorLabel: 'Lantai 2',
+      floorLabel: 'Mizu Commonroom',
       accentColor: '#38bdf8',
       bannerImg: '/assets/gothic_cathedral_ritual_concert.png',
       acts: [
@@ -226,11 +226,11 @@ export const GOTHIC_RUNDOWN_DATA: Record<'day-1' | 'day-2', StageColumnData[]> =
   ],
 
   'day-2': [
-    // --- TETRA — STAGE 1 (LANTAI 1) ---
+    // --- TETRA — STAGE 1 (TETRA) ---
     {
       id: 'tetra-1',
       name: 'TETRA — STAGE 1',
-      floorLabel: 'Lantai 1',
+      floorLabel: 'Tetra',
       accentColor: '#d4af37',
       bannerImg: '/assets/day2_billboard_vault.jpg',
       acts: [
@@ -270,11 +270,11 @@ export const GOTHIC_RUNDOWN_DATA: Record<'day-1' | 'day-2', StageColumnData[]> =
       ]
     },
 
-    // --- TETRA — STAGE 2 (LANTAI 1) ---
+    // --- TETRA — STAGE 2 (TETRA) ---
     {
       id: 'tetra-2',
       name: 'TETRA — STAGE 2',
-      floorLabel: 'Lantai 1',
+      floorLabel: 'Tetra',
       accentColor: '#e63946',
       bannerImg: '/assets/crimson_gothic_cathedral_hall.png',
       acts: [
@@ -314,11 +314,11 @@ export const GOTHIC_RUNDOWN_DATA: Record<'day-1' | 'day-2', StageColumnData[]> =
       ]
     },
 
-    // --- MIZU — STAGE (LANTAI 2) ---
+    // --- MIZU — STAGE (MIZU COMMONROOM) ---
     {
       id: 'mizu',
       name: 'MIZU — STAGE',
-      floorLabel: 'Lantai 2',
+      floorLabel: 'Mizu Commonroom',
       accentColor: '#38bdf8',
       bannerImg: '/assets/gothic_cathedral_ritual_concert.png',
       acts: [

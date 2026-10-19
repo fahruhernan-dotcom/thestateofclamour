@@ -246,7 +246,7 @@ export const FloorPlanViewer: React.FC<Props> = ({
             {/* Architectural Background Render */}
             <img
               src={floorImageUrl}
-              alt={`Denah Arsitektural Lantai ${currentFloor}`}
+              alt={`Denah Arsitektural ${currentFloor === 1 ? 'Tetra Solo' : 'Mizu Commonroom'}`}
               className="floorplan-base-image"
               loading="eager"
               draggable={false}

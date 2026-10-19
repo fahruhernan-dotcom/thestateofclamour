@@ -31,13 +31,13 @@ export const DenahPage: React.FC<Props> = ({ onBack, onNavigateToReservasi }) =>
       <header className="denah-header-cluster">
         <div className="denah-eyebrow-pill">
           <Compass size={13} className="text-gold-antique" />
-          <span>DENAH VENUE RESMI // MIZU COMMONROOM</span>
+          <span>DENAH VENUE RESMI // TETRA & MIZU COMMONROOM</span>
         </div>
         <h1 className="denah-main-title">
           TATA LETAK SANCTUARY &amp; DENAH PARTY
         </h1>
         <p className="denah-subtitle-desc">
-          Navigasi interaktif denah <strong>Lantai 1</strong> &amp; <strong>Lantai 2</strong> The State of Clamor.
+          Navigasi interaktif denah <strong>Tetra</strong> &amp; <strong>Mizu Commonroom</strong> The State of Clamor.
           {HIDE_TABLE_AVAILABILITY_STATUS
             ? ' Klik pin meja untuk melihat spesifikasi, kapasitas, dan reservasi langsung via WhatsApp Admin.'
             : ' Status meja (Tersedia vs Terisi) tersinkronisasi secara real-time. Klik pin meja untuk spesifikasi dan reservasi langsung via WhatsApp.'}

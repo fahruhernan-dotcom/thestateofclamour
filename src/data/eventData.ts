@@ -8,7 +8,7 @@ export const initialEvent: EventData = {
   description: 'Two nights of nocturnal sound and monumental assembly.',
   startDate: '2026-10-30T20:00:00+07:00',
   endDate: '2026-10-31T04:00:00+07:00',
-  venueName: 'MIZU COMMONROOM',
+  venueName: 'MIZU COMMONROOM & TETRA',
   venueCity: '',
   heroVideoUrl: '/assets/hero_monument.mp4',
   heroPosterUrl: '/assets/hero_monument.jpg',

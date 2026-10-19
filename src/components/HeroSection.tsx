@@ -770,7 +770,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
 
   const venueLabel = event.venueCity
     ? `${event.venueCity} · ${event.venueName}`
-    : (event.venueName || 'MIZU COMMONROOM');
+    : (event.venueName || 'MIZU COMMONROOM & TETRA');
 
   return (
     <section
@@ -879,7 +879,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
                 <span style={{ color: 'var(--color-gold-antique)' }}>20:00 WIB</span>
               </div>
               <div style={{ marginTop: '0.35rem', fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.24em', color: 'var(--color-crimson)', textTransform: 'uppercase', fontWeight: 600 }}>
-                MIZU COMMONROOM
+                MIZU COMMONROOM &amp; TETRA
               </div>
             </div>
 
@@ -913,7 +913,7 @@ const HeroSectionDesktop: React.FC<Props> = ({ event }) => {
                 <span style={{ color: 'var(--color-gold-antique)' }}>20:00 WIB</span>
               </div>
               <div style={{ marginTop: '0.35rem', fontFamily: 'var(--font-body)', fontSize: '0.625rem', letterSpacing: '0.24em', color: 'var(--color-crimson)', textTransform: 'uppercase', fontWeight: 600 }}>
-                MIZU COMMONROOM
+                MIZU COMMONROOM &amp; TETRA
               </div>
             </div>
           </div>

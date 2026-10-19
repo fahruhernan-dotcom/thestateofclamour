@@ -689,7 +689,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
 
   const venueLabel = event.venueCity
     ? `${event.venueCity} · ${event.venueName}`
-    : (event.venueName || 'MIZU COMMONROOM');
+    : (event.venueName || 'MIZU COMMONROOM & TETRA');
 
   return (
     <section
@@ -778,7 +778,7 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
               The monumental silence breaks into nocturnal sound.
             </p>
             <div className="hero-mobile-sub-venue">
-              SWEAR IN CONTINENTAL · MIZU COMMONROOM
+              SWEAR IN CONTINENTAL · MIZU COMMONROOM & TETRA
             </div>
           </div>
 
@@ -791,14 +791,14 @@ export const HeroSectionMobile: React.FC<Props> = ({ event }) => {
                 <span className="hero-mobile-sched-date">30 OKTOBER</span>
                 <span className="hero-mobile-sched-artist">{IS_LINEUP_TEASER_MODE ? '?' : 'MALVIN'}</span>
                 <span className="hero-mobile-sched-meta">20:00 WIB</span>
-                <span className="hero-mobile-sched-venue">MIZU COMMONROOM</span>
+                <span className="hero-mobile-sched-venue">MIZU COMMONROOM &amp; TETRA</span>
               </div>
 
               <div className="hero-mobile-schedule-item align-right">
                 <span className="hero-mobile-sched-date">31 OKTOBER</span>
                 <span className="hero-mobile-sched-artist">{IS_LINEUP_TEASER_MODE ? '?' : 'FAR'}</span>
                 <span className="hero-mobile-sched-meta">20:00 WIB</span>
-                <span className="hero-mobile-sched-venue">MIZU COMMONROOM</span>
+                <span className="hero-mobile-sched-venue">MIZU COMMONROOM &amp; TETRA</span>
               </div>
             </div>
           </div>
